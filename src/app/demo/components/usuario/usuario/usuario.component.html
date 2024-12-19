@@ -1,0 +1,263 @@
+<div style="margin:10px;">
+    <p-panel header="Usuarios">
+      <p class="m-0">
+        <p-button (onClick)="VerCrearRegistro_usuario()" icon="pi pi-plus" label="Nuevo" class="mr-3 mt-3"></p-button>
+        <label>Buscar:</label>
+        <input pInputText type="text" (input)="onFilter($event.target.value)" placeholder="Buscar usuario" />
+      </p>
+      <br />
+
+      <!-- Tabla de usuarios -->
+      <p class="m-0">
+        <p-table
+          [value]="usuarios"
+          [paginator]="true"
+          [rows]="5"
+          [rowsPerPageOptions]="[5, 10, 20]"
+          selectionMode="single"
+          [(selection)]="seleccionarusuario"
+          [tableStyle]="{ 'width': '800px', 'border': '1px solid black' }"
+          [globalFilterFields]="['Nombre', 'NombreComp']"
+        >
+          <!-- Encabezado de la tabla -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="Nombre">Nombre de usuario</th>
+              <th pSortableColumn="NombreComp">Nombre completo</th>
+              <th pSortableColumn="Cargo">Cargo</th>
+              <th>Acciones</th>
+            </tr>
+          </ng-template>
+
+          <!-- Cuerpo de la tabla -->
+          <ng-template pTemplate="body" let-usuario>
+            <tr [pSelectableRow]="usuario" (click)="selectUsuario(usuario)">
+              <td>{{ usuario.Nombre }}</td>
+              <td>{{ usuario.NombreComp }}</td>
+              <td>{{ usuario.Cargo }}</td>
+              <td>
+                <p-button
+                  icon="pi pi-pencil"
+                  class="mr-2"
+                  [rounded]="true"
+                  [outlined]="true"
+                  (click)="VerActualizarRegistro()"
+                ></p-button>
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [rounded]="true"
+                  [outlined]="true"
+                  (click)="EliminarRegistro()"
+                ></p-button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p>
+    </p-panel>
+
+    <!-- Modal de creación/edición de usuario -->
+    <p-dialog
+      header="{{ nuevoregistro ? 'Insertar usuario' : 'Editar usuario' }}"
+      [modal]="true"
+      [(visible)]="visible_ventana"
+      [style]="{ width: '30rem' }"
+    >
+      <!-- Formulario del modal -->
+      <form [formGroup]="usuarioForm" (ngSubmit)="guardar_usuario()">
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Sistema" class="font-semibold w-6rem">Sistema</label>
+          <input
+            pInputText
+            id="Sistema"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Sistema"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Nombre" class="font-semibold w-6rem">Nombre</label>
+          <input
+            pInputText
+            id="Nombre"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Nombre"
+            required
+            [ngClass]="{ 'p-invalid': usuarioForm.get('Nombre').invalid && usuarioForm.get('Nombre').touched }"
+          />
+          <div *ngIf="usuarioForm.get('Nombre').invalid && usuarioForm.get('Nombre').touched" class="p-error">
+            <small *ngIf="usuarioForm.get('Nombre').errors?.['required']">El nombre es obligatorio.</small>
+            <small *ngIf="usuarioForm.get('Nombre').errors?.['maxlength']">El nombre debe tener como máximo 8 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Clave" class="font-semibold w-6rem">Clave</label>
+          <input
+            pInputText
+            id="Clave"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Clave"
+            required
+            [ngClass]="{ 'p-invalid': usuarioForm.get('Clave').invalid && usuarioForm.get('Clave').touched }"
+          />
+          <div *ngIf="usuarioForm.get('Clave').invalid && usuarioForm.get('Clave').touched" class="p-error">
+            <small *ngIf="usuarioForm.get('Clave').errors?.['required']">La clave es obligatoria.</small>
+          </div>
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="NombreComp" class="font-semibold w-6rem">NombreComp</label>
+          <input
+            pInputText
+            id="NombreComp"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="NombreComp"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Cargo" class="font-semibold w-6rem">Cargo</label>
+          <input
+            pInputText
+            id="Cargo"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Cargo"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="AccPerCerr" class="font-semibold w-6rem">AccPerCerr</label>
+          <input
+            pInputText
+            id="AccPerCerr"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="AccPerCerr"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Periodo" class="font-semibold w-6rem">Periodo</label>
+          <input
+            pInputText
+            id="Periodo"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Periodo"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Moneda" class="font-semibold w-6rem">Moneda</label>
+          <input
+            pInputText
+            id="Moneda"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Moneda"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Saldos" class="font-semibold w-6rem">Saldos</label>
+          <input
+            pInputText
+            id="Saldos"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Saldos"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="TipoImp" class="font-semibold w-6rem">TipoImp</label>
+          <input
+            pInputText
+            id="TipoImp"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="TipoImp"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Ajuste" class="font-semibold w-6rem">Ajuste</label>
+          <input
+            pInputText
+            id="Ajuste"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Ajuste"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="AccPerCon" class="font-semibold w-6rem">AccPerCon</label>
+          <input
+            pInputText
+            id="AccPerCon"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="AccPerCon"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="VarImpChe" class="font-semibold w-6rem">VarImpChe</label>
+          <input
+            pInputText
+            id="VarImpChe"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="VarImpChe"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="CenCosto" class="font-semibold w-6rem">CenCosto</label>
+          <input
+            pInputText
+            id="CenCosto"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="CenCosto"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="Tipo" class="font-semibold w-6rem">Tipo</label>
+          <input
+            pInputText
+            id="Tipo"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="Tipo"
+          />
+        </div>
+
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="AccArea" class="font-semibold w-6rem">AccArea</label>
+          <input
+            pInputText
+            id="AccArea"
+            class="flex-auto"
+            autocomplete="off"
+            formControlName="AccArea"
+          />
+        </div>
+
+        <!-- Botones de acción del modal -->
+        <div class="flex justify-content-end gap-2">
+          <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (click)="visible_ventana = false"></p-button>
+          <p-button label="Guardar" icon="pi pi-check" [disabled]="usuarioForm.invalid" type="submit"></p-button>
+        </div>
+      </form>
+    </p-dialog>
+  </div>

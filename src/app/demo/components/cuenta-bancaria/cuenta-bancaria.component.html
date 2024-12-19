@@ -1,0 +1,36 @@
+<p-confirmDialog key="confirmDialog" [closable]="false"></p-confirmDialog>
+
+<p-table #dt [value]="cuentasBancarias" [lazy]="true" [loading]="isLoading" [paginator]="true" [rows]="10">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Empresa</th>
+      <th>Banco</th>
+      <th>Id Cuenta</th>
+      <th>Moneda</th>
+      <th>Descripcion</th>
+      <th>Acciones</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-cuentaBancaria>
+    <tr>
+      <td>{{ cuentaBancaria.ban01Empresa }}</td>
+      <td>{{ cuentaBancaria.ban01IdBanco }}</td>
+      <td>{{ cuentaBancaria.ban01IdCuenta }}</td>
+      <td>{{ cuentaBancaria.ban01Moneda }}</td>
+      <td>{{ cuentaBancaria.ban01Descripcion }}</td>
+      <td>
+        <button pButton type="button" icon="pi pi-pencil" class="p-button-text" (click)="showEditModal(cuentaBancaria)"></button>
+        <button pButton type="button" icon="pi pi-trash" class="p-button-text" (click)="confirmDelete(cuentaBancaria)"></button>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="empty">
+    <tr>
+      <td colspan="6" class="text-center">No hay datos para mostrar</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<button pButton type="button" label="Agregar Cuenta Bancaria" icon="pi pi-plus" class="p-button-success" (click)="showAddModal()"></button>

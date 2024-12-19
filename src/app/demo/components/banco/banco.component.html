@@ -1,0 +1,104 @@
+<div style="margin:10px;">
+    <p-panel header="Banco">
+        <!-- Botón de nuevo -->
+        <div class="flex align-items-center mb-3">
+            <p-button (click)="VerCrearRegistro()" icon="pi pi-plus" label="Nuevo" class="mr-3" />
+        </div>
+
+        <!-- Filtro de búsqueda para la tabla -->
+        <div class="flex align-items-center gap-3 mb-3">
+            <label class="font-semibold" style="width: 50px;">Buscar:</label>
+            <input pInputText type="text" (input)="onFilter($event.target.value)" placeholder="Buscar por código o nombre" style="width: 740px;" />
+        </div>
+        <br />
+
+        <!-- Tabla de datos -->
+        <p class="m-0">
+            <p-table
+                [value]="bancos"
+                [paginator]="true"
+                [rows]="5"
+                [rowsPerPageOptions]="[5, 10, 20]"
+                selectionMode="single"
+                [(selection)]="selectedBanco"
+                [tableStyle]="{ 'width': '800px', 'border': '1px solid black' }"
+                [globalFilterFields]="['ban01IdBanco', 'ban01Descripcion']">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="ban01IdBanco">Código</th>
+                        <th pSortableColumn="ban01Descripcion">Nombre <p-sortIcon field="ban01Descripcion"></p-sortIcon></th>
+                        <th>Prefijo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-banco>
+                    <tr [pSelectableRow]="banco" (click)="selectBanco(banco)">
+                      <td>{{ banco.ban01IdBanco }}</td>
+                      <td>{{ banco.ban01Descripcion }}</td>
+                      <td>{{ banco.ban01Prefijo }}</td>
+                      <td>
+                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="VerActualizarRegistro(banco)" />
+                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="confirmarEliminacion(banco)" />
+                      </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p>
+    </p-panel>
+
+    <p-dialog header="Estas a punto de eliminar un Banco" [(visible)]="displayDialog" [style]="{ width: '400px' }">
+        <p>¿Estás seguro de que deseas eliminar este registro?</p>
+        <div class="flex justify-content-between">
+            <p-button label="Sí" icon="pi pi-check" (click)="eliminarBanco()" severity="danger" />
+            <p-button label="No" icon="pi pi-times" (click)="cancelarEliminacion()" />
+        </div>
+    </p-dialog>
+
+
+
+    <!-- Mensaje Modal para mostrar mensajes -->
+    <p-dialog [(visible)]="mostrarMensajeModal" header="Mensaje" [style]="{ width: '500px' }">
+        <p>{{ mensajeModal }}</p>
+        <div class="flex justify-content-end">
+            <p-button label="Cerrar" icon="pi pi-check" (click)="cerrarModalMensaje()" />
+        </div>
+    </p-dialog>
+
+    <!-- Ventana para crear/editar -->
+    <p-dialog header="{{ selectedBanco ? 'Editar Banco' : 'Crear Banco' }}" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+        <form [formGroup]="formBanco">
+            <div class="flex align-items-center gap-3 mb-3">
+                <label for="ban01Empresa" class="font-semibold w-6rem">Empresa</label>
+                <input pInputText id="ban01Empresa" class="flex-auto" formControlName="ban01Empresa" />
+                <small *ngIf="formBanco.get('ban01Empresa')?.invalid && formBanco.get('ban01Empresa')?.touched" class="p-error">
+                    Campo requerido
+                </small>
+            </div>
+            <div class="flex align-items-center gap-3 mb-3">
+                <label for="ban01IdBanco" class="font-semibold w-6rem">Código</label>
+                <input pInputText id="ban01IdBanco" class="flex-auto" formControlName="ban01IdBanco" />
+                <small *ngIf="formBanco.get('ban01IdBanco')?.invalid && formBanco.get('ban01IdBanco')?.touched" class="p-error">
+                    Campo requerido
+                </small>
+            </div>
+            <div class="flex align-items-center gap-3 mb-3">
+                <label for="ban01Descripcion" class="font-semibold w-6rem">Descripción</label>
+                <input pInputText id="ban01Descripcion" class="flex-auto" formControlName="ban01Descripcion" />
+                <small *ngIf="formBanco.get('ban01Descripcion')?.invalid && formBanco.get('ban01Descripcion')?.touched" class="p-error">
+                    Campo requerido
+                </small>
+            </div>
+            <div class="flex align-items-center gap-3 mb-3">
+                <label for="ban01Prefijo" class="font-semibold w-6rem">Prefijo</label>
+                <input pInputText id="ban01Prefijo" class="flex-auto" formControlName="ban01Prefijo" />
+                <small *ngIf="formBanco.get('ban01Prefijo')?.invalid && formBanco.get('ban01Prefijo')?.touched" class="p-error">
+                    Campo requerido
+                </small>
+            </div>
+        </form>
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (click)="cerrarModal()" />
+            <p-button label="Guardar" icon="pi pi-check" (click)="guardar()" />
+        </div>
+    </p-dialog>
+</div>
