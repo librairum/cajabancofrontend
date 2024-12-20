@@ -23,7 +23,9 @@ export class CuentaBancariaService {
 
     // método para crear una nueva cuenta bancaria
     CreateCuentaBancaria(cuentaBancaria: Cuenta_Bancaria): Observable<Cuenta_Bancaria>{
+        console.log('Datos enviados para crear cuenta bancaria:', cuentaBancaria); // Imprimir los datos
         return this.http.post<Cuenta_Bancaria>(`${this.apiUrl}`, cuentaBancaria);
+
     }
 
     // método para actualizar una cuenta bancaria

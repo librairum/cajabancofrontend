@@ -38,6 +38,10 @@ s
 
   }
 
+  ComboboxBancos():Observable<Banco[]>{
+    return this.httpClient.get<Banco[]>(this.urlAPI);
+  }
+
 
 
 }
