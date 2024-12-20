@@ -2,168 +2,95 @@ import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from '../demo/components/service/app.layout.service';
 import { RouterLink } from '@angular/router';
+import { PermisosxPerfilService } from '../demo/service/permisosxperfil.service';
+import { PermisosxPerfil } from '../demo/api/permisosxperfil';
 
 @Component({
     selector: 'app-menu',
-    templateUrl: './app.menu.component.html'
+    templateUrl: './app.menu.component.html',
 })
 export class AppMenuComponent implements OnInit {
+    constructor(
+        public permisosService: PermisosxPerfilService,
+        layoutService: LayoutService
+    ) {}
 
     model: any[] = [];
-
-    constructor(public layoutService: LayoutService) { }
+    permisos: PermisosxPerfil[] = []; // Lista para almacenar los resultados
 
     ngOnInit() {
-        this.model = [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/Home'] },
-                    {label:'Banco' , icon:'pi pi-fw pi-building', routerLink:['banco']},
-                    {label:'Cuentas Bancarias' , icon:'pi pi-fw pi-credit-card', routerLink:['cuentas_bancarias']},
-                    {label:'Usuario' , icon:'pi pi-fw pi-user', routerLink:['usuario']}
-                ]
+        // Llama al método para obtener permisos al inicializar el componente
+        this.permisosService.GetPermisosxperfil('03', '01').subscribe({
+            next: (data) => {
+                this.permisos = data; // Asigna los datos obtenidos al array permisos
+                console.log(this.permisos);
+                this.loadMenu(this.permisos)
+                
             },
-            {
-                label: 'UI Components',
-                items: [
-                    { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/Home/uikit/formlayout'] },
-                    { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/Home/uikit/input'] },
-                    { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/Home/uikit/floatlabel'] },
-                    { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/Home/uikit/invalidstate'] },
-                    { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/Home/uikit/button'] },
-                    { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/Home/uikit/table'] },
-                    { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/Home/uikit/list'] },
-                    { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/Home/uikit/tree'] },
-                    { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/Home/uikit/panel'] },
-                    { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/Home/uikit/overlay'] },
-                    { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/Home/uikit/media'] },
-                    { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/Home/uikit/menu'], routerLinkActiveOptions: { paths: 'subset', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' } },
-                    { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/Home/uikit/message'] },
-                    { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/Home/uikit/file'] },
-                    { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/Home/uikit/charts'] },
-                    { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/Home/uikit/misc'] }
-                ]
+            error: (error) => {
+                console.error('Error al obtener datos de permisos:', error);
             },
-            {
-                label: 'Prime Blocks',
-                items: [
-                    { label: 'Free Blocks', icon: 'pi pi-fw pi-eye', routerLink: ['/Home/blocks'], badge: 'NEW' },
-                    { label: 'All Blocks', icon: 'pi pi-fw pi-globe', url: ['https://www.primefaces.org/primeblocks-ng'], target: '_blank' },
-                ]
-            },
-            {
-                label: 'Utilities',
-                items: [
-                    { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['/Home/utilities/icons'] },
-                    { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank' },
-                ]
-            },
-            {
-                label: 'Pages',
-                icon: 'pi pi-fw pi-briefcase',
-                items: [
-                    {
-                        label: 'Landing',
+        });
+    }
+
+    loadMenu(permisos: PermisosxPerfil[]){
+        // Paso 1: Clasificar elementos por niveles
+        const nivel1 = this.permisos.filter((element) =>
+            element.codigoFormulario.endsWith('0000')
+        );
+        const nivel2 = this.permisos.filter(
+            (element) =>
+                element.codigoFormulario.endsWith('00') &&
+                !element.codigoFormulario.endsWith('0000')
+        );
+        const nivel3 = this.permisos.filter(
+            (element) => !element.codigoFormulario.endsWith('00')
+        );
+
+        // Paso 2: Construir la jerarquía del menú
+        this.model = nivel1.map((l1) => {
+            // Encontrar elementos de nivel 2 asociados al nivel 1 actual
+            const subItemsNivel2 = nivel2
+                .filter((l2) =>
+                    l2.codigoFormulario.startsWith(
+                        l1.codigoFormulario.substring(0, 2)
+                    )
+                )
+                .map((l2) => {
+                    // Encontrar elementos de nivel 3 asociados al nivel 2 actual
+                    const subItemsNivel3 = nivel3
+                        .filter((l3) =>
+                            l3.codigoFormulario.startsWith(
+                                l2.codigoFormulario.substring(0, 4)
+                            )
+                        )
+                        .map((l3) => ({
+                            label: l3.etiqueta,
+                            icon: 'pi pi-fw pi-globe',
+                            routerLink: [`/landing`],
+                        }));
+
+                    return {
+                        label: l2.etiqueta,
                         icon: 'pi pi-fw pi-globe',
-                        routerLink: ['/landing']
-                    },
-                    {
-                        label: 'Auth',
-                        icon: 'pi pi-fw pi-user',
-                        items: [
-                            {
-                                label: 'Login',
-                                icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
-                            },
-                            {
-                                label: 'Error',
-                                icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
-                            },
-                            {
-                                label: 'Access Denied',
-                                icon: 'pi pi-fw pi-lock',
-                                routerLink: ['/auth/access']
-                            }
-                        ]
-                    },
-                    {
-                        label: 'Crud',
-                        icon: 'pi pi-fw pi-pencil',
-                        routerLink: ['/pages/crud']
-                    },
-                    {
-                        label: 'Timeline',
-                        icon: 'pi pi-fw pi-calendar',
-                        routerLink: ['/pages/timeline']
-                    },
-                    {
-                        label: 'Not Found',
-                        icon: 'pi pi-fw pi-exclamation-circle',
-                        routerLink: ['/notfound']
-                    },
-                    {
-                        label: 'Empty',
-                        icon: 'pi pi-fw pi-circle-off',
-                        routerLink: ['/pages/empty']
-                    },
-                ]
-            },
-            {
-                label: 'Hierarchy',
-                items: [
-                    {
-                        label: 'Submenu 1', icon: 'pi pi-fw pi-bookmark',
-                        items: [
-                            {
-                                label: 'Submenu 1.1', icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' },
-                                ]
-                            },
-                            {
-                                label: 'Submenu 1.2', icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }
-                                ]
-                            },
-                        ]
-                    },
-                    {
-                        label: 'Submenu 2', icon: 'pi pi-fw pi-bookmark',
-                        items: [
-                            {
-                                label: 'Submenu 2.1', icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                ]
-                            },
-                            {
-                                label: 'Submenu 2.2', icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' },
-                                ]
-                            },
-                        ]
-                    }
-                ]
-            },
-            {
-                label: 'Get Started',
-                items: [
-                    {
-                        label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/documentation']
-                    },
-                    {
-                        label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
-                    }
-                ]
-            }
-        ];
+                        routerLink:
+                            subItemsNivel3.length === 0
+                                ? [`/landing`]
+                                : null,
+                        items:
+                            subItemsNivel3.length > 0
+                                ? subItemsNivel3
+                                : null,
+                    };
+                });
+
+            return {
+                label: l1.etiqueta,
+                icon: 'pi pi-fw pi-briefcase',
+                items:
+                    subItemsNivel2.length > 0 ? subItemsNivel2 : null,
+            };
+        });
+
     }
 }
