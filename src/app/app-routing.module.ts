@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from './demo/components/login/login.component';
+import { AuthGuardService } from './demo/service/auth-guard.service';
 
 @NgModule({
     imports: [
@@ -12,6 +13,7 @@ import { LoginComponent } from './demo/components/login/login.component';
             },
             {
                 path: 'Home', component: AppLayoutComponent,
+                canActivate:[AuthGuardService],
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'uikit', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },

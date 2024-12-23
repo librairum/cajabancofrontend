@@ -6,39 +6,52 @@ import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ButtonModule,CheckboxModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ButtonModule,CheckboxModule,ToastModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  providers: [MessageService]
 })
 export class LoginComponent {
     credencialesFRM:FormGroup;
     errorMessage: string = '';
+    showDialog: boolean = false;
+    dialogMessage: string = '';
 
-    constructor(private fb:FormBuilder, private lS:LoginService, private router:Router){
+    constructor(private fb:FormBuilder, private lS:LoginService, private router:Router, private messageService:MessageService){
         this.credencialesFRM=fb.group({
-            Nombre:['',[Validators.required]],
-            Clave: ['',[Validators.required]]
+            Nombre:['',[Validators.required,Validators.maxLength(8)]],
+            Clave: ['',[Validators.required,Validators.maxLength(8)]]
         });
     }
 
     //Método para manejar el envió del form
     iniciarSesion(){
         if(this.credencialesFRM.valid){
-            this.lS.inicio_Sesion(this.credencialesFRM.value).subscribe({
-                next: (response)=>{
-                    localStorage.setItem('token', response.token);
+            this.lS.login(this.credencialesFRM.value).subscribe({
+                next: ()=>{
+                    //this.showToast('success', 'Inicio de sesión exitoso', 'Bienvenido al sistema.');
                     this.router.navigate(['/Home']);
                 },
-                error:(err)=>{
-                    this.errorMessage='Credenciales Incorrectas'
+                error:(error)=>{
+                    console.error('Error en login', error);
+                    this.showToast('error', 'Credenciales inválidas', 'Por favor verifica tus datos.');
+                    this.credencialesFRM.reset()
                 }
             })
         } else {
-            this.errorMessage='Por favor, completa los campos corrrectamente';
+            this.showToast('warn', 'Campos incompletos', 'Por favor completa los campos correctamente.');
         }
     }
+
+    showToast(severity: string, summary: string, detail: string) {
+        this.messageService.add({ severity, summary, detail }); // Muestra el toast
+      }
+
 }
