@@ -23,7 +23,7 @@ export class AppMenuComponent implements OnInit {
         this.permisosService.GetPermisosxperfil('03', '01').subscribe({
             next: (data) => {
                 this.permisos = data; // Asigna los datos obtenidos al array permisos
-                console.log(this.permisos);
+                //console.log(this.permisos);
                 this.loadMenu(this.permisos)
                 
             },
@@ -66,13 +66,13 @@ export class AppMenuComponent implements OnInit {
                         )
                         .map((l3) => ({
                             label: l3.etiqueta,
-                            icon: 'pi pi-fw pi-globe',
+                            icon: l3.nombreIcono,
                             routerLink: [`/landing`],
                         }));
 
                     return {
                         label: l2.etiqueta,
-                        icon: 'pi pi-fw pi-globe',
+                        icon: l2.nombreIcono,
                         routerLink:
                             subItemsNivel3.length === 0
                                 ? [`/landing`]
@@ -86,7 +86,7 @@ export class AppMenuComponent implements OnInit {
 
             return {
                 label: l1.etiqueta,
-                icon: 'pi pi-fw pi-briefcase',
+                icon: l1.nombreIcono,
                 items:
                     subItemsNivel2.length > 0 ? subItemsNivel2 : null,
             };
