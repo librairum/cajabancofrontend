@@ -16,10 +16,10 @@ import { UsuarioComponent } from '../usuario/usuario/usuario.component';
 import { CuentaBancariaComponent } from '../cuenta-bancaria/cuenta-bancaria.component';
 @NgModule({
     imports: [RouterModule.forChild([
-        { path: '', component: DashboardComponent },
-        { path: 'banco', component: BancoComponent },
-        { path: 'usuario', component: UsuarioComponent },
-        { path: 'cuentas_bancarias', component: CuentaBancariaComponent}
+        { path: '', component: DashboardComponent, canActivate:[] },
+        { path: 'banco', component: BancoComponent, canActivate:[] },
+        { path: 'usuario', component: UsuarioComponent, canActivate:[] },
+        { path: 'cuentas_bancarias', component: CuentaBancariaComponent, canActivate:[]}
         ])], exports:[RouterModule]
     // imports: [
     //     CommonModule,

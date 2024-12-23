@@ -1,7 +1,7 @@
 export interface Usuario {
     Sistema: string | null;           // NULL, máximo 10 caracteres
     Nombre: string;            // máximo 8 caracteres
-    Clave?: string;     // máximo 8 caracteres
+    Clave: string;     // máximo 8 caracteres
     NombreComp?: string | null; // NULL, máximo 40 caracteres
     Cargo?: string | null;     // NULL, máximo 20 caracteres
     AccPerCerr?: string | null; // NULL, 1 carácter
