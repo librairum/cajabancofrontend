@@ -23,7 +23,7 @@ export class AppMenuComponent implements OnInit {
         this.permisosService.GetPermisosxperfil('03', '01').subscribe({
             next: (data) => {
                 this.permisos = data; // Asigna los datos obtenidos al array permisos
-                //console.log(this.permisos);
+                console.log(this.permisos);
                 this.loadMenu(this.permisos)
                 
             },
@@ -67,7 +67,7 @@ export class AppMenuComponent implements OnInit {
                         .map((l3) => ({
                             label: l3.etiqueta,
                             icon: l3.nombreIcono,
-                            routerLink: [`/landing`],
+                            routerLink: [`/Home/${l2.nombreFormulario}/${l3.nombreFormulario}`],
                         }));
 
                     return {
@@ -75,7 +75,7 @@ export class AppMenuComponent implements OnInit {
                         icon: l2.nombreIcono,
                         routerLink:
                             subItemsNivel3.length === 0
-                                ? [`/landing`]
+                                ? [`/Home/${l2.nombreFormulario}`]
                                 : null,
                         items:
                             subItemsNivel3.length > 0
@@ -93,3 +93,20 @@ export class AppMenuComponent implements OnInit {
 
     }
 }
+
+/**
+ 
+
+this.model = [
+            {
+                label: 'Home',
+                items: [
+                    {label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/Home'] },
+                    {label:'Banco' , icon:'pi pi-fw pi-building', routerLink:['banco']},
+                    {label:'Cuentas Bancarias' , icon:'pi pi-fw pi-credit-card', routerLink:['cuentas_bancarias']},
+                    {label:'Usuario' , icon:'pi pi-fw pi-user', routerLink:['usuario']}
+                ]
+
+
+
+ */

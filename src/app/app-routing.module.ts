@@ -1,8 +1,9 @@
 import { RouterModule } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from './demo/components/login/login.component';
+import { NumeroCuentaComponent } from './demo/components/numero-cuenta/numero-cuenta.component';
 
 @NgModule({
     imports: [
@@ -14,11 +15,9 @@ import { LoginComponent } from './demo/components/login/login.component';
                 path: 'Home', component: AppLayoutComponent,
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
-                    { path: 'uikit', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
-                    { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
-                    { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
-                    { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
-                    { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) }
+                    { path: 'banco', component: NumeroCuentaComponent },
+                    { path: 'cuentas_bancarias', component: NumeroCuentaComponent },
+                    { path: 'numero_cuenta', component: NumeroCuentaComponent }
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
