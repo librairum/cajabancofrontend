@@ -86,7 +86,6 @@ export class AppMenuComponent implements OnInit {
 
             return {
                 label: l1.etiqueta,
-                icon: l1.nombreIcono,
                 items:
                     subItemsNivel2.length > 0 ? subItemsNivel2 : null,
             };
