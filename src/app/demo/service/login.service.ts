@@ -1,57 +1,39 @@
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, tap, throwError } from 'rxjs';
+import { Usuario } from '../components/login/Login';
+interface LoginResponse{
+    token: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-    //private urlAPI='https://localhost:7277/Login';
+    private urlAPI = 'https://localhost:7277/Auth/login';
+    constructor(private http: HttpClient){ }
 
-    //constructor(private httpClient:HttpClient) { }
-    // método para iniciar sesion
-    /*inicio_Sesion(credenciales: { Nombre: string; Clave: string }): Observable<any> {
-        if (credenciales.Nombre === 'admin' && credenciales.Clave === 'admin') {
-          return this.httpClient.post(`${this.urlAPI}/login`, credenciales);
-        } else {
-          return throwError('Credenciales inválidas. Nombre y clave incorrectos.');
-        }
-      }
-
-    // Método para cerrar sesión
-    cerrar_sesion():void{
-        localStorage.removeItem('token');
-    }
-    // método para verificar si el usuario esta autenticado
-    esta_autenticado():boolean {
-        const token = localStorage.getItem('token');
-        return !!token;
-    }*/
-    private usuarios=[
-        { Nombre: 'admin', Clave: 'admin' }
-    ];
-    constructor() {}
-
-    inicio_Sesion(credenciales: { Nombre: string; Clave: string }): Observable<any> {
-        const usuarioValido = this.usuarios.find(
-            usuario => usuario.Nombre === credenciales.Nombre && usuario.Clave === credenciales.Clave
+    login(credentials:Pick<Usuario, 'Sistema'|'Nombre'| 'Clave'>):Observable<LoginResponse>{
+        return this.http.post<LoginResponse>(this.urlAPI,credentials)
+        .pipe(
+            tap(response=>{
+                if(response.token){
+                    localStorage.setItem('token', response.token);
+                }
+            })
         );
-
-        if (usuarioValido) {
-            // Simular éxito y retorno de un token (por ejemplo, JWT)
-            return of({ token: 'dummy-jwt-token' });
-        } else {
-            return throwError('Credenciales inválidas.');
-        }
     }
-    // Método para cerrar sesión
-    cerrarSesion(): void {
+
+    getToken(): string | null {
+        return localStorage.getItem('token');
+    }
+
+    isLoggedIn():boolean {
+        return !!this.getToken();
+    }
+
+    logout():void {
         localStorage.removeItem('token');
-    }
-
-    // Método para verificar si el usuario está autenticado
-    estaAutenticado(): boolean {
-        const token = localStorage.getItem('token');
-        return !!token;
     }
 }
