@@ -67,7 +67,7 @@ export class AppMenuComponent implements OnInit {
                         .map((l3) => ({
                             label: l3.etiqueta,
                             icon: l3.nombreIcono,
-                            routerLink: [`/landing`],
+                            routerLink: [`/Home/${l2.nombreFormulario}/${l3.nombreFormulario}`],
                         }));
 
                     return {
