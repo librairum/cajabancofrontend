@@ -66,12 +66,11 @@ export class BancoComponent {
 
     if (this.selectedBanco) {
       // Actualización
-      this.bancoService.ActualizarBanco(
-        this.selectedBanco.ban01Empresa,
-        this.selectedBanco.ban01IdBanco,
+      this.bancoService.ActualizarBanco(        
         this.formBanco.value
       ).subscribe(
         response => {
+          
           this.mostrarMensaje('El Banco se ha actualizado correctamente.');
           this.llenarData();
           this.resetFormulario();

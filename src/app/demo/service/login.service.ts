@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, tap, throwError } from 'rxjs';
 import { Usuario } from '../components/login/Login';
+import { Autenticacion } from '../components/login/Autenticacion';
+import { PermisosxPerfil } from '../api/permisosxperfil';
+import { MenuxPerfil } from '../components/login/MenuxPerfil';
 interface LoginResponse{
     token: string;
 }
@@ -11,9 +14,22 @@ interface LoginResponse{
   providedIn: 'root'
 })
 export class LoginService {
-    private urlAPI = 'https://localhost:7277/Auth/login';
+    private urlAPI = 'https://localhost:7277/Autenticacion';
+    //https://localhost:7277/Autenticacion/SpTraeMenuxPerfil
     constructor(private http: HttpClient){ }
 
+    InicioSesion(nombreusuario:string,
+                  claveusuario:string, 
+                codigoempresa:string):Observable<Autenticacion>{
+   let urlAcceso = `${this.urlAPI}/SpList?nombreusuario=${nombreusuario}&claveusuario=${claveusuario}&codigoempresa=${codigoempresa}`;
+        return this.http.get<Autenticacion>(urlAcceso);
+    }
+//codigoPerfil, string codModulo
+    TraerMenuxPerfil(codigoPerfil: string, codModulo: string){
+        //?codigoPerfil=03&codModulo=01
+        let urlAcceso = `${this.urlAPI}/SpTraeMenuxPerfil?codigoPerfil=${codigoPerfil}&codModulo=${codModulo}`;
+        return this.http.get<MenuxPerfil>(urlAcceso);
+    }
     login(credentials:Pick<Usuario, 'Sistema'|'Nombre'| 'Clave'>):Observable<LoginResponse>{
         return this.http.post<LoginResponse>(this.urlAPI,credentials)
         .pipe(

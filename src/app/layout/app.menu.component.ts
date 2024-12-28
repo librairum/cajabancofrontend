@@ -4,27 +4,34 @@ import { LayoutService } from '../demo/components/service/app.layout.service';
 import { RouterLink } from '@angular/router';
 import { PermisosxPerfilService } from '../demo/service/permisosxperfil.service';
 import { PermisosxPerfil } from '../demo/api/permisosxperfil';
-
+import { LoginService } from '../demo/service/login.service';
+import { MenuxPerfil } from '../demo/components/login/MenuxPerfil';
 @Component({
     selector: 'app-menu',
     templateUrl: './app.menu.component.html',
 })
 export class AppMenuComponent implements OnInit {
     constructor(
-        public permisosService: PermisosxPerfilService,
+        public permisosService: LoginService,
         layoutService: LayoutService
     ) {}
 
     model: any[] = [];
-    permisos: PermisosxPerfil[] = []; // Lista para almacenar los resultados
-
+    //permisos: MenuxPerfil[] = []; // Lista para almacenar los resultados
+    permisos: MenuxPerfil;
     ngOnInit() {
         // Llama al método para obtener permisos al inicializar el componente
-        this.permisosService.GetPermisosxperfil('03', '01').subscribe({
+        this.permisosService.TraerMenuxPerfil('03', '01').subscribe({
             next: (data) => {
-                this.permisos = data; // Asigna los datos obtenidos al array permisos
-                console.log(this.permisos);
-                this.loadMenu(this.permisos)
+                console.log("-------------------------");
+                
+                console.log("Datos obtenido de web api traemenuxperfil");
+                
+                var datosMenu = data.data;
+                console.log(datosMenu);
+                //console.log(this.permisos);
+                
+                this.loadMenu(datosMenu);
                 
             },
             error: (error) => {
@@ -33,17 +40,17 @@ export class AppMenuComponent implements OnInit {
         });
     }
 
-    loadMenu(permisos: PermisosxPerfil[]){
+    loadMenu(menuAsignados: PermisosxPerfil[]){
         // Paso 1: Clasificar elementos por niveles
-        const nivel1 = this.permisos.filter((element) =>
+        const nivel1 = menuAsignados.filter((element) =>
             element.codigoFormulario.endsWith('0000')
         );
-        const nivel2 = this.permisos.filter(
+        const nivel2 =  menuAsignados.filter(
             (element) =>
                 element.codigoFormulario.endsWith('00') &&
                 !element.codigoFormulario.endsWith('0000')
         );
-        const nivel3 = this.permisos.filter(
+        const nivel3 = menuAsignados.filter(
             (element) => !element.codigoFormulario.endsWith('00')
         );
 

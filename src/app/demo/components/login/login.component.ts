@@ -25,27 +25,37 @@ export class LoginComponent {
     showDialog: boolean = false;
     dialogMessage: string = '';
 
-    constructor(private fb:FormBuilder, private lS:LoginService, private router:Router, private messageService:MessageService){
+    constructor(private fb:FormBuilder, private LoginServicio:LoginService, private router:Router, private messageService:MessageService){
         this.credencialesFRM=fb.group({
-            Nombre:['',[Validators.required,Validators.maxLength(8)]],
-            Clave: ['',[Validators.required,Validators.maxLength(8)]]
+            Nombre:['',[Validators.required,Validators.maxLength(50)]],
+            Clave: ['',[Validators.required,Validators.maxLength(50)]]
         });
     }
 
     //Método para manejar el envió del form
     iniciarSesion(){
         if(this.credencialesFRM.valid){
-            this.lS.login(this.credencialesFRM.value).subscribe({
-                next: ()=>{
-                    //this.showToast('success', 'Inicio de sesión exitoso', 'Bienvenido al sistema.');
-                    this.router.navigate(['/Home']);
-                },
-                error:(error)=>{
-                    console.error('Error en login', error);
-                    this.showToast('error', 'Credenciales inválidas', 'Por favor verifica tus datos.');
-                    this.credencialesFRM.reset()
-                }
-            })
+            console.log("Credenciales ingresado al control");
+            console.log(this.credencialesFRM.value.Nombre);
+            console.log(this.credencialesFRM.value.Clave);
+            this.LoginServicio.InicioSesion(this.credencialesFRM.value.Nombre, 
+                this.credencialesFRM.value.Clave,'01').subscribe({
+                    next:  ()=>{
+                        this.router.navigate(['/Home']);
+                    }, error:(error) =>{
+                        this.showToast('error', 'Credenciales invalidas','Usuario y/o clave incorrecta');
+                    }
+                });
+            // this.lS.login(this.credencialesFRM.value).subscribe({
+            //     next: ()=>{              
+            //         this.router.navigate(['/Home']);
+            //     },
+            //     error:(error)=>{
+            //         console.error('Error en login', error);
+            //         this.showToast('error', 'Credenciales inválidas', 'Por favor verifica tus datos.');
+            //         this.credencialesFRM.reset()
+            //     }
+            // })
         } else {
             this.showToast('warn', 'Campos incompletos', 'Por favor completa los campos correctamente.');
         }

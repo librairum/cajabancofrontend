@@ -16,7 +16,7 @@
                     [ngClass]="{'p-invalid': credencialesFRM.get('Nombre')?.invalid && credencialesFRM.get('Nombre')?.touched}"
                     placeholder="Ingrese su nombre"
                     class="w-full mb-3"
-                    maxlength="8"
+                    
                 />
                 <small *ngIf="credencialesFRM.get('Nombre')?.invalid && credencialesFRM.get('Nombre')?.touched" class="p-error">
                     Rellene el campo con su nombre
@@ -33,7 +33,7 @@
                     [ngClass]="{'p-invalid': credencialesFRM.get('Clave')?.invalid && credencialesFRM.get('Clave')?.touched}"
                     placeholder="Ingrese su clave"
                     class="w-full mb-3"
-                    maxlength="8"
+                    
                 />
                 <small *ngIf="credencialesFRM.get('Clave')?.invalid && credencialesFRM.get('Clave')?.touched" class="p-error">
                     Rellene el campo con su clave de acceso
