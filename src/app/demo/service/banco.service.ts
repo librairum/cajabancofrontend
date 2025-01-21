@@ -8,7 +8,6 @@ import { Banco } from '../components/banco/Banco';
 export class BancoService {
   private http = inject(HttpClient);
   private urlAPI = 'https://localhost:7277/Banco';
-s
   constructor(private  httpClient: HttpClient ) {   }
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Error desconocido';
@@ -37,7 +36,7 @@ s
       catchError(this.handleError)
     );
   }
-  
+
   public CrearBanco(banco: Banco): Observable<any>{
     return this.http.post<any>(this.urlAPI+"/SpCreate", banco);
 
@@ -51,7 +50,7 @@ s
   }
   public EliminarBanco(idempresa: string, idbanco:string): Observable<any> {
     let urlmodificada = `${this.urlAPI}/SpDelete?idempresa=${idempresa}&idbanco=${idbanco}`;
-    
+
     //let urlmodificada = this.urlAPI+"/SpDelete?";
     //console.log(urlmodificada);
     //console.log(banco);

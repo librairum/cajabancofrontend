@@ -19,7 +19,7 @@ export class LoginService {
     constructor(private http: HttpClient){ }
 
     InicioSesion(nombreusuario:string,
-                  claveusuario:string, 
+                  claveusuario:string,
                 codigoempresa:string):Observable<Autenticacion>{
    let urlAcceso = `${this.urlAPI}/SpList?nombreusuario=${nombreusuario}&claveusuario=${claveusuario}&codigoempresa=${codigoempresa}`;
         return this.http.get<Autenticacion>(urlAcceso);
