@@ -35,15 +35,15 @@ export class LoginComponent {
     //Método para manejar el envió del form
     iniciarSesion(){
         if(this.credencialesFRM.valid){
-            console.log("Credenciales ingresado al control");
-            console.log(this.credencialesFRM.value.Nombre);
-            console.log(this.credencialesFRM.value.Clave);
+            
             this.LoginServicio.InicioSesion(this.credencialesFRM.value.Nombre, 
                 this.credencialesFRM.value.Clave,'01').subscribe({
                     next:  ()=>{
-                        this.router.navigate(['/Home']);
+                         this.router.navigate(['/Home']);
+                        //console.log("Enviado a /home");
                     }, error:(error) =>{
                         this.showToast('error', 'Credenciales invalidas','Usuario y/o clave incorrecta');
+                        console.log("Error en inicio de sesio");
                     }
                 });
             // this.lS.login(this.credencialesFRM.value).subscribe({

@@ -23,12 +23,10 @@ export class AppMenuComponent implements OnInit {
         // Llama al método para obtener permisos al inicializar el componente
         this.permisosService.TraerMenuxPerfil('03', '01').subscribe({
             next: (data) => {
-                console.log("-------------------------");
-                
-                console.log("Datos obtenido de web api traemenuxperfil");
+               
                 
                 var datosMenu = data.data;
-                console.log(datosMenu);
+                
                 //console.log(this.permisos);
                 
                 this.loadMenu(datosMenu);

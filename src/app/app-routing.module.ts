@@ -14,7 +14,7 @@ import { NumeroCuentaComponent } from './demo/components/numero-cuenta/numero-cu
             },
             {
                 path: 'Home', component: AppLayoutComponent,
-                canActivate:[AuthGuardService],
+                // canActivate:[AuthGuardService],
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'banco', component: NumeroCuentaComponent },
