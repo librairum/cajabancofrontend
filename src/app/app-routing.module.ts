@@ -3,7 +3,6 @@ import { Component, NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from './demo/components/login/login.component';
-import { AuthGuardService } from './demo/service/auth-guard.service';
 import { NumeroCuentaComponent } from './demo/components/numero-cuenta/numero-cuenta.component';
 
 @NgModule({

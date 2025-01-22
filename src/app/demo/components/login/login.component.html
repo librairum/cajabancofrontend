@@ -1,54 +1,41 @@
-<div class="flex align-items-center justify-content-center min-h-screen">
-    <div class="surface-card p-4 shadow-2 border-round" style="width: 400px;">
-        <div class="text-center mb-5">
-            <div class="text-900 text-3xl font-medium mb-3">Caja Banco</div>
-            <span class="text-600 font-medium line-height-3">Ingresa tus credenciales</span>
+<p-toast></p-toast>
+<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-column align-items-center justify-content-center">
+        <div
+            style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+            <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
+                <div class="text-center mb-5">
+                    <img src="/assets/demo/images/logo.jpg" alt="Image" height="50" class="mb-3">
+                    <div class="text-900 text-3xl font-medium mb-3">Caja Banco</div>
+                </div>
+
+                <form [formGroup]="credencialesFRM" (ngSubmit)="iniciarSesion()">
+                    <label for="nombreusuario" class="block text-900 text-xl font-medium mb-2">Usuario</label>
+                    <input pInputText id="nombreusuario" formControlName="nombreusuario"
+                        placeholder="Ingrese su usuario" class="w-full md:w-30rem mb-5" style="padding:1rem">
+
+                    <label for="claveusuario" class="block text-900 font-medium text-xl mb-2">Contraseña</label>
+                    <input pInputText id="claveusuario" type="password" formControlName="claveusuario"
+                        placeholder="Ingrese su claveusuario" class="w-full md:w-30rem mb-5" style="padding:1rem">
+
+                    <label for="codigoempresa" class="block text-900 font-medium text-xl mb-2">Empresa</label>
+                    <p-dropdown [options]="Empresa" optionLabel="nombre" optionValue="empresaCod"
+                        placeholder="Seleccione la empresa" formControlName="codigoempresa"
+                        (onChange)="onEmpresaChallenge($event)" class="w-full md:w-30rem mb-5"
+                        [style]="{'padding': '0.5rem', 'width': '100%'}" [showClear]="true">
+                    </p-dropdown>
+
+                    <div class="flex align-items-center justify-content-between mb-5 gap-5" style="margin-top: 10px;">
+                        <div class="flex align-items-center">
+                            <p-checkbox id="rememberme1" [(ngModel)]="recordarme" [ngModelOptions]="{standalone: true}"
+                                [binary]="true" styleClass="mr-2"></p-checkbox>
+                            <label for="rememberme1">Recordarme</label>
+                        </div>
+
+                    </div>
+                    <button pButton pRipple label="Iniciar Sesión" type="submit" class="w-full p-3 text-xl"></button>
+                </form>
+            </div>
         </div>
-
-        <form [formGroup]="credencialesFRM" (ngSubmit)="iniciarSesion()">
-            <div class="p-field">
-                <label for="nombre" class="block text-900 font-medium mb-2">Nombre</label>
-                <input
-                    id="nombre"
-                    type="text"
-                    pInputText
-                    formControlName="Nombre"
-                    [ngClass]="{'p-invalid': credencialesFRM.get('Nombre')?.invalid && credencialesFRM.get('Nombre')?.touched}"
-                    placeholder="Ingrese su nombre"
-                    class="w-full mb-3"
-                    
-                />
-                <small *ngIf="credencialesFRM.get('Nombre')?.invalid && credencialesFRM.get('Nombre')?.touched" class="p-error">
-                    Rellene el campo con su nombre
-                </small>
-            </div>
-
-            <div class="p-field">
-                <label for="clave" class="block text-900 font-medium mb-2">Clave</label>
-                <input
-                    id="clave"
-                    type="password"
-                    pInputText
-                    formControlName="Clave"
-                    [ngClass]="{'p-invalid': credencialesFRM.get('Clave')?.invalid && credencialesFRM.get('Clave')?.touched}"
-                    placeholder="Ingrese su clave"
-                    class="w-full mb-3"
-                    
-                />
-                <small *ngIf="credencialesFRM.get('Clave')?.invalid && credencialesFRM.get('Clave')?.touched" class="p-error">
-                    Rellene el campo con su clave de acceso
-                </small>
-            </div>
-
-            <button pButton pRipple
-                    label="Iniciar sesión"
-                    icon="pi pi-user"
-                    class="w-full"
-                    [disabled]="credencialesFRM.invalid">
-            </button>
-        </form>
     </div>
-
-    <!-- Toast para mensajes -->
-    <p-toast></p-toast>
 </div>

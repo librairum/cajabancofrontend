@@ -15,11 +15,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { LoginComponent } from './demo/components/login/login.component';
 
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
-    imports: [AppRoutingModule, AppLayoutModule,FormsModule,BrowserModule,ReactiveFormsModule,ToastModule],
+    imports: [AppRoutingModule, AppLayoutModule,FormsModule,BrowserModule,ReactiveFormsModule,ToastModule,LoginComponent],
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
