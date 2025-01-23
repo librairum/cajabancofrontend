@@ -1,152 +1,198 @@
+<p-confirmDialog></p-confirmDialog>
+<div style="margin: 10px;">
+    <p-panel header="Lista de Bancos">
+        <p-breadcrumb class="max-w-full" [model]="items"></p-breadcrumb>
+    </p-panel>
+</div>
 <div style="margin:10px;">
-    <p-panel header="Cuentas Bancarias">
-        <!-- Botón para agregar nueva cuenta bancaria -->
+    <p-toast></p-toast>
+    <p-card>
         <div class="flex align-items-center mb-3">
-            <p-button (click)="showAddModal()" icon="pi pi-plus" label="Nueva Cuenta Bancaria" class="mr-3"></p-button>
+            <h5>Número de cuentas bancarias - {{descripcion}}</h5>
+        </div>
+        <!-- Botón para agregar nueva rowData bancaria -->
+        <div class="flex align-items-center mb-3">
+            <p-button (click)="showAddRow()" icon="pi pi-plus" label="Nueva" class="mr-3"
+                [disabled]="isEditingAnyRow"></p-button>
         </div>
 
         <!-- Filtro de búsqueda -->
-        <div class="flex align-items-center gap-3 mb-3">
+        <!-- <div class="flex align-items-center gap-3 mb-3">
             <label class="font-semibold" style="width: 50px;">Buscar:</label>
             <input pInputText type="text" (input)="onSearch($event.target.value)" placeholder="Buscar por empresa o descripción" style="width: 740px;"/>
         </div>
-        <br />
+        <br /> -->
 
-        <p-table
-            [value]="cuentasBancarias"
-            [paginator]="true"
-            [rows]="5"
-            [rowsPerPageOptions]="[5, 10, 20]"
-            selectionMode="single"
-            [loading]="isLoading"
-            [tableStyle]="{ 'width': '800px', 'border': '1px solid black' }"
-            [globalFilterFields]="['ban01Empresa', 'ban01Descripcion']">
+        <p-table [value]="Cuenta_BancariaList" dataKey="iCuenta" [paginator]="true" [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]" selectionMode="single" editMode="row"
+            [tableStyle]="{ 'width': '100%', 'border': '1px solid black' }">
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="ban01Empresa">Empresa</th>
-                    <th pSortableColumn="ban01IdBanco">Banco</th>
-                    <th pSortableColumn="ban01IdCuenta">Cuenta</th>
-                    <th pSortableColumn="ban01Descripcion">Descripción</th>
-                    <th>Acciones</th>
+                    <th *ngIf="ocultarColumna" style="width: 120px;">IdEmpresa</th>
+                    <th *ngIf="ocultarColumna" style="width: 120px;">IdBanco</th>
+                    <th *ngIf="ocultarColumna" style="width: 120px;">Id</th>
+                    <th style="width: 150px;">Banco</th>
+                    <th style="width: 150px;">Id Cuenta</th>
+                    <th style="width: 120px;">Moneda</th>
+                    <th style="width: 180px;">Cuenta Bancaria</th>
+                    <th style="width: 150px;">Cta Contable</th>
+                    <th style="width: 150px;">Cta ITF</th>
+                    <th style="width: 120px;">Pref</th>
+                    <th style="width: 150px;">Cta Gastos</th>
+                    <th style="width: 100px;">Acciones</th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-cuenta>
-                <tr>
-                    <td>{{ cuenta.ban01Empresa || 'N/A' }}</td>
-                    <td>{{ cuenta.ban01IdBanco || 'N/A' }}</td>
-                    <td>{{ cuenta.ban01IdCuenta || 'N/A' }}</td>
-                    <td>{{ cuenta.ban01Descripcion || 'N/A' }}</td>
-                    <td>
-                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="showEditModal(cuenta)" label="Editar"></p-button>
-                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="confirmDelete(cuenta)" label="Eliminar"></p-button>
+            <ng-template pTemplate="body" let-rowData let-ri="rowIndex" let-editing="editing">
+                <tr [pEditableRow]="rowData">
+                    <td *ngIf="ocultarColumna" style="width: 120px;">{{ rowData.idEmpresa }}</td>
+                    <td *ngIf="ocultarColumna" style="width: 120px;">{{ rowData.idBanco }}</td>
+                    <td *ngIf="ocultarColumna" style="width: 120px;">{{ rowData.id }}</td>
+                    <td style="width: 150px;">{{ rowData.nombreBanco }}</td>
+                    <td style="width: 150px;">{{ rowData.idCuenta }}</td>
+                    <td class="centered" style="width: 120px;">
+                        <div *ngIf="editingRowIndex === ri">
+                            <p-dropdown 
+                                [options]="moneda" 
+                                optionLabel="nombre" 
+                                optionValue="id"
+                                [(ngModel)]="rowData.moneda"
+                                (onChange)="onMonedaChange($event)" 
+                                [filter]="true"
+                                filterBy="label"
+                                placeholder="Moneda" 
+                                appendTo="body">
+                            </p-dropdown>
+                            
+                        </div>
+                        <div *ngIf="editingRowIndex !== ri">
+                            {{ rowData.moneda }}
+                        </div>
+                    </td>
+                    <td style="width: 180px;">{{ rowData.nombreCuentaBancaria }}</td>
+                    <td style="width: 150px;">
+                        <div *ngIf="editingRowIndex !== ri">
+                            {{ rowData.ctaContable }}
+                        </div>
+                        <div *ngIf="editingRowIndex === ri">
+                            <input pInputText type="text" [(ngModel)]="rowData.ctaContable"
+                                class="p-inputtext-sm w-full" required>
+                        </div>
+                    </td>
+                    <td style="width: 150px;">
+                        <div *ngIf="editingRowIndex !== ri">
+                            {{ rowData.ctaITF }}
+                        </div>
+                        <div *ngIf="editingRowIndex === ri">
+                            <input pInputText type="text" [(ngModel)]="rowData.ctaITF" class="p-inputtext-sm w-full"
+                                required>
+                        </div>
+                    </td>
+                    <td style="width: 120px;">
+                        <div *ngIf="editingRowIndex !== ri">
+                            {{ rowData.pref }}
+                        </div>
+                        <div *ngIf="editingRowIndex === ri">
+                            <input pInputText type="text" [(ngModel)]="rowData.pref" class="p-inputtext-sm w-full"
+                                required>
+                        </div>
+                    </td>
+                    <td style="width: 150px;">
+                        <div *ngIf="editingRowIndex !== ri">
+                            {{ rowData.ctaGastos }}
+                        </div>
+                        <div *ngIf="editingRowIndex === ri">
+                            <input pInputText type="text" [(ngModel)]="rowData.ctaGastos" class="p-inputtext-sm w-full"
+                                required>
+                        </div>
+                    </td>
+                    <td style="width: 100px;">
+                        <div style="display: flex; gap: 5px; justify-content: flex-start;">
+                            <!-- Editar -->
+                            <button *ngIf="editingRowIndex !== ri" pButton pInitEditableRow
+                                (click)="onRowEditInit(rowData, ri)" icon="pi pi-pencil" tooltipPosition="top"
+                                [disabled]="isNew || isEditingAnyRow"
+                                class="p-button-rounded p-button-text p-button-sm" pTooltip="Editar"></button>
+
+                            <!-- Guardar -->
+                            <button *ngIf="editingRowIndex === ri" pButton pSaveEditableRow
+                                (click)="onRowEditSave(rowData, ri)" icon="pi pi-save" tooltipPosition="top"
+                                class="p-button-rounded p-button-text p-button-sm p-button-success" pTooltip="Guardar"></button>
+
+                            <!-- Cancelar -->
+                            <button *ngIf="editingRowIndex === ri" pButton (click)="onRowEditCancel(ri)"
+                                icon="pi pi-times" tooltipPosition="top"
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger" pTooltip="Cancelar"></button>
+
+                            <!-- Eliminar -->
+                            <button *ngIf="editingRowIndex !== ri" pButton type="button" (click)="onDelete(rowData, ri)"
+                                icon="pi pi-trash" pTooltip="Eliminar" tooltipPosition="top"
+                                [disabled]="isNew || isEditingAnyRow"
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <!-- Footer para insertar un nuevo dato -->
+            <ng-template pTemplate="footer" style="margin-bottom: 80px;" let-rowData>
+                <tr *ngIf="isEditing">
+                    <td colspan="9">
+                        <!-- Formulario de registro -->
+                        <form [formGroup]="CuentaBancariaForm" class="grid grid-nogutter">
+   
+                            <!-- Contenedor para los campos del formulario -->
+                            <div class="flex gap-3 w-full">
+                                <div style="width: 150px;">
+                                    <input id="nombreBanco" pInputText class="p-field w-full"
+                                        [value]="descripcion" />
+                                </div>
+                                <div style="width: 150px;">
+                                    <input id="idCuenta" pInputText formControlName="idCuenta" class="p-field w-full"
+                                        placeholder="ID Cuenta" />
+                                </div>
+
+                                <div style="width: 120px;">
+                                    <p-dropdown [options]="moneda" formControlName="moneda" optionLabel="nombre"
+                                        optionValue="id" [filter]="true" filterBy="label" [(ngModel)]="selectMoneda"
+                                        (onchange)="onMonedaChange($event)" placeholder="Moneda" appendTo="body">
+                                    </p-dropdown>
+                                </div>
+                                <div style="width: 150px;">
+                                    <input id="idCuenta" pInputText formControlName="idCuenta" class="p-field w-full"
+                                        placeholder="ID Cuenta" />
+                                </div>
+                                <div style="width: 150px;">
+
+                                    <input id="ctaContable" pInputText formControlName="ctaContable"
+                                        class="p-field w-full" placeholder="Cuenta Contable" />
+                                </div>
+                                <div  style="width: 150px;">
+
+                                    <input id="ctaITF" pInputText formControlName="ctaITF" class="p-field w-full"
+                                        placeholder="Cuenta ITF" />
+                                </div>
+                                <div style="width: 150px;">
+
+                                    <input id="pref" pInputText formControlName="pref" class="p-field w-full"
+                                        placeholder="Pref" />
+                                </div>
+                                <div  style="width: 150px;">
+                                    <input id="ctaGastos" pInputText formControlName="ctaGastos" class="p-field w-full"
+                                        placeholder="Cuenta Gasto" />
+                                </div>
+                                <div class="flex justify-content-end gap-2"  style="width: 150px;">
+                                    <button pButton icon="pi pi-save" (click)="onSave()" pTooltip="Guardar" tooltipPosition="top"
+                                        class="p-button-rounded p-button-text p-button-sm p-button-success"></button>
+                                    <button pButton icon="pi pi-times" (click)="onCancel()" pTooltip="Cancelar" tooltipPosition="top"
+                                        class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+                                </div>
+                            </div>
+
+                        </form>
                     </td>
                 </tr>
             </ng-template>
         </p-table>
-    </p-panel>
-
-    <!-- Modal de confirmación de eliminación -->
-    <p-dialog header="Confirmar Eliminación" [(visible)]="displayConfirmDeleteModal" [modal]="true" [style]="{ width: '30rem' }">
-        <p>¿Está seguro que desea eliminar la cuenta bancaria nro {{ deleteCuenta?.ban01IdCuenta }} ?</p>
-        <div class="flex justify-content-between">
-            <p-button label="Sí" icon="pi pi-check" (click)="onDeleteConfirmed()" severity="danger"></p-button>
-            <p-button label="No" icon="pi pi-times" (click)="onDeleteCancelled()"></p-button>
-        </div>
-    </p-dialog>
-
-    <!-- Modal para mostrar mensajes -->
-    <p-dialog header="Mensaje" [(visible)]="mostrarMensajeModal" modal="true" [style]="{ width: '30rem' }">
-        <p>{{ mensajemodal }}</p>
-        <div class="flex justify-content-end">
-        <p-button label="Cerrar" (click)="cerrarModalMensaje()" icon="pi pi-times"></p-button>
-        </div>
-    </p-dialog>
-    <!--p-toast></p-toast>
-
-    <!-- Modal principal para crear o editar cuenta bancaria -->
-    <!-- Modal Step 1: Datos Básicos -->
-    <p-dialog header="Registrar Cuenta Bancaria" [(visible)]="displayModal_paso1" modal="true" [style]="{width:'30rem'}">
-        <form [formGroup]="cuentaBancariaForm_paso1" (ngSubmit)="continuepaso2()">
-            <div class="p-fluid">
-                <div class="p-field" style="display: flex; align-items: center; justify-content: space-between;">
-                    <label for="ban01Empresa" style="flex: 1; margin-right: 1rem;">Empresa</label>
-                    <input id="ban01Empresa" pInputText formControlName="ban01Empresa" style="flex: 2;" />
-                    <p-message *ngIf="cuentaBancariaForm_paso1.get('ban01Empresa')?.invalid && cuentaBancariaForm_paso1.get('ban01Empresa')?.touched" severity="error" text="Campo obligatorio"></p-message>
-                </div>
-                <br>
-                <div class="p-field" style="display: flex; align-items: center; justify-content: space-between;">
-                    <label for="ban01IdBanco" style="flex: 1; margin-right: 1rem;">ID Banco</label>
-                    <div style="flex: 2.1;">
-                        <p-dropdown
-                        [options]="bancos"
-                        formControlName="ban01IdBanco"
-                        optionLabel="ban01Descripcion"
-                        optionValue="ban01IdBanco"
-                        (onchange)="onBancoChange($event)"
-                        [(ngModel)]="selectedBancoId"
-                        >
-                        </p-dropdown>
-                    </div>
-                    <p-message
-                        *ngIf="cuentaBancariaForm_paso1.get('ban01IdBanco')?.invalid && cuentaBancariaForm_paso1.get('ban01IdBanco')?.touched"
-                        severity="error"
-                        text="Campo obligatorio">
-                    </p-message>
-                </div>
-                <br>
-                <div class="p-field" style="display: flex; align-items: center; justify-content: space-between;">
-                    <label for="ban01IdCuenta" style="flex: 1; margin-right: 1rem;">ID Cuenta</label>
-                    <input id="ban01IdCuenta" pInputText formControlName="ban01IdCuenta" style="flex: 2;" />
-                    <p-message *ngIf="cuentaBancariaForm_paso1.get('ban01IdCuenta')?.invalid && cuentaBancariaForm_paso1.get('ban01IdCuenta')?.touched" severity="error" text="Campo obligatorio"></p-message>
-                </div>
-                <br>
-                <div class="p-footer" style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
-                    <button pButton type="submit" label="Continuar" [disabled]="cuentaBancariaForm_paso1.invalid" style="background-color: #007bff; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer;"></button>
-                    <button pButton type="button" label="Cancelar" (click)="cancelRegister()" style="background-color: #d9534f; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer;"></button>
-                </div>
-            </div>
-        </form>
-    </p-dialog>
-
-    <!-- Modal Step 2: Datos Avanzados -->
-    <p-dialog header="Registrar Atributos de la Cuenta Bancaria" [(visible)]="displayModal_paso2" modal="true" [closable]="false" [style]="{width: '40rem'}">
-        <form [formGroup]="cuentaBancariaForm_paso2" (ngSubmit)="guardar()">
-            <div class="p-fluid">
-                <div class="p-field" style="margin-bottom: 1rem;">
-                    <label for="ban01IdNro">Número</label>
-                    <input id="ban01IdNro" pInputText formControlName="ban01IdNro" style="width: 100%;" />
-                </div>
-                <div class="p-field" style="margin-bottom: 1rem;">
-                    <label for="ban01Moneda">Moneda</label>
-                    <input id="ban01Moneda" pInputText formControlName="ban01Moneda" style="width: 100%;" />
-                </div>
-                <div class="p-field" style="margin-bottom: 1rem;">
-                    <label for="ban01Descripcion">Descripción</label>
-                    <input id="ban01Descripcion" pInputText formControlName="ban01Descripcion" style="width: 100%;" />
-                </div>
-                <div class="p-field" style="margin-bottom: 1rem;">
-                    <label for="ban01CuentaContable">Cuenta Contable</label>
-                    <input id="ban01CuentaContable" pInputText formControlName="ban01CuentaContable" style="width: 100%;" />
-                </div>
-                <div class="p-field" style="margin-bottom: 1rem;">
-                    <label for="ban01Itf">ITF</label>
-                    <input id="ban01Itf" pInputText formControlName="ban01Itf" style="width: 100%;" />
-                </div>
-                <div class="p-field" style="margin-bottom: 1rem;">
-                    <label for="ban01Prefijo">Prefijo</label>
-                    <input id="ban01Prefijo" pInputText formControlName="ban01Prefijo" style="width: 100%;" />
-                </div>
-                <div class="p-field" style="margin-bottom: 1rem;">
-                    <label for="ban01CtaDet">Cuenta Detalle</label>
-                    <input id="ban01CtaDet" pInputText formControlName="ban01CtaDet" style="width: 100%;" />
-                </div>
-                <div class="p-footer" style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
-                    <button pButton type="submit" label="Guardar" [disabled]="cuentaBancariaForm_paso2.invalid" style="background-color: #007bff; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer;"></button>
-                    <button pButton type="button" label="Cancelar" (click)="cancelRegister()" style="background-color: #d9534f; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer;"></button>
-                </div>
-            </div>
-        </form>
-    </p-dialog>
-
+    </p-card>
 
 </div>

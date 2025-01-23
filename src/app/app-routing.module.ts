@@ -1,3 +1,4 @@
+import { CuentaBancariaComponent } from './demo/components/cuenta-bancaria/cuenta-bancaria.component';
 import { RouterModule } from '@angular/router';
 import { Component, NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
@@ -18,7 +19,13 @@ import { NumeroCuentaComponent } from './demo/components/numero-cuenta/numero-cu
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'banco', component: NumeroCuentaComponent },
-                    { path: 'cuentas_bancarias', component: NumeroCuentaComponent },
+                    {
+                        path: 'banco/cuentas', component: CuentaBancariaComponent
+                        //path: 'banco/cuentas/',
+                        //path: 'banco/:idBanco/cuentas/:descripcion', // Ruta para acceder a las cuentas de un banco específico
+                        //loadChildren: () => import('./demo/components/cuenta-bancaria/cuentaBancaria.module').then(m => m.CuentaBancariaModule)
+                    },
+                    //{ path: 'cuentas_bancarias', loadChildren: () => import('./demo/components/cuenta-bancaria/cuentaBancaria.module').then(m => m.CuentaBancariaModule)},
                     { path: 'numero_cuenta', component: NumeroCuentaComponent }
                 ]
             },

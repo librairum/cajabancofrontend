@@ -1,5 +1,11 @@
+<p-confirmDialog></p-confirmDialog>
+<div style="margin: 10px;">
+    <p-panel header="Lista de Bancos">
+        <p-breadcrumb class="max-w-full" [model]="items"></p-breadcrumb>
+    </p-panel>
+</div>
 <div style="margin:10px;">
-    <p-panel header="Banco">
+    <p-card>
         <!-- Botón de nuevo -->
         <div class="flex align-items-center mb-3">
             <p-button (click)="VerCrearRegistro()" icon="pi pi-plus" label="Nuevo" class="mr-3" />
@@ -39,12 +45,13 @@
                       <td>
                         <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="VerActualizarRegistro(banco)" label="Editar" />
                         <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="confirmarEliminacion(banco)" label="Eliminar" />
-                      </td>
+                        <p-button icon="pi pi-cog" class="mr-2" [rounded]="true" [outlined]="true" (click)="verCuentas(banco)" />
+                    </td>
                     </tr>
                 </ng-template>
             </p-table>
         </p>
-    </p-panel>
+
 
     <p-dialog header="Estas a punto de eliminar un Banco" [(visible)]="displayDialog" [style]="{ width: '400px' }">
         <p>¿Estás seguro de que deseas eliminar este registro?</p>
@@ -101,4 +108,5 @@
             <p-button label="Guardar" icon="pi pi-check" (click)="guardar()" />
         </div>
     </p-dialog>
+</p-card>
 </div>

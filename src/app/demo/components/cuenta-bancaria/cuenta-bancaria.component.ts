@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Cuenta_Bancaria } from './Cuenta_Bancaria';
+import { Cuenta_Bancaria, delCuenta_Bancaria, insertCuenta_Bancaria, updCuenta_Bancaria } from './Cuenta_Bancaria';
 import { CuentaBancariaService } from '../../service/cuenta-bancaria.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -15,304 +15,254 @@ import { ToastModule } from 'primeng/toast';
 import { BancoService } from '../../service/banco.service';
 import { Banco } from '../banco/Banco';
 import { DropdownModule } from 'primeng/dropdown';
-import { bs } from '@fullcalendar/core/internal-common';
+import { ActivatedRoute } from '@angular/router';
+import { BreadcrumbService } from '../../service/breadcrumb.service';
+import { CardModule } from 'primeng/card';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-cuenta-bancaria',
-  standalone: true,
-  imports: [ButtonModule, TableModule, InputTextModule, DialogModule,ReactiveFormsModule, FormsModule,
-      PanelModule, ConfirmDialogModule, MensajemodalComponent,CommonModule,ToastModule,DropdownModule],
-  templateUrl: './cuenta-bancaria.component.html',
-  styleUrl: './cuenta-bancaria.component.css',
-  providers:[MessageService]
+    selector: 'app-cuenta-bancaria',
+    standalone: true,
+    imports: [CardModule,ButtonModule, TableModule, InputTextModule, DialogModule, ReactiveFormsModule, FormsModule,
+        PanelModule, ConfirmDialogModule,
+        CommonModule, ToastModule, DropdownModule, BreadcrumbModule,TooltipModule],
+    templateUrl: './cuenta-bancaria.component.html',
+    styleUrl: './cuenta-bancaria.component.css',
+    providers: [MessageService, ConfirmationService]
 })
 export class CuentaBancariaComponent implements OnInit {
-    cuentaBancariaForm_paso1:FormGroup;
-    cuentaBancariaForm_paso2:FormGroup;
-    cuentasBancarias: Cuenta_Bancaria[]=[];
-    originalcuentas:Cuenta_Bancaria[] = [];
-    isLoading:boolean = false;
-    errorMessage: string = '';
 
-    // Modal para controlar las variables
-    displayModal_paso1: boolean=false;
-    displayModal_paso2: boolean=false;
-    displayConfirmDeleteModal: boolean=false;
-    currentCuentaBancaria:Cuenta_Bancaria | null=null;
+    //para listar en la tabla:
+    Cuenta_BancariaList: Cuenta_Bancaria[] = [];
+    //para ocultar en la tabla:
+    ocultarColumna = false;
+    //para la inserción de nuevo dato:
+    CuentaBancariaForm: FormGroup;
+    isEditing: boolean = false;
+    isNew: boolean = false;
+    insertCuenta_Bancaria: insertCuenta_Bancaria[] = [];
 
+    //para editar:
+    editingRowIndex: number | null = null;
+    editingCuentaBancaria: Cuenta_Bancaria | null = null;
+    isEditingAnyRow: boolean = false;
+    //para actualizar:
+    updCuenta_Bancaria: updCuenta_Bancaria[] = [];
     //eliminar
-    deleteCuenta:Cuenta_Bancaria | null=null;
+    delCuenta_Bancaria: delCuenta_Bancaria[] = [];
 
-    mostrarMensajeModal: boolean=false;
-    mensajemodal: string='';
-
+    //moneda:
+    moneda: any[] = [];
+    selectMoneda: string | null = null;
     // bancos
-    bancos:Banco[]
-    selectedBancoId: string | null=null;
-    banco:string[]=[];
+    bancos: Banco[] = [];
+    selectedBancoId: string | null = null;
+    //idBanco: string | null = null;
 
-    constructor(private fb:FormBuilder, private cbS:CuentaBancariaService, private messageService:MessageService,private bS:BancoService){
+    items: any[] = [];
+    //datos de BancoComponent:
+    idBanco: string;
+    descripcion: string;
+
+    constructor(private fb: FormBuilder, private cbS: CuentaBancariaService, 
+        private messageService: MessageService, private confirmationsService: ConfirmationService, 
+        private bS: BancoService, private route: ActivatedRoute, private cdRef: ChangeDetectorRef,
+        private bSc: BreadcrumbService) {
 
     }
 
     ngOnInit(): void {
-        this.initForm_paso1();
-        this.initiForm_paso2();
-        this.loadCuentasBancarias();
-        this.loadBancos()
-    }
-
-
-    initForm_paso1(): void{
-        this.cuentaBancariaForm_paso1=this.fb.group({
-            ban01Empresa: ['', [Validators.required]],
-            ban01IdBanco: ['', [Validators.required]],
-            ban01IdCuenta: ['', [Validators.required]]
+        this.initForm();
+        this.route.queryParams.subscribe(params => {
+            this.idBanco = params['idBanco'];
+            this.descripcion =params['descripcion'];
+            console.log('idBanco:', this.idBanco);
+            console.log('descripcion:', this.descripcion);
+          if (this.idBanco && this.descripcion) {
+            this.CuentaBancariaForm.patchValue({ idBanco: this.idBanco }); 
+            this.CuentaBancariaForm.patchValue({descripcion: this.descripcion});
+            this.loadCuentasBancarias();
+            this.loadMonedas();
+            this.bSc.setBreadcrumbs([
+              { icon: 'pi pi-home', routerLink: '/' },
+              { label: 'Banco', routerLink: '/Home/banco' },
+              { label: 'Ver Cuentas' }
+            ]);
+            this.bSc.currentBreadcrumbs$.subscribe(bc => {
+                this.items = bc;
+            })
+          }
         });
+      }
+    initForm() {
+        this.CuentaBancariaForm = this.fb.group({
+            idCuenta: ['', Validators.required], //es lo que irá en el formControlName
+            idBanco: [null],
+            descripcion: [null],
+            moneda: ['', Validators.required],
+            ctaContable: [''],
+            ctaITF: [''],
+            pref: [''],
+            ctaGastos: [''],
+        });
+
     }
-
-
-    initiForm_paso2(): void{
-        this.cuentaBancariaForm_paso2=this.fb.group({
-            ban01IdNro: [''],
-            ban01Moneda: [''],
-            ban01Descripcion: [''],
-            ban01CuentaContable: [''],
-            ban01Itf: [''],
-            ban01Prefijo: [''],
-            ban01CtaDet: ['']
-        })
-    }
-
     // cargar las cuentas bancarias
-    loadCuentasBancarias():void{
-        this.isLoading=true;
-        this.cbS.GetCuentasBancarias().subscribe(
-            (data: Cuenta_Bancaria[])=>{
-                this.cuentasBancarias=data;
-                this.originalcuentas=[...data];
-                this.isLoading=false;
-            },
-            (error)=>{
-                this.errorMessage='Error al cargar las cuentas bancarias';
-                this.mostrarMensaje('Error al cargar las cuentas bancarias');
-                this.isLoading=false;
-            }
-        )
+    loadCuentasBancarias(): void {
+        this.cbS.GetCuentasBancarias(this.idBanco)
+            .subscribe({
+                next: (data) => {
+                    this.Cuenta_BancariaList = data;
+                },
+            });
+        this.loadMonedas();
     }
-    // abrimos el modal para registra una nueva cuenta
-    showAddModal(): void {
-        /*if (!this.displayModal_paso1 && this.displayModal_paso2  && !this.displayConfirmDeleteModal) {
-
-
-        }*/
-        this.displayModal_paso1 = true; // Mostrar el modal paso 1
-        this.currentCuentaBancaria = null; // Resetear datos
-        this.cuentaBancariaForm_paso1.reset(); // Limpiar el formulario paso 1
-        this.cuentaBancariaForm_paso2.reset();
+    //para mostrar la nueva inserción:
+    showAddRow() {
+        this.isEditing = true;
+        this.isNew = true;
+        //this.CuentaBancariaForm.reset();
     }
 
-    loadBancos(){
-        this.bS.ComboboxBancos().subscribe(
-            (data: Banco[]) =>{
-                this.bancos=data;
-            }
-        )
+    loadMonedas(): void {
+        this.moneda = [
+            { nombre: 'Dolares', id: 'D' },
+            { nombre: 'Soles', id: 'S' }
+        ];
+    }
+    onMonedaChange(event: any) {
+        this.selectMoneda = event.value;
     }
 
-    onBancoChange(event: any){
-        const selectedBancoId=event.value;
+    onBancoChange(event: any) {
+        this.selectedBancoId = event.value;
     }
-
-
-
-    continuepaso2(): void{
-        if(this.cuentaBancariaForm_paso1.valid){
-            this.displayModal_paso1=false;
-            this.displayModal_paso2=true;
-        } else {
-            /*this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Por favor complete los campos requeridos en el paso 1.'
-            });*/
-            this.mostrarMensaje('Por favor complete los campos requeridos en el paso 1.');
+    //ACCIONES DELA TABLA:
+    onRowEditInit(cuentaBancaria: Cuenta_Bancaria, index: number) {
+        this.editingRowIndex = index;
+        this.editingCuentaBancaria = { ...cuentaBancaria }
+         
+        // const selectedMoneda = this.moneda.find(m => m.nombre === this.editingCuentaBancaria.moneda);
+        // if (selectedMoneda) {
+        // this.editingCuentaBancaria.moneda = selectedMoneda.id;  // Asignamos el value correspondiente
+        // }
+        this.isEditingAnyRow = true;
+        console.log("verificacion datos: ", this.editingCuentaBancaria);
+        //console.log("verificacion datos moneda: ", selectedMoneda);
+    }
+    onRowEditCancel(index: number) {
+        if (this.editingCuentaBancaria) {
+            this.Cuenta_BancariaList[index] = { ...this.editingCuentaBancaria };
+            this.editingCuentaBancaria = null;
+            this.isEditingAnyRow = false;
+            this.editingRowIndex = null;
         }
     }
+    onRowEditSave(rowData: any) {
+        if (rowData) {
+            const updCuentaBancaria: updCuenta_Bancaria = {
+                ban01Empresa: '01',
+                ban01IdBanco: rowData.idBanco,
+                ban01IdCuenta: rowData.idCuenta,
+                ban01IdNro: rowData.id,
+                ban01Moneda: rowData.moneda,
+                ban01Descripcion: rowData.idBanco + ' ' + rowData.nombreBanco + ' ' + rowData.idCuenta,
+                ban01CuentaContable: rowData.ctaContable,
+                ban01Itf: rowData.ctaITF,
+                ban01Prefijo: rowData.pref,
+                ban01CtaDet: rowData.ctaGastos,
+            };
 
-
-    // abrimos el modal para el editar cuenta bancaria
-    showEditModal(cuenta: Cuenta_Bancaria): void {
-          this.currentCuentaBancaria = { ...cuenta };
-          this.cuentaBancariaForm_paso2.patchValue(this.currentCuentaBancaria);
-          this.cuentaBancariaForm_paso1.patchValue({
-            ban01Empresa: this.currentCuentaBancaria.ban01Empresa,
-            ban01IdBanco:this.currentCuentaBancaria.ban01IdBanco,
-            ban01IdCuenta:this.currentCuentaBancaria.ban01IdCuenta
-          })
-          this.displayModal_paso2 = true;
-    }
-
-    guardar(): void {
-        if (this.cuentaBancariaForm_paso2.invalid) {
-            /*this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Por favor complete todos los campos requeridos en el paso 2.'
-            });*/
-            this.mostrarMensaje('Por favor complete todos los campos requeridos en el paso 2.');
-            return;
-        }
-
-        const cuentaBancariaData = {
-            ...this.cuentaBancariaForm_paso1.value, // Copiamos los valores del paso 1
-            ...this.cuentaBancariaForm_paso2.value, // Copiamos los valores del paso 2
-
-        };
-
-        if (this.currentCuentaBancaria) {
-            // Editar cuenta
-            this.cbS.UpdateCuentaBancaria(
-                this.currentCuentaBancaria.ban01Empresa,
-                this.currentCuentaBancaria.ban01IdBanco,
-                this.currentCuentaBancaria.ban01IdCuenta,
-                cuentaBancariaData
-            ).subscribe(
-                () => {
-                    /*this.messageService.add({
+            this.cbS.UpdateCuentaBancaria(updCuentaBancaria).subscribe({
+                next: () => {
+                    this.loadCuentasBancarias();
+                    this.loadMonedas();
+                    this.editingCuentaBancaria = null;
+                    this.isEditingAnyRow = false;
+                    this.editingRowIndex = null;
+                    this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: 'Cuenta bancaria actualizada correctamente'
-                    });*/
-                    this.mostrarMensaje('Cuenta bancaria actualizada correctamente');
-                    this.displayModal_paso2 = false; // Cerrar el modal del paso 2
-                    this.loadCuentasBancarias(); // Recargar las cuentas bancarias
-                },
-                (error) => {
-                    /*this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Error al actualizar la cuenta bancaria'
-                    });*/
-                    this.mostrarMensaje('Error al actualizar la cuenta bancaria');
-                    console.error('Error response:', error); // Muestra el error en consola
+                        detail: 'Registro actualizado',
+                        life: 3000  
+                    });
+                
+                    this.cdRef.detectChanges();
                 }
-            );
-        } else {
-            // Crear nueva cuenta
-            this.cuentaBancariaForm_paso2.reset();
-            this.cbS.CreateCuentaBancaria(cuentaBancariaData).subscribe(
-                () => {
-                    /*this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Cuenta bancaria creada correctamente'
-                    });*/
-                    this.mostrarMensaje('Cuenta bancaria creada correctamente');
-                    this.displayModal_paso2 = false; // Cerrar el modal del paso 2
-                    this.loadCuentasBancarias(); // Recargar las cuentas bancarias
-                },
-                (error) => {
-                    /*this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Error al crear la cuenta bancaria'
-                    });*/
-                    this.mostrarMensaje('Cuenta bancaria creada correctamente');
-                    console.error('Error response:', error); // Muestra el error en consola
-                }
-            );
-        }
-    }
-
-
-
-    cancelRegister(): void {
-        this.displayModal_paso1 = false;
-        this.displayModal_paso2 = false;
-    }
-
-    // para el eliminar cuenta bancaria
-    // Método para abrir el diálogo de confirmación
-    // Confirmar la eliminación de la cuenta
-    confirmDelete(cuenta: Cuenta_Bancaria): void {
-        if (!this.displayModal_paso1 && !this.displayModal_paso2 && !this.displayConfirmDeleteModal) { // Validar que no haya otros modales abiertos
-            this.deleteCuenta = cuenta;
-            this.messageService.clear(); // Limpiar mensajes previos
-            console.log('Deleting Cuenta:', this.deleteCuenta);
-            this.displayConfirmDeleteModal = true; // Abrir el modal de confirmación
-
-            this.messageService.add({
-                key: 'confirmDialog',
-                sticky: true,
-                severity: 'warn',
-                summary: 'Confirmación requerida',
-                detail: `¿Está seguro que desea eliminar la cuenta bancaria nro ${cuenta.ban01IdCuenta}?`
             });
         }
     }
+    onDelete(rowData: any, index: number) {
+        if (rowData) {
+            const idnro = rowData.id
+            const idBanco = rowData.idBanco
 
-    // Método para manejar la confirmación positiva
-    onDeleteConfirmed(): void {
-        this.displayConfirmDeleteModal=false;
-        if (this.deleteCuenta) {
-            console.log('Deleting Cuenta:', this.deleteCuenta); // Agregar el console.log
-            this.cbS.DeleteCuentaBancaria(
-                this.deleteCuenta.ban01Empresa,
-                this.deleteCuenta.ban01IdBanco,
-                this.deleteCuenta.ban01IdCuenta
-            ).subscribe(
-                () => {
-                    /*this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: 'Cuenta bancaria eliminada correctamente' });*/
-                    this.mostrarMensaje('Cuenta bancaria eliminada correctamente');
-                    this.loadCuentasBancarias(); // Recargar datos
-                },
-                (error) => {
-                    /*this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la cuenta bancaria' });*/
-                    this.mostrarMensaje('No se pudo eliminar la cuenta bancaria');
+            this.confirmationsService.confirm({
+                message: `¿Está seguro que desea eliminar la cuenta bancaria?`,
+                header: 'Confirmar Eliminación',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: 'Sí, eliminar',
+                rejectLabel: 'No, cancelar',
+                acceptButtonStyleClass: 'p-button-danger',
+                rejectButtonStyleClass: 'p-button',
+                accept: () => {
+                    this.cbS.DeleteCuentaBancaria(idBanco,idnro).subscribe({
+                        next: () => {
+                            this.Cuenta_BancariaList.splice(index, 1);
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Éxito',
+                                detail: 'Registro eliminado',
+                                life: 3000
+                            });
+                            this.loadCuentasBancarias();
+                        }
+                    });
                 }
-            );
-        }
-        this.deleteCuenta = null; // Resetear la cuenta
-        //this.messageService.clear('confirmDialog'); // Cerrar diálogo
-    }
-
-
-    // Método para cancelar la confirmación
-    onDeleteCancelled(): void {
-        this.deleteCuenta = null; // Resetear la cuenta
-        this.messageService.clear('confirmDialog'); // Cerrar diálogo
-    }
-
-
-    onSearch(query: string) {
-        const searchTerm = query.toLowerCase().trim(); // Convertir a minúsculas y eliminar espacios en blanco
-        if (searchTerm) {
-            this.cuentasBancarias = this.originalcuentas.filter(b => {
-                const empresa = b.ban01Empresa.toLowerCase();
-                const banco = b.ban01IdBanco.toLowerCase();
-                const cuenta = b.ban01IdCuenta.toLowerCase();
-                const descripcion = b.ban01Descripcion.toLowerCase();
-                return empresa.includes(searchTerm) || banco.includes(searchTerm) || cuenta.includes(searchTerm) || descripcion.includes(searchTerm);
             });
-        } else {
-            this.cuentasBancarias = [...this.originalcuentas]; // Restablecer la lista completa si el campo está vacío
         }
     }
-
-
-    mostrarMensaje(mensaje: string){
-        this.mensajemodal=mensaje;
-        this.mostrarMensajeModal=true;
+    //botones para guardar del form:
+    onCancel() {
+        this.isEditing = false;
+        this.isNew = false;
+        this.CuentaBancariaForm.reset();
     }
+    onSave() {
+        if (this.CuentaBancariaForm.valid) {
+            const formData = this.CuentaBancariaForm.value;
 
-    cerrarModalMensaje(){
-        this.mostrarMensajeModal=false;
+            const createCuentaBancaria: insertCuenta_Bancaria = {
+                ban01Empresa: '01',
+                ban01IdBanco:  this.idBanco,
+                ban01IdCuenta: formData.idCuenta,
+                ban01IdNro:  this.descripcion,
+                ban01Moneda: formData.moneda,
+                ban01Descripcion: this.idBanco + ' ' + this.descripcion + ' ' + formData.idCuenta,
+                ban01CuentaContable: formData.ctaContable || '',
+                ban01Itf: formData.ctaITF || '',
+                ban01Prefijo: formData.pref || '',
+                ban01CtaDet: formData.ctaGastos || '',
+
+            };
+
+            this.cbS.CreateCuentaBancaria(createCuentaBancaria).subscribe({
+                next: () => {
+                    this.loadMonedas();
+                    this.isEditing = false;
+                    this.isNew = false;
+                    this.CuentaBancariaForm.reset();
+                    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro guardado', life: 3000 });
+                    this.loadCuentasBancarias();
+                    
+                },
+                error: (err) => {
+                    console.error('Error al guardar:', err);
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el registro', life: 3000 });
+                },
+            });
+        }
     }
-
-
-
-
-
 
 }
