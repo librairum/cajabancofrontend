@@ -51,18 +51,11 @@
                     <td style="width: 150px;">{{ rowData.idCuenta }}</td>
                     <td class="centered" style="width: 120px;">
                         <div *ngIf="editingRowIndex === ri">
-                            <p-dropdown 
-                                [options]="moneda" 
-                                optionLabel="nombre" 
-                                optionValue="id"
-                                [(ngModel)]="rowData.moneda"
-                                (onChange)="onMonedaChange($event)" 
-                                [filter]="true"
-                                filterBy="label"
-                                placeholder="Moneda" 
-                                appendTo="body">
+                            <p-dropdown [options]="moneda" optionLabel="nombre" optionValue="id"
+                                [(ngModel)]="rowData.moneda" (onChange)="onMonedaChange($event)" [filter]="true"
+                                filterBy="nombre" placeholder="Moneda" appendTo="body">
                             </p-dropdown>
-                            
+
                         </div>
                         <div *ngIf="editingRowIndex !== ri">
                             {{ rowData.moneda }}
@@ -110,18 +103,20 @@
                             <!-- Editar -->
                             <button *ngIf="editingRowIndex !== ri" pButton pInitEditableRow
                                 (click)="onRowEditInit(rowData, ri)" icon="pi pi-pencil" tooltipPosition="top"
-                                [disabled]="isNew || isEditingAnyRow"
-                                class="p-button-rounded p-button-text p-button-sm" pTooltip="Editar"></button>
+                                [disabled]="isNew || isEditingAnyRow" class="p-button-rounded p-button-text p-button-sm"
+                                pTooltip="Editar"></button>
 
                             <!-- Guardar -->
                             <button *ngIf="editingRowIndex === ri" pButton pSaveEditableRow
                                 (click)="onRowEditSave(rowData, ri)" icon="pi pi-save" tooltipPosition="top"
-                                class="p-button-rounded p-button-text p-button-sm p-button-success" pTooltip="Guardar"></button>
+                                class="p-button-rounded p-button-text p-button-sm p-button-success"
+                                pTooltip="Guardar"></button>
 
                             <!-- Cancelar -->
                             <button *ngIf="editingRowIndex === ri" pButton (click)="onRowEditCancel(ri)"
                                 icon="pi pi-times" tooltipPosition="top"
-                                class="p-button-rounded p-button-text p-button-sm p-button-danger" pTooltip="Cancelar"></button>
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                                pTooltip="Cancelar"></button>
 
                             <!-- Eliminar -->
                             <button *ngIf="editingRowIndex !== ri" pButton type="button" (click)="onDelete(rowData, ri)"
@@ -134,60 +129,72 @@
             </ng-template>
 
             <!-- Footer para insertar un nuevo dato -->
-            <ng-template pTemplate="footer" style="margin-bottom: 80px;" let-rowData>
+            <ng-template pTemplate="footer">
                 <tr *ngIf="isEditing">
-                    <td colspan="9">
-                        <!-- Formulario de registro -->
-                        <form [formGroup]="CuentaBancariaForm" class="grid grid-nogutter">
-   
-                            <!-- Contenedor para los campos del formulario -->
-                            <div class="flex gap-3 w-full">
-                                <div style="width: 150px;">
-                                    <input id="nombreBanco" pInputText class="p-field w-full"
-                                        [value]="descripcion" />
-                                </div>
-                                <div style="width: 150px;">
-                                    <input id="idCuenta" pInputText formControlName="idCuenta" class="p-field w-full"
+                    <td colspan="9" class="p-0">
+                        <form [formGroup]="CuentaBancariaForm" style="padding-bottom: 10px;">
+                            <td style="width: 150px;">
+                                <div><input id="nombreBanco" pInputText class="p-inputtext-sm w-full" [value]="descripcion" readonly/></div>
+                            </td>
+
+                            <td style="width: 150px; padding-left: 10px;">
+                                <div>
+                                    <input id="idCuenta" pInputText formControlName="idCuenta" class="p-inputtext-sm w-full"
                                         placeholder="ID Cuenta" />
                                 </div>
-
-                                <div style="width: 120px;">
+                            </td>
+                            <td style="width: 120px;padding-left: 10px;">
+                                <div>
                                     <p-dropdown [options]="moneda" formControlName="moneda" optionLabel="nombre"
-                                        optionValue="id" [filter]="true" filterBy="label" [(ngModel)]="selectMoneda"
-                                        (onchange)="onMonedaChange($event)" placeholder="Moneda" appendTo="body">
-                                    </p-dropdown>
+                                        optionValue="id" class="p-inputtext-sm w-full" [filter]="true" filterBy="label"
+                                        [(ngModel)]="selectMoneda" (onchange)="onMonedaChange($event)" placeholder="Moneda"
+                                        appendTo="body"></p-dropdown>
                                 </div>
-                                <div style="width: 150px;">
-                                    <input id="idCuenta" pInputText formControlName="idCuenta" class="p-field w-full"
-                                        placeholder="ID Cuenta" />
-                                </div>
-                                <div style="width: 150px;">
+                            </td>
+                            <td style="width: 180px; padding-left: 10px;">
+                                <div>
 
+                                </div>
+                            </td>
+
+                            <td style="width: 150px; padding-left: 10px;">
+                                <div>
                                     <input id="ctaContable" pInputText formControlName="ctaContable"
-                                        class="p-field w-full" placeholder="Cuenta Contable" />
+                                        class="p-inputtext-sm w-full" placeholder="Cuenta Contable" />
                                 </div>
-                                <div  style="width: 150px;">
+                            </td>
 
-                                    <input id="ctaITF" pInputText formControlName="ctaITF" class="p-field w-full"
+                            <td style="width: 150px; padding-left: 10px;">
+                                <div>
+                                    <input id="ctaITF" pInputText formControlName="ctaITF" class="p-inputtext-sm w-full"
                                         placeholder="Cuenta ITF" />
                                 </div>
-                                <div style="width: 150px;">
+                            </td>
 
-                                    <input id="pref" pInputText formControlName="pref" class="p-field w-full"
+                            <td style="width: 120px; padding-left: 10px; padding-right: 20px;">
+                                <div>
+                                    <input id="pref" pInputText formControlName="pref" class="p-inputtext-sm w-full"
                                         placeholder="Pref" />
                                 </div>
-                                <div  style="width: 150px;">
-                                    <input id="ctaGastos" pInputText formControlName="ctaGastos" class="p-field w-full"
+                            </td>
+
+                            <td style="width: 150px;">
+                                <div>
+                                    <input id="ctaGastos" pInputText formControlName="ctaGastos" class="p-inputtext-sm w-full"
                                         placeholder="Cuenta Gasto" />
                                 </div>
-                                <div class="flex justify-content-end gap-2"  style="width: 150px;">
-                                    <button pButton icon="pi pi-save" (click)="onSave()" pTooltip="Guardar" tooltipPosition="top"
+
+                            </td>
+                            <td style="width: 100px;  padding-left: 10px;">
+                                <div class="flex gap-2 justify-start">
+                                    <button pButton icon="pi pi-save" (click)="onSave()" pTooltip="Guardar"
+                                        tooltipPosition="top"
                                         class="p-button-rounded p-button-text p-button-sm p-button-success"></button>
-                                    <button pButton icon="pi pi-times" (click)="onCancel()" pTooltip="Cancelar" tooltipPosition="top"
+                                    <button pButton icon="pi pi-times" (click)="onCancel()" pTooltip="Cancelar"
+                                        tooltipPosition="top"
                                         class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
                                 </div>
-                            </div>
-
+                            </td>
                         </form>
                     </td>
                 </tr>
