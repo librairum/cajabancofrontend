@@ -17,3 +17,17 @@ export interface Usuario {
     AccArea?: string | null;   // NULL, máximo 10 caracteres
   }
 
+export interface EmpresasxModulo{
+    codigomodulo: string;
+    nombre: string;
+    empresaCod: string;
+    razonSocial: string;
+    ruc: string;
+    direccion: string;
+}
+
+export interface Login{
+    nombreusuario:string;
+    claveusuario:string;
+    codigoempresa:string;
+}

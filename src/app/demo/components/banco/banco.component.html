@@ -53,23 +53,61 @@
         </p>
 
 
-    <p-dialog header="Estas a punto de eliminar un Banco" [(visible)]="displayDialog" [style]="{ width: '400px' }">
-        <p>¿Estás seguro de que deseas eliminar este registro?</p>
-        <div class="flex justify-content-between">
-            <p-button label="Sí" icon="pi pi-check" (click)="eliminarBanco()" severity="danger" />
-            <p-button label="No" icon="pi pi-times" (click)="cancelarEliminacion()" />
+
+    <div class="card">
+        <!-- Botón Nuevo -->
+        <div class="flex justify-content-between align-items-center mb-3">
+            <button type="button" pButton icon="pi pi-plus" label="Nuevo Banco"
+                    (click)="showAddRow()" [disabled]="isEditingAnyRow"
+                    class="p-button-sm"></button>
         </div>
-    </p-dialog>
 
+        <!-- Tabla Principal -->
+        <p-table [value]="bancoList"
+                 dataKey="ban01IdBanco"
+                 editMode="row"
+                 [paginator]="true"
+                 [rows]="5"
+                 responsiveLayout="scroll"
+                 styleClass="p-datatable-sm">
+            <!-- Cabecera de Tabla -->
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 20%">ID</th>
+                    <th style="width: 40%">Descripción</th>
+                    <th style="width: 20%">Prefijo</th>
+                    <th style="width: 20%">Acciones</th>
+                </tr>
+            </ng-template>
 
+            <!-- Cuerpo de Tabla -->
+            <ng-template pTemplate="body" let-banco let-ri="rowIndex" let-editing="editing">
+                <tr [pEditableRow]="banco">
+                    <!-- Columna ID -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="banco.ban01IdBanco"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{banco.ban01IdBanco}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
 
-    <!-- Mensaje Modal para mostrar mensajes -->
-    <p-dialog [(visible)]="mostrarMensajeModal" header="Mensaje" [style]="{ width: '500px' }">
-        <p>{{ mensajeModal }}</p>
-        <div class="flex justify-content-end">
-            <p-button label="Cerrar" icon="pi pi-check" (click)="cerrarModalMensaje()" />
-        </div>
-    </p-dialog>
+                    <!-- Columna Descripción -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="banco.ban01Descripcion"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{banco.ban01Descripcion}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
 
     <!-- Ventana para crear/editar -->
     <p-dialog header="{{ selectedBanco ? 'Editar Banco' : 'Crear Banco' }}" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
