@@ -1,0 +1,103 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<div class="container">
+    <p-panel header="Lista de Pagos" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
+    </p-panel>
+    <br>
+    <div class="card p-2">
+        <p-table
+            [value]="presupuesto"
+            [tableStyle]="{'min-width': '150rem'}"
+            [scrollable]="true"
+            scrollHeight="400px"
+            [scrollDirection]="'both'"
+        >
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th rowspan="2">Pago Nro</th>
+                    <th rowspan="2">Fecha</th>
+                    <th rowspan="2">Motivo</th>
+                    <th rowspan="2">Medio Pago</th>
+                    <th colspan="2">Bruto a Pagar</th>
+                    <th colspan="3">Afectos</th>
+                    <th colspan="2">Neto a Pagar</th>
+                    <th colspan="5"></th>
+                </tr>
+                <tr>
+                    <th colspan="1">S/.</th>
+                    <th colspan="1">US$</th>
+                    <th colspan="1">Detracción</th>
+                    <th colspan="1">Retención</th>
+                    <th colspan="1">Percepción</th>
+                    <th colspan="1">S/.</th>
+                    <th colspan="1">US$</th>
+                    <th colspan="1">Estado</th>
+                    <th colspan="1">Fecha Ejecución Pago</th>
+                    <th colspan="1">nro Operacion</th>
+                    <th colspan="1">Adjuntar / Ver Comprobante pago</th>
+                    <th colspan="1">Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-presupuesto>
+                <tr>
+                    <td>{{presupuesto.PagoNro}}</td>
+                    <td>{{presupuesto.Fecha}}</td>
+                    <td>{{presupuesto.motivo}}</td>
+                    <td>{{presupuesto.mediopago}}</td>
+                    <td>{{presupuesto.brutopagarsoles | currency: 's/.'}}</td>
+                    <td>{{presupuesto.brutopagardolares | currency: 'USD'}}</td>
+                    <td>{{presupuesto.afectodetraccion| currency: 's/.'}}</td>
+                    <td>{{presupuesto.afectoretencion| currency: 's/.'}}</td>
+                    <td>{{presupuesto.afectopercepcion| currency: 's/.'}}</td>
+                    <td>{{presupuesto.netopagosoles | currency: 's/.'}}</td>
+                    <td>{{presupuesto.netopagodolares | currency: 'USD'}}</td>
+                    <td>{{presupuesto.estado}}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{presupuesto.enlaceadjunto}}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <p-button
+                                icon="pi pi-eye"
+                                styleClass="p-button-info p-button-sm"
+                                pTooltip="Ver Detalles"
+                                [text]="true"
+                                (onClick)="verDetalles(presupuesto)"
+                            ></p-button>
+                            <p-button
+                                icon="pi pi-pencil"
+                                styleClass="p-button-warning p-button-sm"
+                                pTooltip="Modificar"
+                                [text]="true"
+                                (onClick)="modificarPago(presupuesto)"
+                            ></p-button>
+                            <p-button
+                                icon="pi pi-trash"
+                                styleClass="p-button-danger p-button-sm"
+                                pTooltip="Eliminar"
+                                [text]="true"
+                                (onClick)="eliminarPago(presupuesto)"
+                            ></p-button>
+                            <p-button
+                                icon="pi pi-check"
+                                styleClass="p-button-success p-button-sm"
+                                pTooltip="Confirmar Pago"
+                                [text]="true"
+                                (onClick)="confirmarPago(presupuesto)"
+                            ></p-button>
+                            <p-button
+                                icon="pi pi-ban"
+                                styleClass="p-button-danger p-button-sm"
+                                (onClick)="anularPago(presupuesto)"
+                                [text]="true"
+                                pTooltip="Anular pago"
+                            ></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
