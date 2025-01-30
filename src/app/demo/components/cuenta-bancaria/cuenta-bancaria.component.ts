@@ -143,13 +143,9 @@ export class CuentaBancariaComponent implements OnInit {
         this.editingRowIndex = index;
         this.editingCuentaBancaria = { ...cuentaBancaria }
          
-        // const selectedMoneda = this.moneda.find(m => m.nombre === this.editingCuentaBancaria.moneda);
-        // if (selectedMoneda) {
-        // this.editingCuentaBancaria.moneda = selectedMoneda.id;  // Asignamos el value correspondiente
-        // }
         this.isEditingAnyRow = true;
         console.log("verificacion datos: ", this.editingCuentaBancaria);
-        //console.log("verificacion datos moneda: ", selectedMoneda);
+
     }
     onRowEditCancel(index: number) {
         if (this.editingCuentaBancaria) {
@@ -246,7 +242,7 @@ export class CuentaBancariaComponent implements OnInit {
                 ban01CtaDet: formData.ctaGastos || '',
 
             };
-
+            console.log("createCuentaBancaria: ", createCuentaBancaria);
             this.cbS.CreateCuentaBancaria(createCuentaBancaria).subscribe({
                 next: () => {
                     this.loadMonedas();
