@@ -16,7 +16,7 @@ import { RouterLink } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { Router} from  '@angular/router';
+
 
 @Component({
   selector: 'app-banco',
@@ -40,9 +40,7 @@ export class BancoComponent implements OnInit {
     items:any[] = [];
     isEditingAnyRow: boolean = false;
 
-    constructor(private bancoService: BancoService, private fb:FormBuilder,
-        private mS:MessageService,private confirmationService:ConfirmationService,
-        private bS:BreadcrumbService, private router: Router){
+    constructor(private bancoService: BancoService, private fb:FormBuilder,private mS:MessageService,private confirmationService:ConfirmationService,private bS:BreadcrumbService){
 
     }
 
@@ -58,35 +56,7 @@ export class BancoComponent implements OnInit {
         this.initForm()
         this.cargarBancos()
     }
- // Función para navegar a las cuentas del banco seleccionado
-  verCuentas(banco): void {
-    // Primero, actualiza las migas de pan antes de navegar
-    this.bS.setBreadcrumbs([
-      { icon: 'pi pi-home', routerLink: '/' },
-      { label: 'Banco', routerLink: '/Home/banco' },
-      { label: 'Ver Cuentas' }
-    ]);
-    this.bS.currentBreadcrumbs$.subscribe(bc => {
-      this.items = bc;
-    })
-    const navigationExtras = {
-        state:{
-            idBanco: banco.ban01IdBanco,
-            descripcion:banco.ban01Descripcion
-        }
-    }
-    this.router.navigate(['Home/cuentas_bancarias'], navigationExtras);
-    /*
-    this.router.navigate(['/Home/banco/cuentas'], {
-      queryParams: {
-        idBanco: banco.ban01IdBanco,
-        descripcion: banco.ban01Descripcion
-      }
-    });
-    */
-    // Luego, navega a la ruta correspondiente de "Ver Cuentas"
-    //this.router.navigate([`/Home/banco/${banco.ban01IdBanco}/cuentas/${banco.ban01Descripcion}`]);
-  }
+
     initForm(){
         this.bancoForm=this.fb.group({
             ban01Empresa: ['01', Validators.required],

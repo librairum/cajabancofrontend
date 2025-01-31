@@ -110,9 +110,6 @@
                                     pTooltip="Borrar Banco"
                                     [disabled]="isNew || isEditingAnyRow"
                                     class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
-                              <button *ngIf="!editing" pButton type="button" (click)="verCuentas(banco)"
-                                icon="pi pi-cog" pTooltip="Ver Cuentas" [disabled]="isNew || isEditingAnyRow"
-                                class="p-button-rounded p-button-text p-button-sm"></button>
                         </div>
                     </td>
                 </tr>
