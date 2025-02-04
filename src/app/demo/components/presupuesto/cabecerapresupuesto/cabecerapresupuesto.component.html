@@ -3,6 +3,8 @@
 <div class="container">
     <p-panel header="Lista de Pagos" class="mb-3">
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
+        <br>
+        <p-button label="Nuevo" icon="pi pi-plus"  [routerLink]="'/Home/nuevo-presupuesto'"/>
     </p-panel>
     <br>
     <div class="card p-2">
@@ -12,6 +14,7 @@
             [scrollable]="true"
             scrollHeight="400px"
             [scrollDirection]="'both'"
+            [loading]="loading"
         >
 
             <ng-template pTemplate="header">
@@ -20,9 +23,9 @@
                     <th rowspan="2">Fecha</th>
                     <th rowspan="2">Motivo</th>
                     <th rowspan="2">Medio Pago</th>
-                    <th colspan="2">Bruto a Pagar</th>
-                    <th colspan="3">Afectos</th>
-                    <th colspan="2">Neto a Pagar</th>
+                    <th colspan="2" class="text-center">Bruto a Pagar</th>
+                    <th colspan="3" class="text-center">Afectos</th>
+                    <th colspan="2" class="text-center">Neto a Pagar</th>
                     <th colspan="5"></th>
                 </tr>
                 <tr>
@@ -42,21 +45,21 @@
             </ng-template>
             <ng-template pTemplate="body" let-presupuesto>
                 <tr>
-                    <td>{{presupuesto.PagoNro}}</td>
-                    <td>{{presupuesto.Fecha}}</td>
+                    <td>{{presupuesto.pagoNumero}}</td>
+                    <td>{{ presupuesto.fecha | date:'dd/MM/yyyy' }}</td>
                     <td>{{presupuesto.motivo}}</td>
                     <td>{{presupuesto.mediopago}}</td>
-                    <td>{{presupuesto.brutopagarsoles | currency: 's/.'}}</td>
-                    <td>{{presupuesto.brutopagardolares | currency: 'USD'}}</td>
-                    <td>{{presupuesto.afectodetraccion| currency: 's/.'}}</td>
-                    <td>{{presupuesto.afectoretencion| currency: 's/.'}}</td>
-                    <td>{{presupuesto.afectopercepcion| currency: 's/.'}}</td>
-                    <td>{{presupuesto.netopagosoles | currency: 's/.'}}</td>
-                    <td>{{presupuesto.netopagodolares | currency: 'USD'}}</td>
+                    <td>{{presupuesto.impBrutoSoles | currency: 's/.'}}</td>
+                    <td>{{presupuesto.impBrutoDolares | currency: 'USD'}}</td>
+                    <td>{{presupuesto.impDetraccionSoles| currency: 's/.'}}</td>
+                    <td>{{presupuesto.impRetencionSoles| currency: 's/.'}}</td>
+                    <td>{{presupuesto.impPercepcionSoles| currency: 's/.'}}</td>
+                    <td>{{presupuesto.netoPagaSoles | currency: 's/.'}}</td>
+                    <td>{{presupuesto.netoPagoDolares | currency: 'USD'}}</td>
                     <td>{{presupuesto.estado}}</td>
                     <td></td>
                     <td></td>
-                    <td>{{presupuesto.enlaceadjunto}}</td>
+                    <td>{{presupuesto.enlaceComprobante}}</td>
                     <td>
                         <div class="flex gap-2">
                             <p-button
@@ -68,7 +71,7 @@
                             ></p-button>
                             <p-button
                                 icon="pi pi-pencil"
-                                styleClass="p-button-warning p-button-sm"
+                                styleClass="p-button-info p-button-sm"
                                 pTooltip="Modificar"
                                 [text]="true"
                                 (onClick)="modificarPago(presupuesto)"

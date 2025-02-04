@@ -14,6 +14,7 @@ import { Autenticacion } from './Autenticacion';
 import { CardModule } from 'primeng/card';
 import { EmpresasxModulo, Login } from './Login';
 import { DropdownModule } from 'primeng/dropdown';
+import { GlobalService } from '../../service/global.service';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +34,7 @@ export class LoginComponent implements OnInit {
     selectedEmpresa: string = '';
 
 
-    constructor(private fb:FormBuilder, private LoginServicio:LoginService, private router:Router, private messageService:MessageService, private link:Router){
+    constructor(private globalservice:GlobalService,private fb:FormBuilder, private LoginServicio:LoginService, private router:Router, private messageService:MessageService, private link:Router){
         this.credencialesFRM=fb.group({
             nombreusuario:['',[Validators.required,Validators.maxLength(50)]],
             claveusuario: ['',[Validators.required,Validators.maxLength(50)]],
@@ -65,6 +66,8 @@ export class LoginComponent implements OnInit {
             this.LoginServicio.autenticacion(autenticacion).subscribe({
                     next:  (response)=>{
                         if(response.isSuccess){
+                            this.globalservice.setNombreUsuario(autenticacion.nombreusuario)
+                            this.globalservice.setCodigoEmpresa(autenticacion.codigoempresa)
                             this.router.navigate(['/Home']);
                             if (this.recordarme) {
                                localStorage.setItem('rememberedUser', JSON.stringify({

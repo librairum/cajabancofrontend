@@ -1,0 +1,84 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<div class="container">
+    <p-panel header="Ayuda para agregar pago">
+        <p-breadcrumb [model]="items" class="max-w-full;" style="margin-bottom: 1rem;"></p-breadcrumb>
+        <br>
+        <form [formGroup]="filtroFRM">
+            <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <label style="width: 150px;">Proveedor: </label>
+                <p-dropdown [options]="proveedores"
+                    optionLabel="razonsocial"
+                    optionValue="ruc"
+                    formControlName="ruc"
+                    (onChange)="onProveedorChallenge($event)"
+                    [filter]="true"
+                    filterBy="razonsocial"
+                    [showClear]="true"
+                    placeholder="Seleccione un proveedor"
+                    styleClass="w-15rem"
+                    [virtualScroll]="true"
+                    [virtualScrollItemSize]="38"
+                    [panelStyle]="{width:'350px', overflow: 'hidden'}">
+                </p-dropdown>
+            </div>
+            <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <label style="width: 150px;">Fecha de Vencimiento: </label>
+                <p-calendar formControlName="fechavencimiento"
+                    [showIcon]="true"
+                    [showOnFocus]="false"
+                    inputId="buttondisplay"
+                    styleClass="w-15rem"
+                    [panelStyle]="{width:'350px', overflow: 'hidden'}">
+                </p-calendar>
+            </div>
+            <div style="margin-bottom: 1rem; display: flex; justify-content: flex-end;">
+                <p-button label="Filtrar" icon="pi pi-filter" (onClick)="filtrar()"></p-button>
+            </div>
+        </form>
+    </p-panel>
+</div>
+<div class="card p-2">
+    <p-table [value]="ayudapago" [tableStyle]="{'min-width': '100rem'}" [scrollable]="true" scrollHeight="400px"
+        [scrollDirection]="'both'" [loading]="loading">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>RUC</th>
+                <th>Razon Social</th>
+                <th>Tipo Doc</th>
+                <th>Numero</th>
+                <th>Moneda Original</th>
+                <th>S/. </th>
+                <th>US$</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Fecha Emision</th>
+                <th>Fecha Vencimiento</th>
+                <th>Dias Atrazo</th>
+                <th>Seleccionar</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ayudapago>
+            <tr>
+                <td>{{ayudapago.ruc}}</td>
+                <td>{{ayudapago.razonSocial}}</td>
+                <td>{{ayudapago.nombreTipoDOc}}</td>
+                <td>{{ayudapago.numeroDOcumento}}</td>
+                <td>{{ayudapago.monedaOriginal}}</td>
+                <td>{{ayudapago.soles}}</td>
+                <td>{{ayudapago.dolares}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ayudapago.fechaEmision}}</td>
+                <td>{{ayudapago.fechaVencimiento}}</td>
+                <td>{{ayudapago.diasAtrazo}}</td>
+                <td></td>
+            </tr>
+        </ng-template>
+
+
+
+    </p-table>
+</div>

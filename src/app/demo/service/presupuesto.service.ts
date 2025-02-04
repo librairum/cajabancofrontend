@@ -1,0 +1,87 @@
+import { Injectable } from '@angular/core';
+import { agregar_Pago, cabeceraPresupuesto, Detallepresupuesto, proveedores_lista } from '../components/presupuesto/presupuesto';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class PresupuestoService {
+    private urlApi = 'https://localhost:7277/Presupuesto'
+
+    constructor(private http: HttpClient) { }
+
+    public obtenerPresupuesto(empresa: string, anio: string, mes: string): Observable<cabeceraPresupuesto[]> {
+        const params = new HttpParams()
+          .set('empresa', empresa)
+          .set('anio', anio)
+          .set('mes', mes);
+
+        return this.http.get<RespuestaAPI>(`${this.urlApi}/SpList`, { params }).pipe(
+            map(response => response.data)
+        );
+    }
+    public obtenerDetallePresupuesto(empresa:string, numerodocumento:string,fechapresupuesto:string): Observable<Detallepresupuesto[]>{
+        const params=new HttpParams()
+            .set('empresa', empresa)
+            .set('numerodocumento', numerodocumento)
+            .set('fechapresupuesto', fechapresupuesto);
+        return this.http.get<RespuestaAPI2>(`${this.urlApi}/SpListaDet`, {params}).pipe(map(response=>response.data));
+    }
+    public obtenerProveedores(empresa:string): Observable<proveedores_lista[]>{
+        const params=new HttpParams()
+            .set('empresa', empresa)
+        return this.http.get<RespuestaAPI3>(`${this.urlApi}/SpTraeProveedores`, {params}).pipe(map(response=>response.data));
+    }
+    public obtenerDocPendiente(empresa:string,fechavencimiento:string,ruc:string): Observable<agregar_Pago[]>{
+        const params=new HttpParams()
+            .set('empresa', empresa)
+            .set('fechavencimiento', fechavencimiento)
+            .set('ruc', ruc);
+        return this.http.get<RespuestaAPI4>(`${this.urlApi}/SpListaDocPendientes`, {params}).pipe(map(response=>response.data));
+    }
+}
+
+interface RespuestaAPI {
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: any | null; // Puedes tipar 'item' si conoces su estructura
+    data: cabeceraPresupuesto[];
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
+}
+
+interface RespuestaAPI2 {
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: any | null; // Puedes tipar 'item' si conoces su estructura
+    data: Detallepresupuesto[];
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
+}
+
+interface RespuestaAPI3 {
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: any | null; // Puedes tipar 'item' si conoces su estructura
+    data: proveedores_lista[];
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
+}
+
+interface RespuestaAPI4 {
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: any | null; // Puedes tipar 'item' si conoces su estructura
+    data: agregar_Pago[];
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
+}

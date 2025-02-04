@@ -25,7 +25,7 @@
                 <label for="fecha" class="text-sm">Fecha: </label>
                 <p-calendar [disabled]="true" [(ngModel)]="fecha"
                     [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}"
-                    inputStyleClass="p-input-sm"></p-calendar>
+                    inputStyleClass="p-input-sm" dateFormat="dd/mm/yy"></p-calendar>
             </div>
             <div>
                 <p-button label="Reporte para pago" icon="pi pi-file-pdf" styleClass="p-button-sm mr-2"></p-button>
@@ -55,8 +55,8 @@
         </div>
     </div>
     <div class="card p-2">
-        <p-table [value]="DetallePago" sortField="razonsocial" sortMode="single" rowGroupMode="subheader"
-            [tableStyle]="{'min-width': '150rem'}" groupRowsBy="razonsocial" [scrollable]="true" scrollHeight="400px">
+        <p-table [value]="DetallePago" sortField="ban02Proveedor" sortMode="single" rowGroupMode="subheader"
+            [tableStyle]="{'min-width': '170rem'}" groupRowsBy="ban02Proveedor" [scrollable]="true" scrollHeight="500px" [loading]="load">
             <ng-template pTemplate="header">
                 <tr>
                     <th rowspan="2">Item</th>
@@ -93,7 +93,7 @@
                     <!--
                     <td colspan="8">
                         <div class="flex items-center gap-2">
-                            <span class="font-bold">{{ groupData.razonsocial }}</span>
+                            <span class="font-bold">{{ groupData.ban02Proveedor }}</span>
                         </div>
                     </td>-->
                 </tr>
@@ -103,24 +103,23 @@
                 <tr>
                     <td colspan="6">
                     </td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.razonsocial, 'importetotalsoles') |
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Proveedor, 'ban02Soles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.razonsocial, 'importetotaldolares') |
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Proveedor, 'ban02Dolares') |
                         number:'1.2-2' }}</td>
 
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.razonsocial, 'detraccionimporte') |
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Proveedor, 'ban02ImporteSolesDet') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.razonsocial, 'retencion') |
+                    <td></td>
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Proveedor, 'ban02ImporteSolesPercepcion') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.razonsocial, 'percepcion') |
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Proveedor, 'netoSoles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.razonsocial, 'netopagasoles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.razonsocial, 'netopagadolares') |
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Proveedor, 'netoDolares') |
                         number:'1.2-2' }}</td>
                 </tr>
             </ng-template>
@@ -128,22 +127,22 @@
             <ng-template pTemplate="body" let-detalle>
                 <tr>
                     <td>{{ detalle.item }}</td>
-                    <td>{{ detalle.ruc }}</td>
-                    <td>{{ detalle.razonsocial }}</td>
-                    <td>{{ detalle.TipoDoc }}</td>
-                    <td>{{ detalle.Numero }}</td>
-                    <td>{{ detalle.MonedaOriginal }}</td>
-                    <td>{{ detalle.importetotalsoles | number:'1.2-2' }}</td>
-                    <td>{{ detalle.importetotaldolares | number:'1.2-2' }}</td>
-                    <td>{{ detalle.Montopagarsoles | number:'1.2-2' }}</td>
-                    <td>{{ detalle.montopagardolares | number:'1.2-2' }}</td>
-                    <td>{{ detalle.detracciontipo }}</td>
-                    <td>{{ detalle.detracciontasa }}</td>
-                    <td>{{ detalle.detraccionimporte | number:'1.2-2' }}</td>
-                    <td>{{ detalle.retencion | number:'1.2-2' }}</td>
-                    <td>{{ detalle.percepcion | number:'1.2-2' }}</td>
-                    <td>{{ detalle.netopagasoles | number:'1.2-2' }}</td>
-                    <td>{{ detalle.netopagadolares | number:'1.2-2' }}</td>
+                    <td>{{ detalle.ban02Ruc }}</td>
+                    <td>{{ detalle.ban02Proveedor }}</td>
+                    <td>{{ detalle.ban02Tipodoc }}</td>
+                    <td>{{ detalle.ban02NroDoc }}</td>
+                    <td>{{ detalle.ban02Moneda }}</td>
+                    <td>{{ detalle.ban02Soles | number:'1.2-2' }}</td>
+                    <td>{{ detalle.ban02Dolares | number:'1.2-2' }}</td>
+                    <td>{{ detalle.ban02PagoSoles | number:'1.2-2' }}</td>
+                    <td>{{ detalle.ban02PagoDolares | number:'1.2-2' }}</td>
+                    <td>{{ detalle.tipoDetraccion }}</td>
+                    <td>{{ detalle.ban02TasaDet }}</td>
+                    <td>{{ detalle.ban02ImporteSolesDet | number:'1.2-2' }}</td>
+                    <td> </td>
+                    <td>{{ detalle.ban02ImporteSolesPercepcion | number:'1.2-2' }}</td>
+                    <td>{{ detalle.netoSoles | number:'1.2-2' }}</td>
+                    <td>{{ detalle.netoDolares | number:'1.2-2' }}</td>
                     <td>
                         <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm" pTooltip="Eliminar"
                             [text]="true" (onClick)="eliminarPago(presupuesto)"></p-button>
@@ -160,17 +159,17 @@
                 <tr>
                     <td colspan="5" class="text-right font-bold"></td>
                     <td class="font-bold">Sumas</td>
-                    <td class="font-bold">{{ getTotalColumn('importetotalsoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('importetotaldolares') | number:'1.2-2' }}</td>
+                    <td class="font-bold">{{ getTotalColumn('ban02Soles') | number:'1.2-2' }}</td>
+                    <td class="font-bold">{{ getTotalColumn('ban02Dolares') | number:'1.2-2' }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="font-bold">{{ getTotalColumn('detraccionimporte') | number:'1.2-2' }}</td>
+                    <td class="font-bold">{{ getTotalColumn('ban02ImporteSolesDet') | number:'1.2-2' }}</td>
                     <td class="font-bold">{{ getTotalColumn('retencion') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('percepcion') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('netopagasoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('netopagadolares') | number:'1.2-2' }}</td>
+                    <td class="font-bold">{{ getTotalColumn('ban02ImporteSolesPercepcion') | number:'1.2-2' }}</td>
+                    <td class="font-bold">{{ getTotalColumn('netoSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold">{{ getTotalColumn('netoDolares') | number:'1.2-2' }}</td>
                     <td></td>
                 </tr>
             </ng-template>

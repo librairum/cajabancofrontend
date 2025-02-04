@@ -1,35 +1,54 @@
 export interface cabeceraPresupuesto{
-    PagoNro: string;
-    Fecha: string;
-    motivo:string;
+    pagoNumero: string;
+    fecha: string;
     mediopago:string;
-    brutopagarsoles:number;
-    brutopagardolares:number;
-    afectodetraccion:number;
-    afectoretencion:number;
-    afectopercepcion:number;
-    netopagosoles:number;
-    netopagodolares:number;
+    motivo:string;
+    impBrutoSoles:number;
+    impBrutoDolares:number;
+    impDetraccionSoles:number;
+    impRetencionSoles:number;
+    impPercepcionSoles:number;
+    netoPagaSoles:number;
+    netoPagoDolares:number;
     estado:string;
-    enlaceadjunto:string;
+    enlaceComprobante:string;
 }
 
 export interface Detallepresupuesto{
     item:number;
+    ban02Ruc:string;
+    ban02Proveedor:string;
+    ban02Tipodoc:string;
+    ban02NroDoc :string;
+    ban02Moneda:string;
+    ban02Soles:number;
+    ban02Dolares:number;
+    ban02PagoSoles:number;
+    ban02PagoDolares:number;
+    tipoDetraccion:string;
+    ban02TasaDet:string;
+    ban02ImporteSolesDet:number;
+    //retencion:number;
+    ban02ImporteSolesPercepcion:number;
+    netoSoles:number;
+    netoDolares:number;
+}
+
+export interface agregar_Pago{
+    ruc:string;
+    razonSocial:string;
+    coditoTipoDoc:string;
+    nombreTipoDOc:string;
+    numeroDOcumento:string;
+    monedaOriginal:string;
+    soles:number;
+    dolares:number;
+    fechaEmision:string;
+    fechaVencimiento:string;
+    diasAtrazo:number;
+}
+
+export interface proveedores_lista{
     ruc:string;
     razonsocial:string;
-    TipoDoc:string;
-    Numero :string;
-    MonedaOriginal:string;
-    importetotalsoles:number;
-    importetotaldolares:number;
-    Montopagarsoles:number;
-    montopagardolares:number;
-    detracciontipo:string;
-    detracciontasa:string;
-    detraccionimporte:number;
-    retencion:number;
-    percepcion:number;
-    netopagasoles:number;
-    netopagadolares:number;
 }

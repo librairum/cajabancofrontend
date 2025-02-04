@@ -1,32 +1,50 @@
-<div class="layout-topbar">
+<div class="layout-topbar" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
 
-    
-    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
-        <i class="pi pi-bars"></i>
-    </button>
-    
-    <a class="layout-topbar-logo" routerLink="/Home/banco">
-        <img src="assets\demo\images\logo.jpg" alt="logo">
-        <span></span>
-    </a>
-
-
-    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
-        <i class="pi pi-ellipsis-v"></i>
-    </button>
-
-    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-calendar"></i>
-            <span>Calendar</span>
+    <div class="left-section" style="display: flex; align-items: center; gap: 10px;">
+        <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+            <i class="pi pi-bars"></i>
         </button>
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-user"></i>
-            <span>Profile</span>
-        </button>
-        <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
-            <i class="pi pi-cog"></i>
-            <span>Settings</span>
-        </button>
+
+        <a class="layout-topbar-logo" routerLink="/Home/banco">
+            <img src="assets\demo\images\logo.jpg" alt="logo">
+            <span></span>
+        </a>
     </div>
+
+
+
+    <div class="right-section" style="display: flex; align-items: center; gap: 10px; margin-left: auto;">
+        <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
+            <i class="pi pi-ellipsis-v"></i>
+        </button>
+
+        <p-calendar view="month" dateFormat="mm/yy" [readonlyInput]="true" [(ngModel)]="selectedDate" (onSelect)="onDateSelect($event)" [showIcon]="true" ></p-calendar>
+
+        <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+            <button class="p-link layout-topbar-button" (click)="op.toggle($event)">
+                <i class="pi pi-user"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <p-overlayPanel #op [showCloseIcon]="true" [style]="{ 'min-width': '220px', 'max-width': '220px' }" styleClass="user-overlay-panel">
+        <div class="w-80">
+            <div class="flex align-items-center gap-3 p-3">
+                <div class="w-3rem h-3rem border-circle surface-200 flex align-items-center justify-content-center">
+                    <i class="pi pi-user text-2xl"></i>
+                </div>
+                <div>
+                    <div class="text-900 font-medium">{{nombre}}</div>
+                </div>
+            </div>
+            <div class="border-top-1 surface-border my-2"></div>
+            <div class="p-2">
+                <button (click)="cerrarSesion()" class="p-link w-full p-3 flex align-items-center gap-2 hover:surface-100 border-round-lg text-red-600 transition-colors transition-duration-150">
+                    <i class="pi pi-sign-out"></i>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </div>
+        </div>
+    </p-overlayPanel>
 </div>

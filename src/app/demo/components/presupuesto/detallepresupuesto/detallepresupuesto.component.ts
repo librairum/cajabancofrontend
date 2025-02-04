@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { Detallepresupuesto } from '../presupuesto';
+import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 
 
 @Component({
@@ -33,8 +34,9 @@ export class DetallepresupuestoComponent implements OnInit {
     motivo: string;
     medio: string;
     groupTotals:any[] = [];
+    load: boolean = false;
 
-    constructor(private bs: BreadcrumbService, private router: Router, private ms: MessageService) {
+    constructor(private messageService:MessageService,private presupuestoservice: PresupuestoService,private bs: BreadcrumbService, private router: Router, private ms: MessageService) {
         const navigation = router.getCurrentNavigation();
         if (navigation?.extras?.state) {
             this.navigationData = navigation.extras.state;
@@ -52,18 +54,36 @@ export class DetallepresupuestoComponent implements OnInit {
         this.bs.currentBreadcrumbs$.subscribe(bc => {
             this.items = bc;
         })
+        this.cargarDetalles()
         this.valoresCampos()
-        this.DetallePago = [
-
-            { item: 1, ruc: '204532455', razonsocial: 'Ivan Systems', TipoDoc: 'factura', Numero: 'E001-2345', MonedaOriginal: 'Soles', importetotalsoles: 1000.00, importetotaldolares: 264.55, Montopagarsoles: 600.00, montopagardolares: 158.73, detracciontipo: null, detracciontasa: '12%', detraccionimporte: 120.00, retencion: null, percepcion: null, netopagasoles: 480.00, netopagadolares: 126.98 },
-            { item: 2, ruc: '201234567', razonsocial: 'Ivan Systems', TipoDoc: 'factura', Numero: 'E001-3456', MonedaOriginal: 'Soles', importetotalsoles: 300.00, importetotaldolares: 79.37, Montopagarsoles: 300.00, montopagardolares: null, detracciontipo: null, detracciontasa: '12%', detraccionimporte: 36.00, retencion: null, percepcion: null, netopagasoles: 264.00, netopagadolares: 69.84 },
-            { item: 3, ruc: '201234567', razonsocial: 'William Tech', TipoDoc: 'factura', Numero: 'E001-3458', MonedaOriginal: 'Soles', importetotalsoles: 550.00, importetotaldolares: 145.50, Montopagarsoles: null, montopagardolares: null, detracciontipo: null, detracciontasa: '12%', detraccionimporte: 66.00, retencion: null, percepcion: null, netopagasoles: 484.00, netopagadolares: 128.04 },
-            { item: 4, ruc: '201234567', razonsocial: 'William Tech', TipoDoc: 'factura', Numero: 'E001-3445', MonedaOriginal: 'Soles', importetotalsoles: 150.00, importetotaldolares: 39.68, Montopagarsoles: null, montopagardolares: null, detracciontipo: null, detracciontasa: '12%', detraccionimporte: 18.00, retencion: null, percepcion: null, netopagasoles: 132.00, netopagadolares: 34.92 }
-
-        ];
         this.calculateGroupTotals()
 
 
+    }
+
+    cargarDetalles(){
+        this.load=true;
+        this.presupuestoservice.obtenerDetallePresupuesto('01',this.navigationData.PagoNro,this.navigationData.Fecha).subscribe({
+            next: (data) => {
+                this.DetallePago=data;
+                if (data.length === 0) {
+                    this.messageService.add({
+                        severity: 'warn',
+                        summary: 'Advertencia',
+                        detail: 'No se encontraron detalles del presupuesto'
+                    });
+                } else {
+                    this.load=false;
+                }
+            },
+            error: (error) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Error al cargar presupuesto: ' + error.message
+                });
+            }
+        })
     }
 
     valoresCampos() {
@@ -79,34 +99,36 @@ export class DetallepresupuestoComponent implements OnInit {
         this.medio = this.navigationData?.mediopago || '';
     }
 
+
+
     calculateGroupTotals() {
         const groupedTotals = this.DetallePago.reduce((acc, item) => {
-            if (!acc[item.razonsocial]) {
-                acc[item.razonsocial] = {
-                    razonsocial: item.razonsocial,
+            if (!acc[item.ban02Proveedor]) {
+                acc[item.ban02Proveedor] = {
+                    razonsocial: item.ban02Proveedor,
                     totalSoles: 0,
                     totalDolares: 0,
                     totalMontoPagarSoles: 0,
                     totalMontoPagarDolares: 0,
                     totalImporte:0,
-                    totalRetencion:0,
+                    //totalRetencion:0,
                     totalPercepcion:0,
                     totalNetoPagarSoles: 0,
                     totalNetoPagarDolares: 0,
                 };
             }
 
-            acc[item.razonsocial].totalSoles += item.importetotalsoles || 0;
-            acc[item.razonsocial].totalDolares += item.importetotaldolares || 0;
+            acc[item.ban02Proveedor].totalSoles += item.ban02Soles || 0;
+            acc[item.ban02Proveedor].totalDolares += item.ban02Dolares || 0;
 
-            acc[item.razonsocial].totalMontoPagarSoles += item.Montopagarsoles || 0;
-            acc[item.razonsocial].totalMontoPagarDolares += item.montopagardolares || 0;
-            acc[item.razonsocial].totalImporte += item.detraccionimporte || 0;
-            acc[item.razonsocial].totalRetencion += item.retencion || 0;
-            acc[item.razonsocial].totalPercepcion += item.percepcion || 0;
+            acc[item.ban02Proveedor].totalMontoPagarSoles += item.ban02PagoSoles || 0;
+            acc[item.ban02Proveedor].totalMontoPagarDolares += item.ban02PagoDolares || 0;
+            acc[item.ban02Proveedor].totalImporte += item.ban02ImporteSolesDet || 0;
+            //acc[item.ban02Proveedor].totalRetencion += item.retencion || 0;
+            acc[item.ban02Proveedor].totalPercepcion += item.ban02ImporteSolesPercepcion || 0;
 
-            acc[item.razonsocial].totalNetoPagarSoles += item.netopagasoles || 0;
-            acc[item.razonsocial].totalNetoPagarDolares += item.netopagadolares || 0;
+            acc[item.ban02Proveedor].totalNetoPagarSoles += item.netoSoles || 0;
+            acc[item.ban02Proveedor].totalNetoPagarDolares += item.netoDolares || 0;
 
             return acc;
         }, {});
@@ -116,7 +138,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     calculateGroupTotal(razonsocial: string, field: string): number {
         return this.DetallePago
-            .filter(item => item.razonsocial === razonsocial)
+            .filter(item => item.ban02Proveedor === razonsocial)
             .reduce((sum, item) => sum + (item[field] || 0), 0);
     }
 

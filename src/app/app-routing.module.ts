@@ -7,6 +7,8 @@ import { NumeroCuentaComponent } from './demo/components/numero-cuenta/numero-cu
 import { CabecerapresupuestoComponent } from './demo/components/presupuesto/cabecerapresupuesto/cabecerapresupuesto.component';
 import { DetallepresupuestoComponent } from './demo/components/presupuesto/detallepresupuesto/detallepresupuesto.component';
 import { AuthGuard } from './demo/service/auth.guard';
+import { CuentaBancariaComponent } from './demo/components/cuenta-bancaria/cuenta-bancaria.component';
+import { AgregarPagoComponent } from './demo/components/presupuesto/agregar-pago/agregar-pago.component';
 
 @NgModule({
     imports: [
@@ -22,10 +24,11 @@ import { AuthGuard } from './demo/service/auth.guard';
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'banco', component: NumeroCuentaComponent },
-                    { path: 'cuentas_bancarias', component: NumeroCuentaComponent },
+                    { path: 'cuentas_bancarias', component: CuentaBancariaComponent },
                     { path: 'numero_cuenta', component: NumeroCuentaComponent },
                     {path:'presupuesto',component: CabecerapresupuestoComponent},
-                    {path:'detalle-presupuesto',component: DetallepresupuestoComponent}
+                    {path:'detalle-presupuesto',component: DetallepresupuestoComponent},
+                    {path:'nuevo-presupuesto',component: AgregarPagoComponent}
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
