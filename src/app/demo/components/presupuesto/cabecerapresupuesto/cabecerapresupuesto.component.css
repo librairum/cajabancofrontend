@@ -1,0 +1,21 @@
+::ng-deep .p-datatable table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+::ng-deep .p-datatable th, .p-datatable td {
+    padding: 8px;
+    text-align: left;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    text-align: center;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    text-align: center;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td:last-child {
+    border-right: 1px;
+}

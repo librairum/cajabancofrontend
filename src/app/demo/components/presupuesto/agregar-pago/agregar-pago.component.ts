@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
@@ -15,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { Dropdown, DropdownModule } from 'primeng/dropdown';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { calendario_traduccion } from 'src/app/shared/Calendarios';
 
 @Component({
     selector: 'app-agregar-pago',
@@ -27,13 +28,13 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 export class AgregarPagoComponent implements OnInit {
 
     filtroFRM: FormGroup;
-
     items: any[] = []
     loading: boolean = false
     ayudapago: agregar_Pago[] = []
     proveedores: proveedores_lista[] = []
+    selectedItems: agregar_Pago[] = []
 
-    constructor(private fb: FormBuilder, private gS: GlobalService, private bS: BreadcrumbService, private confirmationService: ConfirmationService, private router: Router, private presupuestoService: PresupuestoService, private messageService: MessageService, private datePipe: DatePipe) {
+    constructor(private link:Router ,private primeng: PrimeNGConfig, private fb: FormBuilder, private gS: GlobalService, private bS: BreadcrumbService, private confirmationService: ConfirmationService, private router: Router, private presupuestoService: PresupuestoService, private messageService: MessageService, private datePipe: DatePipe) {
         this.filtroFRM = fb.group({
             empresa: ['', [Validators.required]],
             fechavencimiento: [new Date(), [Validators.required]],
@@ -42,6 +43,7 @@ export class AgregarPagoComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.primeng.setTranslation(calendario_traduccion());
         this.bS.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
             { label: 'Presupuesto', routerLink: '/Home/presupuesto' },
@@ -51,13 +53,12 @@ export class AgregarPagoComponent implements OnInit {
             this.items = bc;
         })
         this.cargarproveedores();
-        this.cargarayudaparaagregarpago();
 
     }
 
     cargarayudaparaagregarpago(): void {
         this.loading = true;
-        const fechaFormateda=this.datePipe.transform(this.filtroFRM.get('fechavencimiento').value,'dd/MM/yyyy');
+        const fechaFormateda = this.datePipe.transform(this.filtroFRM.get('fechavencimiento').value, 'dd/MM/yyyy');
         this.presupuestoService.obtenerDocPendiente(this.gS.getCodigoEmpresa(), fechaFormateda, this.filtroFRM.get('ruc').value).subscribe({
             next: (data) => {
                 this.ayudapago = data;
@@ -86,7 +87,7 @@ export class AgregarPagoComponent implements OnInit {
         this.presupuestoService.obtenerProveedores(cod_empresa).subscribe(
             (data: proveedores_lista[]) => {
                 this.proveedores = data;
-                if(data.length > 0) {
+                if (data.length > 0) {
                     this.filtroFRM.patchValue({
                         ruc: data[0].ruc
                     });
@@ -103,7 +104,54 @@ export class AgregarPagoComponent implements OnInit {
         })
     }
 
-    filtrar(){
+    filtrar() {
         this.cargarayudaparaagregarpago()
+    }
+
+    //checkbox
+    onAddSelected() {
+        if (this.selectedItems.length === 0) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Advertencia',
+            detail: 'Seleccione al menos un registro'
+          });
+          return;
+        }
+
+        const xmlDoc = document.implementation.createDocument(null, "DataSet", null);
+
+        this.selectedItems.forEach(item => {
+          const tblElement = xmlDoc.createElement("tbl");
+
+          const fields = {
+            ruc: item.ruc,
+            razonSocial: item.razonSocial,
+            coditoTipoDoc: item.coditoTipoDoc,
+            nombreTipoDoc: item.nombreTipoDOc,
+            numeroDocumento: item.numeroDOcumento,
+            monedaOriginal: item.monedaOriginal,
+            soles: item.soles.toString(),
+            dolares: item.dolares.toString(),
+            fechaEmision: item.fechaEmision,
+            fechaVencimiento: item.fechaVencimiento,
+            diasAtrazo: item.diasAtrazo.toString()
+          };
+
+          for (const [key, value] of Object.entries(fields)) {
+            const element = xmlDoc.createElement(key);
+            element.textContent = value;
+            tblElement.appendChild(element);
+          }
+
+          xmlDoc.documentElement.appendChild(tblElement);
+        });
+
+        const xmlString = new XMLSerializer().serializeToString(xmlDoc);
+        console.log(xmlString); // Para verificar el resultado
+      }
+
+    onCancelSelection() {
+        this.selectedItems = [];
     }
 }

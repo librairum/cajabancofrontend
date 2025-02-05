@@ -9,6 +9,7 @@ import { DetallepresupuestoComponent } from './demo/components/presupuesto/detal
 import { AuthGuard } from './demo/service/auth.guard';
 import { CuentaBancariaComponent } from './demo/components/cuenta-bancaria/cuenta-bancaria.component';
 import { AgregarPagoComponent } from './demo/components/presupuesto/agregar-pago/agregar-pago.component';
+import { BancoComponent } from './demo/components/banco/banco.component';
 
 @NgModule({
     imports: [
@@ -23,7 +24,7 @@ import { AgregarPagoComponent } from './demo/components/presupuesto/agregar-pago
                 path: 'Home', component: AppLayoutComponent, //canActivate:[AuthGuard],
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
-                    { path: 'banco', component: NumeroCuentaComponent },
+                    { path: 'banco', component: BancoComponent },
                     { path: 'cuentas_bancarias', component: CuentaBancariaComponent },
                     { path: 'numero_cuenta', component: NumeroCuentaComponent },
                     {path:'presupuesto',component: CabecerapresupuestoComponent},

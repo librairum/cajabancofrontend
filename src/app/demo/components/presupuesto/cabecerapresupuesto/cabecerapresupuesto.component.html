@@ -49,13 +49,13 @@
                     <td>{{ presupuesto.fecha | date:'dd/MM/yyyy' }}</td>
                     <td>{{presupuesto.motivo}}</td>
                     <td>{{presupuesto.mediopago}}</td>
-                    <td>{{presupuesto.impBrutoSoles | currency: 's/.'}}</td>
-                    <td>{{presupuesto.impBrutoDolares | currency: 'USD'}}</td>
-                    <td>{{presupuesto.impDetraccionSoles| currency: 's/.'}}</td>
-                    <td>{{presupuesto.impRetencionSoles| currency: 's/.'}}</td>
-                    <td>{{presupuesto.impPercepcionSoles| currency: 's/.'}}</td>
-                    <td>{{presupuesto.netoPagaSoles | currency: 's/.'}}</td>
-                    <td>{{presupuesto.netoPagoDolares | currency: 'USD'}}</td>
+                    <td>{{presupuesto.impBrutoSoles | number:'1.2-2'}}</td>
+                    <td>{{presupuesto.impBrutoDolares | number:'1.2-2'}}</td>
+                    <td>{{presupuesto.impDetraccionSoles| number:'1.2-2'}}</td>
+                    <td>{{presupuesto.impRetencionSoles| number:'1.2-2'}}</td>
+                    <td>{{presupuesto.impPercepcionSoles| number:'1.2-2'}}</td>
+                    <td>{{presupuesto.netoPagaSoles | number:'1.2-2'}}</td>
+                    <td>{{presupuesto.netoPagoDolares | number:'1.2-2'}}</td>
                     <td>{{presupuesto.estado}}</td>
                     <td></td>
                     <td></td>
@@ -98,6 +98,13 @@
                                 pTooltip="Anular pago"
                             ></p-button>
                         </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="14" style="text-align: center; font-weight: bold; padding: 1rem;">
+                        No se encontraron registros
                     </td>
                 </tr>
             </ng-template>
