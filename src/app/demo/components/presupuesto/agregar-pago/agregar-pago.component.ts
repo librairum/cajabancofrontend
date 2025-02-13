@@ -5,7 +5,7 @@ import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api'
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
-import { agregar_Pago, proveedores_lista } from '../presupuesto';
+import { agregar_Pago, insert_detalle, proveedores_lista } from '../presupuesto';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ToastModule } from 'primeng/toast';
 import { PanelModule } from 'primeng/panel';
@@ -127,7 +127,7 @@ export class AgregarPagoComponent implements OnInit {
           const fields = {
             ruc: item.ruc,
             razonSocial: item.razonSocial,
-            coditoTipoDoc: item.coditoTipoDoc,
+            codigoTipDoc: item.coditoTipoDoc,
             nombreTipoDoc: item.nombreTipoDOc,
             numeroDocumento: item.numeroDOcumento,
             monedaOriginal: item.monedaOriginal,
@@ -149,6 +149,37 @@ export class AgregarPagoComponent implements OnInit {
 
         const xmlString = new XMLSerializer().serializeToString(xmlDoc);
         console.log(xmlString); // Para verificar el resultado
+
+        const detallePresupuesto: insert_detalle = {
+            empresa: this.gS.getCodigoEmpresa(),
+            numeropresupuesto: '00213', // Esto va cambiar de acuerdo
+            tipoaplicacion: '01', //defecto
+            fechapresupuesto: '13/02/2025', // Esto modificaria
+            bcoliquidacion: '00', //defecto
+            xmlDetalle: xmlString //los seleccionados
+        };
+
+        this.presupuestoService.insertarDetallePresupuesto(detallePresupuesto)
+        .subscribe({
+            next: (response) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Éxito',
+                    detail: 'Detalle insertado correctamente'
+                });
+                // Limpiar selección
+                this.selectedItems = [];
+                // Opcional: redirigir a otra página o recargar datos
+                this.link.navigate(['/Home/presupuesto']);
+            },
+            error: (error) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Error al insertar el detalle: ' + error.message
+                });
+            }
+        });
       }
 
     onCancelSelection() {

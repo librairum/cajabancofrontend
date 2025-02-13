@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { agregar_Pago, cabeceraPresupuesto, Detallepresupuesto, proveedores_lista } from '../components/presupuesto/presupuesto';
+import { agregar_Pago, cabeceraPresupuesto, Detallepresupuesto, insert_detalle, proveedores_lista } from '../components/presupuesto/presupuesto';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
@@ -40,6 +40,29 @@ export class PresupuestoService {
             .set('ruc', ruc);
         return this.http.get<RespuestaAPI4>(`${this.urlApi}/SpListaDocPendientes`, {params}).pipe(map(response=>response.data));
     }
+
+    public insertarDetallePresupuesto(detalle: insert_detalle): Observable<any> {
+        const params = new HttpParams()
+            .set('empresa', detalle.empresa)
+            .set('numeropresupuesto', detalle.numeropresupuesto)
+            .set('tipoaplicacion', detalle.tipoaplicacion)
+            .set('fechapresupuesto', detalle.fechapresupuesto)
+            .set('bcoliquidacion', detalle.bcoliquidacion)
+            .set('xmlDetalle', detalle.xmlDetalle);
+
+        return this.http.post<RespuestaAPI5>(`${this.urlApi}/SpInsertaDet`, null, { params });
+    }
+}
+
+interface RespuestaAPI5 {
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: any | null;
+    data: any; // Puedes tipar esto según la respuesta específica que esperes
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
 }
 
 interface RespuestaAPI {

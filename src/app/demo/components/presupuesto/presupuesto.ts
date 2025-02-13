@@ -52,3 +52,12 @@ export interface proveedores_lista{
     ruc:string;
     razonsocial:string;
 }
+
+export interface insert_detalle{
+    empresa:string;
+    numeropresupuesto:string;
+    tipoaplicacion:string;
+    fechapresupuesto:string;
+    bcoliquidacion:string;
+    xmlDetalle:string;
+}
