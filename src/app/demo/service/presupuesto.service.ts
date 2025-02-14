@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { agregar_Pago, cabeceraPresupuesto, Detallepresupuesto, insert_detalle, proveedores_lista } from '../components/presupuesto/presupuesto';
+import { agregar_Pago, cabeceraPresupuesto, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista } from '../components/presupuesto/presupuesto';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
@@ -51,6 +51,9 @@ export class PresupuestoService {
             .set('xmlDetalle', detalle.xmlDetalle);
 
         return this.http.post<RespuestaAPI5>(`${this.urlApi}/SpInsertaDet`, null, { params });
+    }
+    public insertarPresupuesto(presupuesto: insert_presupuesto): Observable<any> {
+        return this.http.post(`${this.urlApi}/SpInsert`, presupuesto);
     }
 }
 

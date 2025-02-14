@@ -5,7 +5,7 @@ import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api'
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
-import { agregar_Pago, insert_detalle, proveedores_lista } from '../presupuesto';
+import { agregar_Pago, cabeceraPresupuesto, insert_detalle, proveedores_lista } from '../presupuesto';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ToastModule } from 'primeng/toast';
 import { PanelModule } from 'primeng/panel';
@@ -34,7 +34,22 @@ export class AgregarPagoComponent implements OnInit {
     proveedores: proveedores_lista[] = []
     selectedItems: agregar_Pago[] = []
 
+
+
+    //opciones del modificar
+    isModificacion: boolean = false;
+    numeropresupuestoMod: string = '';
+    fechapresupuestoMod: string = '';
+
     constructor(private link:Router ,private primeng: PrimeNGConfig, private fb: FormBuilder, private gS: GlobalService, private bS: BreadcrumbService, private confirmationService: ConfirmationService, private router: Router, private presupuestoService: PresupuestoService, private messageService: MessageService, private datePipe: DatePipe) {
+        const navigation = this.router.getCurrentNavigation();
+        if (navigation?.extras.state) {
+            const state = navigation.extras.state as any;
+            this.isModificacion = state.isModificacion;
+            this.numeropresupuestoMod = state.numeropresupuesto;
+            this.fechapresupuestoMod = state.fechapresupuesto;
+        }
+
         this.filtroFRM = fb.group({
             empresa: ['', [Validators.required]],
             fechavencimiento: [new Date(), [Validators.required]],
@@ -148,13 +163,12 @@ export class AgregarPagoComponent implements OnInit {
         });
 
         const xmlString = new XMLSerializer().serializeToString(xmlDoc);
-        console.log(xmlString); // Para verificar el resultado
 
         const detallePresupuesto: insert_detalle = {
             empresa: this.gS.getCodigoEmpresa(),
-            numeropresupuesto: '00213', // Esto va cambiar de acuerdo
+            numeropresupuesto: this.numeropresupuestoMod || null, // Esto va cambiar de acuerdo
             tipoaplicacion: '01', //defecto
-            fechapresupuesto: '13/02/2025', // Esto modificaria
+            fechapresupuesto: this.fechapresupuestoMod || null, // Esto modificaria
             bcoliquidacion: '00', //defecto
             xmlDetalle: xmlString //los seleccionados
         };

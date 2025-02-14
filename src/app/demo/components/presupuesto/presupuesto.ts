@@ -61,3 +61,16 @@ export interface insert_detalle{
     bcoliquidacion:string;
     xmlDetalle:string;
 }
+
+export interface insert_presupuesto{
+    ban01Empresa: string;
+    ban01Numero: string;
+    ban01Anio: string;
+    ban01Mes: string;
+    ban01Descripcion: string;
+    ban01Fecha: string;
+    ban01Estado: string;
+    ban01Usuario: string;
+    ban01Pc: string;
+    ban01FechaRegistro: string;
+}
