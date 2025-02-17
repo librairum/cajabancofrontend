@@ -125,7 +125,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.router.navigate(['Home/detalle-presupuesto'],navigationExtras)
 
     }
-    modificarPago(presupuesto:cabeceraPresupuesto){
+    /*modificarPago(presupuesto:cabeceraPresupuesto){
         const formattedDate=this.datePipe.transform(presupuesto.fecha,'dd/MM/yyyy');
         const navigationExtras = {
             state: {
@@ -135,7 +135,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         };
         this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);
-    }
+    }*/
     iniciarNuevoPresupuesto(){
         this.mostrarNuevaFila=true;
         this.botonesDeshabilitados=true;

@@ -80,7 +80,7 @@
         <div style="margin-top: 1rem; margin-bottom: 0.5rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
             <p-button label="Agregar" icon="pi pi-plus" (onClick)="onAddSelected()"></p-button>
             <p-button label="Cancelar" icon="pi pi-ban" (onClick)="onCancelSelection()"></p-button>
-            <p-button label="Cerrar" icon="pi pi-times" [routerLink]="'/Home/presupuesto'"></p-button>
+            <p-button label="Cerrar" icon="pi pi-times" (onClick)="onCerrar()"></p-button>
         </div>
 
     </p-panel>

@@ -32,7 +32,7 @@
 }
 
 ::ng-deep .p-datatable .p-column-filter {
-    width: 100px; /* Reduce el ancho del filtro */
+    width: auto; /* Reduce el ancho del filtro */
     margin: auto;
     text-align: center;
     display: flex;

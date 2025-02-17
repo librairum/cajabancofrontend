@@ -63,6 +63,7 @@ export class AgregarPagoComponent implements OnInit {
         this.bS.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
             { label: 'Presupuesto', routerLink: '/Home/presupuesto' },
+            { label: 'Detalle Presupuesto', routerLink: '/Home//detalle-presupuesto' },
             { label: 'Agregar Pago', routerLink: '/Home/nuevo-presupuesto' },
         ]);
         this.bS.currentBreadcrumbs$.subscribe(bc => {
@@ -142,16 +143,16 @@ export class AgregarPagoComponent implements OnInit {
 
             const fields = {
                 ruc: item.ruc,
-                razonSocial: item.razonSocial,
+                //razonSocial: item.razonSocial,
                 codigoTipDoc: item.coditoTipoDoc,
-                nombreTipoDoc: item.nombreTipoDOc,
+                //nombreTipoDoc: item.nombreTipoDOc,
                 numeroDocumento: item.numeroDOcumento,
                 monedaOriginal: item.monedaOriginal,
                 soles: item.soles.toString(),
                 dolares: item.dolares.toString(),
                 fechaEmision: item.fechaEmision,
-                fechaVencimiento: item.fechaVencimiento,
-                diasAtrazo: item.diasAtrazo.toString()
+                fechaVencimiento: item.fechaVencimiento
+                //diasAtrazo: item.diasAtrazo.toString()
             };
 
             for (const [key, value] of Object.entries(fields)) {
@@ -183,10 +184,19 @@ export class AgregarPagoComponent implements OnInit {
                         summary: 'Éxito',
                         detail: 'Detalle insertado correctamente'
                     });
-                    // Limpiar selección
+                    const formattedDate = this.fechapresupuestoMod
+                    const navigationExtras = {
+                        state: {
+                            PagoNro: this.numeropresupuestoMod,
+                            Fecha: formattedDate,
+                        }
+                    }
                     this.selectedItems = [];
+                    this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
+                    // Limpiar selección
+
                     // Opcional: redirigir a otra página o recargar datos
-                    this.link.navigate(['/Home/presupuesto']);
+                    //this.link.navigate(['/Home/presupuesto']);
                 },
                 error: (error) => {
                     this.messageService.add({
@@ -200,5 +210,16 @@ export class AgregarPagoComponent implements OnInit {
 
     onCancelSelection() {
         this.selectedItems = [];
+    }
+    onCerrar(){
+        const formattedDate = this.fechapresupuestoMod
+        const navigationExtras = {
+            state: {
+                PagoNro: this.numeropresupuestoMod,
+                Fecha: formattedDate,
+            }
+        }
+        this.selectedItems = [];
+        this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
     }
 }

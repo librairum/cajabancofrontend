@@ -49,14 +49,29 @@
     </div>
     <div class="card p-2">
         <p-table [value]="DetallePago" sortField="ban02Ruc" sortMode="single" rowGroupMode="subheader"
-            groupRowsBy="ban02Ruc" [scrollable]="true" scrollHeight="500px" [loading]="load">
+            groupRowsBy="ban02Ruc" [scrollable]="true" scrollHeight="500px" [loading]="load" [globalFilterFields]="['ban02Ruc','razonsocial','ban02NroDoc']">
             <ng-template pTemplate="header">
                 <tr>
                     <th rowspan="2">Item</th>
-                    <th rowspan="2">RUC</th>
-                    <th rowspan="2">Razon Social</th>
+                    <th rowspan="2">RUC
+                        <br>
+                        <br>
+                        <p-columnFilter type="text" field="ban02Ruc" placeholder="Buscar" ariaLabel="RUC"
+                            [showMenu]="false"></p-columnFilter>
+                    </th>
+                    <th rowspan="2">Razon Social
+                        <br>
+                        <br>
+                        <p-columnFilter type="text" field="razonsocial" placeholder="Buscar" ariaLabel="Razon Social"
+                            [showMenu]="false"></p-columnFilter>
+                    </th>
                     <th rowspan="2">Tipo Doc</th>
-                    <th rowspan="2">Numero</th>
+                    <th rowspan="2">Numero
+                        <br>
+                        <br>
+                        <p-columnFilter type="text" field="ban02NroDoc" placeholder="Buscar" ariaLabel="Nro Documento"
+                            [showMenu]="false"></p-columnFilter>
+                    </th>
                     <th rowspan="2">Moneda Original</th>
                     <th rowspan="2">Importe Total S/.</th>
                     <th rowspan="2">Importe Total US$</th>
