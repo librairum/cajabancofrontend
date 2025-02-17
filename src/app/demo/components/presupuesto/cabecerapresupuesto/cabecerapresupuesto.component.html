@@ -4,20 +4,20 @@
     <p-panel header="Lista de Pagos" class="mb-3">
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
         <br>
-        <p-button label="Nuevo" icon="pi pi-plus" (onClick)="iniciarNuevoPresupuesto()" [disabled]="mostrarNuevaFila"/>
+        <p-button label="Nuevo" icon="pi pi-plus" (onClick)="iniciarNuevoPresupuesto()" [disabled]="mostrarNuevaFila" />
     </p-panel>
     <br>
     <div class="card p-2">
-        <p-table [value]="presupuesto"  [scrollable]="true" scrollHeight="400px"
-            [scrollDirection]="'both'" [loading]="loading" [globalFilterFields]="['pagoNumero']">
+        <p-table [value]="presupuesto" [scrollable]="true" scrollHeight="400px" [scrollDirection]="'both'"
+            [loading]="loading" [globalFilterFields]="['pagoNumero']">
 
             <ng-template pTemplate="header">
                 <tr>
                     <th rowspan="2">Pago Nro
                         <br>
                         <br>
-                        <p-columnFilter type="text" field="pagoNumero" placeholder="Buscar"
-                            ariaLabel="Pago Nro" [showMenu]="false" ></p-columnFilter>
+                        <p-columnFilter type="text" field="pagoNumero" placeholder="Buscar" ariaLabel="Pago Nro"
+                            [showMenu]="false"></p-columnFilter>
                     </th>
                     <th rowspan="2">Fecha</th>
                     <th rowspan="2">Motivo</th>
@@ -45,8 +45,25 @@
             <ng-template pTemplate="body" let-presupuesto>
                 <tr>
                     <td>{{presupuesto.pagoNumero}}</td>
-                    <td>{{ presupuesto.fecha | date:'dd/MM/yyyy' }}</td>
-                    <td>{{presupuesto.motivo}}</td>
+                    <td>
+                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
+                            {{ presupuesto.fecha | date:'dd/MM/yyyy' }}
+                        </ng-container>
+                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
+                            <p-calendar [(ngModel)]="editForm.ban01Fecha" dateFormat="dd/mm/yy"
+                                (onSelect)="actualizarFechaEdicion($event)" [showIcon]="true" appendTo="body"
+                                class="w-full"></p-calendar>
+                        </ng-container>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
+                            {{presupuesto.motivo}}
+                        </ng-container>
+                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
+                            <input pInputText [(ngModel)]="editForm.ban01Descripcion" placeholder="Descripción"
+                                class="w-full">
+                        </ng-container>
+                    </td>
                     <td>{{presupuesto.mediopago}}</td>
                     <td>{{presupuesto.impBrutoSoles | number:'1.2-2'}}</td>
                     <td>{{presupuesto.impBrutoDolares | number:'1.2-2'}}</td>
@@ -61,17 +78,30 @@
                     <td>{{presupuesto.enlaceComprobante}}</td>
                     <td>
                         <div class="flex gap-2">
-                            <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm" pTooltip="Ver Detalles"
-                                [text]="true" (onClick)="verDetalles(presupuesto)" [disabled]="botonesDeshabilitados"></p-button>
-                            <p-button icon="pi pi-pencil" styleClass="p-button-info p-button-sm" pTooltip="Modificar"
-                                [text]="true" (onClick)="modificarPago(presupuesto)" [disabled]="botonesDeshabilitados"></p-button>
-                            <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm" pTooltip="Eliminar"
-                                [text]="true" (onClick)="eliminarPago(presupuesto)" [disabled]="botonesDeshabilitados"></p-button>
-                            <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
-                                pTooltip="Confirmar Pago" [text]="true"
-                                (onClick)="confirmarPago(presupuesto)" [disabled]="botonesDeshabilitados"></p-button>
-                            <p-button icon="pi pi-ban" styleClass="p-button-danger p-button-sm"
-                                (onClick)="anularPago(presupuesto)" [text]="true" pTooltip="Anular pago" [disabled]="botonesDeshabilitados"></p-button>
+                            <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
+                                <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
+                                    pTooltip="Ver Detalles" [text]="true" (onClick)="verDetalles(presupuesto)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                                <p-button icon="pi pi-pencil" styleClass="p-button-info p-button-sm"
+                                    pTooltip="Modificar" [text]="true" (onClick)="iniciarEdicion(presupuesto)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                                <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
+                                    pTooltip="Eliminar" [text]="true" (onClick)="eliminarPago(presupuesto)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                                <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
+                                    pTooltip="Confirmar Pago" [text]="true" (onClick)="confirmarPago(presupuesto)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                                <p-button icon="pi pi-ban" styleClass="p-button-danger p-button-sm"
+                                    (onClick)="anularPago(presupuesto)" [text]="true" pTooltip="Anular pago"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                            </ng-container>
+                            <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
+                                <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
+                                    (onClick)="guardarEdicion(presupuesto.pagoNumero)" pTooltip="Actualizar"></p-button>
+                                <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
+                                    (onClick)="cancelarEdicion(presupuesto.pagoNumero)" pTooltip="Cancelar"></p-button>
+                            </ng-container>
+
                         </div>
                     </td>
                 </tr>
@@ -79,63 +109,38 @@
             <ng-template pTemplate="footer">
                 <tr *ngIf="mostrarNuevaFila">
                     <td style="min-width: 100px;">
-                        <input pInputText
-                               [(ngModel)]="nuevoPresupuesto.ban01Numero"
-                               placeholder="Número"
-                               class="w-full">
+                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Numero" placeholder="Número"
+                            class="w-full">
                     </td>
                     <td style="min-width: 130px;">
-                        <p-calendar [(ngModel)]="nuevoPresupuesto.ban01Fecha"
-                                   dateFormat="dd/mm/yy"
-                                   placeholder="Fecha"
-                                   (onSelect)="actualizarFecha($event)"
-                                   [showIcon]="true"
-                                   appendTo="body"
-                                   class="w-full"></p-calendar>
+                        <p-calendar [(ngModel)]="nuevoPresupuesto.ban01Fecha" dateFormat="dd/mm/yy" placeholder="Fecha"
+                            (onSelect)="actualizarFecha($event)" [showIcon]="true" appendTo="body"
+                            class="w-full"></p-calendar>
                     </td>
                     <td style="min-width: 150px;">
-                        <input pInputText
-                               [(ngModel)]="nuevoPresupuesto.ban01Descripcion"
-                               placeholder="Descripción"
-                               class="w-full">
+                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Descripcion" placeholder="Descripción"
+                            class="w-full">
                     </td>
                     <td style="min-width: 80px;">
-                        <input pInputText
-                               [(ngModel)]="nuevoPresupuesto.ban01Anio"
-                               placeholder="Año"
-                               class="w-full">
+                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Anio" placeholder="Año" class="w-full">
                     </td>
                     <td style="min-width: 80px;">
-                        <input pInputText
-                               [(ngModel)]="nuevoPresupuesto.ban01Mes"
-                               placeholder="Mes"
-                               class="w-full">
+                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Mes" placeholder="Mes" class="w-full">
                     </td>
                     <td style="min-width: 100px;">
-                        <input pInputText
-                               [(ngModel)]="nuevoPresupuesto.ban01Pc"
-                               placeholder="PC"
-                               class="w-full">
+                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Pc" placeholder="PC" class="w-full">
                     </td>
                     <td style="min-width: 150px;">
-                        <input pInputText
-                               [(ngModel)]="nuevoPresupuesto.ban01FechaRegistro"
-                               [readonly]="true"
-                               class="w-full">
+                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01FechaRegistro" [readonly]="true"
+                            class="w-full">
                     </td>
                     <td colspan="5"></td>
                     <td>
                         <div class="flex gap-2">
-                            <p-button icon="pi pi-save"
-                                     styleClass="p-button-success p-button-sm"
-                                     [text]="true"
-                                     (onClick)="guardarNuevoPresupuesto()"
-                                     pTooltip="Guardar"></p-button>
-                            <p-button icon="pi pi-times"
-                                     styleClass="p-button-danger p-button-sm"
-                                     [text]="true"
-                                     (onClick)="cancelarNuevo()"
-                                     pTooltip="Cancelar"></p-button>
+                            <p-button icon="pi pi-save" styleClass="p-button-success p-button-sm" [text]="true"
+                                (onClick)="guardarNuevoPresupuesto()" pTooltip="Guardar"></p-button>
+                            <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
+                                (onClick)="cancelarNuevo()" pTooltip="Cancelar"></p-button>
                         </div>
                     </td>
                 </tr>

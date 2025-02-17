@@ -41,13 +41,14 @@ export class AgregarPagoComponent implements OnInit {
     numeropresupuestoMod: string = '';
     fechapresupuestoMod: string = '';
 
-    constructor(private link:Router ,private primeng: PrimeNGConfig, private fb: FormBuilder, private gS: GlobalService, private bS: BreadcrumbService, private confirmationService: ConfirmationService, private router: Router, private presupuestoService: PresupuestoService, private messageService: MessageService, private datePipe: DatePipe) {
+    constructor(private link: Router, private primeng: PrimeNGConfig, private fb: FormBuilder, private gS: GlobalService, private bS: BreadcrumbService, private confirmationService: ConfirmationService, private router: Router, private presupuestoService: PresupuestoService, private messageService: MessageService, private datePipe: DatePipe) {
         const navigation = this.router.getCurrentNavigation();
         if (navigation?.extras.state) {
             const state = navigation.extras.state as any;
-            this.isModificacion = state.isModificacion;
-            this.numeropresupuestoMod = state.numeropresupuesto;
-            this.fechapresupuestoMod = state.fechapresupuesto;
+            this.numeropresupuestoMod = state.pagonro;
+            this.fechapresupuestoMod = state.fechaformateada;
+        } else {
+            this.router.navigate(['Home/detalle-presupuesto']);
         }
 
         this.filtroFRM = fb.group({
@@ -126,75 +127,76 @@ export class AgregarPagoComponent implements OnInit {
     //checkbox
     onAddSelected() {
         if (this.selectedItems.length === 0) {
-          this.messageService.add({
-            severity: 'warn',
-            summary: 'Advertencia',
-            detail: 'Seleccione al menos un registro'
-          });
-          return;
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'Seleccione al menos un registro'
+            });
+            return;
         }
 
         const xmlDoc = document.implementation.createDocument(null, "DataSet", null);
 
         this.selectedItems.forEach(item => {
-          const tblElement = xmlDoc.createElement("tbl");
+            const tblElement = xmlDoc.createElement("tbl");
 
-          const fields = {
-            ruc: item.ruc,
-            razonSocial: item.razonSocial,
-            codigoTipDoc: item.coditoTipoDoc,
-            nombreTipoDoc: item.nombreTipoDOc,
-            numeroDocumento: item.numeroDOcumento,
-            monedaOriginal: item.monedaOriginal,
-            soles: item.soles.toString(),
-            dolares: item.dolares.toString(),
-            fechaEmision: item.fechaEmision,
-            fechaVencimiento: item.fechaVencimiento,
-            diasAtrazo: item.diasAtrazo.toString()
-          };
+            const fields = {
+                ruc: item.ruc,
+                razonSocial: item.razonSocial,
+                codigoTipDoc: item.coditoTipoDoc,
+                nombreTipoDoc: item.nombreTipoDOc,
+                numeroDocumento: item.numeroDOcumento,
+                monedaOriginal: item.monedaOriginal,
+                soles: item.soles.toString(),
+                dolares: item.dolares.toString(),
+                fechaEmision: item.fechaEmision,
+                fechaVencimiento: item.fechaVencimiento,
+                diasAtrazo: item.diasAtrazo.toString()
+            };
 
-          for (const [key, value] of Object.entries(fields)) {
-            const element = xmlDoc.createElement(key);
-            element.textContent = value;
-            tblElement.appendChild(element);
-          }
+            for (const [key, value] of Object.entries(fields)) {
+                const element = xmlDoc.createElement(key);
+                element.textContent = value;
+                tblElement.appendChild(element);
+            }
 
-          xmlDoc.documentElement.appendChild(tblElement);
+            xmlDoc.documentElement.appendChild(tblElement);
         });
 
         const xmlString = new XMLSerializer().serializeToString(xmlDoc);
+        console.log(xmlString)
 
         const detallePresupuesto: insert_detalle = {
             empresa: this.gS.getCodigoEmpresa(),
-            numeropresupuesto: this.numeropresupuestoMod || null, // Esto va cambiar de acuerdo
-            tipoaplicacion: '01', //defecto
-            fechapresupuesto: this.fechapresupuestoMod || null, // Esto modificaria
-            bcoliquidacion: '00', //defecto
-            xmlDetalle: xmlString //los seleccionados
+            numeropresupuesto: this.numeropresupuestoMod || '',  // Si es null, enviar string vacío
+            tipoaplicacion: '01',
+            fechapresupuesto: this.fechapresupuestoMod || '',   // Si es null, enviar string vacío
+            bcoliquidacion: '00',
+            xmlDetalle: xmlString
         };
 
         this.presupuestoService.insertarDetallePresupuesto(detallePresupuesto)
-        .subscribe({
-            next: (response) => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Éxito',
-                    detail: 'Detalle insertado correctamente'
-                });
-                // Limpiar selección
-                this.selectedItems = [];
-                // Opcional: redirigir a otra página o recargar datos
-                this.link.navigate(['/Home/presupuesto']);
-            },
-            error: (error) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al insertar el detalle: ' + error.message
-                });
-            }
-        });
-      }
+            .subscribe({
+                next: (response) => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: 'Detalle insertado correctamente'
+                    });
+                    // Limpiar selección
+                    this.selectedItems = [];
+                    // Opcional: redirigir a otra página o recargar datos
+                    this.link.navigate(['/Home/presupuesto']);
+                },
+                error: (error) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error al insertar el detalle: ' + error.message
+                    });
+                }
+            });
+    }
 
     onCancelSelection() {
         this.selectedItems = [];

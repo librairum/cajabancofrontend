@@ -21,12 +21,12 @@ export class PresupuestoService {
             map(response => response.data)
         );
     }
-    public obtenerDetallePresupuesto(empresa:string, numerodocumento:string,fechapresupuesto:string): Observable<Detallepresupuesto[]>{
-        const params=new HttpParams()
+    public obtenerDetallePresupuesto(empresa: string, numerodocumento: string): Observable<Detallepresupuesto[]> {
+        const params = new HttpParams()
             .set('empresa', empresa)
-            .set('numerodocumento', numerodocumento)
-            .set('fechapresupuesto', fechapresupuesto);
-        return this.http.get<RespuestaAPI2>(`${this.urlApi}/SpListaDet`, {params}).pipe(map(response=>response.data));
+            .set('numerodocumento', numerodocumento);
+        return this.http.get<RespuestaAPI2>(`${this.urlApi}/SpListaDet`, {params})
+            .pipe(map(response => response.data));
     }
     public obtenerProveedores(empresa:string): Observable<proveedores_lista[]>{
         const params=new HttpParams()
@@ -40,20 +40,34 @@ export class PresupuestoService {
             .set('ruc', ruc);
         return this.http.get<RespuestaAPI4>(`${this.urlApi}/SpListaDocPendientes`, {params}).pipe(map(response=>response.data));
     }
-
     public insertarDetallePresupuesto(detalle: insert_detalle): Observable<any> {
         const params = new HttpParams()
-            .set('empresa', detalle.empresa)
+            .set('Empresa', detalle.empresa)                   // Notar la E mayúscula en Empresa
             .set('numeropresupuesto', detalle.numeropresupuesto)
             .set('tipoaplicacion', detalle.tipoaplicacion)
             .set('fechapresupuesto', detalle.fechapresupuesto)
             .set('bcoliquidacion', detalle.bcoliquidacion)
             .set('xmlDetalle', detalle.xmlDetalle);
 
-        return this.http.post<RespuestaAPI5>(`${this.urlApi}/SpInsertaDet`, null, { params });
+        // El endpoint espera un POST sin body pero con query params
+        return this.http.post<RespuestaAPI5>(
+            `${this.urlApi}/SpInsertaDet`,
+            null,  // body vacío
+            { params }  // parámetros en la URL
+        );
     }
     public insertarPresupuesto(presupuesto: insert_presupuesto): Observable<any> {
         return this.http.post(`${this.urlApi}/SpInsert`, presupuesto);
+    }
+    public actualizarPresupuesto(presupuesto:insert_presupuesto):Observable<any>{
+        return this.http.put(`${this.urlApi}/SpActualiza`, presupuesto);
+    }
+    public eliminarPresupuesto(empresa: string, numero: string): Observable<any> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('numero', numero);
+
+        return this.http.delete(`${this.urlApi}/SpElimina`, { params });
     }
 }
 

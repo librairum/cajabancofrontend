@@ -15,23 +15,46 @@ export interface cabeceraPresupuesto{
 }
 
 export interface Detallepresupuesto{
-    item:number;
-    ban02Ruc:string;
-    ban02Proveedor:string;
-    ban02Tipodoc:string;
-    ban02NroDoc :string;
-    ban02Moneda:string;
-    ban02Soles:number;
-    ban02Dolares:number;
-    ban02PagoSoles:number;
-    ban02PagoDolares:number;
-    tipoDetraccion:string;
-    ban02TasaDet:string;
-    ban02ImporteSolesDet:number;
-    //retencion:number;
-    ban02ImporteSolesPercepcion:number;
-    netoSoles:number;
-    netoDolares:number;
+    item: number;
+    ban02Empresa: string;
+    ban02Codigo: string;
+    ban02Ruc: string;
+    ban02numero: string;
+    ban02Fecha: string;
+    ban02Proveedor: string | null;
+    ban02TipoCambio: string;
+    ban02TipoAplic: string;
+    ban02Tipodoc: string;
+    ban02NroDoc: string;
+    ban02Moneda: string;
+    ban02Soles: number;
+    ban02Dolares: number;
+    ban02SolesVale: string;
+    ban02PagoSoles: number;
+    ban02PagoDolares: number;
+    tipoDetraccion: string;
+    ban02TasaDet: number;
+    ban02ImporteSolesDet: number;
+    ban02ImporteSolesPercepcion: number;
+    ban02ImporteSolesRet: number;
+    ban02SolesNeto: number;
+    ban02DolaresNeto: number;
+    nombreTipDoc: string;
+    razonsocial: string;
+    nombreTipoDocumento: string | null;
+    nombremoneda: string | null;
+    ban02TipoDetraccion: string | null;
+    ban02Tasadetraccion: number;
+    ban02ImporteDetraccionSoles: number;
+    ban02ImporteDetraccionDolares: number;
+    ban02TasaRetencion: number;
+    ban02ImporteRetencionSoles: number;
+    ban02ImporteRetencionDolares: number;
+    ban02TasaPercepcion: number;
+    ban02ImportePercepcionSoles: number;
+    ban02ImportePercepcionDolares: number;
+    ban02NetoSoles: number;
+    ban02NetoDolares: number;
 }
 
 export interface agregar_Pago{
@@ -54,12 +77,12 @@ export interface proveedores_lista{
 }
 
 export interface insert_detalle{
-    empresa:string;
-    numeropresupuesto:string;
-    tipoaplicacion:string;
-    fechapresupuesto:string;
-    bcoliquidacion:string;
-    xmlDetalle:string;
+    empresa: string;
+    numeropresupuesto: string;
+    tipoaplicacion: string;
+    fechapresupuesto: string;
+    bcoliquidacion: string;
+    xmlDetalle: string;
 }
 
 export interface insert_presupuesto{
