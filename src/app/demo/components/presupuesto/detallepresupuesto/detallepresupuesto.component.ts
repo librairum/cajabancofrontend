@@ -2,7 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -14,7 +14,7 @@ import { ToastModule } from 'primeng/toast';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { Detallepresupuesto } from '../presupuesto';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
-
+import { GlobalService } from 'src/app/demo/service/global.service';
 
 @Component({
     selector: 'app-detallepresupuesto',
@@ -22,7 +22,7 @@ import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
     imports: [BreadcrumbModule, RouterModule, ToastModule, ConfirmDialogModule, TableModule, PanelModule, CalendarModule, InputTextModule, ButtonModule, CommonModule, FormsModule],
     templateUrl: './detallepresupuesto.component.html',
     styleUrl: './detallepresupuesto.component.css',
-    providers: [MessageService,DatePipe]
+    providers: [ConfirmationService,MessageService,DatePipe]
 })
 export class DetallepresupuestoComponent implements OnInit {
     DetallePago: Detallepresupuesto[] = []
@@ -36,7 +36,12 @@ export class DetallepresupuestoComponent implements OnInit {
     groupTotals:any[] = [];
     load: boolean = false;
 
-    constructor(private messageService:MessageService,private presupuestoservice: PresupuestoService,private bs: BreadcrumbService, private router: Router, private ms: MessageService,private datePipe: DatePipe) {
+    constructor(private messageService:MessageService,
+        private presupuestoservice: PresupuestoService,
+        private bs: BreadcrumbService, private router: Router, 
+        private ms: MessageService,
+        private datePipe: DatePipe,
+    private confirmationService: ConfirmationService, private gS: GlobalService) {
         const navigation = router.getCurrentNavigation();
         if (navigation?.extras?.state) {
             this.navigationData = navigation.extras.state;
@@ -153,6 +158,63 @@ export class DetallepresupuestoComponent implements OnInit {
         console.log(navigationExtras.state)
         this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);
     }
+
+
+    eliminarPago(detalle : Detallepresupuesto) {
+        console.log(detalle);
+            this.confirmationService.confirm({
+                message: `
+                    <div class="text-center">
+                        <i class="pi pi-exclamation-circle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
+                        <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
+                        <p style="color: var(--text-color-secondary);">Número de pago: ${this.navigationData.PagoNro}</p>
+                        <p style="color: var(--text-color-secondary);">Número de detalle: ${detalle.ban02Codigo}</p>
+                        <p style="color: var(--text-color-secondary);">Fecha: ${this.fechaString}</p>
+                        <p style="margin-top: 1rem; color: var(--text-color-secondary);">Esta acción no se puede deshacer</p>
+                    </div>
+                `,
+                header: 'Confirmar Eliminación',
+                //icon: 'pi pi-exclamation-triangle',
+                acceptLabel: 'Sí, eliminar',
+                rejectLabel: 'No, cancelar',
+                acceptButtonStyleClass: 'p-button-danger p-button-raised',
+                rejectButtonStyleClass: 'p-button-outlined p-button-raised',
+                accept: () => {
+                    const empresa = this.gS.getCodigoEmpresa();
+                    //const numero = presupuesto.pagoNumero;
+                    const numeroPresupuesto = this.navigationData.PagoNro;
+                    const numeroPresupuestoDetalle = detalle.ban02Codigo;
+                    this.presupuestoservice.eliminarPresupuestoDetalle(empresa,
+                         numeroPresupuesto, numeroPresupuestoDetalle).subscribe({
+                            next: (response) =>{
+                                if(response.isSuccess){
+                                    this.messageService.add({
+                                        severity: 'success',
+                                        summary: 'Éxito',
+                                        detail: 'Presupuesto detalle eliminado correctamente'
+                                    });
+                                    this.cargarDetalles();
+                                    
+                                }else{
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'Error',
+                                        detail: response.message || 'Error al eliminar el presupuesto'                                   
+                                    });
+                                }
+                            },
+                            error: (error) => {
+                                this.messageService.add({
+                                    severity: 'error',
+                                    summary: 'Error',
+                                    detail: 'Error al eliminar el presupuesto: ' + error.message
+                                });
+                            }
+
+                         });                
+                }
+            });
+        }
 
 
 

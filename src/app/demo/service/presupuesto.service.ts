@@ -69,6 +69,14 @@ export class PresupuestoService {
 
         return this.http.delete(`${this.urlApi}/SpElimina`, { params });
     }
+    public eliminarPresupuestoDetalle(empresa:string, numero:string, numeroDetalle:string) : Observable<any>{
+            const params = new HttpParams()
+                    .set('empresa', empresa)
+                    .set('codigoDetallePresupuesto', numeroDetalle)  
+                    .set('numeroPresupuesto', numero);
+        return this.http.delete(`${this.urlApi}/SpEliminaDet`, {params});
+
+    }
 }
 
 interface RespuestaAPI5 {
