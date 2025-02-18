@@ -49,7 +49,8 @@
     </div>
     <div class="card p-2">
         <p-table [value]="DetallePago" sortField="ban02Ruc" sortMode="single" rowGroupMode="subheader"
-            groupRowsBy="ban02Ruc" [scrollable]="true" scrollHeight="500px" [loading]="load" [globalFilterFields]="['ban02Ruc','razonsocial','ban02NroDoc']">
+            groupRowsBy="ban02Ruc" [scrollable]="true" scrollHeight="500px" [loading]="load"
+            [globalFilterFields]="['ban02Ruc','razonsocial','ban02NroDoc']">
             <ng-template pTemplate="header">
                 <tr>
                     <th rowspan="2">Item</th>
@@ -123,13 +124,15 @@
                     <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc,
                         'ban02ImporteDetraccionSoles') |
                         number:'1.2-2' }}</td>
-                    <td></td>
                     <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImporteSolesPercepcion') |
+                        'ban02ImporteRetencionSoles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'netoSoles') |
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc,
+                        'ban02ImportePercepcionSoles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'netoDolares') |
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoSoles') |
+                        number:'1.2-2' }}</td>
+                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoDolares') |
                         number:'1.2-2' }}</td>
                 </tr>
             </ng-template>
@@ -144,31 +147,67 @@
                     <td>{{ detalle.nombremoneda }}</td>
                     <td>{{ detalle.ban02Soles | number:'1.2-2' }}</td>
                     <td>{{ detalle.ban02Dolares | number:'1.2-2' }}</td>
-                    <td>{{ detalle.ban02PagoSoles | number:'1.2-2' }}</td>
-                    <td>{{ detalle.ban02PagoDolares | number:'1.2-2' }}</td>
 
-                    <td>{{ detalle.ban02TipoDetraccion }}</td>
-                    <td>{{ detalle.ban02Tasadetraccion }}</td>
-                    <td>{{ detalle.ban02ImporteDetraccionSoles | number:'1.2-2' }}</td>
-                    <td> </td>
-                    <td>{{ detalle.ban02ImporteRetencionSoles | number:'1.2-2' }}</td>
+                    <td>
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles" />
+                        </ng-container>
+                        <ng-template #viewMode>{{ detalle.ban02PagoSoles }}</ng-template>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeDolares">
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoDolares" />
+                        </ng-container>
+                        <ng-template #viewModeDolares>{{ detalle.ban02PagoDolares }}</ng-template>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTipoDetraccion">
+                            <input pInputText type="text" [(ngModel)]="editingRow.ban02TipoDetraccion" />
+                        </ng-container>
+                        <ng-template #viewModeTipoDetraccion>{{ detalle.ban02TipoDetraccion }}</ng-template>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTasaDetraccion">
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02Tasadetraccion" />
+                        </ng-container>
+                        <ng-template #viewModeTasaDetraccion>{{ detalle.ban02Tasadetraccion }}</ng-template>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionSoles" />
+                        </ng-container>
+                        <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles }}</ng-template>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteRetencion">
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteRetencionSoles" />
+                        </ng-container>
+                        <ng-template #viewModeImporteRetencion>{{ detalle.ban02ImporteRetencionSoles }}</ng-template>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImportePercepcion">
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImportePercepcionSoles" />
+                        </ng-container>
+                        <ng-template #viewModeImportePercepcion>{{ detalle.ban02ImportePercepcionSoles }}</ng-template>
+                    </td>
+
                     <td>{{ detalle.ban02NetoSoles | number:'1.2-2' }}</td>
                     <td>{{ detalle.ban02NetoDolares | number:'1.2-2' }}</td>
                     <td>
-                        <div
-                            style="margin-top: 1rem; margin-bottom: 0.5rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
-                            <p-button icon="pi pi-pencil" styleClass="p-button-warning p-button-sm" pTooltip="Modificar"
-                                [text]="true" (onClick)="modificarPago(presupuesto)"></p-button>
-                            <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm" pTooltip="Eliminar"
-                                [text]="true" (onClick)="eliminarPago(presupuesto)"></p-button>
+                        <div class="flex gap-2 justify-content-end">
+                            <ng-container *ngIf="editingIndex === index; else editButtons">
+                                <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" (onClick)="saveEditing()"
+                                    pTooltip="Guardar" [text]="true"></p-button>
+                                <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" (onClick)="cancelEditing()"
+                                    pTooltip="Cancelar" [text]="true"></p-button>
+                            </ng-container>
+                            <ng-template #editButtons>
+                                <p-button icon="pi pi-pencil" styleClass="p-button-warning p-button-sm" (onClick)="startEditing(detalle, index)"
+                                    [disabled]="isAnyRowEditing" pTooltip="Modificar" [text]="true"></p-button>
+                                <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm" [disabled]="isAnyRowEditing"
+                                    pTooltip="Eliminar" [text]="true"></p-button>
+                            </ng-template>
                         </div>
-
-
-                        <!-- <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" pTooltip="Cancelar"
-                            [text]="true" (onClick)="modificarPago(presupuesto)"></p-button>
-                        <p-button icon="pi pi-save" styleClass="p-button-info p-button-sm" pTooltip="Grabar"
-                            [text]="true" (onClick)="verDetalles(presupuesto)"></p-button> -->
-
                     </td>
                 </tr>
             </ng-template>
@@ -183,8 +222,8 @@
                     <td></td>
                     <td></td>
                     <td class="font-bold">{{ getTotalColumn('ban02ImporteDetraccionSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('retencion') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('ban02ImporteSolesPercepcion') | number:'1.2-2' }}</td>
+                    <td class="font-bold">{{ getTotalColumn('ban02ImporteRetencionSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold">{{ getTotalColumn('ban02ImportePercepcionSoles') | number:'1.2-2' }}</td>
                     <td class="font-bold">{{ getTotalColumn('ban02NetoSoles') | number:'1.2-2' }}</td>
                     <td class="font-bold">{{ getTotalColumn('ban02NetoDolares') | number:'1.2-2' }}</td>
                     <td></td>
