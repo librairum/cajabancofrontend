@@ -1,5 +1,19 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
+<p-dialog
+    [(visible)]="displayAgregarModal"
+    [modal]="true"
+    [style]="{width: '90vw', height: '90vh'}"
+    [draggable]="false"
+    [resizable]="false"
+    [maximizable]="true"
+    header="Agregar Documento por Pagar">
+    <app-agregar-pago
+        [numeropresupuesto]="pagnro"
+        [fechapresupuesto]="fechaString"
+        (onClose)="onCloseModal()">
+    </app-agregar-pago>
+</p-dialog>
 <div class="container">
     <p-panel header="Lista de Pagos" class="mb-3">
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
@@ -210,8 +224,8 @@
                                     pTooltip="Cancelar" [text]="true"></p-button>
                             </ng-container>
                             <ng-template #editButtons>
-                                <p-button icon="pi pi-pencil" styleClass="p-button-warning p-button-sm" 
-                                (onClick)="startEditing(detalle,index)" [disabled]="isAnyRowEditing" 
+                                <p-button icon="pi pi-pencil" styleClass="p-button-warning p-button-sm"
+                                (onClick)="startEditing(detalle,index)" [disabled]="isAnyRowEditing"
                                 pTooltip="Modificar" [text]="true"></p-button>
                                 <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm" [disabled]="isAnyRowEditing"
                                     pTooltip="Eliminar" [text]="true"   (onClick)="eliminarPago(detalle)" ></p-button>

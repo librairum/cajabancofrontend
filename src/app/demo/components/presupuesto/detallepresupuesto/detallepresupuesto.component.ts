@@ -17,13 +17,15 @@ import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 
 import { InputNumberModule } from 'primeng/inputnumber';
 import { GlobalService } from 'src/app/demo/service/global.service';
+import { DialogModule } from 'primeng/dialog';
+import { AgregarPagoComponent } from "../agregar-pago/agregar-pago.component";
 
 @Component({
     selector: 'app-detallepresupuesto',
     standalone: true,
-    imports: [BreadcrumbModule, RouterModule, ToastModule, 
-        ConfirmDialogModule, TableModule, PanelModule, CalendarModule, 
-        InputTextModule, InputNumberModule,ButtonModule, CommonModule, FormsModule],
+    imports: [BreadcrumbModule, RouterModule, ToastModule,
+    ConfirmDialogModule, TableModule, PanelModule, CalendarModule,
+    InputTextModule, InputNumberModule, ButtonModule, CommonModule, FormsModule, DialogModule, AgregarPagoComponent],
     templateUrl: './detallepresupuesto.component.html',
     styleUrl: './detallepresupuesto.component.css',
     providers: [ConfirmationService,MessageService,DatePipe]
@@ -39,22 +41,23 @@ export class DetallepresupuestoComponent implements OnInit {
     medio: string;
     groupTotals:any[] = [];
     load: boolean = false;
+    displayAgregarModal: boolean = false;
 
     editingRow: Detallepresupuesto | null = null;
     isAnyRowEditing: boolean = false;
     editingIndex: number | null = null; // Índice de la fila en edición
     constructor(private messageService:MessageService,
         private presupuestoservice: PresupuestoService,
-        private bs: BreadcrumbService, 
-        private router: Router, 
+        private bs: BreadcrumbService,
+        private router: Router,
         private ms: MessageService,
         private datePipe: DatePipe,
     private confirmationService: ConfirmationService, private gS: GlobalService) {
 
     //variables de edición
-  
+
 /*
-    
+
 */
         const navigation = router.getCurrentNavigation();
         if (navigation?.extras?.state) {
@@ -164,7 +167,7 @@ export class DetallepresupuestoComponent implements OnInit {
     }
 
     DatosdeRegistro() {
-        const formattedDate = this.datePipe.transform(this.fecha, 'dd/MM/yyyy');
+        /*const formattedDate = this.datePipe.transform(this.fecha, 'dd/MM/yyyy');
         const navigationExtras = {
           state: {
             pagonro: this.pagnro,
@@ -172,7 +175,12 @@ export class DetallepresupuestoComponent implements OnInit {
           }
         };
         console.log(navigationExtras.state)
-        this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);
+        this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);*/
+        this.displayAgregarModal=true;
+    }
+    onCloseModal(){
+        this.displayAgregarModal=false;
+        this.cargarDetalles();
     }
     startEditing(detalle: Detallepresupuesto, index: number) {
         if (this.isAnyRowEditing) {
@@ -269,8 +277,8 @@ export class DetallepresupuestoComponent implements OnInit {
                 message: `
                     <div class="text-center">
                         <i class="pi pi-exclamation-circle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
-                        <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>                        
-                        <p style="color: var(--text-color-secondary);">Número documento: ${detalle.ban02NroDoc}</p>                        
+                        <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
+                        <p style="color: var(--text-color-secondary);">Número documento: ${detalle.ban02NroDoc}</p>
                         <p style="margin-top: 1rem; color: var(--text-color-secondary);">Esta acción no se puede deshacer</p>
                     </div>
                 `,
@@ -295,12 +303,12 @@ export class DetallepresupuestoComponent implements OnInit {
                                         detail: 'Presupuesto detalle eliminado correctamente'
                                     });
                                     this.cargarDetalles();
-                                    
+
                                 }else{
                                     this.messageService.add({
                                         severity: 'error',
                                         summary: 'Error',
-                                        detail: response.message || 'Error al eliminar el presupuesto'                                   
+                                        detail: response.message || 'Error al eliminar el presupuesto'
                                     });
                                 }
                             },
@@ -312,7 +320,7 @@ export class DetallepresupuestoComponent implements OnInit {
                                 });
                             }
 
-                         });                
+                         });
                 }
             });
         }
