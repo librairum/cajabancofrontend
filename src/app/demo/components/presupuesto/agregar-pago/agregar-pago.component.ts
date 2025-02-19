@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
@@ -16,11 +16,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { Dropdown, DropdownModule } from 'primeng/dropdown';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { calendario_traduccion } from 'src/app/shared/Calendarios';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-agregar-pago',
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, BreadcrumbModule, ToastModule, PanelModule, ConfirmDialogModule, TableModule, CommonModule, ButtonModule, RouterModule, CalendarModule, DropdownModule],
+    imports: [FormsModule, ReactiveFormsModule, BreadcrumbModule, ToastModule, PanelModule, ConfirmDialogModule, TableModule, CommonModule, ButtonModule, RouterModule, CalendarModule, DropdownModule,InputTextModule],
     templateUrl: './agregar-pago.component.html',
     styleUrl: './agregar-pago.component.css',
     providers: [ConfirmationService, MessageService, DatePipe]
@@ -33,6 +34,10 @@ export class AgregarPagoComponent implements OnInit {
     ayudapago: agregar_Pago[] = []
     proveedores: proveedores_lista[] = []
     selectedItems: agregar_Pago[] = []
+    //modal
+    @Input() numeropresupuesto: string;
+    @Input() fechapresupuesto: string;
+    @Output() onClose = new EventEmitter<void>();
 
 
 
@@ -42,23 +47,26 @@ export class AgregarPagoComponent implements OnInit {
     fechapresupuestoMod: string = '';
 
     constructor(private link: Router, private primeng: PrimeNGConfig, private fb: FormBuilder, private gS: GlobalService, private bS: BreadcrumbService, private confirmationService: ConfirmationService, private router: Router, private presupuestoService: PresupuestoService, private messageService: MessageService, private datePipe: DatePipe) {
-        const navigation = this.router.getCurrentNavigation();
+        /*const navigation = this.router.getCurrentNavigation();
         if (navigation?.extras.state) {
             const state = navigation.extras.state as any;
             this.numeropresupuestoMod = state.pagonro;
             this.fechapresupuestoMod = state.fechaformateada;
         } else {
             this.router.navigate(['Home/detalle-presupuesto']);
-        }
+        }*/
+
 
         this.filtroFRM = fb.group({
             empresa: ['', [Validators.required]],
-            fechavencimiento: [new Date(), [Validators.required]],
             ruc: ['', [Validators.required]],
+            nrodoc: ['', [Validators.required]],
         })
     }
 
     ngOnInit(): void {
+        this.numeropresupuestoMod = this.numeropresupuesto;
+        this.fechapresupuestoMod = this.fechapresupuesto;
         this.primeng.setTranslation(calendario_traduccion());
         this.bS.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
@@ -75,8 +83,31 @@ export class AgregarPagoComponent implements OnInit {
 
     cargarayudaparaagregarpago(): void {
         this.loading = true;
-        const fechaFormateda = this.datePipe.transform(this.filtroFRM.get('fechavencimiento').value, 'dd/MM/yyyy');
-        this.presupuestoService.obtenerDocPendiente(this.gS.getCodigoEmpresa(), fechaFormateda, this.filtroFRM.get('ruc').value).subscribe({
+        const nroDoc = this.filtroFRM.get('nrodoc').value;
+        if (!nroDoc) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'La fecha de vencimiento es requerida'
+            });
+            this.loading = false;
+            return;
+        }
+        const ruc = this.filtroFRM.get('ruc').value;
+        if (!ruc) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Debe seleccionar un proveedor'
+            });
+            this.loading = false;
+            return;
+        }
+        this.presupuestoService.obtenerDocPendiente(
+            this.gS.getCodigoEmpresa(),
+            ruc,
+            nroDoc
+        ).subscribe({
             next: (data) => {
                 this.ayudapago = data;
                 this.loading = false;
@@ -96,7 +127,7 @@ export class AgregarPagoComponent implements OnInit {
                     detail: 'Error al cargar los registros: ' + error.message
                 });
             }
-        })
+        });
     }
 
     cargarproveedores() {
@@ -184,19 +215,16 @@ export class AgregarPagoComponent implements OnInit {
                         summary: 'Éxito',
                         detail: 'Detalle insertado correctamente'
                     });
-                    const formattedDate = this.fechapresupuestoMod
+                    /*const formattedDate = this.fechapresupuestoMod
                     const navigationExtras = {
                         state: {
                             PagoNro: this.numeropresupuestoMod,
                             Fecha: formattedDate,
                         }
-                    }
+                    }*/
                     this.selectedItems = [];
-                    this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
-                    // Limpiar selección
-
-                    // Opcional: redirigir a otra página o recargar datos
-                    //this.link.navigate(['/Home/presupuesto']);
+                    //this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
+                    this.onClose.emit();
                 },
                 error: (error) => {
                     this.messageService.add({
@@ -211,8 +239,8 @@ export class AgregarPagoComponent implements OnInit {
     onCancelSelection() {
         this.selectedItems = [];
     }
-    onCerrar(){
-        const formattedDate = this.fechapresupuestoMod
+    onCerrar() {
+        /*const formattedDate = this.fechapresupuestoMod
         const navigationExtras = {
             state: {
                 PagoNro: this.numeropresupuestoMod,
@@ -220,6 +248,7 @@ export class AgregarPagoComponent implements OnInit {
             }
         }
         this.selectedItems = [];
-        this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
+        this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)*/
+        this.onClose.emit();
     }
 }

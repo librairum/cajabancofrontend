@@ -33,11 +33,11 @@ export class PresupuestoService {
             .set('empresa', empresa)
         return this.http.get<RespuestaAPI3>(`${this.urlApi}/SpTraeProveedores`, {params}).pipe(map(response=>response.data));
     }
-    public obtenerDocPendiente(empresa:string,fechavencimiento:string,ruc:string): Observable<agregar_Pago[]>{
+    public obtenerDocPendiente(empresa:string,ruc:string,numerodocumento:string): Observable<agregar_Pago[]>{
         const params=new HttpParams()
             .set('empresa', empresa)
-            .set('fechavencimiento', fechavencimiento)
-            .set('ruc', ruc);
+            .set('ruc', ruc)
+            .set('numerodocumento', numerodocumento);
         return this.http.get<RespuestaAPI4>(`${this.urlApi}/SpListaDocPendientes`, {params}).pipe(map(response=>response.data));
     }
     public insertarDetallePresupuesto(detalle: insert_detalle): Observable<any> {
@@ -71,7 +71,7 @@ export class PresupuestoService {
     public eliminarPresupuestoDetalle(empresa:string, numero:string, numeroDetalle:string) : Observable<any>{
             const params = new HttpParams()
                     .set('empresa', empresa)
-                    .set('codigoDetallePresupuesto', numeroDetalle)  
+                    .set('codigoDetallePresupuesto', numeroDetalle)
                     .set('numeroPresupuesto', numero);
         return this.http.delete(`${this.urlApi}/SpEliminaDet`, {params});
     }
