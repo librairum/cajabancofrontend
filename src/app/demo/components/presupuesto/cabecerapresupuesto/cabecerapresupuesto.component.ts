@@ -64,7 +64,12 @@ export class CabecerapresupuestoComponent implements OnInit {
     };
 
 
-    constructor(private gS:GlobalService,private bS: BreadcrumbService, private confirmationService: ConfirmationService,private router:Router, private presupuestoService:PresupuestoService,private messageService: MessageService, private datePipe: DatePipe) { }
+    constructor(private gS:GlobalService,private bS: BreadcrumbService, 
+        private confirmationService: ConfirmationService,
+        private router:Router, 
+        private presupuestoService:PresupuestoService,
+        private messageService: MessageService, 
+        private datePipe: DatePipe) { }
 
     ngOnInit(): void {
         this.bS.setBreadcrumbs([

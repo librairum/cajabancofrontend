@@ -109,12 +109,13 @@
             <ng-template pTemplate="footer">
                 <tr *ngIf="mostrarNuevaFila">
                     <td style="min-width: 100px;">
-                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Numero" placeholder="Número"
-                            class="w-full">
+                        {{nuevoPresupuesto.ban01IdBanco}}
+                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Numero" placeholder="Número"
+                            class="w-full"> -->
                     </td>
                     <td style="min-width: 130px;">
                         <p-calendar [(ngModel)]="nuevoPresupuesto.ban01Fecha" dateFormat="dd/mm/yy" placeholder="Fecha"
-                            (onSelect)="actualizarFecha($event)" [showIcon]="true" appendTo="body"
+                            (onSelect)="actualizarFecha($event)" [showIcon]="true" appendTo="body" 
                             class="w-full"></p-calendar>
                     </td>
                     <td style="min-width: 150px;">
@@ -122,17 +123,16 @@
                             class="w-full">
                     </td>
                     <td style="min-width: 80px;">
-                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Anio" placeholder="Año" class="w-full">
+                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Anio" placeholder="Año" class="w-full"> -->
                     </td>
                     <td style="min-width: 80px;">
-                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Mes" placeholder="Mes" class="w-full">
+                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Mes" placeholder="Mes" class="w-full"> -->
                     </td>
                     <td style="min-width: 100px;">
-                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Pc" placeholder="PC" class="w-full">
+                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Pc" placeholder="PC" class="w-full"> -->
                     </td>
                     <td style="min-width: 150px;">
-                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01FechaRegistro" [readonly]="true"
-                            class="w-full">
+                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01FechaRegistro" [readonly]="true" class="w-full"> -->
                     </td>
                     <td colspan="5"></td>
                     <td>

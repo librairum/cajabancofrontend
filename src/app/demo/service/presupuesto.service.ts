@@ -42,18 +42,16 @@ export class PresupuestoService {
     }
     public insertarDetallePresupuesto(detalle: insert_detalle): Observable<any> {
         const params = new HttpParams()
-            .set('Empresa', detalle.empresa)                   // Notar la E mayúscula en Empresa
+            .set('Empresa', detalle.empresa)
             .set('numeropresupuesto', detalle.numeropresupuesto)
             .set('tipoaplicacion', detalle.tipoaplicacion)
             .set('fechapresupuesto', detalle.fechapresupuesto)
             .set('bcoliquidacion', detalle.bcoliquidacion)
             .set('xmlDetalle', detalle.xmlDetalle);
-
-        // El endpoint espera un POST sin body pero con query params
         return this.http.post<RespuestaAPI5>(
             `${this.urlApi}/SpInsertaDet`,
-            null,  // body vacío
-            { params }  // parámetros en la URL
+            null,
+            { params }
         );
     }
     public insertarPresupuesto(presupuesto: insert_presupuesto): Observable<any> {
@@ -69,12 +67,17 @@ export class PresupuestoService {
 
         return this.http.delete(`${this.urlApi}/SpElimina`, { params });
     }
+
     public eliminarPresupuestoDetalle(empresa:string, numero:string, numeroDetalle:string) : Observable<any>{
             const params = new HttpParams()
                     .set('empresa', empresa)
                     .set('codigoDetallePresupuesto', numeroDetalle)  
                     .set('numeroPresupuesto', numero);
         return this.http.delete(`${this.urlApi}/SpEliminaDet`, {params});
+    }
+
+    public actualizarDetallePresupuesto(detalle:any):Observable<any>{
+        return this.http.put(`${this.urlApi}/SpActualizaDet`, detalle);
 
     }
 }
