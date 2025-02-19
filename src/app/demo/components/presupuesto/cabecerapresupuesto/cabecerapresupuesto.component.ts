@@ -35,6 +35,8 @@ export class CabecerapresupuestoComponent implements OnInit {
     loading:boolean = false
     mostrarNuevaFila: boolean = false;
     botonesDeshabilitados: boolean = false;
+    medioPagoLista: any[] = [];
+    selectMedioPago: string | null = null;
 
     nuevoPresupuesto: insert_presupuesto = {
         ban01Empresa: '',
@@ -46,7 +48,9 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Estado: '01',
         ban01Usuario: '',
         ban01Pc: '',
-        ban01FechaRegistro: ''
+        ban01FechaRegistro: '',
+        ban01mediopago:'',
+        NombreMedioPago:''
     };
 
     editingPresupuesto: { [key: string]: boolean } = {};
@@ -60,7 +64,9 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Estado: '01',
         ban01Usuario: '',
         ban01Pc: '',
-        ban01FechaRegistro: ''
+        ban01FechaRegistro: '',
+        ban01mediopago:'',
+        NombreMedioPago:''
     };
 
 
@@ -70,6 +76,22 @@ export class CabecerapresupuestoComponent implements OnInit {
         private presupuestoService:PresupuestoService,
         private messageService: MessageService, 
         private datePipe: DatePipe) { }
+
+    
+    cargarMedioPago(): void{
+        this.medioPagoLista =[
+            {id:"01", nombre:"Cheque"},
+            {id:"02", nombre:"Paylink"},
+            {id:"03", nombre:"Caja"}
+        ];
+
+    }
+
+    onMedioChange(event: any) {
+        this.selectMedioPago = event.value;
+        console.log(this.selectMedioPago);
+    }
+    
 
     ngOnInit(): void {
         this.bS.setBreadcrumbs([
@@ -87,7 +109,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                 this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
             }
         });
-
+        this.cargarMedioPago();
 
 
     }
@@ -97,6 +119,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.presupuestoService.obtenerPresupuesto(empresa, anio, mes).subscribe({
             next: (data) => {
                 this.presupuesto = data;
+                console.log(this.presupuesto);
                 this.loading = false;
                 if (data.length === 0) {
                     this.messageService.add({
@@ -157,7 +180,9 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Estado: '01',
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
-            ban01FechaRegistro: fechaRegistroFormateada
+            ban01FechaRegistro: fechaRegistroFormateada,
+            ban01mediopago:'',
+            NombreMedioPago:''
         }
     }
 
@@ -174,10 +199,15 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Estado: '01',
             ban01Usuario: '',
             ban01Pc: '',
-            ban01FechaRegistro: ''
+            ban01FechaRegistro: '',
+            ban01mediopago:'',
+            NombreMedioPago:''
         };
     }
     guardarNuevoPresupuesto() {
+        // console.log("metodo grabar");
+        // console.log(this.nuevoPresupuesto.ban01mediopago);
+        
         this.presupuestoService.insertarPresupuesto(this.nuevoPresupuesto)
             .subscribe({
                 next: (response) => {
@@ -224,7 +254,9 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Estado: '01',
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
-            ban01FechaRegistro: this.datePipe.transform(new Date(), 'dd/MM/yyyy') || ''
+            ban01FechaRegistro: this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '',
+            ban01mediopago:'',
+            NombreMedioPago:''
         };
     }
 

@@ -20,6 +20,7 @@ export class PresupuestoService {
         return this.http.get<RespuestaAPI>(`${this.urlApi}/SpList`, { params }).pipe(
             map(response => response.data)
         );
+        
     }
     public obtenerDetallePresupuesto(empresa: string, numerodocumento: string): Observable<Detallepresupuesto[]> {
         const params = new HttpParams()

@@ -150,6 +150,8 @@ export class CuentaBancariaComponent implements OnInit {
     }
     onMonedaChange(event: any) {
         this.selectMoneda = event.value;
+        console.log(this.selectMoneda);
+        
     }
 
     onBancoChange(event: any) {

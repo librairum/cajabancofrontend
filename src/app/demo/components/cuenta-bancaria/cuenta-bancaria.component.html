@@ -52,7 +52,8 @@
                     <td class="centered" style="width: 120px;">
                         <div *ngIf="editingRowIndex === ri">
                             <p-dropdown [options]="moneda" optionLabel="nombre" optionValue="id"
-                                [(ngModel)]="rowData.moneda" (onChange)="onMonedaChange($event)" [filter]="true"
+                                [(ngModel)]="rowData.moneda" (onChange)="onMonedaChange($event)" 
+                                [filter]="true"
                                 filterBy="nombre" placeholder="Moneda" appendTo="body">
                             </p-dropdown>
 

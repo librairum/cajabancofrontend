@@ -40,6 +40,7 @@
                     <th colspan="1">nro Operacion</th>
                     <th colspan="1">Adjuntar / Ver Comprobante pago</th>
                     <th colspan="1">Acciones</th>
+
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-presupuesto>
@@ -64,7 +65,19 @@
                                 class="w-full">
                         </ng-container>
                     </td>
-                    <td>{{presupuesto.mediopago}}</td>
+                    <td>
+                        <ng-container *ngIf="!editingPresupuesto[presupuesto.mediopago]">
+                            {{presupuesto.nombreMedioPago}}
+                        </ng-container>
+                        <ng-container *ngIf="editingPresupuesto[presupuesto.mediopago]">
+                           <p-dropdown [options] = "medioPagoLista" 
+                           optionLabel="nombre" optionValue="id"
+                           [(ngModel)]="rowData.medioPagoLista" 
+                           ></p-dropdown>
+                        </ng-container>
+                        <!-- -->
+
+                    </td>
                     <td>{{presupuesto.impBrutoSoles | number:'1.2-2'}}</td>
                     <td>{{presupuesto.impBrutoDolares | number:'1.2-2'}}</td>
                     <td>{{presupuesto.impDetraccionSoles| number:'1.2-2'}}</td>
@@ -104,6 +117,7 @@
 
                         </div>
                     </td>
+                  
                 </tr>
             </ng-template>
             <ng-template pTemplate="footer">
@@ -123,6 +137,13 @@
                             class="w-full">
                     </td>
                     <td style="min-width: 80px;">
+                        
+                                <p-dropdown [options]="medioPagoLista" optionLabel="nombre" optionValue="id"
+                                [(ngModel)]="nuevoPresupuesto.ban01mediopago"
+                                (onChange)="onMedioChange($event)" 
+                                [filter]="true"
+                                filterBy="nombre" placeholder="medio" appendTo="body">
+                            </p-dropdown>
                         <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Anio" placeholder="Año" class="w-full"> -->
                     </td>
                     <td style="min-width: 80px;">
