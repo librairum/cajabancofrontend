@@ -41,20 +41,25 @@
 
 
         <p-table [value]="ayudapago" [scrollable]="true" scrollHeight="400px"
-            [scrollDirection]="'both'" [loading]="loading" showGridlines [(selection)]="selectedItems"
-            dataKey="numeroDOcumento">
+            [scrollDirection]="'both'" [loading]="loading" 
+            showGridlines [(selection)]="selectedItems"
+            dataKey="clave">
             <ng-template pTemplate="header">
                 <tr>
+                    
                     <th>RUC</th>
                     <th>Razon Social</th>
                     <th>Tipo Doc</th>
                     <th>Numero</th>
+                    
                     <th>Moneda Original</th>
                     <th>S/. </th>
                     <th>US$</th>
                     <th>Fecha Emision</th>
                     <th>Fecha Vencimiento</th>
                     <th>Dias Atrazo</th>
+                    <th>AfectaDetraccion</th>
+                    <th>AfectaRetencion</th>
                     <th style="width: 4rem">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
@@ -62,6 +67,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-ayudapago>
                 <tr>
+                    
                     <td>{{ayudapago.ruc}}</td>
                     <td>{{ayudapago.razonSocial}}</td>
                     <td>{{ayudapago.nombreTipoDOc}}</td>
@@ -72,6 +78,8 @@
                     <td>{{ayudapago.fechaEmision}}</td>
                     <td>{{ayudapago.fechaVencimiento}}</td>
                     <td>{{ayudapago.diasAtrazo}}</td>
+                    <td>{{ayudapago.afectoDetraccion}}</td>
+                    <td>{{ayudapago.afectoRetencion}}</td>
                     <td>
                         <p-tableCheckbox [value]="ayudapago"></p-tableCheckbox>
                     </td>

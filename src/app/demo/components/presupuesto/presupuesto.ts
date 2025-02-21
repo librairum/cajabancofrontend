@@ -56,9 +56,12 @@ export interface Detallepresupuesto{
     ban02ImportePercepcionDolares: number;
     ban02NetoSoles: number;
     ban02NetoDolares: number;
+    ban02FechaEmision: string;
+    ban02FechaVencimiento: string;
 }
 
 export interface agregar_Pago{
+    clave:string;
     ruc:string;
     razonSocial:string;
     coditoTipoDoc:string;
@@ -70,6 +73,8 @@ export interface agregar_Pago{
     fechaEmision:string;
     fechaVencimiento:string;
     diasAtrazo:number;
+    afectoDetraccion:string;
+    afectoRetencion:string;
 }
 
 export interface proveedores_lista{

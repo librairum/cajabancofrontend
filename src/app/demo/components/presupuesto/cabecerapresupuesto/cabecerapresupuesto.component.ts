@@ -310,7 +310,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
                     <p style="color: var(--text-color-secondary);">Número de pago: ${presupuesto.pagoNumero}</p>
                     <p style="color: var(--text-color-secondary);">Fecha: ${this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy')}</p>
-                    <p style="margin-top: 1rem; color: var(--text-color-secondary);">Esta acción no se puede deshacer</p>
+                    
                 </div>
             `,
             header: 'Confirmar Eliminación',

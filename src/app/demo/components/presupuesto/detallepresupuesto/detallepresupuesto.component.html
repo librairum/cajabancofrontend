@@ -22,39 +22,40 @@
     <div class="card p-2">
         <!-- Fila 1: Username y botones -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <div>
+            <div style="display: inline;">
+                <div [style]="{'display':'inline',  'margin-right':'30px' }">
                 <label for="username" class="text-sm">Pago Nro: </label>
                 <input pInputText id="username" aria-describedby="username-help" [value]="pagnro" [disabled]="true"
-                    [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
+                    [style]="{'min-width': '200px', 'height': '2.5rem'}" />
+                </div>
+                
+                <div [style]="{'display':'inline' , 'margin-right':'30px'}">
+                    <label for="fecha" class="text-sm">Fecha: </label>
+                    <p-calendar [disabled]="true" [(ngModel)]="fecha"
+                        [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}"
+                        inputStyleClass="p-input-sm" dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+                <div [style]="{'display':'inline', 'margin-right':'30px'}">
+                    <label for="motivo" class="text-sm">Motivo: </label>
+                    <input pInputText id="motivo" aria-describedby="motivo-help" [value]="motivo" [disabled]="true"
+                        [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
+                </div>
+                <div [style]="{'display':'inline'}">
+                    <label for="medio-pago" class="text-sm">Medio Pago: </label>
+                    <input pInputText id="medio-pago" aria-describedby="medio-pago-help" [value]="medio" [disabled]="true"
+                        [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
+                </div>
             </div>
+            
         </div>
-
-        <!-- Fila 2: Fecha y botones -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <div>
-                <label for="fecha" class="text-sm">Fecha: </label>
-                <p-calendar [disabled]="true" [(ngModel)]="fecha"
-                    [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}"
-                    inputStyleClass="p-input-sm" dateFormat="dd/mm/yy"></p-calendar>
-            </div>
+           
+           
         </div>
-
-        <!-- Fila 3: Motivo -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <div>
-                <label for="motivo" class="text-sm">Motivo: </label>
-                <input pInputText id="motivo" aria-describedby="motivo-help" [value]="motivo" [disabled]="true"
-                    [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
-            </div>
-        </div>
-
+       
         <!-- Fila 4: Medio de Pago y botón -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <div>
-                <label for="medio-pago" class="text-sm">Medio Pago: </label>
-                <input pInputText id="medio-pago" aria-describedby="medio-pago-help" [value]="medio" [disabled]="true"
-                    [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
-            </div>
+            
             <div style="display: flex; justify-content: flex-end;">
                 <p-button label="Agregar Doc x Pagar" icon="pi pi-plus" styleClass="p-button-sm"
                     (onClick)="DatosdeRegistro()"></p-button>
@@ -88,6 +89,8 @@
                             [showMenu]="false"></p-columnFilter>
                     </th>
                     <th rowspan="2">Moneda Original</th>
+                    <th rowspan="2">Fecha emision</th>
+                    <th rowspan="2">Fecha vencimiento</th>
                     <th rowspan="2">Importe Total S/.</th>
                     <th rowspan="2">Importe Total US$</th>
                     <th colspan="2"></th>
@@ -124,7 +127,7 @@
 
             <ng-template pTemplate="groupfooter" let-groupData>
                 <tr>
-                    <td colspan="6">
+                    <td colspan="8">
                     </td>
                     <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') |
                         number:'1.2-2' }}</td>
@@ -159,6 +162,8 @@
                     <td>{{ detalle.nombreTipoDocumento }}</td>
                     <td>{{ detalle.ban02NroDoc }}</td>
                     <td>{{ detalle.nombremoneda }}</td>
+                    <td>{{detalle.ban02FechaEmision}}</td>
+                    <td>{{detalle.ban02FechaVencimiento}}</td>
                     <td>{{ detalle.ban02Soles | number:'1.2-2' }}</td>
                     <td>{{ detalle.ban02Dolares | number:'1.2-2' }}</td>
 
@@ -188,7 +193,10 @@
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionSoles" />
+                            <input pInputText type="number" 
+                            [(ngModel)]="editingRow.ban02ImporteDetraccionSoles" 
+                            (onBlur)="CalcularNetoPago(detalle)"
+                            />
                         </ng-container>
                         <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles }}</ng-template>
                     </td>
@@ -237,7 +245,7 @@
             </ng-template>
             <ng-template pTemplate="footer">
                 <tr>
-                    <td colspan="5" class="text-right font-bold"></td>
+                    <td colspan="7" class="text-right font-bold"></td>
                     <td class="font-bold">Sumas</td>
                     <td class="font-bold">{{ getTotalColumn('ban02Soles') | number:'1.2-2' }}</td>
                     <td class="font-bold">{{ getTotalColumn('ban02Dolares') | number:'1.2-2' }}</td>

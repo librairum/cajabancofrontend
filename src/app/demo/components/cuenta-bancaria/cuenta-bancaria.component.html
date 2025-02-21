@@ -16,15 +16,14 @@
                 [disabled]="isEditingAnyRow"></p-button>
         </div>
 
-        <!-- Filtro de búsqueda -->
-        <!-- <div class="flex align-items-center gap-3 mb-3">
-            <label class="font-semibold" style="width: 50px;">Buscar:</label>
-            <input pInputText type="text" (input)="onSearch($event.target.value)" placeholder="Buscar por empresa o descripción" style="width: 740px;"/>
-        </div>
-        <br /> -->
 
-        <p-table [value]="Cuenta_BancariaList" dataKey="iCuenta" [paginator]="true" [rows]="5"
-            [rowsPerPageOptions]="[5, 10, 20]" selectionMode="single" editMode="row"
+        <p-table [value]="Cuenta_BancariaList" 
+            dataKey="iCuenta" 
+            [paginator]="true" 
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]" 
+            selectionMode="single" 
+            editMode="row"
             [tableStyle]="{ 'width': '100%', 'border': '1px solid black' }">
             <ng-template pTemplate="header">
                 <tr>
@@ -146,8 +145,12 @@
                             </td>
                             <td style="width: 120px;padding-left: 10px;">
                                 <div>
-                                    <p-dropdown [options]="moneda" formControlName="moneda" optionLabel="nombre"
-                                        optionValue="id" class="p-inputtext-sm w-full" [filter]="true" filterBy="label"
+                                    <p-dropdown [options]="moneda" 
+                                    formControlName="moneda" 
+                                    optionLabel="nombre"
+                                        optionValue="id" 
+                                        class="p-inputtext-sm w-full" 
+                                        [filter]="true" filterBy="label"
                                         [(ngModel)]="selectMoneda" (onchange)="onMonedaChange($event)" placeholder="Moneda"
                                         appendTo="body"></p-dropdown>
                                 </div>

@@ -83,26 +83,27 @@ export class AgregarPagoComponent implements OnInit {
 
     cargarayudaparaagregarpago(): void {
         this.loading = true;
-        const nroDoc = this.filtroFRM.get('nrodoc').value;
-        if (!nroDoc) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'La fecha de vencimiento es requerida'
-            });
-            this.loading = false;
-            return;
-        }
-        const ruc = this.filtroFRM.get('ruc').value;
-        if (!ruc) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Debe seleccionar un proveedor'
-            });
-            this.loading = false;
-            return;
-        }
+        const nroDoc = this.filtroFRM.get('nrodoc').value ?? "";
+        // if (!nroDoc) {
+        //     this.messageService.add({
+        //         severity: 'error',
+        //         summary: 'Error',
+        //         detail: 'La fecha de vencimiento es requerida'
+        //     });
+        //     this.loading = false;
+        //     return;
+        // }
+        const ruc = this.filtroFRM.get('ruc').value ?? "";
+        
+        // if (!ruc) {
+        //     this.messageService.add({
+        //         severity: 'error',
+        //         summary: 'Error',
+        //         detail: 'Debe seleccionar un proveedor'
+        //     });
+        //     this.loading = false;
+        //     return;
+        // }
         this.presupuestoService.obtenerDocPendiente(
             this.gS.getCodigoEmpresa(),
             ruc,
@@ -110,6 +111,7 @@ export class AgregarPagoComponent implements OnInit {
         ).subscribe({
             next: (data) => {
                 this.ayudapago = data;
+                console.log(data);
                 this.loading = false;
                 if (data.length === 0) {
                     this.messageService.add({

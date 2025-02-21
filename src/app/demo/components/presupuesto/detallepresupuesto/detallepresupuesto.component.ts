@@ -191,6 +191,8 @@ export class DetallepresupuestoComponent implements OnInit {
             });
             return;
         }
+        //editar la columna  pago segun el tipo de moneda
+        
         this.editingRow = { ...detalle }; // Copia los datos para editar
         this.editingIndex = index; // Guarda el índice de la fila
         this.isAnyRowEditing = true;
@@ -215,6 +217,7 @@ export class DetallepresupuestoComponent implements OnInit {
                         detail: 'Detalle actualizado correctamente'
                     });
                     this.cancelEditing();
+                    this.cargarDetalles();
                 },
                 error: (error) => {
                     this.messageService.add({
@@ -279,7 +282,7 @@ export class DetallepresupuestoComponent implements OnInit {
                         <i class="pi pi-exclamation-circle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
                         <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
                         <p style="color: var(--text-color-secondary);">Número documento: ${detalle.ban02NroDoc}</p>
-                        <p style="margin-top: 1rem; color: var(--text-color-secondary);">Esta acción no se puede deshacer</p>
+                        
                     </div>
                 `,
                 header: 'Confirmar Eliminación',
@@ -324,7 +327,19 @@ export class DetallepresupuestoComponent implements OnInit {
                 }
             });
         }
+        CalcularNetoPago(detalle: Detallepresupuesto){
+               
+            let importeNetoSoles : number = 0; 
+            importeNetoSoles=detalle.ban02Soles -  detalle.ban02ImporteDetraccionSoles - 
+            detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionSoles;
+            detalle.ban02NetoSoles = importeNetoSoles;
 
+            let importeNetoDolares: number = 0;
+            importeNetoDolares = detalle.ban02Dolares - detalle.ban02ImporteDetraccionDolares -
+            detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionDolares;
+            
+            detalle.ban02NetoDolares = importeNetoDolares;
+        }
 
 
 }

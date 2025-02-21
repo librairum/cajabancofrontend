@@ -8,9 +8,15 @@
     </p-panel>
     <br>
     <div class="card p-2">
-        <p-table [value]="presupuesto" [scrollable]="true" scrollHeight="400px" [scrollDirection]="'both'"
-            [loading]="loading" [globalFilterFields]="['pagoNumero']">
-
+        <p-table [value]="presupuesto" 
+            [scrollable]="true" 
+               
+            
+            [loading]="loading" 
+            [globalFilterFields]="['pagoNumero']"
+            [tableStyle]="{ 'width': '100%','border': '1px solid black' }"
+            >
+            
             <ng-template pTemplate="header">
                 <tr>
                     <th rowspan="2">Pago Nro
@@ -66,13 +72,16 @@
                         </ng-container>
                     </td>
                     <td>
-                        <ng-container *ngIf="!editingPresupuesto[presupuesto.mediopago]">
+                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{presupuesto.nombreMedioPago}}
                         </ng-container>
-                        <ng-container *ngIf="editingPresupuesto[presupuesto.mediopago]">
+                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
                            <p-dropdown [options] = "medioPagoLista" 
                            optionLabel="nombre" optionValue="id"
-                           [(ngModel)]="rowData.medioPagoLista" 
+                           [(ngModel)]="editForm.ban01mediopago"
+                           class="p-inputtext-sm w-full"
+                           [filter]="true"
+                                filterBy="nombre" placeholder="medio" appendTo="body"
                            ></p-dropdown>
                         </ng-container>
                         <!-- -->
@@ -132,14 +141,18 @@
                             (onSelect)="actualizarFecha($event)" [showIcon]="true" appendTo="body" 
                             class="w-full"></p-calendar>
                     </td>
-                    <td style="min-width: 150px;">
+                    <td style="min-width: 200px;">
                         <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Descripcion" placeholder="Descripción"
                             class="w-full">
                     </td>
-                    <td style="min-width: 80px;">
+                    <td style="min-width: 100px; min-height: 100px;">
                         
-                                <p-dropdown [options]="medioPagoLista" optionLabel="nombre" optionValue="id"
+                                <p-dropdown [options]="medioPagoLista" 
+                                optionLabel="nombre" 
+                                optionValue="id"
+                                
                                 [(ngModel)]="nuevoPresupuesto.ban01mediopago"
+                                class="p-inputtext-sm w-full"
                                 (onChange)="onMedioChange($event)" 
                                 [filter]="true"
                                 filterBy="nombre" placeholder="medio" appendTo="body">
