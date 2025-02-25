@@ -7,7 +7,7 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
-import { cabeceraPresupuesto, insert_presupuesto } from '../presupuesto';
+import { cabeceraPresupuesto, insert_presupuesto, mediopago_lista } from '../presupuesto';
 import { ButtonModule } from 'primeng/button';
 import { Router, RouterModule } from '@angular/router';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
@@ -32,10 +32,10 @@ export class CabecerapresupuestoComponent implements OnInit {
     items: any[] = []
     prueba!: any[];
     presupuesto: cabeceraPresupuesto[] = []
-    loading:boolean = false
+    loading:boolean = false;
     mostrarNuevaFila: boolean = false;
     botonesDeshabilitados: boolean = false;
-    medioPagoLista: any[] = [];
+    medioPagoLista: mediopago_lista[] = [];
     selectMedioPago: string | null = null;
 
     nuevoPresupuesto: insert_presupuesto = {
@@ -79,17 +79,43 @@ export class CabecerapresupuestoComponent implements OnInit {
 
     
     cargarMedioPago(): void{
+        const codempresa :string = this.gS.getCodigoEmpresa();
+        this.loading = true;
+        this.presupuestoService.obtenerMedioPago(codempresa).subscribe({
+            next:(data) =>{
+                console.log(data);
+                this.medioPagoLista = data;
+                console.log(this.medioPagoLista);
+                this.loading = false;
+                if (data.length === 0) {
+                    this.messageService.add({
+                        severity: 'warn',
+                        summary: 'Advertencia',
+                        detail: 'No se encontraron registros de presupuesto'
+                    });
+                }
+            },
+            error:(error) =>{
+                this.loading = false;
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Error al cargar presupuesto: ' + error.message
+                });
+            }
+        });
+        /*
         this.medioPagoLista =[
             {id:"01", nombre:"Cheque"},
             {id:"02", nombre:"Paylink"},
             {id:"03", nombre:"Caja"}
         ];
-
+        */
     }
 
     onMedioChange(event: any) {
         this.selectMedioPago = event.value;
-        console.log(this.selectMedioPago);
+        
     }
     
 
@@ -119,7 +145,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.presupuestoService.obtenerPresupuesto(empresa, anio, mes).subscribe({
             next: (data) => {
                 this.presupuesto = data;
-                console.log(this.presupuesto);
+                
                 this.loading = false;
                 if (data.length === 0) {
                     this.messageService.add({
@@ -142,12 +168,13 @@ export class CabecerapresupuestoComponent implements OnInit {
 
     verDetalles(presupuesto: cabeceraPresupuesto){
         const formattedDate = this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy');
+       
         const navigationExtras={
             state:{
                 PagoNro:presupuesto.pagoNumero,
                 Fecha:formattedDate,
                 motivo:presupuesto.motivo,
-                mediopago:presupuesto.mediopago
+                nombreMedioPago:presupuesto.nombreMedioPago
             }
         }
         this.router.navigate(['Home/detalle-presupuesto'],navigationExtras)
@@ -176,7 +203,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Anio: '',
             ban01Mes: '',
             ban01Descripcion: '',
-            ban01Fecha: '',
+            ban01Fecha: fechaRegistroFormateada,
             ban01Estado: '01',
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
@@ -205,8 +232,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         };
     }
     guardarNuevoPresupuesto() {
-        // console.log("metodo grabar");
-        // console.log(this.nuevoPresupuesto.ban01mediopago);
+   
         
         this.presupuestoService.insertarPresupuesto(this.nuevoPresupuesto)
             .subscribe({
@@ -357,5 +383,9 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         });
     }
+   
 
+    confirmarPago(){
+        
+    }
 }

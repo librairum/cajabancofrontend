@@ -62,6 +62,7 @@
             </div>
         </div>
     </div>
+
     <div class="card p-2">
         <p-table [value]="DetallePago" sortField="ban02Ruc" sortMode="single" rowGroupMode="subheader"
             groupRowsBy="ban02Ruc" [scrollable]="true" scrollHeight="500px" [loading]="load"
@@ -169,13 +170,16 @@
 
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles" />
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles" 
+                            (change)="calcularNetoPago(detalle)" />
                         </ng-container>
                         <ng-template #viewMode>{{ detalle.ban02PagoSoles }}</ng-template>
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeDolares">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoDolares" />
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoDolares"
+                            (change)="calcularNetoPago(detalle)" 
+                             />
                         </ng-container>
                         <ng-template #viewModeDolares>{{ detalle.ban02PagoDolares }}</ng-template>
                     </td>
@@ -195,7 +199,7 @@
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
                             <input pInputText type="number" 
                             [(ngModel)]="editingRow.ban02ImporteDetraccionSoles" 
-                            (onBlur)="CalcularNetoPago(detalle)"
+                            (change)="calcularNetoPago(editingRow)"
                             />
                         </ng-container>
                         <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles }}</ng-template>
@@ -272,5 +276,5 @@
 
         </p-table>
     </div>
-
+    
 </div>

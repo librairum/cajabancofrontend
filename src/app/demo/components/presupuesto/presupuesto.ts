@@ -12,7 +12,7 @@ export interface cabeceraPresupuesto{
     netoPagoDolares:number;
     estado:string;
     enlaceComprobante:string;
-    NombreMedioPago:string;
+    nombreMedioPago:string;
 }
 
 export interface Detallepresupuesto{
@@ -81,7 +81,11 @@ export interface proveedores_lista{
     ruc:string;
     razonsocial:string;
 }
-
+export interface mediopago_lista{
+    ban01Empresa : string;
+    ban01IdTipoPago:string;
+    ban01Descripcion:string;
+}
 export interface insert_detalle{
     empresa: string;
     numeropresupuesto: string;

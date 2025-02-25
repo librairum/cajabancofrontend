@@ -21,7 +21,8 @@ import { InputTextModule } from 'primeng/inputtext';
 @Component({
     selector: 'app-agregar-pago',
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, BreadcrumbModule, ToastModule, PanelModule, ConfirmDialogModule, TableModule, CommonModule, ButtonModule, RouterModule, CalendarModule, DropdownModule,InputTextModule],
+    imports: [FormsModule, ReactiveFormsModule, BreadcrumbModule, ToastModule, PanelModule, 
+        ConfirmDialogModule, TableModule, CommonModule, ButtonModule, RouterModule, CalendarModule, DropdownModule,InputTextModule],
     templateUrl: './agregar-pago.component.html',
     styleUrl: './agregar-pago.component.css',
     providers: [ConfirmationService, MessageService, DatePipe]
@@ -111,7 +112,7 @@ export class AgregarPagoComponent implements OnInit {
         ).subscribe({
             next: (data) => {
                 this.ayudapago = data;
-                console.log(data);
+                
                 this.loading = false;
                 if (data.length === 0) {
                     this.messageService.add({
@@ -138,9 +139,9 @@ export class AgregarPagoComponent implements OnInit {
             (data: proveedores_lista[]) => {
                 this.proveedores = data;
                 if (data.length > 0) {
-                    this.filtroFRM.patchValue({
-                        ruc: data[0].ruc
-                    });
+                    // this.filtroFRM.patchValue({
+                    //     ruc: data[0].ruc
+                    // });
                     // Cargamos los datos iniciales
                     this.cargarayudaparaagregarpago();
                 }

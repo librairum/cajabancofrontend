@@ -118,7 +118,9 @@ export class DetallepresupuestoComponent implements OnInit {
             this.fecha = null; // O un valor predeterminado
         }
         this.motivo = this.navigationData?.motivo || '';
-        this.medio = this.navigationData?.mediopago || '';
+       
+        this.medio = this.navigationData?.nombreMedioPago || '';
+        
     }
 
 
@@ -174,7 +176,7 @@ export class DetallepresupuestoComponent implements OnInit {
             fechaformateada: formattedDate
           }
         };
-        console.log(navigationExtras.state)
+    
         this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);*/
         this.displayAgregarModal=true;
     }
@@ -182,6 +184,8 @@ export class DetallepresupuestoComponent implements OnInit {
         this.displayAgregarModal=false;
         this.cargarDetalles();
     }
+     esEditablePagoSoles:boolean = false;
+     esEditablePagoDolares:boolean=false;
     startEditing(detalle: Detallepresupuesto, index: number) {
         if (this.isAnyRowEditing) {
             this.messageService.add({
@@ -196,7 +200,11 @@ export class DetallepresupuestoComponent implements OnInit {
         this.editingRow = { ...detalle }; // Copia los datos para editar
         this.editingIndex = index; // Guarda el índice de la fila
         this.isAnyRowEditing = true;
+        const tipoMoneda =  this.editingRow.ban02Moneda;
+        
+  
     }
+    
 
     cancelEditing() {
         this.editingRow = null;
@@ -275,7 +283,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
 
     eliminarPago(detalle : Detallepresupuesto) {
-        console.log(detalle);
+        
             this.confirmationService.confirm({
                 message: `
                     <div class="text-center">
@@ -327,19 +335,79 @@ export class DetallepresupuestoComponent implements OnInit {
                 }
             });
         }
-        CalcularNetoPago(detalle: Detallepresupuesto){
-               
-            let importeNetoSoles : number = 0; 
-            importeNetoSoles=detalle.ban02Soles -  detalle.ban02ImporteDetraccionSoles - 
-            detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionSoles;
-            detalle.ban02NetoSoles = importeNetoSoles;
-
-            let importeNetoDolares: number = 0;
-            importeNetoDolares = detalle.ban02Dolares - detalle.ban02ImporteDetraccionDolares -
-            detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionDolares;
+        
+    calcularNetoPago(detalle: Detallepresupuesto){
             
-            detalle.ban02NetoDolares = importeNetoDolares;
+        let importeNetoSoles : number = 0; 
+        let montoPagoSoles : number = this.editingRow.ban02PagoSoles;
+        let montoPagoDolares: number = this.editingRow.ban02PagoDolares;
+
+        const tasaRetencion =this.editingRow.ban02TasaRetencion;
+        const tasaDetraccion = this.editingRow.ban02Tasadetraccion;
+        const tasaPercepcion = this.editingRow.ban02TasaPercepcion;
+        let importeDetraccionSoles :number = 0, 
+            importeRetencionSoles: number = 0,
+            importePercepcionSoles: number = 0;
+        let importeDetraccionDolares:number= 0, 
+            importeRetencionDolares:number = 0, 
+            importePercepcionDolares:number = 0;
+        
+            let netoSoles =0, netoDolares = 0;
+        if(montoPagoSoles > 0  ){
+            importeDetraccionSoles = (tasaDetraccion/100) * montoPagoSoles; 
+            importeRetencionSoles = (tasaRetencion/100) * montoPagoSoles;
+            importePercepcionSoles = (tasaPercepcion/100)  * montoPagoSoles;
+            
+            netoSoles =  montoPagoSoles - (importeDetraccionSoles + importeRetencionSoles + importePercepcionSoles);    
+       
+        }else{
+            netoSoles = 0;
+            
         }
 
+        if(montoPagoDolares> 0 ){
+            importeDetraccionDolares = (tasaDetraccion/100)  * montoPagoDolares;
+            importeRetencionDolares = (tasaRetencion/100) * montoPagoDolares;
+            importePercepcionDolares = (tasaPercepcion/100) * montoPagoDolares;
+            netoDolares = montoPagoDolares - (importeDetraccionDolares + importeRetencionDolares + importePercepcionDolares); 
+        }else{
+            netoDolares = 0;
+        }
+       
+        //asignar valor de improte detraccion
+        detalle.ban02ImporteDetraccionSoles = importeDetraccionSoles;
+        detalle.ban02ImporteRetencionSoles = importeRetencionSoles;
+        detalle.ban02ImportePercepcionSoles = importePercepcionSoles;
 
+        this.editingRow.ban02ImporteRetencionSoles = importeRetencionSoles;
+        this.editingRow.ban02ImporteDetraccionSoles = importeDetraccionSoles;
+        this.editingRow.ban02ImportePercepcionSoles = importePercepcionSoles;
+
+        detalle.ban02NetoDolares = netoDolares;
+        detalle.ban02NetoSoles = netoSoles;
+        
+
+        // if (montoPagoSoles> 0 && montoPagoSoles == importeSoles ){
+            
+        // }
+        // const importeDetraccionSoles : number = this.editingRow.ban02ImporteDetraccionSoles;
+        // const importeRetencionSoles: number = this.editingRow.ban02ImporteRetencionSoles;
+        // const importePercepcionSoles: number = this.editingRow.ban02ImportePercepcionSoles;
+
+        // let netoSoles: number = 0;
+        // netoSoles = montoPagoSoles -  (importeDetraccionSoles + importeRetencionSoles +  importePercepcionSoles);
+ 
+
+        // importeNetoSoles=detalle.ban02Soles -  detalle.ban02ImporteDetraccionSoles - 
+        // detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionSoles;
+        // detalle.ban02NetoSoles = importeNetoSoles;
+
+        // let importeNetoDolares: number = 0;
+        // importeNetoDolares = detalle.ban02Dolares - detalle.ban02ImporteDetraccionDolares -
+        // detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionDolares;
+        
+        // detalle.ban02NetoDolares = importeNetoDolares;
+    }
+  
+    
 }

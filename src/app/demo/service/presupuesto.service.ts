@@ -34,12 +34,14 @@ export class PresupuestoService {
             .set('empresa', empresa)
         return this.http.get<RespuestaAPI3>(`${this.urlApi}/SpTraeProveedores`, {params}).pipe(map(response=>response.data));
     }
-    public obtenerDocPendiente(empresa:string,ruc:string,numerodocumento:string): Observable<agregar_Pago[]>{
+    public obtenerDocPendiente(empresa:string,ruc:string,
+        numerodocumento:string): Observable<agregar_Pago[]>{
         const params=new HttpParams()
             .set('empresa', empresa)
             .set('ruc', ruc)
             .set('numerodocumento', numerodocumento);
-        return this.http.get<RespuestaAPI4>(`${this.urlApi}/SpListaDocPendientes`, {params}).pipe(map(response=>response.data));
+        return this.http.get<RespuestaAPI4>(`${this.urlApi}/SpListaDocPendientes`, 
+            {params}).pipe(map(response=>response.data));
     }
     public insertarDetallePresupuesto(detalle: insert_detalle): Observable<any> {
         const params = new HttpParams()
@@ -80,6 +82,14 @@ export class PresupuestoService {
     public actualizarDetallePresupuesto(detalle:any):Observable<any>{
         return this.http.put(`${this.urlApi}/SpActualizaDet`, detalle);
 
+    }
+
+    public obtenerMedioPago(empresa:string) : Observable<MedioPago[]>{
+        const params=new HttpParams()
+            .set('empresa',empresa);
+        /*https://localhost:7277/Presupuesto/SpTraeTipoPago?empresa=01*/ 
+        return this.http.get<RespuestaAPIMedioPago>(`${this.urlApi}/SpTraeTipoPago`, 
+            {params} ).pipe(map(response=>response.data));
     }
 }
 
@@ -137,3 +147,21 @@ interface RespuestaAPI4 {
     mensajeRetorno: string | null;
     flagRetorno: number;
 }
+
+interface RespuestaAPIMedioPago{
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: any | null; // Puedes tipar 'item' si conoces su estructura
+    data: MedioPago[];
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
+}
+interface  MedioPago {
+    ban01Empresa : string;
+    ban01IdTipoPago:string;
+    ban01Descripcion:string;
+}
+
+   
