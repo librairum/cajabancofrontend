@@ -1,8 +1,22 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
+<p-dialog
+[(visible)]="verConfirmarPago"
+[modal]="true"
+header="Confirmar pago"
+[style]="{width: '20vw', height: '47vh'}"
+[draggable]="false"
+[resizable]="false"
+[maximizable]="true"
+>
+<app-confirmar-pago></app-confirmar-pago>
+</p-dialog>
+
 <div class="container">
     <p-panel header="Lista de Pagos" class="mb-3">
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
+        <br>
+        
         <br>
         <p-button label="Nuevo" icon="pi pi-plus" (onClick)="iniciarNuevoPresupuesto()" [disabled]="mostrarNuevaFila" />
         

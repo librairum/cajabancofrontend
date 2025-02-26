@@ -1,1 +1,25 @@
-<p>confirmar-pago works!</p>
+<p-panel>
+    <p-header>
+        Detalle del presupuesto
+    </p-header>
+    <p>
+        <label>Fecha ejecucion</label>
+        <input type="date" pInputText id="fechaejecucion" >
+    </p>
+    <p>
+        <label>Nro operacion</label>
+        <input pInputText id="nropago" >
+    </p>
+    <p>
+        <label>adjuntar comprobante</label>
+        <input pInputText id="rutacomprobante" >´
+        <p-fileUpload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"  accept="image/*" ></p-fileUpload>
+        
+        
+
+    </p>
+    <p-footer>
+        <p-button label="Aceptar"></p-button>
+        <p-button label="Cancelar"></p-button>
+    </p-footer>
+</p-panel>

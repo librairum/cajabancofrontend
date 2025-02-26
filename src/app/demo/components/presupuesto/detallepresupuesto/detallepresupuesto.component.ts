@@ -25,7 +25,8 @@ import { AgregarPagoComponent } from "../agregar-pago/agregar-pago.component";
     standalone: true,
     imports: [BreadcrumbModule, RouterModule, ToastModule,
     ConfirmDialogModule, TableModule, PanelModule, CalendarModule,
-    InputTextModule, InputNumberModule, ButtonModule, CommonModule, FormsModule, DialogModule, AgregarPagoComponent],
+    InputTextModule, InputNumberModule, ButtonModule, CommonModule, 
+    FormsModule, DialogModule, AgregarPagoComponent],
     templateUrl: './detallepresupuesto.component.html',
     styleUrl: './detallepresupuesto.component.css',
     providers: [ConfirmationService,MessageService,DatePipe]
@@ -52,7 +53,8 @@ export class DetallepresupuestoComponent implements OnInit {
         private router: Router,
         private ms: MessageService,
         private datePipe: DatePipe,
-    private confirmationService: ConfirmationService, private gS: GlobalService) {
+    private confirmationService: ConfirmationService, 
+    private gS: GlobalService) {
 
     //variables de edición
 

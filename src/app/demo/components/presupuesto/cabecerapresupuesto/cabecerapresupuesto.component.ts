@@ -18,11 +18,17 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { ConfirmarPagoComponent } from '../confirmar-pago/confirmar-pago.component';
+import { DialogModule } from 'primeng/dialog';
+import { FileUploadModule } from 'primeng/fileupload';
 @Component({
     selector: 'app-cabecerapresupuesto',
     standalone: true,
-    imports: [BreadcrumbModule, ToastModule, PanelModule, ConfirmDialogModule, TableModule, CommonModule,ButtonModule,RouterModule,FormsModule,CalendarModule,InputTextModule,InputNumberModule,DropdownModule,ReactiveFormsModule],
+    imports: [BreadcrumbModule, ToastModule, PanelModule, 
+        ConfirmDialogModule, TableModule, CommonModule,ButtonModule,
+        RouterModule,FormsModule,CalendarModule,InputTextModule,
+        InputNumberModule,DropdownModule,ReactiveFormsModule,
+        ConfirmarPagoComponent, DialogModule, FileUploadModule],
     templateUrl: './cabecerapresupuesto.component.html',
     styleUrl: './cabecerapresupuesto.component.css',
     providers: [ConfirmationService, MessageService,DatePipe]
@@ -37,7 +43,7 @@ export class CabecerapresupuestoComponent implements OnInit {
     botonesDeshabilitados: boolean = false;
     medioPagoLista: mediopago_lista[] = [];
     selectMedioPago: string | null = null;
-
+    verConfirmarPago: boolean = false;
     nuevoPresupuesto: insert_presupuesto = {
         ban01Empresa: '',
         ban01Numero: '',
@@ -386,6 +392,7 @@ export class CabecerapresupuestoComponent implements OnInit {
    
 
     confirmarPago(){
-        
+        this.verConfirmarPago = true;
     }
+    uploadFunction(){}
 }
