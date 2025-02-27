@@ -1,0 +1,4 @@
+.p-datepicker {
+    z-index: 20000 !important;
+    position: absolute !important;
+}

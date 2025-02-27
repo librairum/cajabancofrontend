@@ -24,7 +24,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 @Component({
     selector: 'app-cabecerapresupuesto',
     standalone: true,
-    imports: [BreadcrumbModule, ToastModule, PanelModule, 
+    imports: [BreadcrumbModule, ToastModule, PanelModule,
         ConfirmDialogModule, TableModule, CommonModule,ButtonModule,
         RouterModule,FormsModule,CalendarModule,InputTextModule,
         InputNumberModule,DropdownModule,ReactiveFormsModule,
@@ -74,16 +74,18 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01mediopago:'',
         NombreMedioPago:''
     };
+    //para pasar el pagonro
+    selectedPagoNumero: string = '';
 
 
-    constructor(private gS:GlobalService,private bS: BreadcrumbService, 
+    constructor(private gS:GlobalService,private bS: BreadcrumbService,
         private confirmationService: ConfirmationService,
-        private router:Router, 
+        private router:Router,
         private presupuestoService:PresupuestoService,
-        private messageService: MessageService, 
+        private messageService: MessageService,
         private datePipe: DatePipe) { }
 
-    
+
     cargarMedioPago(): void{
         const codempresa :string = this.gS.getCodigoEmpresa();
         this.loading = true;
@@ -121,9 +123,9 @@ export class CabecerapresupuestoComponent implements OnInit {
 
     onMedioChange(event: any) {
         this.selectMedioPago = event.value;
-        
+
     }
-    
+
 
     ngOnInit(): void {
         this.bS.setBreadcrumbs([
@@ -151,7 +153,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.presupuestoService.obtenerPresupuesto(empresa, anio, mes).subscribe({
             next: (data) => {
                 this.presupuesto = data;
-                
+
                 this.loading = false;
                 if (data.length === 0) {
                     this.messageService.add({
@@ -174,7 +176,7 @@ export class CabecerapresupuestoComponent implements OnInit {
 
     verDetalles(presupuesto: cabeceraPresupuesto){
         const formattedDate = this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy');
-       
+
         const navigationExtras={
             state:{
                 PagoNro:presupuesto.pagoNumero,
@@ -238,8 +240,8 @@ export class CabecerapresupuestoComponent implements OnInit {
         };
     }
     guardarNuevoPresupuesto() {
-   
-        
+
+
         this.presupuestoService.insertarPresupuesto(this.nuevoPresupuesto)
             .subscribe({
                 next: (response) => {
@@ -342,7 +344,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
                     <p style="color: var(--text-color-secondary);">Número de pago: ${presupuesto.pagoNumero}</p>
                     <p style="color: var(--text-color-secondary);">Fecha: ${this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy')}</p>
-                    
+
                 </div>
             `,
             header: 'Confirmar Eliminación',
@@ -389,10 +391,17 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         });
     }
-   
 
-    confirmarPago(){
+
+    confirmarPago(presupuesto: cabeceraPresupuesto){
+        this.selectedPagoNumero = presupuesto.pagoNumero;
+        console.log(this.selectedPagoNumero)
         this.verConfirmarPago = true;
+    }
+
+    onCloseModal(){
+        this.verConfirmarPago=false;
+        this.cargarMedioPago();
     }
     uploadFunction(){}
 }
