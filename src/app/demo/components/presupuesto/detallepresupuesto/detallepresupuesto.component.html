@@ -7,7 +7,8 @@
     [draggable]="false"
     [resizable]="false"
     [maximizable]="true"
-    header="Agregar Documento por Pagar">
+    header="Agregar Documento por Pagar"
+    (onHide)="onCloseModal()">
     <app-agregar-pago
         [numeropresupuesto]="pagnro"
         [fechapresupuesto]="fechaString"
@@ -28,7 +29,7 @@
                 <input pInputText id="username" aria-describedby="username-help" [value]="pagnro" [disabled]="true"
                     [style]="{'min-width': '200px', 'height': '2.5rem'}" />
                 </div>
-                
+
                 <div [style]="{'display':'inline' , 'margin-right':'30px'}">
                     <label for="fecha" class="text-sm">Fecha: </label>
                     <p-calendar [disabled]="true" [(ngModel)]="fecha"
@@ -46,16 +47,16 @@
                         [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
                 </div>
             </div>
-            
+
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-           
-           
+
+
         </div>
-       
+
         <!-- Fila 4: Medio de Pago y botón -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            
+
             <div style="display: flex; justify-content: flex-end;">
                 <p-button label="Agregar Doc x Pagar" icon="pi pi-plus" styleClass="p-button-sm"
                     (onClick)="DatosdeRegistro()"></p-button>
@@ -170,7 +171,7 @@
 
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles" 
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles"
                             (change)="calcularNetoPago(detalle)" />
                         </ng-container>
                         <ng-template #viewMode>{{ detalle.ban02PagoSoles }}</ng-template>
@@ -178,7 +179,7 @@
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeDolares">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoDolares"
-                            (change)="calcularNetoPago(detalle)" 
+                            (change)="calcularNetoPago(detalle)"
                              />
                         </ng-container>
                         <ng-template #viewModeDolares>{{ detalle.ban02PagoDolares }}</ng-template>
@@ -197,8 +198,8 @@
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
-                            <input pInputText type="number" 
-                            [(ngModel)]="editingRow.ban02ImporteDetraccionSoles" 
+                            <input pInputText type="number"
+                            [(ngModel)]="editingRow.ban02ImporteDetraccionSoles"
                             (change)="calcularNetoPago(editingRow)"
                             />
                         </ng-container>
@@ -276,5 +277,5 @@
 
         </p-table>
     </div>
-    
+
 </div>

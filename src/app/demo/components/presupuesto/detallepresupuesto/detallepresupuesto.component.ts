@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -25,13 +25,14 @@ import { AgregarPagoComponent } from "../agregar-pago/agregar-pago.component";
     standalone: true,
     imports: [BreadcrumbModule, RouterModule, ToastModule,
     ConfirmDialogModule, TableModule, PanelModule, CalendarModule,
-    InputTextModule, InputNumberModule, ButtonModule, CommonModule, 
+    InputTextModule, InputNumberModule, ButtonModule, CommonModule,
     FormsModule, DialogModule, AgregarPagoComponent],
     templateUrl: './detallepresupuesto.component.html',
     styleUrl: './detallepresupuesto.component.css',
     providers: [ConfirmationService,MessageService,DatePipe]
 })
 export class DetallepresupuestoComponent implements OnInit {
+    @ViewChild(AgregarPagoComponent) agregarPagoComponent: AgregarPagoComponent;
     DetallePago: Detallepresupuesto[] = []
     navigationData: any;
     items: any[] = [];
@@ -53,7 +54,7 @@ export class DetallepresupuestoComponent implements OnInit {
         private router: Router,
         private ms: MessageService,
         private datePipe: DatePipe,
-    private confirmationService: ConfirmationService, 
+    private confirmationService: ConfirmationService,
     private gS: GlobalService) {
 
     //variables de edición
@@ -120,9 +121,9 @@ export class DetallepresupuestoComponent implements OnInit {
             this.fecha = null; // O un valor predeterminado
         }
         this.motivo = this.navigationData?.motivo || '';
-       
+
         this.medio = this.navigationData?.nombreMedioPago || '';
-        
+
     }
 
 
@@ -178,11 +179,14 @@ export class DetallepresupuestoComponent implements OnInit {
             fechaformateada: formattedDate
           }
         };
-    
+
         this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);*/
         this.displayAgregarModal=true;
     }
     onCloseModal(){
+        if (this.agregarPagoComponent) {
+            this.agregarPagoComponent.resetForm();
+        }
         this.displayAgregarModal=false;
         this.cargarDetalles();
     }
@@ -198,15 +202,15 @@ export class DetallepresupuestoComponent implements OnInit {
             return;
         }
         //editar la columna  pago segun el tipo de moneda
-        
+
         this.editingRow = { ...detalle }; // Copia los datos para editar
         this.editingIndex = index; // Guarda el índice de la fila
         this.isAnyRowEditing = true;
         const tipoMoneda =  this.editingRow.ban02Moneda;
-        
-  
+
+
     }
-    
+
 
     cancelEditing() {
         this.editingRow = null;
@@ -285,14 +289,14 @@ export class DetallepresupuestoComponent implements OnInit {
 
 
     eliminarPago(detalle : Detallepresupuesto) {
-        
+
             this.confirmationService.confirm({
                 message: `
                     <div class="text-center">
                         <i class="pi pi-exclamation-circle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
                         <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
                         <p style="color: var(--text-color-secondary);">Número documento: ${detalle.ban02NroDoc}</p>
-                        
+
                     </div>
                 `,
                 header: 'Confirmar Eliminación',
@@ -337,45 +341,45 @@ export class DetallepresupuestoComponent implements OnInit {
                 }
             });
         }
-        
+
     calcularNetoPago(detalle: Detallepresupuesto){
-            
-        let importeNetoSoles : number = 0; 
+
+        let importeNetoSoles : number = 0;
         let montoPagoSoles : number = this.editingRow.ban02PagoSoles;
         let montoPagoDolares: number = this.editingRow.ban02PagoDolares;
 
         const tasaRetencion =this.editingRow.ban02TasaRetencion;
         const tasaDetraccion = this.editingRow.ban02Tasadetraccion;
         const tasaPercepcion = this.editingRow.ban02TasaPercepcion;
-        let importeDetraccionSoles :number = 0, 
+        let importeDetraccionSoles :number = 0,
             importeRetencionSoles: number = 0,
             importePercepcionSoles: number = 0;
-        let importeDetraccionDolares:number= 0, 
-            importeRetencionDolares:number = 0, 
+        let importeDetraccionDolares:number= 0,
+            importeRetencionDolares:number = 0,
             importePercepcionDolares:number = 0;
-        
+
             let netoSoles =0, netoDolares = 0;
         if(montoPagoSoles > 0  ){
-            importeDetraccionSoles = (tasaDetraccion/100) * montoPagoSoles; 
+            importeDetraccionSoles = (tasaDetraccion/100) * montoPagoSoles;
             importeRetencionSoles = (tasaRetencion/100) * montoPagoSoles;
             importePercepcionSoles = (tasaPercepcion/100)  * montoPagoSoles;
-            
-            netoSoles =  montoPagoSoles - (importeDetraccionSoles + importeRetencionSoles + importePercepcionSoles);    
-       
+
+            netoSoles =  montoPagoSoles - (importeDetraccionSoles + importeRetencionSoles + importePercepcionSoles);
+
         }else{
             netoSoles = 0;
-            
+
         }
 
         if(montoPagoDolares> 0 ){
             importeDetraccionDolares = (tasaDetraccion/100)  * montoPagoDolares;
             importeRetencionDolares = (tasaRetencion/100) * montoPagoDolares;
             importePercepcionDolares = (tasaPercepcion/100) * montoPagoDolares;
-            netoDolares = montoPagoDolares - (importeDetraccionDolares + importeRetencionDolares + importePercepcionDolares); 
+            netoDolares = montoPagoDolares - (importeDetraccionDolares + importeRetencionDolares + importePercepcionDolares);
         }else{
             netoDolares = 0;
         }
-       
+
         //asignar valor de improte detraccion
         detalle.ban02ImporteDetraccionSoles = importeDetraccionSoles;
         detalle.ban02ImporteRetencionSoles = importeRetencionSoles;
@@ -387,10 +391,10 @@ export class DetallepresupuestoComponent implements OnInit {
 
         detalle.ban02NetoDolares = netoDolares;
         detalle.ban02NetoSoles = netoSoles;
-        
+
 
         // if (montoPagoSoles> 0 && montoPagoSoles == importeSoles ){
-            
+
         // }
         // const importeDetraccionSoles : number = this.editingRow.ban02ImporteDetraccionSoles;
         // const importeRetencionSoles: number = this.editingRow.ban02ImporteRetencionSoles;
@@ -398,18 +402,18 @@ export class DetallepresupuestoComponent implements OnInit {
 
         // let netoSoles: number = 0;
         // netoSoles = montoPagoSoles -  (importeDetraccionSoles + importeRetencionSoles +  importePercepcionSoles);
- 
 
-        // importeNetoSoles=detalle.ban02Soles -  detalle.ban02ImporteDetraccionSoles - 
+
+        // importeNetoSoles=detalle.ban02Soles -  detalle.ban02ImporteDetraccionSoles -
         // detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionSoles;
         // detalle.ban02NetoSoles = importeNetoSoles;
 
         // let importeNetoDolares: number = 0;
         // importeNetoDolares = detalle.ban02Dolares - detalle.ban02ImporteDetraccionDolares -
         // detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionDolares;
-        
+
         // detalle.ban02NetoDolares = importeNetoDolares;
     }
-  
-    
+
+
 }

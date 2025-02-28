@@ -1,34 +1,55 @@
 <p-toast></p-toast>
+
+<!-- Panel principal -->
 <p-panel>
     <p-header>
         Detalle del presupuesto
     </p-header>
     <div class="p-grid p-fluid">
         <div class="p-field p-col-12 mb-3">
-            <label for="fechaejecucion">Fecha ejecución</label>
+            <label for="fechaejecucion">Fecha ejecución <span class="text-danger">*</span></label>
             <input type="date" pInputText id="fechaejecucion" [(ngModel)]="fechaEjecucionPago" class="w-full">
-
-
         </div>
         <div class="p-field p-col-12 mb-3">
-            <label for="nropago" class="block mb-1">Nro operación</label>
+            <label for="nropago" class="block mb-1">Nro operación <span class="text-danger">*</span></label>
             <input pInputText id="nropago" [(ngModel)]="nroOperacion" class="w-full">
         </div>
         <div class="p-field p-col-12 mb-3">
-            <label for="fileupload" class="block mb-1">Adjuntar comprobante</label>
+            <label for="fileupload" class="block mb-1">Adjuntar comprobante <span class="text-danger">*</span></label>
             <div class="flex align-items-center gap-2">
-                <span *ngIf="rutaComprobante" class="p-tag">{{rutaComprobante}}</span>
-                <p-fileUpload #fu mode="basic" chooseLabel="Adjuntar" chooseIcon="pi pi-upload" accept="image/*"
-                    [auto]="true" (onSelect)="onFileSelected($event)" styleClass="p-button-primary"></p-fileUpload>
-                <button *ngIf="rutaComprobante" pButton icon="pi pi-times" class="p-button-danger p-button-outlined"
+                <span *ngIf="rutaComprobante && !cargandoArchivo" class="p-tag">{{rutaComprobante}}</span>
+                <span *ngIf="cargandoArchivo" class="p-tag p-tag-warning">
+                    <i class="pi pi-spin pi-spinner mr-2"></i>Subiendo archivo...
+                </span>
+                <p-fileUpload #fu mode="basic" chooseLabel="Adjuntar" chooseIcon="pi pi-upload" accept="image/*,application/pdf"
+                    [auto]="true" (onSelect)="onFileSelected($event)" styleClass="p-button-primary"
+                    [disabled]="cargandoArchivo"></p-fileUpload>
+                <button *ngIf="rutaComprobante && !cargandoArchivo" pButton icon="pi pi-times"
+                    class="p-button-danger p-button-outlined"
                     (click)="limpiarArchivo()" pTooltip="Eliminar archivo"></button>
             </div>
         </div>
     </div>
     <p-footer>
         <div class="flex justify-content-end gap-2">
-            <p-button label="Aceptar" (onClick)="guardarConfirmacion()" styleClass="p-button-success"></p-button>
-            <p-button label="Cancelar" (onClick)="cancelar()" styleClass="p-button-secondary"></p-button>
+            <p-button label="Aceptar" (onClick)="guardarConfirmacion()"
+                styleClass="p-button-success" [disabled]="cargandoArchivo"></p-button>
+            <p-button label="Cancelar" (onClick)="cancelar()"
+                styleClass="p-button-secondary" [disabled]="cargandoArchivo"></p-button>
         </div>
     </p-footer>
 </p-panel>
+
+<!-- Modal de confirmación -->
+<p-dialog header="Archivo guardado correctamente" [(visible)]="mostrarDialogoExito"
+    [modal]="true" [style]="{width: '450px'}" [closable]="false">
+    <div class="flex align-items-center p-3">
+        <i class="pi pi-check-circle text-green-500 mr-3" style="font-size: 2rem"></i>
+        <span>{{mensajeExito}}</span>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end">
+            <p-button label="OK" (onClick)="onConfirmOk()" styleClass="p-button-success"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>

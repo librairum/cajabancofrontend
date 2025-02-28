@@ -21,7 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 @Component({
     selector: 'app-agregar-pago',
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, BreadcrumbModule, ToastModule, PanelModule, 
+    imports: [FormsModule, ReactiveFormsModule, BreadcrumbModule, ToastModule, PanelModule,
         ConfirmDialogModule, TableModule, CommonModule, ButtonModule, RouterModule, CalendarModule, DropdownModule,InputTextModule],
     templateUrl: './agregar-pago.component.html',
     styleUrl: './agregar-pago.component.css',
@@ -82,6 +82,11 @@ export class AgregarPagoComponent implements OnInit {
 
     }
 
+    public resetForm(): void {
+        this.filtroFRM.reset();
+        this.selectedItems = [];
+    }
+
     cargarayudaparaagregarpago(): void {
         this.loading = true;
         const nroDoc = this.filtroFRM.get('nrodoc').value ?? "";
@@ -95,7 +100,7 @@ export class AgregarPagoComponent implements OnInit {
         //     return;
         // }
         const ruc = this.filtroFRM.get('ruc').value ?? "";
-        
+
         // if (!ruc) {
         //     this.messageService.add({
         //         severity: 'error',
@@ -112,7 +117,7 @@ export class AgregarPagoComponent implements OnInit {
         ).subscribe({
             next: (data) => {
                 this.ayudapago = data;
-                
+
                 this.loading = false;
                 if (data.length === 0) {
                     this.messageService.add({
@@ -252,6 +257,8 @@ export class AgregarPagoComponent implements OnInit {
         }
         this.selectedItems = [];
         this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)*/
+        this.filtroFRM.reset();  // Limpia los campos del formulario
+        this.selectedItems = [];  // Limpia la selección de elementos
         this.onClose.emit();
     }
 }

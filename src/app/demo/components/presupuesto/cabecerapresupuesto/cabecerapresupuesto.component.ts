@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -34,6 +34,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     providers: [ConfirmationService, MessageService,DatePipe]
 })
 export class CabecerapresupuestoComponent implements OnInit {
+    @ViewChild(ConfirmarPagoComponent) confirmarpagocomponente: ConfirmarPagoComponent;
     //breadcrumb
     items: any[] = []
     prueba!: any[];
@@ -400,6 +401,9 @@ export class CabecerapresupuestoComponent implements OnInit {
     }
 
     onCloseModal(){
+        if (this.confirmarpagocomponente) {
+            this.confirmarpagocomponente.limpiar();
+        }
         this.verConfirmarPago=false;
         this.cargarMedioPago();
     }

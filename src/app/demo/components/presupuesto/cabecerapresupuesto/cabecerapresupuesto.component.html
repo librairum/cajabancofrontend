@@ -9,7 +9,7 @@
     [resizable]="false"
     [maximizable]="true"
     [baseZIndex]="10000"
-    (onHide)="selectedPagoNumero = ''"
+    (onHide)="selectedPagoNumero = '';onCloseModal()"
 >
     <app-confirmar-pago [pagoNumero]="selectedPagoNumero" (onClose)="onCloseModal()"></app-confirmar-pago>
 </p-dialog>
