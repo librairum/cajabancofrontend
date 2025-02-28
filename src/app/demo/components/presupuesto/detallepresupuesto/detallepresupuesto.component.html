@@ -1,18 +1,8 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
-<p-dialog
-    [(visible)]="displayAgregarModal"
-    [modal]="true"
-    [style]="{width: '90vw', height: '90vh'}"
-    [draggable]="false"
-    [resizable]="false"
-    [maximizable]="true"
-    header="Agregar Documento por Pagar"
-    (onHide)="onCloseModal()">
-    <app-agregar-pago
-        [numeropresupuesto]="pagnro"
-        [fechapresupuesto]="fechaString"
-        (onClose)="onCloseModal()">
+<p-dialog [(visible)]="displayAgregarModal" [modal]="true" [style]="{width: '90vw', height: '90vh'}" [draggable]="false"
+    [resizable]="false" [maximizable]="true" header="Agregar Documento por Pagar" (onHide)="onCloseModal()">
+    <app-agregar-pago [numeropresupuesto]="pagnro" [fechapresupuesto]="fechaString" (onClose)="onCloseModal()">
     </app-agregar-pago>
 </p-dialog>
 <div class="container">
@@ -25,9 +15,9 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
             <div style="display: inline;">
                 <div [style]="{'display':'inline',  'margin-right':'30px' }">
-                <label for="username" class="text-sm">Pago Nro: </label>
-                <input pInputText id="username" aria-describedby="username-help" [value]="pagnro" [disabled]="true"
-                    [style]="{'min-width': '200px', 'height': '2.5rem'}" />
+                    <label for="username" class="text-sm">Pago Nro: </label>
+                    <input pInputText id="username" aria-describedby="username-help" [value]="pagnro" [disabled]="true"
+                        [style]="{'min-width': '200px', 'height': '2.5rem'}" />
                 </div>
 
                 <div [style]="{'display':'inline' , 'margin-right':'30px'}">
@@ -43,8 +33,8 @@
                 </div>
                 <div [style]="{'display':'inline'}">
                     <label for="medio-pago" class="text-sm">Medio Pago: </label>
-                    <input pInputText id="medio-pago" aria-describedby="medio-pago-help" [value]="medio" [disabled]="true"
-                        [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
+                    <input pInputText id="medio-pago" aria-describedby="medio-pago-help" [value]="medio"
+                        [disabled]="true" [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
                 </div>
             </div>
 
@@ -163,7 +153,9 @@
                     <td>{{ detalle.razonsocial }}</td>
                     <td>{{ detalle.nombreTipoDocumento }}</td>
                     <td>{{ detalle.ban02NroDoc }}</td>
-                    <td>{{ detalle.nombremoneda }}</td>
+                    <td
+                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 'dolares-class': detalle.nombremoneda === ' DOLARES'}">
+                        {{ detalle.nombremoneda }}</td>
                     <td>{{detalle.ban02FechaEmision}}</td>
                     <td>{{detalle.ban02FechaVencimiento}}</td>
                     <td>{{ detalle.ban02Soles | number:'1.2-2' }}</td>
@@ -172,17 +164,22 @@
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles"
-                            (change)="calcularNetoPago(detalle)" />
+                                [disabled]="!esEditablePagoSoles" (change)="calcularNetoPago(detalle)" />
                         </ng-container>
-                        <ng-template #viewMode>{{ detalle.ban02PagoSoles }}</ng-template>
+                        <ng-template #viewMode><span
+                                [style.font-weight]="detalle.nombremoneda === 'SOLES' ? 'bold' : 'normal'">
+                                {{ detalle.ban02PagoSoles }}
+                            </span></ng-template>
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeDolares">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoDolares"
-                            (change)="calcularNetoPago(detalle)"
-                             />
+                                [disabled]="!esEditablePagoDolares" (change)="calcularNetoPago(detalle)" />
                         </ng-container>
-                        <ng-template #viewModeDolares>{{ detalle.ban02PagoDolares }}</ng-template>
+                        <ng-template #viewModeDolares><span
+                                [style.font-weight]="detalle.nombremoneda === ' DOLARES' ? 'bold' : 'normal'">
+                                {{ detalle.ban02PagoDolares }}
+                            </span></ng-template>
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTipoDetraccion">
@@ -198,10 +195,8 @@
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
-                            <input pInputText type="number"
-                            [(ngModel)]="editingRow.ban02ImporteDetraccionSoles"
-                            (change)="calcularNetoPago(editingRow)"
-                            />
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionSoles"
+                                (change)="calcularNetoPago(editingRow)" />
                         </ng-container>
                         <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles }}</ng-template>
                     </td>
@@ -231,17 +226,18 @@
                         </div> -->
                         <div class="flex gap-2 justify-content-end">
                             <ng-container *ngIf="editingIndex === index; else editButtons">
-                                <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" (onClick)="saveEditing()"
-                                    pTooltip="Guardar" [text]="true"></p-button>
-                                <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" (onClick)="cancelEditing()"
-                                    pTooltip="Cancelar" [text]="true"></p-button>
+                                <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
+                                    (onClick)="saveEditing()" pTooltip="Guardar" [text]="true"></p-button>
+                                <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm"
+                                    (onClick)="cancelEditing()" pTooltip="Cancelar" [text]="true"></p-button>
                             </ng-container>
                             <ng-template #editButtons>
                                 <p-button icon="pi pi-pencil" styleClass="p-button-warning p-button-sm"
-                                (onClick)="startEditing(detalle,index)" [disabled]="isAnyRowEditing"
-                                pTooltip="Modificar" [text]="true"></p-button>
-                                <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm" [disabled]="isAnyRowEditing"
-                                    pTooltip="Eliminar" [text]="true"   (onClick)="eliminarPago(detalle)" ></p-button>
+                                    (onClick)="startEditing(detalle,index)" [disabled]="isAnyRowEditing"
+                                    pTooltip="Modificar" [text]="true"></p-button>
+                                <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
+                                    [disabled]="isAnyRowEditing" pTooltip="Eliminar" [text]="true"
+                                    (onClick)="eliminarPago(detalle)"></p-button>
                             </ng-template>
 
                         </div>
@@ -268,7 +264,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="14" style="text-align: center; font-weight: bold; padding: 1rem;">
+                    <td colspan="20" style="text-align: center; font-weight: bold; padding: 1rem;">
                         No se encontraron registros
                     </td>
                 </tr>

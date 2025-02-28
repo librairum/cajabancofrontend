@@ -2,9 +2,6 @@
 
 <!-- Panel principal -->
 <p-panel>
-    <p-header>
-        Detalle del presupuesto
-    </p-header>
     <div class="p-grid p-fluid">
         <div class="p-field p-col-12 mb-3">
             <label for="fechaejecucion">Fecha ejecución <span class="text-danger">*</span></label>
@@ -31,11 +28,11 @@
         </div>
     </div>
     <p-footer>
-        <div class="flex justify-content-end gap-2">
+        <div class="flex justify-content-center gap-8">
             <p-button label="Aceptar" (onClick)="guardarConfirmacion()"
-                styleClass="p-button-success" [disabled]="cargandoArchivo"></p-button>
+                styleClass="p-button-primary" [disabled]="cargandoArchivo"></p-button>
             <p-button label="Cancelar" (onClick)="cancelar()"
-                styleClass="p-button-secondary" [disabled]="cargandoArchivo"></p-button>
+                styleClass="p-button-danger" [disabled]="cargandoArchivo"></p-button>
         </div>
     </p-footer>
 </p-panel>

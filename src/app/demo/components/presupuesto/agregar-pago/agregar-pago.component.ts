@@ -72,8 +72,7 @@ export class AgregarPagoComponent implements OnInit {
         this.bS.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
             { label: 'Presupuesto', routerLink: '/Home/presupuesto' },
-            { label: 'Detalle Presupuesto', routerLink: '/Home//detalle-presupuesto' },
-            { label: 'Agregar Pago', routerLink: '/Home/nuevo-presupuesto' },
+            { label: 'Detalle Presupuesto', routerLink: '/Home//detalle-presupuesto' }
         ]);
         this.bS.currentBreadcrumbs$.subscribe(bc => {
             this.items = bc;

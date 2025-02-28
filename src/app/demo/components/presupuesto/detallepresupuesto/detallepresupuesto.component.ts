@@ -24,12 +24,12 @@ import { AgregarPagoComponent } from "../agregar-pago/agregar-pago.component";
     selector: 'app-detallepresupuesto',
     standalone: true,
     imports: [BreadcrumbModule, RouterModule, ToastModule,
-    ConfirmDialogModule, TableModule, PanelModule, CalendarModule,
-    InputTextModule, InputNumberModule, ButtonModule, CommonModule,
-    FormsModule, DialogModule, AgregarPagoComponent],
+        ConfirmDialogModule, TableModule, PanelModule, CalendarModule,
+        InputTextModule, InputNumberModule, ButtonModule, CommonModule,
+        FormsModule, DialogModule, AgregarPagoComponent],
     templateUrl: './detallepresupuesto.component.html',
     styleUrl: './detallepresupuesto.component.css',
-    providers: [ConfirmationService,MessageService,DatePipe]
+    providers: [ConfirmationService, MessageService, DatePipe]
 })
 export class DetallepresupuestoComponent implements OnInit {
     @ViewChild(AgregarPagoComponent) agregarPagoComponent: AgregarPagoComponent;
@@ -41,27 +41,27 @@ export class DetallepresupuestoComponent implements OnInit {
     fecha: Date
     motivo: string;
     medio: string;
-    groupTotals:any[] = [];
+    groupTotals: any[] = [];
     load: boolean = false;
     displayAgregarModal: boolean = false;
 
     editingRow: Detallepresupuesto | null = null;
     isAnyRowEditing: boolean = false;
     editingIndex: number | null = null; // Índice de la fila en edición
-    constructor(private messageService:MessageService,
+    constructor(private messageService: MessageService,
         private presupuestoservice: PresupuestoService,
         private bs: BreadcrumbService,
         private router: Router,
         private ms: MessageService,
         private datePipe: DatePipe,
-    private confirmationService: ConfirmationService,
-    private gS: GlobalService) {
+        private confirmationService: ConfirmationService,
+        private gS: GlobalService) {
 
-    //variables de edición
+        //variables de edición
 
-/*
+        /*
 
-*/
+        */
         const navigation = router.getCurrentNavigation();
         if (navigation?.extras?.state) {
             this.navigationData = navigation.extras.state;
@@ -86,19 +86,20 @@ export class DetallepresupuestoComponent implements OnInit {
 
     }
 
-    cargarDetalles(){
-        this.load=true;
-        this.presupuestoservice.obtenerDetallePresupuesto('01',this.navigationData.PagoNro).subscribe({
+    cargarDetalles() {
+        this.load = true;
+        this.presupuestoservice.obtenerDetallePresupuesto('01', this.navigationData.PagoNro).subscribe({
             next: (data) => {
-                this.DetallePago=data;
+                this.DetallePago = data;
                 if (data.length === 0) {
                     this.messageService.add({
                         severity: 'warn',
                         summary: 'Advertencia',
                         detail: 'No se encontraron detalles del presupuesto'
                     });
+                    this.load = false;
                 } else {
-                    this.load=false;
+                    this.load = false;
                 }
             },
             error: (error) => {
@@ -181,17 +182,17 @@ export class DetallepresupuestoComponent implements OnInit {
         };
 
         this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);*/
-        this.displayAgregarModal=true;
+        this.displayAgregarModal = true;
     }
-    onCloseModal(){
+    onCloseModal() {
         if (this.agregarPagoComponent) {
             this.agregarPagoComponent.resetForm();
         }
-        this.displayAgregarModal=false;
+        this.displayAgregarModal = false;
         this.cargarDetalles();
     }
-     esEditablePagoSoles:boolean = false;
-     esEditablePagoDolares:boolean=false;
+    esEditablePagoSoles: boolean = false;
+    esEditablePagoDolares: boolean = false;
     startEditing(detalle: Detallepresupuesto, index: number) {
         if (this.isAnyRowEditing) {
             this.messageService.add({
@@ -206,7 +207,19 @@ export class DetallepresupuestoComponent implements OnInit {
         this.editingRow = { ...detalle }; // Copia los datos para editar
         this.editingIndex = index; // Guarda el índice de la fila
         this.isAnyRowEditing = true;
-        const tipoMoneda =  this.editingRow.ban02Moneda;
+        //const tipoMoneda =  this.editingRow.ban02Moneda;
+
+        if (detalle.nombremoneda === 'SOLES') {
+            this.esEditablePagoSoles = true;
+            this.esEditablePagoDolares = false;
+        } else if (detalle.nombremoneda === " DOLARES") {
+            this.esEditablePagoSoles = false;
+            this.esEditablePagoDolares = true;
+        } else {
+            // Si no es ninguno de los dos, editar los dos xD
+            this.esEditablePagoSoles = true;
+            this.esEditablePagoDolares = true;
+        }
 
 
     }
@@ -278,7 +291,7 @@ export class DetallepresupuestoComponent implements OnInit {
             ban02ImporteDetraccionSoles: detalle.ban02ImporteDetraccionSoles,
             ban02ImporteDetraccionDolares: detalle.ban02ImporteDetraccionDolares,
             ban02TasaRetencion: detalle.ban02TasaRetencion,
-            ban02ImporteRetencionSoles:  detalle.ban02ImporteRetencionSoles,
+            ban02ImporteRetencionSoles: detalle.ban02ImporteRetencionSoles,
             ban02ImporteRetencionDolares: detalle.ban02ImporteRetencionDolares,
             ban02TasaPercepcion: detalle.ban02TasaPercepcion,
             ban02ImportePercepcionSoles: detalle.ban02ImportePercepcionSoles,
@@ -288,10 +301,10 @@ export class DetallepresupuestoComponent implements OnInit {
 
 
 
-    eliminarPago(detalle : Detallepresupuesto) {
+    eliminarPago(detalle: Detallepresupuesto) {
 
-            this.confirmationService.confirm({
-                message: `
+        this.confirmationService.confirm({
+            message: `
                     <div class="text-center">
                         <i class="pi pi-exclamation-circle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
                         <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
@@ -299,84 +312,84 @@ export class DetallepresupuestoComponent implements OnInit {
 
                     </div>
                 `,
-                header: 'Confirmar Eliminación',
-                //icon: 'pi pi-exclamation-triangle',
-                acceptLabel: 'Sí, eliminar',
-                rejectLabel: 'No, cancelar',
-                acceptButtonStyleClass: 'p-button-danger p-button-raised',
-                rejectButtonStyleClass: 'p-button-outlined p-button-raised',
-                accept: () => {
-                    const empresa = this.gS.getCodigoEmpresa();
-                    //const numero = presupuesto.pagoNumero;
-                    const numeroPresupuesto = this.navigationData.PagoNro;
-                    const numeroPresupuestoDetalle = detalle.ban02Codigo;
-                    this.presupuestoservice.eliminarPresupuestoDetalle(empresa,
-                         numeroPresupuesto, numeroPresupuestoDetalle).subscribe({
-                            next: (response) =>{
-                                if(response.isSuccess){
-                                    this.messageService.add({
-                                        severity: 'success',
-                                        summary: 'Éxito',
-                                        detail: 'Presupuesto detalle eliminado correctamente'
-                                    });
-                                    this.cargarDetalles();
+            header: 'Confirmar Eliminación',
+            //icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí, eliminar',
+            rejectLabel: 'No, cancelar',
+            acceptButtonStyleClass: 'p-button-danger p-button-raised',
+            rejectButtonStyleClass: 'p-button-outlined p-button-raised',
+            accept: () => {
+                const empresa = this.gS.getCodigoEmpresa();
+                //const numero = presupuesto.pagoNumero;
+                const numeroPresupuesto = this.navigationData.PagoNro;
+                const numeroPresupuestoDetalle = detalle.ban02Codigo;
+                this.presupuestoservice.eliminarPresupuestoDetalle(empresa,
+                    numeroPresupuesto, numeroPresupuestoDetalle).subscribe({
+                        next: (response) => {
+                            if (response.isSuccess) {
+                                this.messageService.add({
+                                    severity: 'success',
+                                    summary: 'Éxito',
+                                    detail: 'Presupuesto detalle eliminado correctamente'
+                                });
+                                this.cargarDetalles();
 
-                                }else{
-                                    this.messageService.add({
-                                        severity: 'error',
-                                        summary: 'Error',
-                                        detail: response.message || 'Error al eliminar el presupuesto'
-                                    });
-                                }
-                            },
-                            error: (error) => {
+                            } else {
                                 this.messageService.add({
                                     severity: 'error',
                                     summary: 'Error',
-                                    detail: 'Error al eliminar el presupuesto: ' + error.message
+                                    detail: response.message || 'Error al eliminar el presupuesto'
                                 });
                             }
+                        },
+                        error: (error) => {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Error al eliminar el presupuesto: ' + error.message
+                            });
+                        }
 
-                         });
-                }
-            });
-        }
+                    });
+            }
+        });
+    }
 
-    calcularNetoPago(detalle: Detallepresupuesto){
+    calcularNetoPago(detalle: Detallepresupuesto) {
 
-        let importeNetoSoles : number = 0;
-        let montoPagoSoles : number = this.editingRow.ban02PagoSoles;
+        let importeNetoSoles: number = 0;
+        let montoPagoSoles: number = this.editingRow.ban02PagoSoles;
         let montoPagoDolares: number = this.editingRow.ban02PagoDolares;
 
-        const tasaRetencion =this.editingRow.ban02TasaRetencion;
+        const tasaRetencion = this.editingRow.ban02TasaRetencion;
         const tasaDetraccion = this.editingRow.ban02Tasadetraccion;
         const tasaPercepcion = this.editingRow.ban02TasaPercepcion;
-        let importeDetraccionSoles :number = 0,
+        let importeDetraccionSoles: number = 0,
             importeRetencionSoles: number = 0,
             importePercepcionSoles: number = 0;
-        let importeDetraccionDolares:number= 0,
-            importeRetencionDolares:number = 0,
-            importePercepcionDolares:number = 0;
+        let importeDetraccionDolares: number = 0,
+            importeRetencionDolares: number = 0,
+            importePercepcionDolares: number = 0;
 
-            let netoSoles =0, netoDolares = 0;
-        if(montoPagoSoles > 0  ){
-            importeDetraccionSoles = (tasaDetraccion/100) * montoPagoSoles;
-            importeRetencionSoles = (tasaRetencion/100) * montoPagoSoles;
-            importePercepcionSoles = (tasaPercepcion/100)  * montoPagoSoles;
+        let netoSoles = 0, netoDolares = 0;
+        if (montoPagoSoles > 0) {
+            importeDetraccionSoles = (tasaDetraccion / 100) * montoPagoSoles;
+            importeRetencionSoles = (tasaRetencion / 100) * montoPagoSoles;
+            importePercepcionSoles = (tasaPercepcion / 100) * montoPagoSoles;
 
-            netoSoles =  montoPagoSoles - (importeDetraccionSoles + importeRetencionSoles + importePercepcionSoles);
+            netoSoles = montoPagoSoles - (importeDetraccionSoles + importeRetencionSoles + importePercepcionSoles);
 
-        }else{
+        } else {
             netoSoles = 0;
 
         }
 
-        if(montoPagoDolares> 0 ){
-            importeDetraccionDolares = (tasaDetraccion/100)  * montoPagoDolares;
-            importeRetencionDolares = (tasaRetencion/100) * montoPagoDolares;
-            importePercepcionDolares = (tasaPercepcion/100) * montoPagoDolares;
+        if (montoPagoDolares > 0) {
+            importeDetraccionDolares = (tasaDetraccion / 100) * montoPagoDolares;
+            importeRetencionDolares = (tasaRetencion / 100) * montoPagoDolares;
+            importePercepcionDolares = (tasaPercepcion / 100) * montoPagoDolares;
             netoDolares = montoPagoDolares - (importeDetraccionDolares + importeRetencionDolares + importePercepcionDolares);
-        }else{
+        } else {
             netoDolares = 0;
         }
 

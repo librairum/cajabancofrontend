@@ -99,3 +99,10 @@
     -webkit-appearance: none;
     margin: 0;
 }
+.soles-class {
+    font-weight: bold;
+  }
+
+  .dolares-class {
+    font-weight: bold;
+  }
