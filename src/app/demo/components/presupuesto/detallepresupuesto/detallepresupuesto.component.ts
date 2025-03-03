@@ -19,6 +19,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { DialogModule } from 'primeng/dialog';
 import { AgregarPagoComponent } from "../agregar-pago/agregar-pago.component";
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 @Component({
     selector: 'app-detallepresupuesto',
@@ -48,6 +50,8 @@ export class DetallepresupuestoComponent implements OnInit {
     editingRow: Detallepresupuesto | null = null;
     isAnyRowEditing: boolean = false;
     editingIndex: number | null = null; // Índice de la fila en edición
+    // fecha hoy
+    fechahoy: Date
     constructor(private messageService: MessageService,
         private presupuestoservice: PresupuestoService,
         private bs: BreadcrumbService,
@@ -79,9 +83,11 @@ export class DetallepresupuestoComponent implements OnInit {
         this.bs.currentBreadcrumbs$.subscribe(bc => {
             this.items = bc;
         })
-        this.cargarDetalles()
-        this.valoresCampos()
-        this.calculateGroupTotals()
+        this.cargarDetalles();
+        this.valoresCampos();
+        this.calculateGroupTotals();
+        // inicializar el pdfmake
+        (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
 
     }
@@ -428,9 +434,269 @@ export class DetallepresupuestoComponent implements OnInit {
         // detalle.ban02NetoDolares = importeNetoDolares;
     }
 
-    exportarPDF(){
+    exportarPDF() {
+        // Definimos las cabeceras
+        const headers = [
+            [
+                { text: 'Item', rowSpan: 2, style: 'tableHeader' },
+                { text: 'RUC', rowSpan: 2, style: 'tableHeader' },
+                { text: 'Razon Social', rowSpan: 2, style: 'tableHeader' },
+                { text: 'Tipo Doc', rowSpan: 2, style: 'tableHeader' },
+                { text: 'Numero', rowSpan: 2, style: 'tableHeader' },
+                { text: 'Moneda Original', rowSpan: 2, style: 'tableHeader' },
+                { text: 'Fecha emision', rowSpan: 2, style: 'tableHeader' },
+                { text: 'Fecha vencimiento', rowSpan: 2, style: 'tableHeader' },
+                { text: 'Importe Total S/.', rowSpan: 2, style: 'tableHeader' },
+                { text: 'Importe Total US$', rowSpan: 2, style: 'tableHeader' },
+                { text: '', colSpan: 2, style: 'tableHeader' }, '',
+                { text: 'Detraccion', colSpan: 3, style: 'tableHeader' }, '', '',
+                { text: 'Retencion', colSpan: 1, style: 'tableHeader' },
+                { text: 'Percepcion', colSpan: 1, style: 'tableHeader' },
+                { text: 'Neto a Pagar', colSpan: 2, style: 'tableHeader' }, ''
+            ],
+            [
+                '', '', '', '', '', '', '', '', '', '',
+                { text: 'Monto a Pagar S/.', style: 'tableHeader' },
+                { text: 'Monto a Pagar $', style: 'tableHeader' },
+                { text: 'Tipo', style: 'tableHeader' },
+                { text: 'Tasa', style: 'tableHeader' },
+                { text: 'Importe', style: 'tableHeader' },
+                { text: 'Importe', style: 'tableHeader' },
+                { text: 'Importe', style: 'tableHeader' },
+                { text: 'S/.', style: 'tableHeader' },
+                { text: 'US$', style: 'tableHeader' }
+            ]
+        ];
 
+        // Agrupamos por RUC
+        const groupedData = {};
+        this.DetallePago.forEach(item => {
+            if (!groupedData[item.ban02Ruc]) {
+                groupedData[item.ban02Ruc] = [];
+            }
+            groupedData[item.ban02Ruc].push(item);
+        });
+
+        // Formato para los numeros
+        const formatNumber = (num) => {
+            return num ? num.toFixed(2) : '0.00';
+        };
+
+        // Cuerpo de la tabla
+        const body = [...headers];
+
+        Object.keys(groupedData).forEach(ruc => {
+            const groupItems = groupedData[ruc];
+            groupItems.forEach(item => {
+                body.push([
+                    item.item,
+                    item.ban02Ruc,
+                    item.razonsocial,
+                    item.nombreTipoDocumento,
+                    item.ban02NroDoc,
+                    item.nombremoneda,
+                    item.ban02FechaEmision,
+                    item.ban02FechaVencimiento,
+                    formatNumber(item.ban02Soles),
+                    formatNumber(item.ban02Dolares),
+                    formatNumber(item.ban02PagoSoles),
+                    formatNumber(item.ban02PagoDolares),
+                    item.ban02TipoDetraccion || '',
+                    item.ban02Tasadetraccion || '',
+                    formatNumber(item.ban02ImporteDetraccionSoles),
+                    formatNumber(item.ban02ImporteRetencionSoles),
+                    formatNumber(item.ban02ImportePercepcionSoles),
+                    formatNumber(item.ban02NetoSoles),
+                    formatNumber(item.ban02NetoDolares)
+                ]);
+            });
+
+            const solesSubtotal = this.calculateGroupTotal(ruc, 'ban02Soles');
+            const dolaresSubtotal = this.calculateGroupTotal(ruc, 'ban02Dolares');
+            const detraccionSubtotal = this.calculateGroupTotal(ruc, 'ban02ImporteDetraccionSoles');
+            const retencionSubtotal = this.calculateGroupTotal(ruc, 'ban02ImporteRetencionSoles');
+            const percepcionSubtotal = this.calculateGroupTotal(ruc, 'ban02ImportePercepcionSoles');
+            const netoSolesSubtotal = this.calculateGroupTotal(ruc, 'ban02NetoSoles');
+            const netoDolaresSubtotal = this.calculateGroupTotal(ruc, 'ban02NetoDolares');
+
+            body.push([
+                { text: '', colSpan: 8, style: 'subtotal' },
+                '', '', '', '', '', '', '',
+                { text: formatNumber(solesSubtotal), style: 'subtotal', colSpan: 1 },
+                { text: formatNumber(dolaresSubtotal), style: 'subtotal', colSpan: 1 },
+                { text: '', style: 'subtotal', colSpan: 1 },
+                { text: '', style: 'subtotal', colSpan: 1 },
+                { text: '', style: 'subtotal', colSpan: 1 },
+                { text: '', style: 'subtotal', colSpan: 1 },
+                { text: formatNumber(detraccionSubtotal), style: 'subtotal', colSpan: 1 },
+                { text: formatNumber(retencionSubtotal), style: 'subtotal', colSpan: 1 },
+                { text: formatNumber(percepcionSubtotal), style: 'subtotal', colSpan: 1 },
+                { text: formatNumber(netoSolesSubtotal), style: 'subtotal', colSpan: 1 },
+                { text: formatNumber(netoDolaresSubtotal), style: 'subtotal', colSpan: 1 }
+            ]);
+        });
+
+        const totalSoles = this.getTotalColumn('ban02Soles');
+        const totalDolares = this.getTotalColumn('ban02Dolares');
+        const totalDetraccion = this.getTotalColumn('ban02ImporteDetraccionSoles');
+        const totalRetencion = this.getTotalColumn('ban02ImporteRetencionSoles');
+        const totalPercepcion = this.getTotalColumn('ban02ImportePercepcionSoles');
+        const totalNetoSoles = this.getTotalColumn('ban02NetoSoles');
+        const totalNetoDolares = this.getTotalColumn('ban02NetoDolares');
+
+        body.push([
+            { text: '', colSpan: 7, style: 'total' }, '', '', '', '', '', '',
+            { text: 'Sumas', style: 'total', colSpan: 1 },
+            { text: formatNumber(totalSoles), style: 'total', colSpan: 1 },
+            { text: formatNumber(totalDolares), style: 'total', colSpan: 1 },
+            { text: '', style: 'total', colSpan: 1 },
+            { text: '', style: 'total', colSpan: 1 },
+            { text: '', style: 'total', colSpan: 1 },
+            { text: '', style: 'total', colSpan: 1 },
+            { text: formatNumber(totalDetraccion), style: 'total', colSpan: 1 },
+            { text: formatNumber(totalRetencion), style: 'total', colSpan: 1 },
+            { text: formatNumber(totalPercepcion), style: 'total', colSpan: 1 },
+            { text: formatNumber(totalNetoSoles), style: 'total', colSpan: 1 },
+            { text: formatNumber(totalNetoDolares), style: 'total', colSpan: 1 }
+        ]);
+        // Estructura y estilos del pdf, medio complicado es
+        const docDefinition = {
+            pageOrientation: 'landscape',
+            pageMargins: [20, 20, 20, 20],
+            content: [
+                { text: 'Detalle de Presupuesto', style: 'header' },
+                {
+                    columns: [
+                        {
+                            width: 'auto',
+                            text: [
+                                { text: 'Numero de Pago: ', style: 'label' },
+                                { text: this.pagnro, style: 'value' }
+                            ]
+                        },
+                        {
+                            width: 'auto',
+                            text: [
+                                { text: 'Fecha: ', style: 'label' },
+                                { text: this.fechaString, style: 'value' }
+                            ],
+                            margin: [20, 0, 0, 0]
+                        },
+                        {
+                            width: 'auto',
+                            text: [
+                                { text: 'Motivo: ', style: 'label' },
+                                { text: this.motivo, style: 'value' }
+                            ],
+                            margin: [20, 0, 0, 0]
+                        },
+                        {
+                            width: 'auto',
+                            text: [
+                                { text: 'Medio Pago: ', style: 'label' },
+                                { text: this.medio, style: 'value' }
+                            ],
+                            margin: [20, 0, 0, 0]
+                        }
+                    ],
+                    margin: [0, 0, 0, 10]
+                },
+                {
+                    table: {
+                        headerRows: 2,
+                        widths: [15, 40, 70, 30, 40, 30, 35, 40, 30, 30, 30, 30, 20, 20, 25, 35, 40, 25, 30],
+                        body: body,
+                        alignment: 'center',
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return (i === 0 || i === 1 || i === 2 || i === node.table.body.length) ? 1 : 0.5;
+                        },
+                        vLineWidth: function (i, node) {
+                            return 0.5;
+                        },
+                        hLineColor: function (i, node) {
+                            return (i === 0 || i === 1 || i === 2 || i === node.table.body.length) ? 'black' : '#aaa';
+                        },
+                        vLineColor: function (i, node) {
+                            return '#aaa';
+                        },
+                        paddingTop: function (i) { return 4; },
+                        paddingBottom: function (i) { return 4; }
+                    }
+                }
+            ],
+            styles: {
+                header: {
+                    fontSize: 15,
+                    bold: true,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 11]
+                },
+                label: {
+                    bold: true,
+                    fontSize: 8
+                },
+                value: {
+                    fontSize: 8
+                },
+                tableHeader: {
+                    bold: true,
+                    fontSize: 7,
+                    alignment: 'center',
+                    fillColor: '#eeeeee',
+                    margin: [0, 5]
+                },
+                subtotal: {
+                    bold: true,
+                    fontSize: 6,
+                    alignment: 'center'
+                },
+                total: {
+                    bold: true,
+                    fontSize: 6,
+                    alignment: 'center'
+                }
+            },
+            defaultStyle: {
+                fontSize: 6,
+                alignment: 'center'
+            }
+        };
+
+        // Generamos el pdf
+        //pdfMake.createPdf(docDefinition).download('DetallePrespupuesto_' + this.pagnro + '.pdf');
+
+        pdfMake.createPdf(docDefinition).getBlob((blob) => {
+            // Crear un objeto URL para el blob
+            const blobUrl = URL.createObjectURL(blob);
+
+            // Crear un elemento <a> invisible
+            const link = document.createElement('a');
+            link.href = blobUrl;
+
+            link.download = 'DetallePrespupuesto_' + this.pagnro + '_' + this.formatFecha(this.fechahoy = new Date()); +'.pdf';
+
+            // Añadir al documento, hacer clic y limpiar
+            document.body.appendChild(link);
+            link.click();
+
+            // Limpiar después
+            setTimeout(() => {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(blobUrl);
+            }, 100);
+        });
     }
 
+    formatFecha(fecha: Date): string {
+        const dia = fecha.getDate().toString().padStart(2, '0');
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Mes empieza en 0
+        const año = fecha.getFullYear();
+        const horas = fecha.getHours().toString().padStart(2, '0');
+        const minutos = fecha.getMinutes().toString().padStart(2, '0');
+        const segundos = fecha.getSeconds().toString().padStart(2, '0');
 
+        return `${dia}/${mes}/${año}_${horas}:${minutos}:${segundos}`;
+    }
 }

@@ -11,8 +11,11 @@ export interface cabeceraPresupuesto{
     netoPagaSoles:number;
     netoPagoDolares:number;
     estado:string;
-    enlaceComprobante:string;
     nombreMedioPago:string;
+    ban01FechaEjecucionPago:string;
+    ban01NroOperacion:string;
+    ban01EnlacePago:string;
+
 }
 
 export interface Detallepresupuesto{
