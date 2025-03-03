@@ -90,9 +90,9 @@
 }
 
 /* Mejoras para inputs numéricos */
-::ng-deep .p-datatable .p-datatable-tbody > tr > td input[type="number"] {
+/*::ng-deep .p-datatable .p-datatable-tbody > tr > td input[type="number"] {
     -moz-appearance: textfield;
-}
+}*/
 
 ::ng-deep .p-datatable .p-datatable-tbody > tr > td input[type="number"]::-webkit-outer-spin-button,
 ::ng-deep .p-datatable .p-datatable-tbody > tr > td input[type="number"]::-webkit-inner-spin-button {
@@ -106,3 +106,15 @@
   .dolares-class {
     font-weight: bold;
   }
+
+.soles-classs {
+    font-weight: bold;
+    background-color: #e6f7ff; /* Light blue background for Soles */
+    color: #0066cc;
+}
+
+.dolares-classs {
+    font-weight: bold;
+    background-color: #ebf5eb; /* Light green background for Dolares */
+    color: #2e8b57;
+}

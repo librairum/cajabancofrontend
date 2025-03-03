@@ -428,5 +428,9 @@ export class DetallepresupuestoComponent implements OnInit {
         // detalle.ban02NetoDolares = importeNetoDolares;
     }
 
+    exportarPDF(){
+
+    }
+
 
 }

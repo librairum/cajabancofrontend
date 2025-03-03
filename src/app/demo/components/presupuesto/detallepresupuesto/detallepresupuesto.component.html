@@ -46,10 +46,11 @@
 
         <!-- Fila 4: Medio de Pago y botón -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-
             <div style="display: flex; justify-content: flex-end;">
-                <p-button label="Agregar Doc x Pagar" icon="pi pi-plus" styleClass="p-button-sm"
+                <p-button label="Agregar Doc x Pagar" icon="pi pi-plus" styleClass="p-button-sm mr-2"
                     (onClick)="DatosdeRegistro()"></p-button>
+                <p-button label="Exportar a PDF" icon="pi pi-file-pdf" styleClass="p-button-sm p-button-success"
+                    (onClick)="exportarPDF()"></p-button>
             </div>
         </div>
     </div>
@@ -158,8 +159,8 @@
                         {{ detalle.nombremoneda }}</td>
                     <td>{{detalle.ban02FechaEmision}}</td>
                     <td>{{detalle.ban02FechaVencimiento}}</td>
-                    <td>{{ detalle.ban02Soles | number:'1.2-2' }}</td>
-                    <td>{{ detalle.ban02Dolares | number:'1.2-2' }}</td>
+                    <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}">{{ detalle.ban02Soles | number:'1.2-2' }}</td>
+                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === ' DOLARES'}">{{ detalle.ban02Dolares | number:'1.2-2' }}</td>
 
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
@@ -168,7 +169,7 @@
                         </ng-container>
                         <ng-template #viewMode><span
                                 [style.font-weight]="detalle.nombremoneda === 'SOLES' ? 'bold' : 'normal'">
-                                {{ detalle.ban02PagoSoles }}
+                                {{ detalle.ban02PagoSoles | number:'1.2-2'  }}
                             </span></ng-template>
                     </td>
                     <td>
@@ -178,7 +179,7 @@
                         </ng-container>
                         <ng-template #viewModeDolares><span
                                 [style.font-weight]="detalle.nombremoneda === ' DOLARES' ? 'bold' : 'normal'">
-                                {{ detalle.ban02PagoDolares }}
+                                {{ detalle.ban02PagoDolares | number:'1.2-2'  }}
                             </span></ng-template>
                     </td>
                     <td>
@@ -198,19 +199,19 @@
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionSoles"
                                 (change)="calcularNetoPago(editingRow)" />
                         </ng-container>
-                        <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles }}</ng-template>
+                        <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles  | number:'1.2-2'  }}</ng-template>
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteRetencion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteRetencionSoles" />
                         </ng-container>
-                        <ng-template #viewModeImporteRetencion>{{ detalle.ban02ImporteRetencionSoles }}</ng-template>
+                        <ng-template #viewModeImporteRetencion>{{ detalle.ban02ImporteRetencionSoles | number:'1.2-2'  }}</ng-template>
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImportePercepcion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImportePercepcionSoles" />
                         </ng-container>
-                        <ng-template #viewModeImportePercepcion>{{ detalle.ban02ImportePercepcionSoles }}</ng-template>
+                        <ng-template #viewModeImportePercepcion>{{ detalle.ban02ImportePercepcionSoles | number:'1.2-2'  }}</ng-template>
                     </td>
 
                     <td>{{ detalle.ban02NetoSoles | number:'1.2-2' }}</td>
