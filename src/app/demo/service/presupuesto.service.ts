@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { agregar_Pago, cabeceraPresupuesto, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista } from '../components/presupuesto/presupuesto';
+import { agregar_Pago, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista } from '../components/presupuesto/presupuesto';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
 
@@ -122,6 +122,29 @@ export class PresupuestoService {
 
     }
 
+    public actualizarComprobante(params: ComprobanteUpdateParams): Observable<RespuestaAPI5> {
+        const httpParams = new HttpParams()
+            .set('empresa', params.empresa)
+            .set('anio', params.anio)
+            .set('mes', params.mes)
+            .set('numeropresupuesto', params.numeropresupuesto)
+            .set('flagOperacion', params.flagOperacion)
+            .set('fechapago', params.fechapago)
+            .set('numerooperacion', params.numerooperacion)
+            .set('enlacepago', params.enlacepago)
+        return this.http.put<RespuestaAPI5>(`${this.urlApi}/SpActualizaComprobante`, null, { params: httpParams });
+    }
+
+    public subirArchivo(file: File, destinationPath: string): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('destinationPath', destinationPath);
+
+        return this.http.post(`${this.urlApi}/SubirArchivo`, formData, {
+            reportProgress: true,
+            observe: 'events'
+        });
+    }
 
 }
 

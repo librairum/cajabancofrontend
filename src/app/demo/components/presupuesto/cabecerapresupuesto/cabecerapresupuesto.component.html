@@ -98,23 +98,14 @@
                     <td>{{presupuesto.ban01FechaEjecucionPago | date:'dd/MM/yyyy'}}</td>
                     <td>{{presupuesto.ban01NroOperacion}}</td>
                     <td>
-                        <p-button
-                          *ngIf="presupuesto.ban01EnlacePago"
-                          label=""
-                          icon="pi pi-file"
-                          styleClass="p-button-sm p-button-info"
-                          (onClick)="abrirdocumento(presupuesto.ban01EnlacePago)"
-                          [text]="false">
+                        <p-button *ngIf="presupuesto.ban01EnlacePago" label="" icon="pi pi-file"
+                            styleClass="p-button-sm p-button-info"
+                            (onClick)="abrirdocumento(presupuesto.ban01EnlacePago)" [text]="false">
                         </p-button>
-                        <p-button
-                          *ngIf="!presupuesto.ban01EnlacePago"
-                          label=""
-                          icon="pi pi-file-excel"
-                          styleClass="p-button-sm p-button-danger"
-                          [disabled]="true"
-                          [text]="false">
+                        <p-button *ngIf="!presupuesto.ban01EnlacePago" label="" icon="pi pi-file-excel"
+                            styleClass="p-button-sm p-button-danger" [disabled]="true" [text]="false">
                         </p-button>
-                      </td>
+                    </td>
                     <td>
                         <div class="flex gap-2">
                             <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
@@ -129,10 +120,15 @@
                                     [disabled]="botonesDeshabilitados"></p-button>
                                 <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
                                     pTooltip="Confirmar Pago" [text]="true" (onClick)="confirmarPago(presupuesto)"
-                                    [disabled]="botonesDeshabilitados"></p-button>
+                                    [disabled]="botonesDeshabilitados ||
+                                               (presupuesto.ban01EnlacePago ||
+                                                presupuesto.ban01NroOperacion ||
+                                                presupuesto.ban01FechaEjecucionPago)"></p-button>
                                 <p-button icon="pi pi-ban" styleClass="p-button-danger p-button-sm"
-                                    (onClick)="anularPago(presupuesto)" [text]="true" pTooltip="Anular pago"
-                                    [disabled]="botonesDeshabilitados"></p-button>
+                                    (onClick)="anularPago(presupuesto)" [text]="true" pTooltip="Anular pago" [disabled]="botonesDeshabilitados ||
+                                           (!presupuesto.ban01EnlacePago &&
+                                            !presupuesto.ban01NroOperacion &&
+                                            !presupuesto.ban01FechaEjecucionPago)"></p-button>
                             </ng-container>
                             <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
                                 <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"

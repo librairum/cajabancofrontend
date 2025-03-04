@@ -66,6 +66,7 @@ export class AgregarPagoComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.filtroFRM.reset();
         this.numeropresupuestoMod = this.numeropresupuesto;
         this.fechapresupuestoMod = this.fechapresupuesto;
         this.primeng.setTranslation(calendario_traduccion());
@@ -83,32 +84,20 @@ export class AgregarPagoComponent implements OnInit {
 
     public resetForm(): void {
         this.filtroFRM.reset();
+        this.filtroFRM.setValue({
+            empresa:this.gS.getCodigoEmpresa(),
+            ruc: '',
+            nrodoc: ''
+        })
+        this.cargarproveedores();
         this.selectedItems = [];
     }
 
     cargarayudaparaagregarpago(): void {
         this.loading = true;
         const nroDoc = this.filtroFRM.get('nrodoc').value ?? "";
-        // if (!nroDoc) {
-        //     this.messageService.add({
-        //         severity: 'error',
-        //         summary: 'Error',
-        //         detail: 'La fecha de vencimiento es requerida'
-        //     });
-        //     this.loading = false;
-        //     return;
-        // }
         const ruc = this.filtroFRM.get('ruc').value ?? "";
 
-        // if (!ruc) {
-        //     this.messageService.add({
-        //         severity: 'error',
-        //         summary: 'Error',
-        //         detail: 'Debe seleccionar un proveedor'
-        //     });
-        //     this.loading = false;
-        //     return;
-        // }
         this.presupuestoService.obtenerDocPendiente(
             this.gS.getCodigoEmpresa(),
             ruc,
@@ -256,7 +245,6 @@ export class AgregarPagoComponent implements OnInit {
         }
         this.selectedItems = [];
         this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)*/
-        this.filtroFRM.reset();  // Limpia los campos del formulario
         this.selectedItems = [];  // Limpia la selección de elementos
         this.onClose.emit();
     }

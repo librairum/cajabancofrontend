@@ -409,6 +409,13 @@ export class CabecerapresupuestoComponent implements OnInit {
         }
         this.verConfirmarPago = false;
         this.cargarMedioPago();
+        this.gS.selectedDate$.subscribe(date => {
+            if (date) {
+                const year = date.getFullYear().toString();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
+            }
+        });
     }
     uploadFunction() { }
 
@@ -416,6 +423,89 @@ export class CabecerapresupuestoComponent implements OnInit {
         if (filePath) {
             // Solo abre una nueva ventana y coloca la ruta directamente en la barra de direcciones
             window.open(filePath, '_blank');
-          }
-      }
+        }
+    }
+
+
+    anio_dato: string = ""
+    mes_dato: string = ""
+
+    anularPago(presupuesto: cabeceraPresupuesto) {
+        this.confirmationService.confirm({
+            message: `
+                <div class="text-center">
+                    <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
+                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de anular este pago?</p>
+                    <p style="color: var(--text-color-secondary);">Número de pago: ${presupuesto.pagoNumero}</p>
+                    <p style="color: var(--red-500); font-weight: bold;">Esta acción no se puede deshacer</p>
+                </div>
+            `,
+            header: 'Confirmar Anulación de Pago',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí, anular pago',
+            rejectLabel: 'No, cancelar',
+            acceptButtonStyleClass: 'p-button-danger p-button-raised',
+            rejectButtonStyleClass: 'p-button-outlined p-button-raised',
+            accept: () => {
+
+                this.gS.selectedDate$.subscribe(date => {
+                    if (date) {
+                        this.anio_dato = date.getFullYear().toString();
+                        this.mes_dato = (date.getMonth() + 1).toString().padStart(2, '0');
+                    }
+                });
+                const parametrosanulacion = {
+                    empresa: this.gS.getCodigoEmpresa(),
+                    anio: this.anio_dato,
+                    mes: this.mes_dato,
+                    numeropresupuesto: presupuesto.pagoNumero,
+                    flagOperacion: 'E',
+                    fechapago: '',
+                    numerooperacion: '',
+                    enlacepago: '' ,
+                };
+                this.presupuestoService.actualizarComprobante(parametrosanulacion).subscribe({
+                    next: (response) => {
+                        if (response.isSuccess) {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Éxito',
+                                detail: 'Pago anulado correctamente'
+                            });
+                            this.gS.selectedDate$.subscribe(date => {
+                                if (date) {
+                                    const year = date.getFullYear().toString();
+                                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                                    this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
+                                }
+                            });
+                        } else {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: response.message || 'Error al anular el pago'
+                            });
+                        }
+                    },
+                    error: (error) => {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Error al anular el pago: ' + error.message
+                        });
+                    }
+                });
+            },
+            reject: () => {
+                this.messageService.add({
+                    severity: 'info',
+                    summary: 'Cancelado',
+                    detail: 'Anulación de pago cancelada'
+                });
+            }
+        });
+
+
+
+    }
 }
