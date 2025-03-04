@@ -435,15 +435,14 @@ export class CabecerapresupuestoComponent implements OnInit {
             message: `
                 <div class="text-center">
                     <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
-                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de anular este pago?</p>
+                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de anular?</p>
                     <p style="color: var(--text-color-secondary);">Número de pago: ${presupuesto.pagoNumero}</p>
-                    <p style="color: var(--red-500); font-weight: bold;">Esta acción no se puede deshacer</p>
                 </div>
             `,
-            header: 'Confirmar Anulación de Pago',
+            header: 'Anular comprobante de pago',
             icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sí, anular pago',
-            rejectLabel: 'No, cancelar',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
             acceptButtonStyleClass: 'p-button-danger p-button-raised',
             rejectButtonStyleClass: 'p-button-outlined p-button-raised',
             accept: () => {
