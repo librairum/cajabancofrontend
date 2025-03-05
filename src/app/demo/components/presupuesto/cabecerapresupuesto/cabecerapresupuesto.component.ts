@@ -461,7 +461,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     flagOperacion: 'E',
                     fechapago: '',
                     numerooperacion: '',
-                    enlacepago: '' ,
+                    enlacepago: presupuesto.ban01EnlacePago ,
                 };
                 this.presupuestoService.actualizarComprobante(parametrosanulacion).subscribe({
                     next: (response) => {
@@ -507,4 +507,6 @@ export class CabecerapresupuestoComponent implements OnInit {
 
 
     }
+
+    
 }

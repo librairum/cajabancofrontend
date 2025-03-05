@@ -155,17 +155,17 @@
                     <td>{{ detalle.nombreTipoDocumento }}</td>
                     <td>{{ detalle.ban02NroDoc }}</td>
                     <td
-                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 'dolares-class': detalle.nombremoneda === ' DOLARES'}">
+                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 'dolares-class': detalle.nombremoneda === 'DOLARES'}">
                         {{ detalle.nombremoneda }}</td>
                     <td>{{detalle.ban02FechaEmision}}</td>
                     <td>{{detalle.ban02FechaVencimiento}}</td>
                     <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}">{{ detalle.ban02Soles | number:'1.2-2' }}</td>
-                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === ' DOLARES'}">{{ detalle.ban02Dolares | number:'1.2-2' }}</td>
+                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}">{{ detalle.ban02Dolares | number:'1.2-2' }}</td>
 
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles"
-                                [disabled]="!esEditablePagoSoles" (change)="calcularNetoPago(detalle)" />
+                                [disabled]="!esEditablePagoSoles" (change)="calcularNetoPago(detalle,'S')" />
                         </ng-container>
                         <ng-template #viewMode><span
                                 [style.font-weight]="detalle.nombremoneda === 'SOLES' ? 'bold' : 'normal'">
@@ -175,10 +175,10 @@
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeDolares">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoDolares"
-                                [disabled]="!esEditablePagoDolares" (change)="calcularNetoPago(detalle)" />
+                                [disabled]="!esEditablePagoDolares" (change)="calcularNetoPago(detalle,'D')" />
                         </ng-container>
                         <ng-template #viewModeDolares><span
-                                [style.font-weight]="detalle.nombremoneda === ' DOLARES' ? 'bold' : 'normal'">
+                                [style.font-weight]="detalle.nombremoneda === 'DOLARES' ? 'bold' : 'normal'">
                                 {{ detalle.ban02PagoDolares | number:'1.2-2'  }}
                             </span></ng-template>
                     </td>

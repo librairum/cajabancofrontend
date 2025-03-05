@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { agregar_Pago, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista } from '../components/presupuesto/presupuesto';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
+import { formatDate } from '@angular/common';
 
 @Injectable({
     providedIn: 'root'
@@ -143,6 +144,14 @@ export class PresupuestoService {
         return this.http.post(`${this.urlApi}/SubirArchivo`, formData, {
             reportProgress: true,
             observe: 'events'
+        });
+    }
+
+    public EliminarArchivo(rutaArchivo:string): Observable<any>{
+        const params = new HttpParams()
+        .set('rutaArchivo', rutaArchivo);
+        return  this.http.delete(`${this.urlApi}/EliminarArchivo`, {
+            params
         });
     }
 
