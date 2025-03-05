@@ -25,13 +25,13 @@ import { FileUploadModule } from 'primeng/fileupload';
     selector: 'app-cabecerapresupuesto',
     standalone: true,
     imports: [BreadcrumbModule, ToastModule, PanelModule,
-        ConfirmDialogModule, TableModule, CommonModule,ButtonModule,
-        RouterModule,FormsModule,CalendarModule,InputTextModule,
-        InputNumberModule,DropdownModule,ReactiveFormsModule,
+        ConfirmDialogModule, TableModule, CommonModule, ButtonModule,
+        RouterModule, FormsModule, CalendarModule, InputTextModule,
+        InputNumberModule, DropdownModule, ReactiveFormsModule,
         ConfirmarPagoComponent, DialogModule, FileUploadModule],
     templateUrl: './cabecerapresupuesto.component.html',
     styleUrl: './cabecerapresupuesto.component.css',
-    providers: [ConfirmationService, MessageService,DatePipe]
+    providers: [ConfirmationService, MessageService, DatePipe]
 })
 export class CabecerapresupuestoComponent implements OnInit {
     @ViewChild(ConfirmarPagoComponent) confirmarpagocomponente: ConfirmarPagoComponent;
@@ -39,7 +39,7 @@ export class CabecerapresupuestoComponent implements OnInit {
     items: any[] = []
     prueba!: any[];
     presupuesto: cabeceraPresupuesto[] = []
-    loading:boolean = false;
+    loading: boolean = false;
     mostrarNuevaFila: boolean = false;
     botonesDeshabilitados: boolean = false;
     medioPagoLista: mediopago_lista[] = [];
@@ -56,8 +56,8 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Usuario: '',
         ban01Pc: '',
         ban01FechaRegistro: '',
-        ban01mediopago:'',
-        NombreMedioPago:''
+        ban01mediopago: '',
+        NombreMedioPago: ''
     };
 
     editingPresupuesto: { [key: string]: boolean } = {};
@@ -72,26 +72,26 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Usuario: '',
         ban01Pc: '',
         ban01FechaRegistro: '',
-        ban01mediopago:'',
-        NombreMedioPago:''
+        ban01mediopago: '',
+        NombreMedioPago: ''
     };
     //para pasar el pagonro
     selectedPagoNumero: string = '';
 
 
-    constructor(private gS:GlobalService,private bS: BreadcrumbService,
+    constructor(private gS: GlobalService, private bS: BreadcrumbService,
         private confirmationService: ConfirmationService,
-        private router:Router,
-        private presupuestoService:PresupuestoService,
+        private router: Router,
+        private presupuestoService: PresupuestoService,
         private messageService: MessageService,
         private datePipe: DatePipe) { }
 
 
-    cargarMedioPago(): void{
-        const codempresa :string = this.gS.getCodigoEmpresa();
+    cargarMedioPago(): void {
+        const codempresa: string = this.gS.getCodigoEmpresa();
         this.loading = true;
         this.presupuestoService.obtenerMedioPago(codempresa).subscribe({
-            next:(data) =>{
+            next: (data) => {
                 console.log(data);
                 this.medioPagoLista = data;
                 console.log(this.medioPagoLista);
@@ -104,7 +104,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     });
                 }
             },
-            error:(error) =>{
+            error: (error) => {
                 this.loading = false;
                 this.messageService.add({
                     severity: 'error',
@@ -175,18 +175,18 @@ export class CabecerapresupuestoComponent implements OnInit {
         });
     }
 
-    verDetalles(presupuesto: cabeceraPresupuesto){
+    verDetalles(presupuesto: cabeceraPresupuesto) {
         const formattedDate = this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy');
 
-        const navigationExtras={
-            state:{
-                PagoNro:presupuesto.pagoNumero,
-                Fecha:formattedDate,
-                motivo:presupuesto.motivo,
-                nombreMedioPago:presupuesto.nombreMedioPago
+        const navigationExtras = {
+            state: {
+                PagoNro: presupuesto.pagoNumero,
+                Fecha: formattedDate,
+                motivo: presupuesto.motivo,
+                nombreMedioPago: presupuesto.nombreMedioPago
             }
         }
-        this.router.navigate(['Home/detalle-presupuesto'],navigationExtras)
+        this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
 
     }
     /*modificarPago(presupuesto:cabeceraPresupuesto){
@@ -200,25 +200,28 @@ export class CabecerapresupuestoComponent implements OnInit {
         };
         this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);
     }*/
-    iniciarNuevoPresupuesto(){
-        this.mostrarNuevaFila=true;
-        this.botonesDeshabilitados=true;
+    iniciarNuevoPresupuesto() {
+        this.mostrarNuevaFila = true;
+        this.botonesDeshabilitados = true;
 
-        const fechaActual=new Date();
+        const fechaActual = new Date();
         const fechaRegistroFormateada = this.datePipe.transform(fechaActual, 'dd/MM/yyyy'); //HH:mm:ss.SSS
-        this.nuevoPresupuesto={
+        const anioActual = fechaActual.getFullYear().toString();
+        const mesActual = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+
+        this.nuevoPresupuesto = {
             ban01Empresa: this.gS.getCodigoEmpresa(),
             ban01Numero: ' ',
-            ban01Anio: '',
-            ban01Mes: '',
+            ban01Anio: anioActual,  // Set year from current date
+            ban01Mes: mesActual,    // Set month from current date
             ban01Descripcion: '',
             ban01Fecha: fechaRegistroFormateada,
             ban01Estado: '01',
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
             ban01FechaRegistro: fechaRegistroFormateada,
-            ban01mediopago:'',
-            NombreMedioPago:''
+            ban01mediopago: '',
+            NombreMedioPago: ''
         }
     }
 
@@ -236,8 +239,8 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Usuario: '',
             ban01Pc: '',
             ban01FechaRegistro: '',
-            ban01mediopago:'',
-            NombreMedioPago:''
+            ban01mediopago: '',
+            NombreMedioPago: ''
         };
     }
     guardarNuevoPresupuesto() {
@@ -290,8 +293,8 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
             ban01FechaRegistro: this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '',
-            ban01mediopago:'',
-            NombreMedioPago:''
+            ban01mediopago: '',
+            NombreMedioPago: ''
         };
     }
 
@@ -394,18 +397,114 @@ export class CabecerapresupuestoComponent implements OnInit {
     }
 
 
-    confirmarPago(presupuesto: cabeceraPresupuesto){
+    confirmarPago(presupuesto: cabeceraPresupuesto) {
         this.selectedPagoNumero = presupuesto.pagoNumero;
         console.log(this.selectedPagoNumero)
         this.verConfirmarPago = true;
     }
 
-    onCloseModal(){
+    onCloseModal() {
         if (this.confirmarpagocomponente) {
             this.confirmarpagocomponente.limpiar();
         }
-        this.verConfirmarPago=false;
+        this.verConfirmarPago = false;
         this.cargarMedioPago();
+        this.gS.selectedDate$.subscribe(date => {
+            if (date) {
+                const year = date.getFullYear().toString();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
+            }
+        });
     }
-    uploadFunction(){}
+    uploadFunction() { }
+
+    abrirdocumento(filePath: string): void {
+        if (filePath) {
+            // Solo abre una nueva ventana y coloca la ruta directamente en la barra de direcciones
+            window.open(filePath, '_blank');
+        }
+    }
+
+
+    anio_dato: string = ""
+    mes_dato: string = ""
+
+    anularPago(presupuesto: cabeceraPresupuesto) {
+        this.confirmationService.confirm({
+            message: `
+                <div class="text-center">
+                    <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
+                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de anular?</p>
+                    <p style="color: var(--text-color-secondary);">Número de pago: ${presupuesto.pagoNumero}</p>
+                </div>
+            `,
+            header: 'Anular comprobante de pago',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
+            acceptButtonStyleClass: 'p-button-danger p-button-raised',
+            rejectButtonStyleClass: 'p-button-outlined p-button-raised',
+            accept: () => {
+
+                this.gS.selectedDate$.subscribe(date => {
+                    if (date) {
+                        this.anio_dato = date.getFullYear().toString();
+                        this.mes_dato = (date.getMonth() + 1).toString().padStart(2, '0');
+                    }
+                });
+                const parametrosanulacion = {
+                    empresa: this.gS.getCodigoEmpresa(),
+                    anio: this.anio_dato,
+                    mes: this.mes_dato,
+                    numeropresupuesto: presupuesto.pagoNumero,
+                    flagOperacion: 'E',
+                    fechapago: '',
+                    numerooperacion: '',
+                    enlacepago: '' ,
+                };
+                this.presupuestoService.actualizarComprobante(parametrosanulacion).subscribe({
+                    next: (response) => {
+                        if (response.isSuccess) {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Éxito',
+                                detail: 'Pago anulado correctamente'
+                            });
+                            this.gS.selectedDate$.subscribe(date => {
+                                if (date) {
+                                    const year = date.getFullYear().toString();
+                                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                                    this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
+                                }
+                            });
+                        } else {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: response.message || 'Error al anular el pago'
+                            });
+                        }
+                    },
+                    error: (error) => {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Error al anular el pago: ' + error.message
+                        });
+                    }
+                });
+            },
+            reject: () => {
+                this.messageService.add({
+                    severity: 'info',
+                    summary: 'Cancelado',
+                    detail: 'Anulación de pago cancelada'
+                });
+            }
+        });
+
+
+
+    }
 }

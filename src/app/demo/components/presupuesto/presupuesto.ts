@@ -1,21 +1,24 @@
-export interface cabeceraPresupuesto{
+export interface cabeceraPresupuesto {
     pagoNumero: string;
     fecha: string;
-    mediopago:string;
-    motivo:string;
-    impBrutoSoles:number;
-    impBrutoDolares:number;
-    impDetraccionSoles:number;
-    impRetencionSoles:number;
-    impPercepcionSoles:number;
-    netoPagaSoles:number;
-    netoPagoDolares:number;
-    estado:string;
-    enlaceComprobante:string;
-    nombreMedioPago:string;
+    mediopago: string;
+    motivo: string;
+    impBrutoSoles: number;
+    impBrutoDolares: number;
+    impDetraccionSoles: number;
+    impRetencionSoles: number;
+    impPercepcionSoles: number;
+    netoPagaSoles: number;
+    netoPagoDolares: number;
+    estado: string;
+    nombreMedioPago: string;
+    ban01FechaEjecucionPago: string;
+    ban01NroOperacion: string;
+    ban01EnlacePago: string;
+
 }
 
-export interface Detallepresupuesto{
+export interface Detallepresupuesto {
     item: number;
     ban02Empresa: string;
     ban02Codigo: string;
@@ -60,33 +63,33 @@ export interface Detallepresupuesto{
     ban02FechaVencimiento: string;
 }
 
-export interface agregar_Pago{
-    clave:string;
-    ruc:string;
-    razonSocial:string;
-    coditoTipoDoc:string;
-    nombreTipoDOc:string;
-    numeroDOcumento:string;
-    monedaOriginal:string;
-    soles:number;
-    dolares:number;
-    fechaEmision:string;
-    fechaVencimiento:string;
-    diasAtrazo:number;
-    afectoDetraccion:string;
-    afectoRetencion:string;
+export interface agregar_Pago {
+    clave: string;
+    ruc: string;
+    razonSocial: string;
+    coditoTipoDoc: string;
+    nombreTipoDOc: string;
+    numeroDOcumento: string;
+    monedaOriginal: string;
+    soles: number;
+    dolares: number;
+    fechaEmision: string;
+    fechaVencimiento: string;
+    diasAtrazo: number;
+    afectoDetraccion: string;
+    afectoRetencion: string;
 }
 
-export interface proveedores_lista{
-    ruc:string;
-    razonsocial:string;
+export interface proveedores_lista {
+    ruc: string;
+    razonsocial: string;
 }
-export interface mediopago_lista{
-    ban01Empresa : string;
-    ban01IdTipoPago:string;
-    ban01Descripcion:string;
+export interface mediopago_lista {
+    ban01Empresa: string;
+    ban01IdTipoPago: string;
+    ban01Descripcion: string;
 }
-export interface insert_detalle{
+export interface insert_detalle {
     empresa: string;
     numeropresupuesto: string;
     tipoaplicacion: string;
@@ -95,7 +98,7 @@ export interface insert_detalle{
     xmlDetalle: string;
 }
 
-export interface insert_presupuesto{
+export interface insert_presupuesto {
     ban01Empresa: string;
     ban01Numero: string;
     ban01Anio: string;
@@ -106,6 +109,18 @@ export interface insert_presupuesto{
     ban01Usuario: string;
     ban01Pc: string;
     ban01FechaRegistro: string;
-    ban01mediopago:string;
-    NombreMedioPago:string;
+    ban01mediopago: string;
+    NombreMedioPago: string;
 }
+
+export interface ComprobanteUpdateParams {
+    empresa: string;
+    anio: string;
+    mes: string;
+    numeropresupuesto: string;
+    fechapago?: string;
+    numerooperacion?: string;
+    enlacepago?: string;
+    flagOperacion: string;
+}
+

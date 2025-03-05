@@ -1,9 +1,10 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, PrimeNGConfig } from 'primeng/api';
 import { LayoutService } from "../demo/components/service/app.layout.service";
 import { Router } from '@angular/router';
 import { GlobalService } from '../demo/service/global.service';
 import { LoginService } from '../demo/service/login.service';
+import { calendario_traduccion } from 'src/app/shared/Calendarios';
 
 @Component({
     selector: 'app-topbar',
@@ -19,8 +20,9 @@ export class AppTopBarComponent {
 
     @ViewChild('topbarmenu') menu!: ElementRef;
 
-    constructor(public layoutService: LayoutService,private link:Router,private gS:GlobalService,private aS:LoginService) {
+    constructor(public layoutService: LayoutService,private link:Router,private gS:GlobalService,private aS:LoginService,private primeng: PrimeNGConfig) {
         this.selectedDate = new Date();
+        this.primeng.setTranslation(calendario_traduccion());
     }
 
     nombre:string=this.gS.getNombreUsuario();
