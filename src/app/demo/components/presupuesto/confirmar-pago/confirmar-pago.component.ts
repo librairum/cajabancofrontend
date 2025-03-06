@@ -87,9 +87,10 @@ export class ConfirmarPagoComponent implements OnInit {
             });
             return;
         }
-
+//
         this.cargandoArchivo = true;
-        const destinationPath = 'D:/GMINGENIEROS/fronent/cajabancofrontend/src/assets/documentos';
+        //const destinationPath = 'D:/GMINGENIEROS/fronent/cajabancofrontend/src/assets/documentos';
+        const destinationPath = 'D:\\PROYECTOS_29082024\\CAJABANCO\\cajabancofrontend\\src\\assets\\documentos';
         const originalFileName = this.archivoSeleccionado?.name || '';
         const fileName = originalFileName.split('.').length > 1
             ? originalFileName

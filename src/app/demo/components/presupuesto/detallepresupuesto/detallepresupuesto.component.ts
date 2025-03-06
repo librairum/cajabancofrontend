@@ -240,6 +240,8 @@ export class DetallepresupuestoComponent implements OnInit {
     saveEditing() {
         if (this.editingRow && this.editingIndex !== null) {
             const payload = this.buildBackendPayload(this.editingRow);
+            console.log("save editing");
+            console.log(payload);
             this.presupuestoservice.actualizarDetallePresupuesto(payload).subscribe({
                 next: (response) => {
                     // Actualiza la fila en la lista original
@@ -301,7 +303,10 @@ export class DetallepresupuestoComponent implements OnInit {
             ban02ImporteRetencionDolares: detalle.ban02ImporteRetencionDolares,
             ban02TasaPercepcion: detalle.ban02TasaPercepcion,
             ban02ImportePercepcionSoles: detalle.ban02ImportePercepcionSoles,
-            ban02ImportePercepcionDolares: detalle.ban02ImportePercepcionDolares
+            ban02ImportePercepcionDolares: detalle.ban02ImportePercepcionDolares,
+            ban02NetoSoles: detalle.ban02NetoSoles,
+            ban02NetoDolares: detalle.ban02NetoDolares
+
         };
     }
 
@@ -361,8 +366,10 @@ export class DetallepresupuestoComponent implements OnInit {
         });
     }
 
-    calcularNetoPago(detalle: Detallepresupuesto) {
+    calcularNetoPago(detalle: Detallepresupuesto, monedaEdicion:string) {
 
+        //let tipoCambio = this.editingRow.ban02TipoCambio;
+        const  tipoCambio = detalle.ban02TipoCambio;
         let importeNetoSoles: number = 0;
         let montoPagoSoles: number = this.editingRow.ban02PagoSoles;
         let montoPagoDolares: number = this.editingRow.ban02PagoDolares;
@@ -378,39 +385,68 @@ export class DetallepresupuestoComponent implements OnInit {
             importePercepcionDolares: number = 0;
 
         let netoSoles = 0, netoDolares = 0;
-        if (montoPagoSoles > 0) {
+        console.log("canculo de importe detraccion soles");
+        let  numeroTipoCambio: number = Number(tipoCambio);
+        if (monedaEdicion == 'S'){
+                  //calculo de importe en soles de afectaciones
             importeDetraccionSoles = (tasaDetraccion / 100) * montoPagoSoles;
+            
             importeRetencionSoles = (tasaRetencion / 100) * montoPagoSoles;
             importePercepcionSoles = (tasaPercepcion / 100) * montoPagoSoles;
-
+            
             netoSoles = montoPagoSoles - (importeDetraccionSoles + importeRetencionSoles + importePercepcionSoles);
+            console.log(netoSoles);
+            //calcular los valores de dolares
+            montoPagoDolares = montoPagoSoles / numeroTipoCambio;
+            importeDetraccionDolares = (tasaDetraccion/100) * montoPagoDolares;
+            importeRetencionDolares = (tasaRetencion/100) * montoPagoDolares;
+            importePercepcionDolares = (tasaRetencion/100)* montoPagoDolares;
+            netoDolares = montoPagoDolares - (importeDetraccionDolares + importeRetencionDolares + importePercepcionDolares);
 
-        } else {
-            netoSoles = 0;
-
-        }
-
-        if (montoPagoDolares > 0) {
+        }else if(monedaEdicion == 'D'){
             importeDetraccionDolares = (tasaDetraccion / 100) * montoPagoDolares;
             importeRetencionDolares = (tasaRetencion / 100) * montoPagoDolares;
             importePercepcionDolares = (tasaPercepcion / 100) * montoPagoDolares;
             netoDolares = montoPagoDolares - (importeDetraccionDolares + importeRetencionDolares + importePercepcionDolares);
-        } else {
-            netoDolares = 0;
+            
+            //cambio en soles soles
+            //Convertir segun el tiop de cambio mont de pago dolares a monto pago soles ;
+            montoPagoSoles = montoPagoDolares * numeroTipoCambio;
+
+            importeDetraccionSoles = (tasaDetraccion/100) * montoPagoSoles;
+            importeRetencionSoles = (tasaRetencion/100) * montoPagoSoles;
+            importePercepcionSoles = (tasaRetencion/100) * montoPagoSoles;
+            netoSoles = montoPagoSoles - (importeDetraccionSoles +  importeRetencionSoles + importePercepcionSoles);
+            // montoPagoSoles = montoPagoDolares*numeroTipoCambio;
+            // montoPagoDolares =  montoPagoSoles/ numeroTipoCambio;
         }
 
+
+       
+      
         //asignar valor de improte detraccion
         detalle.ban02ImporteDetraccionSoles = importeDetraccionSoles;
         detalle.ban02ImporteRetencionSoles = importeRetencionSoles;
         detalle.ban02ImportePercepcionSoles = importePercepcionSoles;
 
+        this.editingRow.ban02PagoDolares = montoPagoDolares;
+        this.editingRow.ban02PagoSoles = montoPagoSoles;
         this.editingRow.ban02ImporteRetencionSoles = importeRetencionSoles;
         this.editingRow.ban02ImporteDetraccionSoles = importeDetraccionSoles;
         this.editingRow.ban02ImportePercepcionSoles = importePercepcionSoles;
-
+        
+        this.editingRow.ban02ImporteRetencionDolares = importeRetencionDolares;
+        this.editingRow.ban02ImporteDetraccionDolares = importeDetraccionDolares;
+        this.editingRow.ban02ImportePercepcionDolares = importePercepcionDolares;
+        this.editingRow.ban02NetoDolares = netoDolares;
+        console.log("Editing Row ban02NetoSoles");
+        this.editingRow.ban02NetoSoles = netoSoles;
+        console.log(this.editingRow.ban02NetoSoles);
         detalle.ban02NetoDolares = netoDolares;
-        detalle.ban02NetoSoles = netoSoles;
 
+        console.log("detalle objeto neto soles");
+        detalle.ban02NetoSoles = netoSoles;
+        console.log(detalle.ban02NetoSoles);
 
         // if (montoPagoSoles> 0 && montoPagoSoles == importeSoles ){
 
