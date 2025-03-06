@@ -18,29 +18,41 @@ import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { DialogModule } from 'primeng/dialog';
-import { AgregarPagoComponent } from "../agregar-pago/agregar-pago.component";
+import { AgregarPagoComponent } from '../agregar-pago/agregar-pago.component';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 @Component({
     selector: 'app-detallepresupuesto',
     standalone: true,
-    imports: [BreadcrumbModule, RouterModule, ToastModule,
-        ConfirmDialogModule, TableModule, PanelModule, CalendarModule,
-        InputTextModule, InputNumberModule, ButtonModule, CommonModule,
-        FormsModule, DialogModule, AgregarPagoComponent],
+    imports: [
+        BreadcrumbModule,
+        RouterModule,
+        ToastModule,
+        ConfirmDialogModule,
+        TableModule,
+        PanelModule,
+        CalendarModule,
+        InputTextModule,
+        InputNumberModule,
+        ButtonModule,
+        CommonModule,
+        FormsModule,
+        DialogModule,
+        AgregarPagoComponent,
+    ],
     templateUrl: './detallepresupuesto.component.html',
     styleUrl: './detallepresupuesto.component.css',
-    providers: [ConfirmationService, MessageService, DatePipe]
+    providers: [ConfirmationService, MessageService, DatePipe],
 })
 export class DetallepresupuestoComponent implements OnInit {
     @ViewChild(AgregarPagoComponent) agregarPagoComponent: AgregarPagoComponent;
-    DetallePago: Detallepresupuesto[] = []
+    DetallePago: Detallepresupuesto[] = [];
     navigationData: any;
     items: any[] = [];
     pagnro: string;
     fechaString: string;
-    fecha: Date
+    fecha: Date;
     motivo: string;
     medio: string;
     groupTotals: any[] = [];
@@ -51,16 +63,17 @@ export class DetallepresupuestoComponent implements OnInit {
     isAnyRowEditing: boolean = false;
     editingIndex: number | null = null; // Índice de la fila en edición
     // fecha hoy
-    fechahoy: Date
-    constructor(private messageService: MessageService,
+    fechahoy: Date;
+    constructor(
+        private messageService: MessageService,
         private presupuestoservice: PresupuestoService,
         private bs: BreadcrumbService,
         private router: Router,
         private ms: MessageService,
         private datePipe: DatePipe,
         private confirmationService: ConfirmationService,
-        private gS: GlobalService) {
-
+        private gS: GlobalService
+    ) {
         //variables de edición
 
         /*
@@ -77,45 +90,52 @@ export class DetallepresupuestoComponent implements OnInit {
     ngOnInit(): void {
         this.bs.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
-            { label: 'Presupuesto', routerLink: '/Home/presupuesto'/*, command: () => this.volverAListado()*/ },
-            { label: 'Detalle presupuesto ', routerLink: '/Home/detalle-presupuesto' }
+            {
+                label: 'Presupuesto',
+                routerLink:
+                    '/Home/presupuesto' /*, command: () => this.volverAListado()*/,
+            },
+            {
+                label: 'Detalle presupuesto ',
+                routerLink: '/Home/detalle-presupuesto',
+            },
         ]);
-        this.bs.currentBreadcrumbs$.subscribe(bc => {
+        this.bs.currentBreadcrumbs$.subscribe((bc) => {
             this.items = bc;
-        })
+        });
         this.cargarDetalles();
         this.valoresCampos();
         this.calculateGroupTotals();
         // inicializar el pdfmake
         (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
-
-
     }
 
     cargarDetalles() {
         this.load = true;
-        this.presupuestoservice.obtenerDetallePresupuesto('01', this.navigationData.PagoNro).subscribe({
-            next: (data) => {
-                this.DetallePago = data;
-                if (data.length === 0) {
+        this.presupuestoservice
+            .obtenerDetallePresupuesto('01', this.navigationData.PagoNro)
+            .subscribe({
+                next: (data) => {
+                    this.DetallePago = data;
+                    if (data.length === 0) {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Advertencia',
+                            detail: 'No se encontraron detalles del presupuesto',
+                        });
+                        this.load = false;
+                    } else {
+                        this.load = false;
+                    }
+                },
+                error: (error) => {
                     this.messageService.add({
-                        severity: 'warn',
-                        summary: 'Advertencia',
-                        detail: 'No se encontraron detalles del presupuesto'
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error al cargar presupuesto: ' + error.message,
                     });
-                    this.load = false;
-                } else {
-                    this.load = false;
-                }
-            },
-            error: (error) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar presupuesto: ' + error.message
-                });
-            }
-        })
+                },
+            });
     }
 
     valoresCampos() {
@@ -130,9 +150,7 @@ export class DetallepresupuestoComponent implements OnInit {
         this.motivo = this.navigationData?.motivo || '';
 
         this.medio = this.navigationData?.nombreMedioPago || '';
-
     }
-
 
     calculateGroupTotals() {
         const groupedTotals = this.DetallePago.reduce((acc, item) => {
@@ -155,12 +173,17 @@ export class DetallepresupuestoComponent implements OnInit {
             acc[item.ban02Ruc].totalSoles += item.ban02Soles || 0;
             acc[item.ban02Ruc].totalDolares += item.ban02Dolares || 0;
             acc[item.ban02Ruc].totalMontoPagarSoles += item.ban02PagoSoles || 0;
-            acc[item.ban02Ruc].totalMontoPagarDolares += item.ban02PagoDolares || 0;
-            acc[item.ban02Ruc].totalImporte += item.ban02ImporteDetraccionSoles || 0;
-            acc[item.ban02Ruc].totalRetencion += item.ban02ImporteRetencionSoles || 0;
-            acc[item.ban02Ruc].totalPercepcion += item.ban02ImporteSolesPercepcion || 0;
+            acc[item.ban02Ruc].totalMontoPagarDolares +=
+                item.ban02PagoDolares || 0;
+            acc[item.ban02Ruc].totalImporte +=
+                item.ban02ImporteDetraccionSoles || 0;
+            acc[item.ban02Ruc].totalRetencion +=
+                item.ban02ImporteRetencionSoles || 0;
+            acc[item.ban02Ruc].totalPercepcion +=
+                item.ban02ImporteSolesPercepcion || 0;
             acc[item.ban02Ruc].totalNetoPagarSoles += item.ban02SolesNeto || 0;
-            acc[item.ban02Ruc].totalNetoPagarDolares += item.ban02DolaresNeto || 0;
+            acc[item.ban02Ruc].totalNetoPagarDolares +=
+                item.ban02DolaresNeto || 0;
 
             return acc;
         }, {});
@@ -169,13 +192,17 @@ export class DetallepresupuestoComponent implements OnInit {
     }
 
     calculateGroupTotal(ruc: string, field: string): number {
-        return this.DetallePago
-            .filter(item => item.ban02Ruc === ruc)
-            .reduce((sum, item) => sum + (item[field] || 0), 0);
+        return this.DetallePago.filter((item) => item.ban02Ruc === ruc).reduce(
+            (sum, item) => sum + (item[field] || 0),
+            0
+        );
     }
 
     getTotalColumn(field: string): number {
-        return this.DetallePago.reduce((sum, item) => sum + (item[field] || 0), 0);
+        return this.DetallePago.reduce(
+            (sum, item) => sum + (item[field] || 0),
+            0
+        );
     }
 
     DatosdeRegistro() {
@@ -195,16 +222,19 @@ export class DetallepresupuestoComponent implements OnInit {
             this.agregarPagoComponent.resetForm();
         }
         this.displayAgregarModal = false;
+        this.agregarPagoComponent.onCerrar();
         this.cargarDetalles();
     }
+
     esEditablePagoSoles: boolean = false;
     esEditablePagoDolares: boolean = false;
+
     startEditing(detalle: Detallepresupuesto, index: number) {
         if (this.isAnyRowEditing) {
             this.messageService.add({
                 severity: 'warn',
                 summary: 'Advertencia',
-                detail: 'Termina la edición actual antes de editar otra fila.'
+                detail: 'Termina la edición actual antes de editar otra fila.',
             });
             return;
         }
@@ -218,7 +248,7 @@ export class DetallepresupuestoComponent implements OnInit {
         if (detalle.nombremoneda === 'SOLES') {
             this.esEditablePagoSoles = true;
             this.esEditablePagoDolares = false;
-        } else if (detalle.nombremoneda === " DOLARES") {
+        } else if (detalle.nombremoneda === 'DOLARES') {
             this.esEditablePagoSoles = false;
             this.esEditablePagoDolares = true;
         } else {
@@ -226,10 +256,7 @@ export class DetallepresupuestoComponent implements OnInit {
             this.esEditablePagoSoles = true;
             this.esEditablePagoDolares = true;
         }
-
-
     }
-
 
     cancelEditing() {
         this.editingRow = null;
@@ -240,28 +267,32 @@ export class DetallepresupuestoComponent implements OnInit {
     saveEditing() {
         if (this.editingRow && this.editingIndex !== null) {
             const payload = this.buildBackendPayload(this.editingRow);
-            console.log("save editing");
+            console.log('save editing');
             console.log(payload);
-            this.presupuestoservice.actualizarDetallePresupuesto(payload).subscribe({
-                next: (response) => {
-                    // Actualiza la fila en la lista original
-                    this.DetallePago[this.editingIndex] = { ...this.editingRow };
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Detalle actualizado correctamente'
-                    });
-                    this.cancelEditing();
-                    this.cargarDetalles();
-                },
-                error: (error) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Error al actualizar: ' + error.message
-                    });
-                }
-            });
+            this.presupuestoservice
+                .actualizarDetallePresupuesto(payload)
+                .subscribe({
+                    next: (response) => {
+                        // Actualiza la fila en la lista original
+                        this.DetallePago[this.editingIndex] = {
+                            ...this.editingRow,
+                        };
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Éxito',
+                            detail: 'Detalle actualizado correctamente',
+                        });
+                        this.cancelEditing();
+                        this.cargarDetalles();
+                    },
+                    error: (error) => {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Error al actualizar: ' + error.message,
+                        });
+                    },
+                });
         }
     }
 
@@ -269,51 +300,52 @@ export class DetallepresupuestoComponent implements OnInit {
         return {
             ban02Empresa: this.gS.getCodigoEmpresa(),
             ban02Ruc: detalle.ban02Ruc,
-            ban02Tipodoc: detalle.nombreTipoDocumento || "01",
+            ban02Tipodoc: detalle.nombreTipoDocumento || '01',
             ban02NroDoc: detalle.ban02NroDoc,
-            ban02Codigo: detalle.ban02Codigo || "COD001",
+            ban02Codigo: detalle.ban02Codigo || 'COD001',
             razonSocial: detalle.razonsocial,
             nombreMoneda: detalle.nombremoneda,
             nombreTipoDocumento: detalle.nombreTipoDocumento,
-            ban02Numero: this.pagnro || "NUM001",
+            ban02Numero: this.pagnro || 'NUM001',
             ban02Fecha: this.datePipe.transform(new Date(), 'dd/MM/yyyy'),
             ban02TipoCambio: 0,
-            ban02TipoAplic: "01",
-            ban02Moneda: detalle.ban02Moneda || "PEN",
+            ban02TipoAplic: '01',
+            ban02Moneda: detalle.ban02Moneda || 'PEN',
             ban02Soles: detalle.ban02Soles,
             ban02Dolares: detalle.ban02Dolares,
             ban02SolesVale: 0,
             ban02DolaresVale: 0,
             ban02Concepto: detalle.razonsocial,
-            ban02GiroOrden: "No se",
-            ban02BcoLiquidacion: "00",
-            ban02Redondeo: "0",
+            ban02GiroOrden: 'No se',
+            ban02BcoLiquidacion: '00',
+            ban02Redondeo: '0',
             ban02Usuario: this.gS.getNombreUsuario(),
-            ban02Pc: "PC001",
-            ban02FechaRegistro: this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-            ban02Estado: "ElabP",
-            ban02EstadoTemp: "P",
+            ban02Pc: 'PC001',
+            ban02FechaRegistro: this.datePipe.transform(
+                new Date(),
+                'yyyy-MM-dd'
+            ),
+            ban02Estado: 'ElabP',
+            ban02EstadoTemp: 'P',
             ban02pagosoles: detalle.ban02PagoSoles,
             ban02PagoDolares: detalle.ban02PagoDolares,
             ban02TasaDetraccion: detalle.ban02Tasadetraccion,
             ban02ImporteDetraccionSoles: detalle.ban02ImporteDetraccionSoles,
-            ban02ImporteDetraccionDolares: detalle.ban02ImporteDetraccionDolares,
+            ban02ImporteDetraccionDolares:
+                detalle.ban02ImporteDetraccionDolares,
             ban02TasaRetencion: detalle.ban02TasaRetencion,
             ban02ImporteRetencionSoles: detalle.ban02ImporteRetencionSoles,
             ban02ImporteRetencionDolares: detalle.ban02ImporteRetencionDolares,
             ban02TasaPercepcion: detalle.ban02TasaPercepcion,
             ban02ImportePercepcionSoles: detalle.ban02ImportePercepcionSoles,
-            ban02ImportePercepcionDolares: detalle.ban02ImportePercepcionDolares,
+            ban02ImportePercepcionDolares:
+                detalle.ban02ImportePercepcionDolares,
             ban02NetoSoles: detalle.ban02NetoSoles,
-            ban02NetoDolares: detalle.ban02NetoDolares
-
+            ban02NetoDolares: detalle.ban02NetoDolares,
         };
     }
 
-
-
     eliminarPago(detalle: Detallepresupuesto) {
-
         this.confirmationService.confirm({
             message: `
                     <div class="text-center">
@@ -334,22 +366,28 @@ export class DetallepresupuestoComponent implements OnInit {
                 //const numero = presupuesto.pagoNumero;
                 const numeroPresupuesto = this.navigationData.PagoNro;
                 const numeroPresupuestoDetalle = detalle.ban02Codigo;
-                this.presupuestoservice.eliminarPresupuestoDetalle(empresa,
-                    numeroPresupuesto, numeroPresupuestoDetalle).subscribe({
+                this.presupuestoservice
+                    .eliminarPresupuestoDetalle(
+                        empresa,
+                        numeroPresupuesto,
+                        numeroPresupuestoDetalle
+                    )
+                    .subscribe({
                         next: (response) => {
                             if (response.isSuccess) {
                                 this.messageService.add({
                                     severity: 'success',
                                     summary: 'Éxito',
-                                    detail: 'Presupuesto detalle eliminado correctamente'
+                                    detail: 'Presupuesto detalle eliminado correctamente',
                                 });
                                 this.cargarDetalles();
-
                             } else {
                                 this.messageService.add({
                                     severity: 'error',
                                     summary: 'Error',
-                                    detail: response.message || 'Error al eliminar el presupuesto'
+                                    detail:
+                                        response.message ||
+                                        'Error al eliminar el presupuesto',
                                 });
                             }
                         },
@@ -357,19 +395,19 @@ export class DetallepresupuestoComponent implements OnInit {
                             this.messageService.add({
                                 severity: 'error',
                                 summary: 'Error',
-                                detail: 'Error al eliminar el presupuesto: ' + error.message
+                                detail:
+                                    'Error al eliminar el presupuesto: ' +
+                                    error.message,
                             });
-                        }
-
+                        },
                     });
-            }
+            },
         });
     }
 
-    calcularNetoPago(detalle: Detallepresupuesto, monedaEdicion:string) {
-
+    calcularNetoPago(detalle: Detallepresupuesto, monedaEdicion: string) {
         //let tipoCambio = this.editingRow.ban02TipoCambio;
-        const  tipoCambio = detalle.ban02TipoCambio;
+        const tipoCambio = detalle.ban02TipoCambio;
         let importeNetoSoles: number = 0;
         let montoPagoSoles: number = this.editingRow.ban02PagoSoles;
         let montoPagoDolares: number = this.editingRow.ban02PagoDolares;
@@ -384,46 +422,62 @@ export class DetallepresupuestoComponent implements OnInit {
             importeRetencionDolares: number = 0,
             importePercepcionDolares: number = 0;
 
-        let netoSoles = 0, netoDolares = 0;
-        console.log("canculo de importe detraccion soles");
-        let  numeroTipoCambio: number = Number(tipoCambio);
-        if (monedaEdicion == 'S'){
-                  //calculo de importe en soles de afectaciones
+        let netoSoles = 0,
+            netoDolares = 0;
+        console.log('canculo de importe detraccion soles');
+        let numeroTipoCambio: number = Number(tipoCambio);
+        if (monedaEdicion == 'S') {
+            //calculo de importe en soles de afectaciones
             importeDetraccionSoles = (tasaDetraccion / 100) * montoPagoSoles;
-            
+
             importeRetencionSoles = (tasaRetencion / 100) * montoPagoSoles;
             importePercepcionSoles = (tasaPercepcion / 100) * montoPagoSoles;
-            
-            netoSoles = montoPagoSoles - (importeDetraccionSoles + importeRetencionSoles + importePercepcionSoles);
+
+            netoSoles =
+                montoPagoSoles -
+                (importeDetraccionSoles +
+                    importeRetencionSoles +
+                    importePercepcionSoles);
             console.log(netoSoles);
             //calcular los valores de dolares
             montoPagoDolares = montoPagoSoles / numeroTipoCambio;
-            importeDetraccionDolares = (tasaDetraccion/100) * montoPagoDolares;
-            importeRetencionDolares = (tasaRetencion/100) * montoPagoDolares;
-            importePercepcionDolares = (tasaRetencion/100)* montoPagoDolares;
-            netoDolares = montoPagoDolares - (importeDetraccionDolares + importeRetencionDolares + importePercepcionDolares);
-
-        }else if(monedaEdicion == 'D'){
-            importeDetraccionDolares = (tasaDetraccion / 100) * montoPagoDolares;
+            importeDetraccionDolares =
+                (tasaDetraccion / 100) * montoPagoDolares;
             importeRetencionDolares = (tasaRetencion / 100) * montoPagoDolares;
-            importePercepcionDolares = (tasaPercepcion / 100) * montoPagoDolares;
-            netoDolares = montoPagoDolares - (importeDetraccionDolares + importeRetencionDolares + importePercepcionDolares);
-            
+            importePercepcionDolares = (tasaRetencion / 100) * montoPagoDolares;
+            netoDolares =
+                montoPagoDolares -
+                (importeDetraccionDolares +
+                    importeRetencionDolares +
+                    importePercepcionDolares);
+        } else if (monedaEdicion == 'D') {
+            importeDetraccionDolares =
+                (tasaDetraccion / 100) * montoPagoDolares;
+            importeRetencionDolares = (tasaRetencion / 100) * montoPagoDolares;
+            importePercepcionDolares =
+                (tasaPercepcion / 100) * montoPagoDolares;
+            netoDolares =
+                montoPagoDolares -
+                (importeDetraccionDolares +
+                    importeRetencionDolares +
+                    importePercepcionDolares);
+
             //cambio en soles soles
             //Convertir segun el tiop de cambio mont de pago dolares a monto pago soles ;
             montoPagoSoles = montoPagoDolares * numeroTipoCambio;
 
-            importeDetraccionSoles = (tasaDetraccion/100) * montoPagoSoles;
-            importeRetencionSoles = (tasaRetencion/100) * montoPagoSoles;
-            importePercepcionSoles = (tasaRetencion/100) * montoPagoSoles;
-            netoSoles = montoPagoSoles - (importeDetraccionSoles +  importeRetencionSoles + importePercepcionSoles);
+            importeDetraccionSoles = (tasaDetraccion / 100) * montoPagoSoles;
+            importeRetencionSoles = (tasaRetencion / 100) * montoPagoSoles;
+            importePercepcionSoles = (tasaRetencion / 100) * montoPagoSoles;
+            netoSoles =
+                montoPagoSoles -
+                (importeDetraccionSoles +
+                    importeRetencionSoles +
+                    importePercepcionSoles);
             // montoPagoSoles = montoPagoDolares*numeroTipoCambio;
             // montoPagoDolares =  montoPagoSoles/ numeroTipoCambio;
         }
 
-
-       
-      
         //asignar valor de improte detraccion
         detalle.ban02ImporteDetraccionSoles = importeDetraccionSoles;
         detalle.ban02ImporteRetencionSoles = importeRetencionSoles;
@@ -434,17 +488,19 @@ export class DetallepresupuestoComponent implements OnInit {
         this.editingRow.ban02ImporteRetencionSoles = importeRetencionSoles;
         this.editingRow.ban02ImporteDetraccionSoles = importeDetraccionSoles;
         this.editingRow.ban02ImportePercepcionSoles = importePercepcionSoles;
-        
+
         this.editingRow.ban02ImporteRetencionDolares = importeRetencionDolares;
-        this.editingRow.ban02ImporteDetraccionDolares = importeDetraccionDolares;
-        this.editingRow.ban02ImportePercepcionDolares = importePercepcionDolares;
+        this.editingRow.ban02ImporteDetraccionDolares =
+            importeDetraccionDolares;
+        this.editingRow.ban02ImportePercepcionDolares =
+            importePercepcionDolares;
         this.editingRow.ban02NetoDolares = netoDolares;
-        console.log("Editing Row ban02NetoSoles");
+        console.log('Editing Row ban02NetoSoles');
         this.editingRow.ban02NetoSoles = netoSoles;
         console.log(this.editingRow.ban02NetoSoles);
         detalle.ban02NetoDolares = netoDolares;
 
-        console.log("detalle objeto neto soles");
+        console.log('detalle objeto neto soles');
         detalle.ban02NetoSoles = netoSoles;
         console.log(detalle.ban02NetoSoles);
 
@@ -457,7 +513,6 @@ export class DetallepresupuestoComponent implements OnInit {
 
         // let netoSoles: number = 0;
         // netoSoles = montoPagoSoles -  (importeDetraccionSoles + importeRetencionSoles +  importePercepcionSoles);
-
 
         // importeNetoSoles=detalle.ban02Soles -  detalle.ban02ImporteDetraccionSoles -
         // detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionSoles;
@@ -484,14 +539,27 @@ export class DetallepresupuestoComponent implements OnInit {
                 { text: 'Fecha vencimiento', rowSpan: 2, style: 'tableHeader' },
                 { text: 'Importe Total S/.', rowSpan: 2, style: 'tableHeader' },
                 { text: 'Importe Total US$', rowSpan: 2, style: 'tableHeader' },
-                { text: '', colSpan: 2, style: 'tableHeader' }, '',
-                { text: 'Detraccion', colSpan: 3, style: 'tableHeader' }, '', '',
+                { text: '', colSpan: 2, style: 'tableHeader' },
+                '',
+                { text: 'Detraccion', colSpan: 3, style: 'tableHeader' },
+                '',
+                '',
                 { text: 'Retencion', colSpan: 1, style: 'tableHeader' },
                 { text: 'Percepcion', colSpan: 1, style: 'tableHeader' },
-                { text: 'Neto a Pagar', colSpan: 2, style: 'tableHeader' }, ''
+                { text: 'Neto a Pagar', colSpan: 2, style: 'tableHeader' },
+                '',
             ],
             [
-                '', '', '', '', '', '', '', '', '', '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
                 { text: 'Monto a Pagar S/.', style: 'tableHeader' },
                 { text: 'Monto a Pagar $', style: 'tableHeader' },
                 { text: 'Tipo', style: 'tableHeader' },
@@ -500,13 +568,13 @@ export class DetallepresupuestoComponent implements OnInit {
                 { text: 'Importe', style: 'tableHeader' },
                 { text: 'Importe', style: 'tableHeader' },
                 { text: 'S/.', style: 'tableHeader' },
-                { text: 'US$', style: 'tableHeader' }
-            ]
+                { text: 'US$', style: 'tableHeader' },
+            ],
         ];
 
         // Agrupamos por RUC
         const groupedData = {};
-        this.DetallePago.forEach(item => {
+        this.DetallePago.forEach((item) => {
             if (!groupedData[item.ban02Ruc]) {
                 groupedData[item.ban02Ruc] = [];
             }
@@ -521,9 +589,9 @@ export class DetallepresupuestoComponent implements OnInit {
         // Cuerpo de la tabla
         const body = [...headers];
 
-        Object.keys(groupedData).forEach(ruc => {
+        Object.keys(groupedData).forEach((ruc) => {
             const groupItems = groupedData[ruc];
-            groupItems.forEach(item => {
+            groupItems.forEach((item) => {
                 body.push([
                     item.item,
                     item.ban02Ruc,
@@ -543,45 +611,109 @@ export class DetallepresupuestoComponent implements OnInit {
                     formatNumber(item.ban02ImporteRetencionSoles),
                     formatNumber(item.ban02ImportePercepcionSoles),
                     formatNumber(item.ban02NetoSoles),
-                    formatNumber(item.ban02NetoDolares)
+                    formatNumber(item.ban02NetoDolares),
                 ]);
             });
 
             const solesSubtotal = this.calculateGroupTotal(ruc, 'ban02Soles');
-            const dolaresSubtotal = this.calculateGroupTotal(ruc, 'ban02Dolares');
-            const detraccionSubtotal = this.calculateGroupTotal(ruc, 'ban02ImporteDetraccionSoles');
-            const retencionSubtotal = this.calculateGroupTotal(ruc, 'ban02ImporteRetencionSoles');
-            const percepcionSubtotal = this.calculateGroupTotal(ruc, 'ban02ImportePercepcionSoles');
-            const netoSolesSubtotal = this.calculateGroupTotal(ruc, 'ban02NetoSoles');
-            const netoDolaresSubtotal = this.calculateGroupTotal(ruc, 'ban02NetoDolares');
+            const dolaresSubtotal = this.calculateGroupTotal(
+                ruc,
+                'ban02Dolares'
+            );
+            const detraccionSubtotal = this.calculateGroupTotal(
+                ruc,
+                'ban02ImporteDetraccionSoles'
+            );
+            const retencionSubtotal = this.calculateGroupTotal(
+                ruc,
+                'ban02ImporteRetencionSoles'
+            );
+            const percepcionSubtotal = this.calculateGroupTotal(
+                ruc,
+                'ban02ImportePercepcionSoles'
+            );
+            const netoSolesSubtotal = this.calculateGroupTotal(
+                ruc,
+                'ban02NetoSoles'
+            );
+            const netoDolaresSubtotal = this.calculateGroupTotal(
+                ruc,
+                'ban02NetoDolares'
+            );
 
             body.push([
                 { text: '', colSpan: 8, style: 'subtotal' },
-                '', '', '', '', '', '', '',
-                { text: formatNumber(solesSubtotal), style: 'subtotal', colSpan: 1 },
-                { text: formatNumber(dolaresSubtotal), style: 'subtotal', colSpan: 1 },
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                {
+                    text: formatNumber(solesSubtotal),
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
+                {
+                    text: formatNumber(dolaresSubtotal),
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
                 { text: '', style: 'subtotal', colSpan: 1 },
                 { text: '', style: 'subtotal', colSpan: 1 },
                 { text: '', style: 'subtotal', colSpan: 1 },
                 { text: '', style: 'subtotal', colSpan: 1 },
-                { text: formatNumber(detraccionSubtotal), style: 'subtotal', colSpan: 1 },
-                { text: formatNumber(retencionSubtotal), style: 'subtotal', colSpan: 1 },
-                { text: formatNumber(percepcionSubtotal), style: 'subtotal', colSpan: 1 },
-                { text: formatNumber(netoSolesSubtotal), style: 'subtotal', colSpan: 1 },
-                { text: formatNumber(netoDolaresSubtotal), style: 'subtotal', colSpan: 1 }
+                {
+                    text: formatNumber(detraccionSubtotal),
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
+                {
+                    text: formatNumber(retencionSubtotal),
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
+                {
+                    text: formatNumber(percepcionSubtotal),
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
+                {
+                    text: formatNumber(netoSolesSubtotal),
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
+                {
+                    text: formatNumber(netoDolaresSubtotal),
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
             ]);
         });
 
         const totalSoles = this.getTotalColumn('ban02Soles');
         const totalDolares = this.getTotalColumn('ban02Dolares');
-        const totalDetraccion = this.getTotalColumn('ban02ImporteDetraccionSoles');
-        const totalRetencion = this.getTotalColumn('ban02ImporteRetencionSoles');
-        const totalPercepcion = this.getTotalColumn('ban02ImportePercepcionSoles');
+        const totalDetraccion = this.getTotalColumn(
+            'ban02ImporteDetraccionSoles'
+        );
+        const totalRetencion = this.getTotalColumn(
+            'ban02ImporteRetencionSoles'
+        );
+        const totalPercepcion = this.getTotalColumn(
+            'ban02ImportePercepcionSoles'
+        );
         const totalNetoSoles = this.getTotalColumn('ban02NetoSoles');
         const totalNetoDolares = this.getTotalColumn('ban02NetoDolares');
 
         body.push([
-            { text: '', colSpan: 7, style: 'total' }, '', '', '', '', '', '',
+            { text: '', colSpan: 7, style: 'total' },
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
             { text: 'Sumas', style: 'total', colSpan: 1 },
             { text: formatNumber(totalSoles), style: 'total', colSpan: 1 },
             { text: formatNumber(totalDolares), style: 'total', colSpan: 1 },
@@ -593,111 +725,135 @@ export class DetallepresupuestoComponent implements OnInit {
             { text: formatNumber(totalRetencion), style: 'total', colSpan: 1 },
             { text: formatNumber(totalPercepcion), style: 'total', colSpan: 1 },
             { text: formatNumber(totalNetoSoles), style: 'total', colSpan: 1 },
-            { text: formatNumber(totalNetoDolares), style: 'total', colSpan: 1 }
+            {
+                text: formatNumber(totalNetoDolares),
+                style: 'total',
+                colSpan: 1,
+            },
         ]);
         // Estructura y estilos del pdf, medio complicado es
         const docDefinition = {
             pageOrientation: 'landscape',
             pageMargins: [20, 20, 20, 20],
             content: [
+                //title
                 { text: 'Detalle de Presupuesto', style: 'header' },
+                //description
                 {
                     columns: [
                         {
                             width: 'auto',
                             text: [
                                 { text: 'Numero de Pago: ', style: 'label' },
-                                { text: this.pagnro, style: 'value' }
-                            ]
+                                { text: this.pagnro, style: 'value' },
+                            ],
                         },
                         {
                             width: 'auto',
                             text: [
                                 { text: 'Fecha: ', style: 'label' },
-                                { text: this.fechaString, style: 'value' }
+                                { text: this.fechaString, style: 'value' },
                             ],
-                            margin: [20, 0, 0, 0]
+                            margin: [20, 0, 0, 0],
                         },
                         {
                             width: 'auto',
                             text: [
                                 { text: 'Motivo: ', style: 'label' },
-                                { text: this.motivo, style: 'value' }
+                                { text: this.motivo, style: 'value' },
                             ],
-                            margin: [20, 0, 0, 0]
+                            margin: [20, 0, 0, 0],
                         },
                         {
                             width: 'auto',
                             text: [
                                 { text: 'Medio Pago: ', style: 'label' },
-                                { text: this.medio, style: 'value' }
+                                { text: this.medio, style: 'value' },
                             ],
-                            margin: [20, 0, 0, 0]
-                        }
+                            margin: [20, 0, 0, 0],
+                        },
                     ],
-                    margin: [0, 0, 0, 10]
+                    margin: [0, 0, 0, 10],
                 },
+                //table
                 {
                     table: {
                         headerRows: 2,
-                        widths: [15, 40, 70, 30, 40, 30, 35, 40, 30, 30, 30, 30, 20, 20, 25, 35, 40, 25, 30],
+                        widths: [
+                            15, 38, 60, 28, 40, 28, 33, 39, 35, 35, 30, 30, 15,
+                            15, 25, 35, 40, 40, 40,
+                        ],
                         body: body,
                         alignment: 'center',
                     },
                     layout: {
                         hLineWidth: function (i, node) {
-                            return (i === 0 || i === 1 || i === 2 || i === node.table.body.length) ? 1 : 0.5;
+                            return i === 0 ||
+                                i === 1 ||
+                                i === 2 ||
+                                i === node.table.body.length
+                                ? 1
+                                : 0.5;
                         },
                         vLineWidth: function (i, node) {
                             return 0.5;
                         },
                         hLineColor: function (i, node) {
-                            return (i === 0 || i === 1 || i === 2 || i === node.table.body.length) ? 'black' : '#aaa';
+                            return i === 0 ||
+                                i === 1 ||
+                                i === 2 ||
+                                i === node.table.body.length
+                                ? 'black'
+                                : '#aaa';
                         },
                         vLineColor: function (i, node) {
                             return '#aaa';
                         },
-                        paddingTop: function (i) { return 4; },
-                        paddingBottom: function (i) { return 4; }
-                    }
-                }
+                        paddingTop: function (i) {
+                            return 4;
+                        },
+                        paddingBottom: function (i) {
+                            return 4;
+                        },
+                    },
+                },
             ],
             styles: {
                 header: {
                     fontSize: 15,
                     bold: true,
                     alignment: 'center',
-                    margin: [0, 0, 0, 11]
+                    margin: [0, 0, 0, 11],
                 },
                 label: {
                     bold: true,
-                    fontSize: 8
+                    fontSize: 8,
                 },
                 value: {
-                    fontSize: 8
+                    fontSize: 8,
                 },
                 tableHeader: {
                     bold: true,
                     fontSize: 7,
                     alignment: 'center',
                     fillColor: '#eeeeee',
-                    margin: [0, 5]
+                    margin: [0, 5],
                 },
                 subtotal: {
                     bold: true,
                     fontSize: 6,
-                    alignment: 'center'
+                    alignment: 'center',
                 },
                 total: {
                     bold: true,
                     fontSize: 6,
-                    alignment: 'center'
-                }
+                    alignment: 'center',
+                },
             },
             defaultStyle: {
                 fontSize: 6,
-                alignment: 'center'
-            }
+                alignment: 'center',
+            },
         };
 
         // Generamos el pdf
@@ -707,15 +863,25 @@ export class DetallepresupuestoComponent implements OnInit {
             // Crear un objeto URL para el blob
             const blobUrl = URL.createObjectURL(blob);
 
+            
+
             // Crear un elemento <a> invisible
             const link = document.createElement('a');
             link.href = blobUrl;
 
-            link.download = 'DetallePrespupuesto_' + this.pagnro + '_' + this.formatFecha(this.fechahoy = new Date()); +'.pdf';
+            link.download =
+                'DetallePrespupuesto_' +
+                this.pagnro +
+                '_' +
+                this.formatFecha((this.fechahoy = new Date()));
+            +'.pdf';
 
             // Añadir al documento, hacer clic y limpiar
             document.body.appendChild(link);
-            link.click();
+            link.click();//
+
+            // Abrir en una nueva pestaña/ventana
+            //window.open(blobUrl, '_blank');
 
             // Limpiar después
             setTimeout(() => {

@@ -81,7 +81,7 @@
                         <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
                             <p-dropdown [options]="medioPagoLista" optionLabel="ban01Descripcion"
                                 optionValue="ban01IdTipoPago" [(ngModel)]="editForm.ban01mediopago"
-                                class="p-inputtext-sm w-full" [filter]="true" filterBy="nombre" placeholder="medio"
+                                class="p-inputtext-sm w-full" [filter]="true" filterMatchMode="contains" filterBy="ban01Descripcion" placeholder="medio"
                                 appendTo="body"></p-dropdown>
                         </ng-container>
                         <!-- -->
@@ -118,7 +118,7 @@
                                 <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
                                     pTooltip="Eliminar" [text]="true" (onClick)="eliminarPago(presupuesto)"
                                     [disabled]="botonesDeshabilitados"></p-button>
-                                <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
+                                <p-button icon="pi pi-money-bill" styleClass="p-button-success p-button-sm"
                                     pTooltip="Confirmar Pago" [text]="true" (onClick)="confirmarPago(presupuesto)"
                                     [disabled]="botonesDeshabilitados ||
                                                (presupuesto.ban01EnlacePago ||
@@ -163,7 +163,7 @@
                         <p-dropdown [options]="medioPagoLista" optionLabel="ban01Descripcion"
                             optionValue="ban01IdTipoPago" [(ngModel)]="nuevoPresupuesto.ban01mediopago"
                             class="p-inputtext-sm w-full" (onChange)="onMedioChange($event)" [filter]="true"
-                            filterBy="nombre" placeholder="medio" appendTo="body">
+                            filterBy="ban01Descripcion" filterMatchMode="contains" placeholder="medio" appendTo="body">
                         </p-dropdown>
                         <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Anio" placeholder="Año" class="w-full"> -->
                     </td>
