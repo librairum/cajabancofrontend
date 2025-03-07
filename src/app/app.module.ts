@@ -16,6 +16,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { LoginComponent } from './demo/components/login/login.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { LoginComponent } from './demo/components/login/login.component';
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService,ConfirmationService
+        PhotoService, ProductService,ConfirmationService,HttpClientModule
     ],
     bootstrap: [AppComponent],
 })

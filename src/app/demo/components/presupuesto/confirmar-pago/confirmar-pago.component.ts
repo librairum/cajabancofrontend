@@ -15,6 +15,7 @@ import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { GlobalService } from 'src/app/demo/service/global.service';
+import { ConfigService } from 'src/app/demo/service/config.service';
 @Component({
     selector: 'app-confirmar-pago',
     standalone: true,
@@ -44,20 +45,34 @@ export class ConfirmarPagoComponent implements OnInit {
     mostrarDialogoExito: boolean = false;
     mensajeExito: string = '';
     rutaArchivoGuardado: string = '';
+    rutaDoc:string='';
 
     //combo general
     anio_combo: string = "";;
     mes_combo: string = "";
 
-    constructor(private fb: FormBuilder, private messageService: MessageService, private pS: PresupuestoService, private gS: GlobalService) {
+    constructor(private fb: FormBuilder, private messageService: MessageService, private pS: PresupuestoService, private gS: GlobalService,
+        private configService: ConfigService) {
         this.pagoForm = this.fb.group({
             fechaejecucion: [null,Validators.required],
             nroOperacion: ['',Validators.required],
             rutaComprobante: ['',Validators.required]
         });
+        this.configService.getConfigObservable().subscribe((config) => {
+            if (config) {
+                this.rutaDoc = config.rutaDoc;
+                console.log('Configuración ruta doc:', this.rutaDoc);
+            }
+        });
     }
 
     ngOnInit(): void {
+        this.configService.getConfigObservable().subscribe((config) => {
+            if (config) {
+                this.rutaDoc = config.rutaDoc;
+                console.log('Configuración ruta doc:', this.rutaDoc);
+            }
+        });
         if (this.pagoNumero) {
             this.nroOperacion = this.pagoNumero;
         }
@@ -90,7 +105,7 @@ export class ConfirmarPagoComponent implements OnInit {
 //
         this.cargandoArchivo = true;
         //const destinationPath = 'D:/GMINGENIEROS/fronent/cajabancofrontend/src/assets/documentos';
-        const destinationPath = 'D:\\PROYECTOS_29082024\\CAJABANCO\\cajabancofrontend\\src\\assets\\documentos';
+        const destinationPath = this.rutaDoc;
         const originalFileName = this.archivoSeleccionado?.name || '';
         const fileName = originalFileName.split('.').length > 1
             ? originalFileName

@@ -74,7 +74,10 @@
                             "buildTarget": "sakai-ng:build:development"
                         }
                     },
-                    "defaultConfiguration": "development"
+                    "defaultConfiguration": "development",
+                    "options": {
+                        "port": 4201
+                    }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -106,6 +109,6 @@
         }
     },
     "cli": {
-      "analytics": "3c8f8eac-0a79-4c3b-9298-3b2318a38667"
+        "analytics": "3c8f8eac-0a79-4c3b-9298-3b2318a38667"
     }
 }
