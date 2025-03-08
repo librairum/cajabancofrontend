@@ -8,7 +8,7 @@ import { ConfigService } from './config.service';
 })
 export class BancoService {
     private http = inject(HttpClient);
-    apiUrl: string = ''; //
+    //apiUrl: string = ''; //
     urlAPI: string = ''; //
 
     constructor(
@@ -17,8 +17,8 @@ export class BancoService {
     ) {
         this.configService.getConfigObservable().subscribe((config) => {
             if (config) {
-                this.apiUrl = config.apiUrl;
-                this.urlAPI = `${this.apiUrl}Banco`;
+                //this.apiUrl = config.apiUrl;
+                this.urlAPI = `${config.apiUrl}/Banco`;
                 console.log('Configuración lista:', this.urlAPI);
             }
         });
@@ -48,8 +48,8 @@ export class BancoService {
           switchMap(config => {
             // Actualiza la URL si es necesario
             if (!this.urlAPI && config) {
-              this.apiUrl = config.apiUrl;
-              this.urlAPI = `${this.apiUrl}Banco`;
+              //this.apiUrl = config.apiUrl;
+              this.urlAPI = `${config.apiUrl}/Banco`;
               console.log('URL configurada en executeWithUrlCheck:', this.urlAPI);
             }
             // Ejecuta la operación original

@@ -1,16 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable , inject} from '@angular/core';
 import { agregar_Pago, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista } from '../components/presupuesto/presupuesto';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
 import { formatDate } from '@angular/common';
-
+import { ConfigService } from './config.service';
 @Injectable({
     providedIn: 'root'
 })
 export class PresupuestoService {
-    private urlApi = 'https://localhost:7277/Presupuesto'
+    private http = inject(HttpClient);
+    //private urlApi : string = 'https://localhost:7277/Presupuesto'
+    private urlApi:string = '';
+    constructor(private httpClient: HttpClient,
+         private configService:ConfigService) 
+         { 
+            this.configService.getConfigObservable().subscribe(
+                (config) =>
+                {
+                    if(config){
+                        this.urlApi = `${config.apiUrl}/Presupuesto`;
+                    }
+                }
+            )
 
-    constructor(private http: HttpClient) { }
+         }
 
     public obtenerPresupuesto(empresa: string, anio: string, mes: string): Observable<cabeceraPresupuesto[]> {
         const params = new HttpParams()

@@ -2,17 +2,30 @@ import { insertCuenta_Bancaria, updCuenta_Bancaria, delCuenta_Bancaria } from '.
 import { ApiResponse } from './../model/api_response';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, map, catchError, throwError } from 'rxjs';
 import { Cuenta_Bancaria } from '../components/cuenta-bancaria/Cuenta_Bancaria';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CuentaBancariaService {
-  private apiUrl = 'https://localhost:7277/CtaBancaria';
+   private http = inject(HttpClient);
+      apiUrl: string = ''; //
+      urlAPI: string = ''; //
+      //apiUrl = 'https://localhost:7277/CtaBancaria';
 
-  constructor(private http: HttpClient) { }
+  constructor(private httpClient: HttpClient, private configService: ConfigService) 
+  {
+
+    this.configService.getConfigObservable().subscribe(
+        (config) =>{
+        if(config){            
+          this.apiUrl = `${config.apiUrl}/CtaBancaria`;      
+        }
+  });
+   }
 
   // método para listar
   GetCuentasBancarias(idBanco:string): Observable<Cuenta_Bancaria[]> {

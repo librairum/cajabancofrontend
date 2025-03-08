@@ -1,11 +1,12 @@
 
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, tap, throwError } from 'rxjs';
 import { EmpresasxModulo, Login, Usuario } from '../components/login/Login';
 import { Autenticacion } from '../components/login/Autenticacion';
 import { PermisosxPerfil } from '../api/permisosxperfil';
 import { MenuxPerfil } from '../components/login/MenuxPerfil';
+import { ConfigService } from './config.service';
 interface LoginResponse{
     token: string;
 }
@@ -14,11 +15,21 @@ interface LoginResponse{
   providedIn: 'root'
 })
 export class LoginService {
-
-    private urlAPI = 'https://localhost:7277/Autenticacion';
+    private http = inject(HttpClient);
+    private urlAPI :string = '';
+    private entidadUrl :string = '';
+    //https://localhost:7277/Autenticacion
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.checkAuthStatus());
 
-    constructor(private http: HttpClient){
+    constructor(private httpClient: HttpClient,
+        private configService :ConfigService
+    ){
+        this.configService.getConfigObservable().subscribe((config) =>{
+            if(config){
+                this.entidadUrl = `${config.apiUrl}/Autenticacion`;
+                //http://192.168.1.44:4240/Autenticacion/
+            }
+        });
         window.addEventListener('beforeunload', () => {
             this.logout();
         });
@@ -30,7 +41,7 @@ export class LoginService {
     }
 
     autenticacion(autenticacion:Login): Observable<RespuestaAPI<Login>>{
-        const url=`${this.urlAPI}/SpList`;
+        const url=`${this.entidadUrl}/SpList`;
         return this.http.post<RespuestaAPI<Login>>(url,autenticacion).pipe(
             tap(response=>{
                 if(response.isSuccess){
