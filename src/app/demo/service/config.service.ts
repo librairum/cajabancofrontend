@@ -6,7 +6,7 @@ import { firstValueFrom, Observable, of } from 'rxjs';
     providedIn: 'root'
 })
 export class ConfigService {
-    private config: any = { apiUrl: 'http://localhost:7277' }; // Valor por defecto developer
+    private config: any = { apiUrl: 'http://localhost:7278' }; // Valor por defecto developer
     // private config:any ={ apiUrl:'http://localhost:4240'}; // valor por defecto produccion
     constructor(private http: HttpClient) {
 
