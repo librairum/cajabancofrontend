@@ -6,8 +6,8 @@ import { firstValueFrom, Observable, of } from 'rxjs';
     providedIn: 'root'
 })
 export class ConfigService {
-    private config: any = { apiUrl: 'http://localhost:7277' }; // Valor por defecto developer
-    // private config:any ={ apiUrl:'http://localhost:4240'}; // valor por defecto produccion
+    private config: any = { apiUrl: 'http://192.168.1.44:7277' }; // Valor por defecto servidor
+    // private config:any ={ apiUrl:'http://localhost:7277'}; // valor por defecto desarrollo
     constructor(private http: HttpClient) {
 
         console.log("cargar loadConfig");
@@ -22,7 +22,7 @@ export class ConfigService {
 
     }
     getApiUrl(): string{
-        return (window as any).config?.apiUrl || 'http://localhost:7278';
-        //return (window as any).config?.apiUrl || 'http://localhost:4240'; produccion
+        return (window as any).config?.apiUrl || 'http://192.168.1.44:7277'; //produccion
+        //return (window as any).config?.apiUrl || 'http://localhost:7277'; //desarrollo
     }
 }
