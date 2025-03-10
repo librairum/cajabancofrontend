@@ -1,12 +1,14 @@
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, tap, throwError } from 'rxjs';
+import {catchError, filter, first, firstValueFrom, switchMap, BehaviorSubject, map,
+         Observable, of, tap, throwError } from 'rxjs';
 import { EmpresasxModulo, Login, Usuario } from '../components/login/Login';
 import { Autenticacion } from '../components/login/Autenticacion';
 import { PermisosxPerfil } from '../api/permisosxperfil';
 import { MenuxPerfil } from '../components/login/MenuxPerfil';
 import { ConfigService } from './config.service';
+
 interface LoginResponse{
     token: string;
 }
@@ -16,20 +18,19 @@ interface LoginResponse{
 })
 export class LoginService {
     private http = inject(HttpClient);
+    
     private urlAPI :string = '';
     private entidadUrl :string = '';
-    //https://localhost:7277/Autenticacion
+    
+    
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.checkAuthStatus());
 
     constructor(private httpClient: HttpClient,
         private configService :ConfigService
-    ){
-        this.configService.getConfigObservable().subscribe((config) =>{
-            if(config){
-                this.entidadUrl = `${config.apiUrl}/Autenticacion`;
-                //http://192.168.1.44:4240/Autenticacion/
-            }
-        });
+    ){     
+
+    this.urlAPI = `${this.configService.getApiUrl()}/Autenticacion`
+    
         window.addEventListener('beforeunload', () => {
             this.logout();
         });
@@ -39,21 +40,26 @@ export class LoginService {
             this.logout();
         });
     }
+    
+    
 
     autenticacion(autenticacion:Login): Observable<RespuestaAPI<Login>>{
-        const url=`${this.entidadUrl}/SpList`;
-        return this.http.post<RespuestaAPI<Login>>(url,autenticacion).pipe(
-            tap(response=>{
-                if(response.isSuccess){
-                    localStorage.setItem('userSession',JSON.stringify({
-                        isAuthenticated: true,
-                        userData: response.data[0]
-                    }));
-                    this.isAuthenticatedSubject.next(true);
-                    localStorage.setItem('sesionStartTime',new Date().toISOString());
-                }
-            })
-        )
+        const url=`${this.urlAPI}/SpList`;
+        
+            return this.http.post<RespuestaAPI<Login>>(url,autenticacion).pipe(
+                tap(response=>{
+                    if(response.isSuccess){
+                        localStorage.setItem('userSession',JSON.stringify({
+                            isAuthenticated: true,
+                            userData: response.data[0]
+                        }));
+                        this.isAuthenticatedSubject.next(true);
+                        localStorage.setItem('sesionStartTime',new Date().toISOString());
+                    }
+                })
+            )
+        
+        
     }
 //codigoPerfil, string codModulo
     TraerMenuxPerfil(codigoPerfil: string, codModulo: string){
@@ -88,9 +94,24 @@ export class LoginService {
         return diffHours >= 4;
     }
     getEmpresa(codigomodulo:string):Observable<EmpresasxModulo[]>{
-        const params=new HttpParams()
-        .set('codigomodulo',codigomodulo);
-        return this.http.get<RespuestaAPI<EmpresasxModulo>>(`${this.urlAPI}/SpTraeEmpresasxModulo`,{params}).pipe(map(response=>response.data));
+
+        
+        let ippuerto = this.configService.getApiUrl;
+        //let ipPuerto : string = this.configService.getConfigValue().apiUrl;
+        
+
+            
+                const params=new HttpParams()
+                .set('codigomodulo',codigomodulo);
+                
+                
+                
+                
+                return this.http.get<RespuestaAPI<EmpresasxModulo>>(`${this.urlAPI}/SpTraeEmpresasxModulo`,
+                    {params}).pipe(map(response=>response.data));
+        //  return this.http.get<RespuestaAPI<EmpresasxModulo>>(`https://localhost:7277/Autenticacion/SpTraeEmpresasxModulo`,
+        // {params}).pipe(map(response=>response.data));
+        
     }
 }
 

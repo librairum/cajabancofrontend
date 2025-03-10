@@ -9,19 +9,14 @@ import { ConfigService } from './config.service';
 })
 export class PresupuestoService {
     private http = inject(HttpClient);
+    
     //private urlApi : string = 'https://localhost:7277/Presupuesto'
     private urlApi:string = '';
     constructor(private httpClient: HttpClient,
          private configService:ConfigService) 
          { 
-            this.configService.getConfigObservable().subscribe(
-                (config) =>
-                {
-                    if(config){
-                        this.urlApi = `${config.apiUrl}/Presupuesto`;
-                    }
-                }
-            )
+            const config = `${this.configService.getApiUrl()}/Presupuesto`;
+           this.urlApi = config;
 
          }
 

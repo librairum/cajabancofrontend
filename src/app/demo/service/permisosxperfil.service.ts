@@ -15,14 +15,8 @@ export class PermisosxPerfilService {
   constructor(private httpClient: HttpClient,
     private configService:ConfigService
   ) {
-      this.configService.getConfigObservable().subscribe(
-        (config) =>
-        {
-          if(config){
-            this.urlAPI = `${config.apiUrl}/PermisosxPerfil`;
-          }
-        }
-      );
+    const config = `${this.configService.getApiUrl()}/PermisosxPerfil`;
+    this.urlAPI = config;
 
   }
   public GetPermisosxperfil(codperfil: string, codmod: string): Observable<PermisosxPerfil[]> {

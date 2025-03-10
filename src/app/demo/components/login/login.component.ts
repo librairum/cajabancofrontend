@@ -34,7 +34,9 @@ export class LoginComponent implements OnInit {
     selectedEmpresa: string = '';
 
 
-    constructor(private globalservice:GlobalService,private fb:FormBuilder, private LoginServicio:LoginService, private router:Router, private messageService:MessageService, private link:Router){
+    constructor(private globalservice:GlobalService,private fb:FormBuilder, 
+        private LoginServicio:LoginService, private router:Router, 
+        private messageService:MessageService, private link:Router){
         this.credencialesFRM=fb.group({
             nombreusuario:['',[Validators.required,Validators.maxLength(50)]],
             claveusuario: ['',[Validators.required,Validators.maxLength(50)]],
@@ -42,6 +44,7 @@ export class LoginComponent implements OnInit {
         });
     }
     ngOnInit(): void {
+        
         this.LoginServicio.isAuthenticated().subscribe(isAuthenticated => {
             if (isAuthenticated) {
                 this.link.navigate(['/Home']);
@@ -80,12 +83,12 @@ export class LoginComponent implements OnInit {
                            }
                         } else{
                             this.showToast('error', 'Credenciales invalidas','Usuario y/o clave incorrecta');
-                            console.log("Error en inicio de sesio");
+                            
                         }
 
                     }, error:(error) =>{
                         this.showToast('error', 'Credenciales invalidas','Usuario y/o clave incorrecta');
-                        console.log("Error en inicio de sesio");
+                        
                     }
                 });
         } else {

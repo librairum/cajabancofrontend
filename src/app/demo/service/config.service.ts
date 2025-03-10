@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ConfigService {
-    private config$ = new BehaviorSubject<any>(null);
-
+    private config: any = { apiUrl: 'http://localhost:7277' }; // Valor por defecto developer
+    // private config:any ={ apiUrl:'http://localhost:4240'}; // valor por defecto produccion
     constructor(private http: HttpClient) {
-        this.loadConfig();
+
+        console.log("cargar loadConfig");
+        //this.config = firstValueFrom(this.http.get('/assets/config.json'));
+        
     }
 
-    private async loadConfig() {
-        const configData = await firstValueFrom(this.http.get('/assets/config.json'));
-        this.config$.next(configData);
-    }
+ 
 
-    getConfig(): any {
-        return this.config$.getValue();
-    }
+    getConfig() : Observable<any>{
+        return of ((window as any).config);
 
-    getConfigObservable() {
-        return this.config$.asObservable();
+    }
+    getApiUrl(): string{
+        return (window as any).config?.apiUrl || 'http://localhost:7278';
+        //return (window as any).config?.apiUrl || 'http://localhost:4240'; produccion
     }
 }

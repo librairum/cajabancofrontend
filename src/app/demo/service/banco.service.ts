@@ -15,13 +15,9 @@ export class BancoService {
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
-        this.configService.getConfigObservable().subscribe((config) => {
-            if (config) {
-                //this.apiUrl = config.apiUrl;
-                this.urlAPI = `${config.apiUrl}/Banco`;
-                console.log('Configuración lista:', this.urlAPI);
-            }
-        });
+      
+      this.urlAPI = `${this.configService.getApiUrl()}/Banco`;
+      console.log(this.urlAPI);
     }
 
     //private urlAPI = `${this.apiUrl}/Banco`;
@@ -37,38 +33,11 @@ export class BancoService {
       return throwError(() => new Error(errorMessage));
     }
   
-    // Método seguro corregido que verifica si la URL está disponible antes de ejecutar cualquier operación
-    private executeWithUrlCheck<T>(operation: () => Observable<T>): Observable<T> {
-      if (!this.urlAPI) {
-        console.warn('La URL de la API no está configurada todavía. Esperando configuración...');
-        // Espera a que la URL esté disponible y luego ejecuta la operación
-        return this.configService.getConfigObservable().pipe(
-          filter(config => !!config), // Solo continúa cuando hay una configuración válida
-          // Usar switchMap en lugar de map para trabajar correctamente con Observables anidados
-          switchMap(config => {
-            // Actualiza la URL si es necesario
-            if (!this.urlAPI && config) {
-              //this.apiUrl = config.apiUrl;
-              this.urlAPI = `${config.apiUrl}/Banco`;
-              console.log('URL configurada en executeWithUrlCheck:', this.urlAPI);
-            }
-            // Ejecuta la operación original
-            return operation();
-          }),
-          catchError(error => {
-            console.error('Error al obtener la configuración:', error);
-            return throwError(() => new Error('No se pudo obtener la configuración de la API'));
-          })
-        );
-      }
-      
-      // Si la URL ya está configurada, ejecuta la operación directamente
-      return operation();
-    }
+  
   
     // Ejemplo de cómo usar el método de verificación con GetBancos
     public GetBancos(): Observable<Banco[]> {
-      return this.executeWithUrlCheck<Banco[]>(() => {
+      
         return this.http
           .get<RespuestaAPI>(this.urlAPI + '/SpList?empresa=01')
           .pipe(
@@ -87,38 +56,38 @@ export class BancoService {
             }),
             catchError(this.handleError)
           );
-      });
+     
     }
     public CrearBanco(banco: Banco): Observable<any> {
-      return this.executeWithUrlCheck<any>(() => {
+      
         return this.http.post<any>(this.urlAPI + '/SpCreate', banco);
-      });
+      
     }
     
     public ActualizarBanco(banco: Banco): Observable<any> {
-      return this.executeWithUrlCheck<any>(() => {
+      
         let urlmodificada = this.urlAPI + '/SpUpdate';
         return this.http.put<any>(urlmodificada, banco);
-      });
+      
     }
     
     public EliminarBanco(idempresa: string, idbanco: string): Observable<any> {
-      return this.executeWithUrlCheck<any>(() => {
+      
         let urlmodificada = `${this.urlAPI}/SpDelete?idempresa=${idempresa}&idbanco=${idbanco}`;
         return this.http.delete<any>(urlmodificada);
-      });
+      
     }
     
     public getData(): Observable<Banco[]> {
-      return this.executeWithUrlCheck<Banco[]>(() => {
+      
         return this.http.get<Banco[]>(this.urlAPI);
-      });
+      
     }
     
     ComboboxBancos(): Observable<Banco[]> {
-      return this.executeWithUrlCheck<Banco[]>(() => {
+      
         return this.httpClient.get<Banco[]>(this.urlAPI);
-      });
+      
     }
 }
 

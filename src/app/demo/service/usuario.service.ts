@@ -10,7 +10,9 @@ export class UsuarioService {
 
     private apiUrl='https://localhost:7277/Banco'
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient) { 
+    
+  }
 
   // para listar
   listar_usuarios(): Observable<Usuario[]>{

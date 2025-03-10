@@ -19,12 +19,8 @@ export class CuentaBancariaService {
   constructor(private httpClient: HttpClient, private configService: ConfigService) 
   {
 
-    this.configService.getConfigObservable().subscribe(
-        (config) =>{
-        if(config){            
-          this.apiUrl = `${config.apiUrl}/CtaBancaria`;      
-        }
-  });
+    const config = `${this.configService.getApiUrl()}/CtaBancaria`;
+    this.urlAPI = config;
    }
 
   // método para listar

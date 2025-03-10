@@ -50,7 +50,7 @@ export class ConfirmarPagoComponent implements OnInit {
     //combo general
     anio_combo: string = "";;
     mes_combo: string = "";
-
+    urlApi : string = '';
     constructor(private fb: FormBuilder, private messageService: MessageService, private pS: PresupuestoService, private gS: GlobalService,
         private configService: ConfigService) {
         this.pagoForm = this.fb.group({
@@ -58,21 +58,11 @@ export class ConfirmarPagoComponent implements OnInit {
             nroOperacion: ['',Validators.required],
             rutaComprobante: ['',Validators.required]
         });
-        this.configService.getConfigObservable().subscribe((config) => {
-            if (config) {
-                this.rutaDoc = config.rutaDoc;
-                console.log('Configuración ruta doc:', this.rutaDoc);
-            }
-        });
+        this.urlApi = this.configService.getApiUrl();
     }
 
     ngOnInit(): void {
-        this.configService.getConfigObservable().subscribe((config) => {
-            if (config) {
-                this.rutaDoc = config.rutaDoc;
-                console.log('Configuración ruta doc:', this.rutaDoc);
-            }
-        });
+    
         if (this.pagoNumero) {
             this.nroOperacion = this.pagoNumero;
         }
@@ -104,8 +94,8 @@ export class ConfirmarPagoComponent implements OnInit {
         }
 //
         this.cargandoArchivo = true;
-        //const destinationPath = 'D:/GMINGENIEROS/fronent/cajabancofrontend/src/assets/documentos';
-        const destinationPath = this.rutaDoc;
+        const destinationPath = 'D:/GMINGENIEROS/fronent/cajabancofrontend/src/assets/documentos';
+        //const destinationPath = this.rutaDoc;
         const originalFileName = this.archivoSeleccionado?.name || '';
         const fileName = originalFileName.split('.').length > 1
             ? originalFileName
