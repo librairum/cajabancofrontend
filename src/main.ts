@@ -20,8 +20,8 @@ function loadConfig(): Promise<any> {
       })
       .catch(() => {
         console.error("Error al cargar config.json, usando valores por defecto.");
-        const defaultConfig = { apiUrl: 'http://192.168.1.44:7277' }; //produccion
-        //const defaultConfig = { apiUrl: 'http://localhost:7277' }; // desarrollo
+        // const defaultConfig = { apiUrl: 'http://192.168.1.44:7277' }; //produccion
+        const defaultConfig = { apiUrl: 'http://localhost:7277' }; // desarrollo
         (window as any).config = defaultConfig;
         return defaultConfig; // Devuelve la configuración por defecto
       });
