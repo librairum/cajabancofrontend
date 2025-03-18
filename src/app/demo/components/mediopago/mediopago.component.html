@@ -1,1 +1,175 @@
-<p>Mantenimiento de medio de pago </p>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="container">
+    <p-panel header="Medios de pago" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
+    </p-panel>
+
+    <div class="card">
+        <!-- Botón Nuevo -->
+        <div class="flex justify-content-between align-items-center mb-3">
+            <button type="button" pButton icon="pi pi-plus" label="Nuevo"
+                    (click)="showAddRow()" [disabled]="isEditingAnyRow"
+                    class="p-button-sm"></button>
+        </div>
+
+        <!-- Tabla Principal -->
+        <p-table [value]="mediopagoList"
+                 dataKey="ban01IdTipoPago"
+                 editMode="row"
+                 [paginator]="true"
+                 [rows]="10"
+                 responsiveLayout="scroll"
+                 styleClass="p-datatable-sm"
+                 style="table-layout: fixed; width: 100%;">
+            <!-- Cabecera de Tabla -->
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 10%">Código</th>
+                    <th style="width: 25%">Descripción</th>
+                    <th style="width: 15%">Prefijo</th>
+                    <th style="width: 15%">CtaBanco</th>
+                    <th style="width: 15%">CtaITF</th>
+                    <th style="width: 20%">Acciones</th>
+                </tr>
+            </ng-template>
+
+            <!-- Cuerpo de Tabla -->
+            <ng-template pTemplate="body" let-mediopago let-ri="rowIndex" let-editing="editing">
+                <tr [pEditableRow]="mediopago">
+                    <!-- Código -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01IdTipoPago"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01IdTipoPago }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <!-- Descripción -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01descripcion"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01descripcion }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <!-- Prefijo -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConPrefijo"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01AsiConPrefijo }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <!-- CtaBanco -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01ConCtaBanco"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01ConCtaBanco }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <!-- CtaITF -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaITF"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01AsiConCtaITF }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <!-- Acciones -->
+                    <td>
+                        <div class="flex justify-content-start gap-2">
+                            <button *ngIf="!editing" pButton pInitEditableRow
+                                    (click)="onRowEditInit(mediopago)"
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-text p-button-sm"></button>
+
+                            <button *ngIf="editing" pButton pSaveEditableRow
+                                    (click)="onRowEditSave(mediopago)"
+                                    icon="pi pi-check"
+                                    class="p-button-rounded p-button-text p-button-sm p-button-success"></button>
+
+                            <button *ngIf="editing" pButton pCancelEditableRow
+                                    (click)="onRowEditCancel(mediopago, ri)"
+                                    icon="pi pi-times"
+                                    class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+
+                            <button *ngIf="!editing" pButton type="button"
+                                    (click)="onDelete(mediopago, ri)"
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <!-- Footer para Nuevo Registro -->
+            <ng-template pTemplate="footer">
+                <tr *ngIf="isEditing">
+                    <td colspan="6">
+                        <form [formGroup]="mediopagoForm" class="grid p-fluid">
+                            <div class="col-2" style="width: 10%">
+                                <input pInputText formControlName="ban01IdTipoPago"
+                                       placeholder="Código" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-4" style="width: 25%">
+                                <input pInputText formControlName="ban01descripcion"
+                                       placeholder="Descripción" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-2" style="width: 15%">
+                                <input pInputText formControlName="ban01AsiConPrefijo"
+                                       placeholder="Prefijo" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-2" style="width: 15%">
+                                <input pInputText formControlName="ban01ConCtaBanco"
+                                       placeholder="CtaBanco" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-2" style="width: 15%">
+                                <input pInputText formControlName="ban01AsiConCtaITF"
+                                       placeholder="CtaITF" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-2" style="width: 20%">
+                                <div class="flex gap-2">
+                                    <button type="button" pButton icon="pi pi-save"
+                                            (click)="onSave()"
+                                            [disabled]="!mediopagoForm.valid"
+                                            class="p-button-sm"></button>
+                                    <button type="button" pButton icon="pi pi-times"
+                                            (click)="onCancel()"
+                                            class="p-button-sm p-button-secondary"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
