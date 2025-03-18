@@ -32,6 +32,7 @@ import { MediopagoComponent } from './demo/components/mediopago/mediopago.compon
                     {path:'detalle-presupuesto',component: DetallepresupuestoComponent},
                     {path:'nuevo-presupuesto',component: AgregarPagoComponent},
                     {path:'medio_pago', component:MediopagoComponent}
+                    
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },

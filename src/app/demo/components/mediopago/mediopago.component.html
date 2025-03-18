@@ -55,11 +55,11 @@
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">
-                                <input pInputText type="text" [(ngModel)]="mediopago.ban01descripcion"
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01Descripcion"
                                        class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
-                                {{ mediopago.ban01descripcion }}
+                                {{ mediopago.ban01Descripcion }}
                             </ng-template>
                         </p-cellEditor>
                     </td>
@@ -81,11 +81,11 @@
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">
-                                <input pInputText type="text" [(ngModel)]="mediopago.ban01ConCtaBanco"
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaBanco"
                                        class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
-                                {{ mediopago.ban01ConCtaBanco }}
+                                {{ mediopago.ban01AsiConCtaBanco }}
                             </ng-template>
                         </p-cellEditor>
                     </td>
@@ -140,7 +140,7 @@
                                        placeholder="Código" class="p-inputtext-sm w-full"/>
                             </div>
                             <div class="col-4" style="width: 25%">
-                                <input pInputText formControlName="ban01descripcion"
+                                <input pInputText formControlName="ban01Descripcion"
                                        placeholder="Descripción" class="p-inputtext-sm w-full"/>
                             </div>
                             <div class="col-2" style="width: 15%">
@@ -148,7 +148,7 @@
                                        placeholder="Prefijo" class="p-inputtext-sm w-full"/>
                             </div>
                             <div class="col-2" style="width: 15%">
-                                <input pInputText formControlName="ban01ConCtaBanco"
+                                <input pInputText formControlName="ban01AsiConCtaBanco"
                                        placeholder="CtaBanco" class="p-inputtext-sm w-full"/>
                             </div>
                             <div class="col-2" style="width: 15%">

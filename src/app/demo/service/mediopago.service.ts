@@ -1,5 +1,5 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpResponse, HttpParams } from '@angular/common/http';
+import { inject, Injectable, OnInit } from '@angular/core';
 import { ConfigService } from './config.service';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { MedioPago } from '../components/mediopago/mediopago';
@@ -22,7 +22,6 @@ private http = inject(HttpClient);
       console.log(this.urlAPI);
     }
 
-    //private urlAPI = `${this.apiUrl}/Banco`;
 
     private handleError(error: HttpErrorResponse) {
       let errorMessage = 'Error desconocido';
@@ -35,51 +34,36 @@ private http = inject(HttpClient);
       return throwError(() => new Error(errorMessage));
     }
   
-  
-  
-    // Ejemplo de cómo usar el método de verificación con GetBancos
-    public GetMediosPago(): Observable<MedioPago[]> {
-      
-        return this.http
-          .get<RespuestaAPI>(this.urlAPI + '/SpList?empresa=01')
-          .pipe(
-            map((response: RespuestaAPI) => {
-              if (response.isSuccess && response.data) {
-                console.log(response.data);
-                return response.data;
-              } else {
-                console.error(
-                  'Error en la API:',
-                  response.message,
-                  response.messageException
-                );
-                return [];
-              }
-            }),
-            catchError(this.handleError)
-          );
+    //AQUI SE CAMBIA///////////////////
+    public GetMediosPago(empresa:string): Observable<MedioPago[]> {
+      const params=new HttpParams()
+      .set('empresa',empresa)
+      return this.http.get<RespuestaAPI>(`${this.urlAPI}/SpTrae`, { params }).pipe(
+        map(response => response.data));
+
      
     }
+   
     public CrearMedioPago(mediopago: MedioPago): Observable<any> {
-      
-        return this.http.post<any>(this.urlAPI + '/SpCreate', mediopago);
+      console.log(mediopago)
+        return this.http.post<any>(this.urlAPI + '/SpInserta', mediopago);
       
     }
     
     
     public ActualizarMedioPago(mediopago: MedioPago): Observable<any> {
       
-        let urlmodificada = this.urlAPI + '/SpUpdate';
+        let urlmodificada = this.urlAPI + '/SpActualiza';
         return this.http.put<any>(urlmodificada, mediopago);
       
     }
     
-    public EliminarMedioPago(idempresa: string, idtipopago: string): Observable<any> {
-      
-        let urlmodificada = `${this.urlAPI}/SpDelete?idempresa=${idempresa}&idtipopago=${idtipopago}`;
-        return this.http.delete<any>(urlmodificada);
-      
-    }
+    public EliminarMedioPago(idempresa: string, idtipopago: string): Observable<any> { 
+      let urlmodificada = `${this.urlAPI}/SpElimina?empresa=${idempresa}&idtipopago=${idtipopago}`;
+      return this.http.delete<any>(urlmodificada);
+  }
+  
+  
     
     public getData(): Observable<MedioPago[]> {
       
