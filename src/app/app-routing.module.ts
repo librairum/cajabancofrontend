@@ -10,6 +10,7 @@ import { AuthGuard } from './demo/service/auth.guard';
 import { CuentaBancariaComponent } from './demo/components/cuenta-bancaria/cuenta-bancaria.component';
 import { AgregarPagoComponent } from './demo/components/presupuesto/agregar-pago/agregar-pago.component';
 import { BancoComponent } from './demo/components/banco/banco.component';
+import { MediopagoComponent } from './demo/components/mediopago/mediopago.component';
 
 @NgModule({
     imports: [
@@ -29,7 +30,9 @@ import { BancoComponent } from './demo/components/banco/banco.component';
                     { path: 'numero_cuenta', component: NumeroCuentaComponent },
                     {path:'presupuesto',component: CabecerapresupuestoComponent},
                     {path:'detalle-presupuesto',component: DetallepresupuestoComponent},
-                    {path:'nuevo-presupuesto',component: AgregarPagoComponent}
+                    {path:'nuevo-presupuesto',component: AgregarPagoComponent},
+                    {path:'medio_pago', component:MediopagoComponent}
+                    
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },

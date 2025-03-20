@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { BlockViewerComponent } from '../blockviewer/blockviewer.component';
 @Component({
     templateUrl: './blocks.component.html'
 })

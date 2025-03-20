@@ -25,3 +25,12 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+##config.json 
+config.json asignar valor para lectura de variable dinamica, revisar que debe funciona en versiones posteriores.
+// produccion -> parametro para prueba en  servidor o pc de cliente
+// desarrooloo -> parametro para prueba en pc de programador o prueba.// 
+ruta de prueba
+"rutaDoc":"D:\\PROYECTOS_29082024\\CAJABANCO\\cajabancofrontend\\src\\assets\\documentos" - desarrollo*/
+
+ruta servidor
+c:\\inetput\\cajabancoweb\\src\\assets\\documentos
