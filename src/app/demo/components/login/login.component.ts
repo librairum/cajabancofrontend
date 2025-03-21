@@ -107,6 +107,7 @@ export class LoginComponent implements OnInit {
                 this.Empresa = data;
                 if(this.selectedEmpresa){
                     const empresaEncontrada=this.Empresa.find(p=>p.codigomodulo===this.selectedEmpresa);
+                    console.log(data);
                 }
             }
         )

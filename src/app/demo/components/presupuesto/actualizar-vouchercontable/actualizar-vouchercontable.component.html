@@ -1,0 +1,99 @@
+<p-toast></p-toast>
+
+
+
+
+<!-- Panel principal -->
+<p-panel>
+    <form [formGroup]="pagoForm">
+        <div class="p-grid p-fluid">
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Tipo <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Cuenta <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Cuenta Desc. <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Cuenta Cte. Cod.	 <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Cuenta Cte. Desc.	 <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Tipo Doc. Desc.		 <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Num. Doc.			 <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="fechaejecucion">Fecha Vencimiento <span class="text-danger">*</span></label>
+                <input type="date" pInputText id="fechaejecucion" formControlName="fechaejecucion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Tipo Cambio	 <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Debe <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Haber <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Cargo <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="nropago" class="block mb-1">Abono <span class="text-danger">*</span></label>
+                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            </div>
+        </div>
+
+
+
+
+        <p-footer>
+            <div class="flex justify-content-center gap-8">
+                <p-button label="Aceptar" (onClick)="guardarConfirmacion()" styleClass="p-button-primary"
+                    [disabled]=""></p-button>
+                <p-button label="Cancelar" (onClick)="cancelar()" styleClass="p-button-danger"
+                    [disabled]=""></p-button>
+            </div>
+        </p-footer>
+    </form>
+</p-panel>
+
+
+
+
+
+
+
+
+
+
+<!-- Modal de confirmación -->
+<p-dialog header="Archivo guardado correctamente" [(visible)]="mostrarDialogoExito" [modal]="true"
+    [style]="{width: '450px'}" [closable]="false">
+    <div class="flex align-items-center p-3">
+        <i class="pi pi-check-circle text-green-500 mr-3" style="font-size: 2rem"></i>
+        <span>{{mensajeExito}}</span>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end">
+            <p-button label="OK" (onClick)="onConfirmOk()" styleClass="p-button-success"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>

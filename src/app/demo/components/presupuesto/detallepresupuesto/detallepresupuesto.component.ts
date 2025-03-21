@@ -96,7 +96,7 @@ export class DetallepresupuestoComponent implements OnInit {
                     '/Home/presupuesto' /*, command: () => this.volverAListado()*/,
             },
             {
-                label: 'Detalle presupuesto ',
+                label: 'Detalle presupuesto',
                 routerLink: '/Home/detalle-presupuesto',
             },
         ]);

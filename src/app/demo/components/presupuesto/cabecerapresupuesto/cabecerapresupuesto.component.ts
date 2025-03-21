@@ -189,6 +189,19 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
 
     }
+    verVouchercontable(presupuesto: cabeceraPresupuesto){
+        const formattedDate = this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy');
+
+        const navigationExtras = {
+            state: {
+                PagoNro: presupuesto.pagoNumero,
+                Fecha: formattedDate,
+                motivo: presupuesto.motivo,
+                nombreMedioPago: presupuesto.nombreMedioPago
+            }
+        }
+        this.router.navigate(['Home/voucher_contable'], navigationExtras)
+    }
     /*modificarPago(presupuesto:cabeceraPresupuesto){
         const formattedDate=this.datePipe.transform(presupuesto.fecha,'dd/MM/yyyy');
         const navigationExtras = {
@@ -243,6 +256,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             NombreMedioPago: ''
         };
     }
+    
     guardarNuevoPresupuesto() {
 
 

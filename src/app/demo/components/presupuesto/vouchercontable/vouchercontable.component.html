@@ -1,0 +1,164 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<p-dialog
+    [(visible)]="verConfirmarPago"
+    [modal]="true"
+    header="Actualizar Voucher Contable"
+    [style]="{ width: '30vw', height: 'auto' }"
+    [draggable]="false"
+    [resizable]="false"
+    [maximizable]="true"
+    [baseZIndex]="10000"
+    (onHide)="selectedVoucherC = ''; onCloseModal()"
+>
+    <app-actualizar-vouchercontable
+        [pagoNumero]="selectedVoucherC"
+        (onClose)="onCloseModal()"
+    ></app-actualizar-vouchercontable>
+</p-dialog>
+
+
+<div class="container">
+    <p-panel header="Lista Voucher Contable" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
+    </p-panel>
+    <br />
+    <div class="card p-2">
+        <!-- Fila 1: Username y botones -->
+        <div
+            style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0.5rem;
+            "
+        >
+            <div style="display: inline">
+                <div [style]="{ display: 'inline', 'margin-right': '30px' }">
+                    <label for="username" class="text-sm"
+                        >Libro de NroVoucher:
+                    </label>
+                    <input
+                        pInputText
+                        id="username"
+                        aria-describedby="username-help"
+                        [value]="libro"
+                        [disabled]="true"
+                        [style]="{ 'width': '40px', height: '2.5rem' }"
+                    />
+                    <input
+                        pInputText
+                        id="username"
+                        aria-describedby="username-help"
+                        [value]="libro_numero"
+                        [disabled]="true"
+                        [style]="{ 'min-width': '100px', height: '2.5rem' }"
+                    />
+                </div>
+            </div>
+        </div>
+        <div
+            style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0.5rem;
+            "
+        ></div>
+    </div>
+
+    <div class="card p-2">
+        <p-table
+            [value]="voucherContableDetalle"
+            sortField="orden"
+            sortMode="single"
+            rowGroupMode="subheader"
+            groupRowsBy="orden"
+            [scrollable]="true"
+            scrollHeight="500px"
+            [loading]="load"
+            [globalFilterFields]="['cuenta', 'CtaCbleDesc', 'NumDoc']"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    
+                    <th colspan="1"></th>
+                    <th rowspan="2">Tipo</th>
+                    <th rowspan="2">Cuenta</th>
+                    <th rowspan="2">Cuenta Desc</th>
+                    <th rowspan="2">Cuenta Cte. Cod.</th>
+                    <th rowspan="2">Cuenta Cte. Desc.</th>
+                    <th rowspan="2">Tipo Doc. Desc.</th>
+                    <th rowspan="2">Num. Doc.</th>
+                    <th rowspan="2">Fecha Emisión</th>
+                    <th rowspan="2">Fecha Vencimiento</th>
+                    <th rowspan="2">Tipo Cambio</th>
+                    <th rowspan="2">Debe</th>
+                    <th rowspan="2">Haber</th>
+                    <th rowspan="2">Cargo</th>
+                    <th rowspan="2">Abono</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-detalle>
+                <tr>
+                    <td>
+                        <div class="flex gap-2">
+                            <ng-container
+                               
+                            >
+                                <p-button
+                                    icon="pi pi-pencil"
+                                    styleClass="p-button-info p-button-sm"
+                                    pTooltip="Modificar"
+                                    [text]="true"
+                                    (onClick)="ActualizarVoucherContable(detalle)"
+                                    [disabled]="botonesDeshabilitados"
+                                ></p-button>
+                                <p-button
+                                    icon="pi pi-trash"
+                                    styleClass="p-button-danger p-button-sm"
+                                    pTooltip="Eliminar"
+                                    [text]="true"
+                                    (onClick)="eliminarPago(detalle)"
+                                    [disabled]="botonesDeshabilitados"
+                                ></p-button>
+                              
+
+                            </ng-container>
+                        </div>
+                    </td>
+                    <td>{{ detalle.amarre }}</td>
+                    <td>{{ detalle.cuenta }}</td>
+                    <td>{{ detalle.ctaCbleDesc }}</td>
+                    <td>{{ detalle.ctactecod }}</td>
+                    <td>{{ detalle.ctaCteDesc }}</td>
+                    <td>{{ detalle.tipDocDes }}</td>
+                    <td>{{ detalle.numDoc }}</td>
+                    <td>{{ detalle.fechaDoc }}</td>
+                    <td>{{ detalle.fechaVencimiento }}</td>
+                    <td class="text-right">{{ detalle.tipoCambio | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ detalle.importeDebe | currency:'':'':'1.2-2' }}</td>
+                    <td class="text-right">{{ detalle.importeHaber | currency:'':'':'1.2-2' }}</td>
+                    <td class="text-right">{{ detalle.importeDebeEquivalencia | currency:'':'':'1.2-2' }}</td>
+                    <td class="text-right">{{ detalle.importeHaberEquivalencia | currency:'':'':'1.2-2' }}</td>
+                      
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td
+                        colspan="20"
+                        style="
+                            text-align: center;
+                            font-weight: bold;
+                            padding: 1rem;
+                        "
+                    >
+                        No se encontraron registros
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

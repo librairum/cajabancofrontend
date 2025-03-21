@@ -61,7 +61,7 @@ export class LoginService {
         
         
     }
-//codigoPerfil, string codModulo
+    //codigoPerfil, string codModulo
     TraerMenuxPerfil(codigoPerfil: string, codModulo: string){
         //?codigoPerfil=03&codModulo=01
         let urlAcceso = `${this.urlAPI}/SpTraeMenuxPerfil?codigoPerfil=${codigoPerfil}&codModulo=${codModulo}`;

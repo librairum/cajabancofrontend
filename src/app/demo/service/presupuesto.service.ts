@@ -1,5 +1,5 @@
 import { Injectable , inject} from '@angular/core';
-import { agregar_Pago, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista } from '../components/presupuesto/presupuesto';
+import { agregar_Pago, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista, VoucherContableCabecera, VoucherContableDetalle } from '../components/presupuesto/presupuesto';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
 import { formatDate } from '@angular/common';
@@ -12,11 +12,13 @@ export class PresupuestoService {
     
     //private urlApi : string = 'https://localhost:7277/Presupuesto'
     private urlApi:string = '';
+    private urlBase:string = '';
     constructor(private httpClient: HttpClient,
          private configService:ConfigService) 
          { 
             const config = `${this.configService.getApiUrl()}/Presupuesto`;
            this.urlApi = config;
+           this.urlBase=`${this.configService.getApiUrl()}`;
 
          }
 
@@ -163,6 +165,36 @@ export class PresupuestoService {
         });
     }
 
+     ////obetener voucher contable////////////////
+     public obtenerVoucherContableDetalle(empresa: string, numero: string): Observable<VoucherContableDetalle[]> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('numero', numero);
+        return this.http.get<RespuestaAPI6>(`${this.urlBase}/CtaCtable/SpTraeDetalle?`, { params })
+            .pipe(map(response => response.data));
+    }
+    
+    public obtenerVoucherContableCabecera(empresa: string, numero: string): Observable<VoucherContableCabecera[]> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('numero', numero);
+        return this.http.get<RespuestaAPI7>(`${this.urlBase}/CtaCtable/SpTraeCabecera?`, { params })
+            .pipe(map(response => response.data));
+    }
+
+
+    public eliminarVoucherContableDetalle(
+        empresa: string, 
+        orden: number
+    ): Observable<any> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('orden', orden.toString()); // Ajuste para que coincida con la interfaz
+    
+        return this.http.delete(`${this.urlApi}/SpEliminaDet`, { params });
+    }
+  
+
 }
 
 interface RespuestaAPI5 {
@@ -236,3 +268,27 @@ interface MedioPago {
     ban01Descripcion: string;
 }
 
+interface RespuestaAPI6{
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: any | null; // Puedes tipar 'item' si conoces su estructura
+    data: VoucherContableDetalle[];
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
+
+}
+
+
+interface RespuestaAPI7{
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: any | null; // Puedes tipar 'item' si conoces su estructura
+    data: VoucherContableCabecera[];
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
+
+}

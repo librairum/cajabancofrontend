@@ -124,3 +124,48 @@ export interface ComprobanteUpdateParams {
     flagOperacion: string;
 }
 
+
+
+
+export interface VoucherContableDetalle{
+    orden: number;
+  amarre: string;
+  cuenta: string;
+  ctaCbleDesc: string;
+  concepto: string;
+  ctactecod: string;
+  ctaCteDesc: string;
+  afecto: string;
+  moneda: string;
+  tipoDocumento: string;
+  tipDocDes: string;
+  numDoc: string;
+  fechaDoc: string; 
+  fechaVencimiento: string; 
+  tipoCambio: number;
+  importeDebe: number;
+  importeHaber: number;
+  importeDebeEquivalencia: number;
+  importeHaberEquivalencia: number;
+  cencos: string;
+  cCostoDesc: string;
+  cenGes: string;
+  cGestionDesc: string;
+  totalRecords: number;
+}
+
+
+export interface VoucherContableCabecera{
+    empresa:string;
+    anio:string;
+    mes:string;
+    libro:string;
+    numero:string;
+    fecha:string;
+    detalle:string;
+    flag:string;
+    asientotipo:string;
+    transaccion:string;
+    totalRecords:number;
+
+}

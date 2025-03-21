@@ -15,13 +15,12 @@ export class ConfigService {
         
     }
 
- 
-
     getConfig() : Observable<any>{
         return of ((window as any).config);
 
     }
     getApiUrl(): string{
+        
         // return (window as any).config?.apiUrl || 'http://192.168.1.44:7277'; //produccion
         return (window as any).config?.apiUrl || 'http://localhost:7277'; //desarrollo
     }
