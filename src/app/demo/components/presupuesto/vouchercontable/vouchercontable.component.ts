@@ -66,9 +66,10 @@ export class VouchercontableComponent implements OnInit {
     // fecha hoy
     fechahoy: Date;
     selectedPagoNumero: any;
+    detalleSelected:VoucherContableDetalle;
 
     
-    verConfirmarPago: boolean = false;
+    verConfirmarActualizacion: boolean = false;
     selectedVoucherC: string;
     constructor(
         private messageService: MessageService,
@@ -172,8 +173,9 @@ export class VouchercontableComponent implements OnInit {
 
     ActualizarVoucherContable(vc: VoucherContableDetalle) {
         this.selectedVoucherC = vc.numDoc;
+        this.detalleSelected=vc;
         console.log(this.selectedPagoNumero);
-        this.verConfirmarPago = true;
+        this.verConfirmarActualizacion = true;
     }
 
     onCloseModal() {
@@ -181,7 +183,7 @@ export class VouchercontableComponent implements OnInit {
         if (this.confirmarpagocomponente) {
             this.confirmarpagocomponente.limpiar();
         }
-        this.verConfirmarPago = false;
+        this.verConfirmarActualizacion = false;
         this.cargarMedioPago();
         this.gS.selectedDate$.subscribe(date => {
             if (date) {

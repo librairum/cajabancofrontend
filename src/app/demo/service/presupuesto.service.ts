@@ -10,15 +10,17 @@ import { ConfigService } from './config.service';
 export class PresupuestoService {
     private http = inject(HttpClient);
     
-    //private urlApi : string = 'https://localhost:7277/Presupuesto'
     private urlApi:string = '';
     private urlBase:string = '';
+    apiUrl: any;
     constructor(private httpClient: HttpClient,
          private configService:ConfigService) 
          { 
-            const config = `${this.configService.getApiUrl()}/Presupuesto`;
+            
+      this.apiUrl = (window as any).config?.url
+            const config = `${this.apiUrl}/Presupuesto`;
            this.urlApi = config;
-           this.urlBase=`${this.configService.getApiUrl()}`;
+           this.urlBase=`${this.apiUrl}`;
 
          }
 
@@ -114,13 +116,6 @@ export class PresupuestoService {
         });
         return this.http.request(req);
 
-        // Simulación de la respuesta del servidor
-        return of({
-            status: 'success',
-            filePath: '/assets/comprobantes/' + file.name
-        }).pipe(
-            delay(1000) // Tiempo de respuesta del server
-        );
     }
 
     //metodo para guardar en la carpeta de assest, solo simulación porque esto no funcionaria sin servidor

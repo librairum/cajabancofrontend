@@ -8,7 +8,7 @@ import { Usuario } from '../components/login/Login';
 })
 export class UsuarioService {
 
-    private apiUrl='https://localhost:7278/Banco'
+    private apiUrl='https://localhost:7277/Banco'
 
   constructor(private http:HttpClient) { 
     

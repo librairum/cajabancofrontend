@@ -10,15 +10,16 @@ import { MedioPago } from '../components/mediopago/mediopago';
 export class MediopagoService {
 
 private http = inject(HttpClient);
-    //apiUrl: string = ''; //
     urlAPI: string = ''; //
+  apiUrl: any;
 
     constructor(
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
       
-      this.urlAPI = `${this.configService.getApiUrl()}/MedioPago`;
+      this.apiUrl = (window as any).config?.url
+      this.urlAPI = `${this.apiUrl}/MedioPago`;
       console.log(this.urlAPI);
     }
 

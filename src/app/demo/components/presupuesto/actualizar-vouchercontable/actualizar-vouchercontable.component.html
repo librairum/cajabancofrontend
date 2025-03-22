@@ -1,82 +1,72 @@
 <p-toast></p-toast>
 
-
-
-
 <!-- Panel principal -->
 <p-panel>
     <form [formGroup]="pagoForm">
-        <div class="p-grid p-fluid">
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Tipo <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+        <div class="grid"> 
+            <div class="field col-12 md:col-6 lg:col-4">
+                <label for="tipo">Tipo<span class="text-danger">*</span></label>
+                <input pInputText id="tipo" formControlName="amarre" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Cuenta <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-8">
+                <label for="cuenta">Cuenta<span class="text-danger">*</span></label>
+                <input pInputText id="cuenta" formControlName="cuenta" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Cuenta Desc. <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-12">
+                <label for="cuentaDesc">Cuenta Desc.<span class="text-danger">*</span></label>
+                <input pInputText id="cuentaDesc" formControlName="ctaCbleDesc" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Cuenta Cte. Cod.	 <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="cuentaCteCod">Cuenta Cte. Cod.<span class="text-danger">*</span></label>
+                <input pInputText id="cuentaCteCod" formControlName="ctactecod" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Cuenta Cte. Desc.	 <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="cuentaCteDesc">Cuenta Cte. Desc.<span class="text-danger">*</span></label>
+                <input pInputText id="cuentaCteDesc" formControlName="ctaCteDesc" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Tipo Doc. Desc.		 <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="tipoDocDesc">Tipo Doc. Desc.<span class="text-danger">*</span></label>
+                <input pInputText id="tipoDocDesc" formControlName="tipDocDes" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Num. Doc.			 <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="numDoc">Num. Doc.<span class="text-danger">*</span></label>
+                <input pInputText id="numDoc" formControlName="numDoc" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="fechaejecucion">Fecha Vencimiento <span class="text-danger">*</span></label>
-                <input type="date" pInputText id="fechaejecucion" formControlName="fechaejecucion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="fechaVencimiento">Fecha Vencimiento<span class="text-danger">*</span></label>
+                <p-calendar id="fechaVencimiento" formControlName="fechaVencimiento" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Tipo Cambio	 <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            
+            <div class="field col-12 md:col-6">
+                <label for="tipoCambio">Tipo Cambio<span class="text-danger">*</span></label>
+                <input pInputText id="tipoCambio" formControlName="tipoCambio" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Debe <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="debe">Debe<span class="text-danger">*</span></label>
+                <input pInputText id="debe" formControlName="importeDebe" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Haber <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="haber">Haber<span class="text-danger">*</span></label>
+                <input pInputText id="haber" formControlName="importeHaber" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Cargo <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="cargo">Cargo<span class="text-danger">*</span></label>
+                <input pInputText id="cargo" formControlName="importeDebeEquivalencia" class="w-full">
             </div>
-            <div class="p-field p-col-12 mb-3">
-                <label for="nropago" class="block mb-1">Abono <span class="text-danger">*</span></label>
-                <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
+            <div class="field col-12 md:col-6">
+                <label for="abono">Abono<span class="text-danger">*</span></label>
+                <input pInputText id="abono" formControlName="importeHaberEquivalencia" class="w-full">
             </div>
         </div>
 
-
-
-
         <p-footer>
             <div class="flex justify-content-center gap-8">
-                <p-button label="Aceptar" (onClick)="guardarConfirmacion()" styleClass="p-button-primary"
-                    [disabled]=""></p-button>
-                <p-button label="Cancelar" (onClick)="cancelar()" styleClass="p-button-danger"
-                    [disabled]=""></p-button>
+                <p-button label="Aceptar" (onClick)="guardarConfirmacion()" styleClass="p-button-primary"></p-button>
+                <p-button label="Cancelar" (onClick)="cancelar()" styleClass="p-button-danger"></p-button>
             </div>
         </p-footer>
     </form>
 </p-panel>
-
-
-
 
 
 

@@ -6,13 +6,21 @@ import { firstValueFrom, Observable, of } from 'rxjs';
     providedIn: 'root'
 })
 export class ConfigService {
-    // private config: any = { apiUrl: 'http://192.168.1.44:7277' }; // Valor por defecto produccion
-    private config:any ={ apiUrl:'http://localhost:7277'}; // valor por defecto desarrollo
-    constructor(private http: HttpClient) {
+    private config: any = {}; // Inicialmente vacío
 
-        console.log("cargar loadConfig");
-        //this.config = firstValueFrom(this.http.get('/assets/config.json'));
-        
+    constructor(private http: HttpClient) {
+         
+    }
+
+    async loadConfig(): Promise<void> {
+        console.log("Cargando configuración desde config.json...");
+        try {
+            this.config = await firstValueFrom(this.http.get('/assets/config.json'));
+            (window as any).config = this.config; // Guardar en window para acceso global
+            console.log(" Configuración cargada:", this.config);
+        } catch (error) {
+            console.error(" Error cargando config.json", error);
+        }
     }
 
     getConfig() : Observable<any>{
@@ -22,6 +30,7 @@ export class ConfigService {
     getApiUrl(): string{
         
         // return (window as any).config?.apiUrl || 'http://192.168.1.44:7277'; //produccion
-        return (window as any).config?.apiUrl || 'http://localhost:7277'; //desarrollo
+        return this.config?.url || 'http://localhost:7277'; // Valor por defecto
+
     }
 }

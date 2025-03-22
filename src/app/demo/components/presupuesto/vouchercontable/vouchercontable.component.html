@@ -1,10 +1,11 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
 <p-dialog
-    [(visible)]="verConfirmarPago"
+*ngIf="verConfirmarActualizacion" 
+    [(visible)]="verConfirmarActualizacion"
     [modal]="true"
     header="Actualizar Voucher Contable"
-    [style]="{ width: '30vw', height: 'auto' }"
+    [style]="{ width: '40vw', height: 'auto' }"
     [draggable]="false"
     [resizable]="false"
     [maximizable]="true"
@@ -13,6 +14,7 @@
 >
     <app-actualizar-vouchercontable
         [pagoNumero]="selectedVoucherC"
+        [detalleSelected]="detalleSelected"
         (onClose)="onCloseModal()"
     ></app-actualizar-vouchercontable>
 </p-dialog>

@@ -48,7 +48,8 @@ export class ConfirmarPagoComponent implements OnInit {
     rutaDoc:string='';
 
     //combo general
-    anio_combo: string = "";;
+    anio_combo: string = "";apiUrl: any;
+;
     mes_combo: string = "";
     urlApi : string = '';
     constructor(private fb: FormBuilder, private messageService: MessageService, private pS: PresupuestoService, private gS: GlobalService,
@@ -58,7 +59,9 @@ export class ConfirmarPagoComponent implements OnInit {
             nroOperacion: ['',Validators.required],
             rutaComprobante: ['',Validators.required]
         });
-        this.urlApi = this.configService.getApiUrl();
+        
+      this.apiUrl = (window as any).config?.url
+        this.urlApi = this.apiUrl;
     }
 
     ngOnInit(): void {

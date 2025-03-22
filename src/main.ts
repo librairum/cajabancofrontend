@@ -8,26 +8,25 @@ import { HttpClient } from '@angular/common/http';
 if (environment.production) {
   enableProdMode();
 }
-// Iniciar Angular solo después de cargar la configuración
 
-function loadConfig(): Promise<any> {
-    return fetch('/assets/config.json')
-      .then(response => response.json())
-      .then(config => {
-        (window as any).config = config;
-        
-        return config; // Devuelve la configuración para que se pueda usar en el siguiente paso
-      })
-      .catch(() => {
-        console.error("Error al cargar config.json, usando valores por defecto.");
-        // const defaultConfig = { apiUrl: 'http://192.168.1.44:7277' }; //produccion
-        const defaultConfig = { apiUrl: 'http://localhost:7277' }; // desarrollo
-        (window as any).config = defaultConfig;
-        return defaultConfig; // Devuelve la configuración por defecto
-      });
+
+// Función para cargar la configuración antes de arrancar Angular
+async function loadConfig(): Promise<void> {
+  try {
+    const response = await fetch('/assets/config.json');
+    const config = await response.json();
+    (window as any).config = config;
+
+  } catch (error) {
+    //console.error("Error al cargar config.json, usando valores por defecto.");
+    (window as any).config = { apiUrl: '' }; // Configuración por defecto
   }
-  
-  loadConfig().then(() => {
-    platformBrowserDynamic().bootstrapModule(AppModule)
-      .catch(err => console.error(err));
-  });
+}
+
+// Cargar configuración y luego iniciar Angular
+loadConfig().then(() => {
+  platformBrowserDynamic()
+    .bootstrapModule(AppModule)
+    .catch(err => console.error(err));
+});
+
