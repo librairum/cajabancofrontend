@@ -4,14 +4,84 @@
 <p-panel>
     <form [formGroup]="pagoForm">
         <div class="grid"> 
-            <div class="field col-12 md:col-6 lg:col-4">
-                <label for="tipo">Tipo<span class="text-danger">*</span></label>
-                <input pInputText id="tipo" formControlName="amarre" class="w-full">
+            <!--  para proporcionar los tamaños de inputs
+             <div class="field col-12 md:col-6 lg:col-4">
+            -->
+            <div class="field col-12 md:col-6 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Cuenta<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
             </div>
-            <div class="field col-12 md:col-8">
-                <label for="cuenta">Cuenta<span class="text-danger">*</span></label>
-                <input pInputText id="cuenta" formControlName="cuenta" class="w-full">
+
+            <div class="field col-12 md:col-6 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Cuenta<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
             </div>
+            <div class="field col-12 md:col-12 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Comprobante<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div>
+            <div class="field col-12 md:col-12 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Glosa<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div>
+
+            <div class="field col-12 md:col-6 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Centro de costo<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div>
+
+            <div class="field col-12 md:col-6 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Centro de gestión<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div><div class="field col-12 md:col-6 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Máquina<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div>
+
+            <div class="field col-12 md:col-6 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Trabajo en curso<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div>
+            <div class="field col-12 md:col-12 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Cuenta corriente<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div>
+            <div class="field col-12 md:col-6 lg:col-4 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Tipo Doc.<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div>
+            <div class="field col-12 md:col-12 lg:col-4 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Nro. Doc.<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1">
+            </div>
+
+            <div class="field col-12 md:col-6 lg:col-4 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Fecha Doc.<span class="text-danger">*</span></label>
+                <p-calendar id="" formControlName="" dateFormat="dd/mm/yy" showIcon="true"  class="flex-1"></p-calendar>
+            </div>
+            
+
+
+            <div class="field col-12 md:col-6 lg:col-3 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-7rem">Año DUA<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1 w-5rem">
+            </div>
+            <div class="field col-12 md:col-6 lg:col-3 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-5rem">Fecha Vcto.<span class="text-danger">*</span></label>
+                <p-calendar id="" formControlName="" dateFormat="dd/mm/yy" showIcon="true"  class="flex-1"></p-calendar>
+            </div>
+            <div class="field col-12 md:col-6 lg:col-3 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-5rem">Fecha Pago<span class="text-danger">*</span></label>
+                <p-calendar id="" formControlName="" dateFormat="dd/mm/yy" showIcon="true"  class="flex-1"></p-calendar>
+            </div>
+            <div class="field col-12 md:col-12 lg:col-3 flex align-items-center gap-3 mb-0 ">
+                <label for="" class="w-5rem">Nro. Pago<span class="text-danger">*</span></label>
+                <input pInputText id="" formControlName="" class="flex-1 w-9rem">
+            </div>
+
+
+
+            
             <div class="field col-12 md:col-12">
                 <label for="cuentaDesc">Cuenta Desc.<span class="text-danger">*</span></label>
                 <input pInputText id="cuentaDesc" formControlName="ctaCbleDesc" class="w-full">
