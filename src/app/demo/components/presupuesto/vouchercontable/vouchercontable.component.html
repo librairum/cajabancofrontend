@@ -4,8 +4,8 @@
 *ngIf="verConfirmarActualizacion" 
     [(visible)]="verConfirmarActualizacion"
     [modal]="true"
-    header="Actualizar Voucher Contable"
-    [style]="{ width: '60vw', height: 'auto' }"
+    header="Actualizar voucher contable"
+    [style]="{ width: '85vw', height: 'auto' }"
     [draggable]="false"
     [resizable]="false"
     [maximizable]="true"
@@ -13,7 +13,6 @@
     (onHide)="selectedVoucherC = ''; onCloseModal()"
 >
     <app-actualizar-vouchercontable
-        [pagoNumero]="selectedVoucherC"
         [detalleSelected]="detalleSelected"
         (onClose)="onCloseModal()"
     ></app-actualizar-vouchercontable>
@@ -21,7 +20,7 @@
 
 
 <div class="container">
-    <p-panel header="Lista Voucher Contable" class="mb-3">
+    <p-panel header="Lista voucher contable" class="mb-3">
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
     </p-panel>
     <br />

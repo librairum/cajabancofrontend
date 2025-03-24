@@ -13,7 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
-import { FileUpload, FileUploadModule } from 'primeng/fileupload';
+import { FileUploadModule } from 'primeng/fileupload';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import {
@@ -26,12 +26,11 @@ import {
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { HttpClientModule } from '@angular/common/http';
-import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { GlobalService } from 'src/app/demo/service/global.service';
-import { ConfigService } from 'src/app/demo/service/config.service';
 import { VoucherContableDetalle } from '../presupuesto';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
     selector: 'app-actualizar-vouchercontable',
@@ -51,6 +50,8 @@ import { VoucherContableDetalle } from '../presupuesto';
         DialogModule,
         ConfirmDialogModule,
         ReactiveFormsModule,
+        CheckboxModule,
+        DropdownModule,
     ],
     templateUrl: './actualizar-vouchercontable.component.html',
     styleUrl: './actualizar-vouchercontable.component.css',
@@ -58,58 +59,30 @@ import { VoucherContableDetalle } from '../presupuesto';
 })
 export class ActualizarVouchercontableComponent implements OnInit {
     //por si acaso el nro de pago de la fila
-    @Input() pagoNumero: string;
     @Input() detalleSelected: VoucherContableDetalle;
-    @ViewChild('fu') fileUpload!: FileUpload;
     @Output() onClose = new EventEmitter<void>();
 
-    pagoForm: FormGroup;
+    vouchercontableForm: FormGroup;
+    actVCForm: FormGroup;
 
-    fechaEjecucionPago: Date | null = null;
-    nroOperacion: string = '';
-    rutaComprobante: string = '';
     // despliegue
 
     // Variables para el diálogo de confirmación
     mostrarDialogoExito: boolean = false;
     mensajeExito: string = '';
-    rutaArchivoGuardado: string = '';
-    rutaDoc: string = '';
 
-    //combo general
-    anio_combo: string = '';
-    mes_combo: string = '';
-    urlApi: string = '';
-    apiUrl: any;
+    // Inicializamos  listas de los conboox o p-dropdown
+    cuentas: any[] = [];
+
+    //checkbox
+    afectoRetencion = false;
+
     constructor(
         private fb: FormBuilder,
-        private messageService: MessageService,
-        private pS: PresupuestoService,
-        private gS: GlobalService,
-        private configService: ConfigService
-    ) {
-        this.pagoForm = this.fb.group({
-            fechaejecucion: [null, Validators.required],
-            nroOperacion: ['', Validators.required],
-            rutaComprobante: ['', Validators.required],
-        });
-        
-      this.apiUrl = (window as any).config?.url
-        this.urlApi = this.apiUrl;
-    }
+        private messageService: MessageService
+    ) {}
 
     ngOnInit(): void {
-        /* if (this.pagoNumero) {
-            this.nroOperacion = this.pagoNumero;
-        }*/
-        this.gS.selectedDate$.subscribe((date) => {
-            if (date) {
-                this.anio_combo = date.getFullYear().toString();
-                this.mes_combo = (date.getMonth() + 1)
-                    .toString()
-                    .padStart(2, '0');
-            }
-        });
         this.cargarDatosActualizar();
     }
     cargarDatosActualizar() {
@@ -118,8 +91,43 @@ export class ActualizarVouchercontableComponent implements OnInit {
         const fechaVenc = this.formatFecha(
             this.detalleSelected.fechaVencimiento
         );
-        // Inicializar el formulario con los valores correctos
-        this.pagoForm = this.fb.group({
+        this.actVCForm = this.fb.group({
+            cuenta: [''],
+            cuenta2: [''],
+            comprobante: [''],
+            glosa: [''],
+            centroCosto: [''],
+            centroGestion: [''],
+            maquina: [''],
+            trabajoCurso: [''],
+            cuentaCorriente: [''],
+            tipDoc: [''],
+            nroDoc: [''],
+            fechaDoc: [null], // Para fechas, inicializa con null
+            AnioDUA: [''],
+            fechaVencim: [null],
+            fechaPago: [null],
+            numeroPago: [''],
+            tipoDocDocModifica: [''],
+            numeroDocModifica: [''],
+            fechaDocModifica: [null],
+            columna: [''],
+            moneda: [''],
+            tipoCambio: [''],
+            debe: [''],
+            debe2: [''],
+            haber: [''],
+            haber2: [''],
+            afectoRet: [''],
+            tipTranRet: [''],
+            tipDocRet: [''],
+            numeroRet: [''],
+            fechaRet: [null],
+            fechaPagoRet: [null],
+        });
+
+        // Inicializar el formulario
+        this.vouchercontableForm = this.fb.group({
             orden: [this.detalleSelected.orden || ''],
             amarre: [this.detalleSelected.amarre || ''],
             cuenta: [this.detalleSelected.cuenta || ''],
@@ -150,8 +158,8 @@ export class ActualizarVouchercontableComponent implements OnInit {
             totalRecords: [this.detalleSelected.totalRecords || ''],
         });
         // Asignar valores al formulario
-        this.pagoForm.patchValue(this.detalleSelected);
-        console.log('registro a actualizar', this.pagoForm.value);
+        this.vouchercontableForm.patchValue(this.detalleSelected);
+        console.log('registro a actualizar', this.vouchercontableForm.value);
     }
 
     /*ngOnChanges(changes: SimpleChanges) {
@@ -175,12 +183,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
     }
 
     limpiarCampos() {
-        this.pagoForm.reset();
-        this.fechaEjecucionPago = null;
-        this.nroOperacion = '';
-        if (this.fileUpload) {
-            this.fileUpload.clear();
-        }
+        this.vouchercontableForm.reset();
     }
 
     cancelar() {
@@ -188,16 +191,8 @@ export class ActualizarVouchercontableComponent implements OnInit {
         this.onClose.emit();
     }
 
-    private formatDate(date: Date): string {
-        const day = (date.getDate() + 1).toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    }
+    //Convierte una fecha de "dd/mm/aaaa" a "yyyy-mm-dd" para input type="date"
 
-    /**
-     * Convierte una fecha de "dd/mm/aaaa" a "yyyy-mm-dd" para input type="date"
-     */
     formatFecha(fecha: string): Date | null {
         if (!fecha) return null; // Si la fecha es null o vacía, retornamos null
         const partes = fecha.split('/');

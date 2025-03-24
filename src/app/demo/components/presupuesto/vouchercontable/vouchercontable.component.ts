@@ -21,8 +21,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { GlobalService } from 'src/app/demo/service/global.service';
-import * as pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ActualizarVouchercontableComponent } from "../actualizar-vouchercontable/actualizar-vouchercontable.component";
 
 @Component({
@@ -65,7 +63,6 @@ export class VouchercontableComponent implements OnInit {
     editingIndex: number | null = null; // Índice de la fila en edición
     // fecha hoy
     fechahoy: Date;
-    selectedPagoNumero: any;
     detalleSelected:VoucherContableDetalle;
 
     
@@ -104,8 +101,6 @@ export class VouchercontableComponent implements OnInit {
 
         this.cargarDatos();
 
-        // Inicializar pdfMake
-        (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
     }
 
     cargarDatos() {
@@ -172,9 +167,7 @@ export class VouchercontableComponent implements OnInit {
     }
 
     ActualizarVoucherContable(vc: VoucherContableDetalle) {
-        this.selectedVoucherC = vc.numDoc;
         this.detalleSelected=vc;
-        console.log(this.selectedPagoNumero);
         this.verConfirmarActualizacion = true;
     }
 

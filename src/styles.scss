@@ -13,3 +13,9 @@ $gutter: 1rem; //for primeflex grid system
 @import "assets/demo/styles/badges.scss";
 @import "assets/demo/styles/code.scss";
 @import "primeflex/primeflex.css";
+.p-dropdown {
+    width: 100% !important;
+}
+.p-calendar{
+    width: 100% !important;
+}
