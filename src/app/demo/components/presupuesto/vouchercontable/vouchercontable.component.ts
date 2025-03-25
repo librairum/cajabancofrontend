@@ -68,15 +68,13 @@ export class VouchercontableComponent implements OnInit {
     
     verConfirmarActualizacion: boolean = false;
     selectedVoucherC: string;
+
+
     constructor(
         private messageService: MessageService,
         private presupuestoservice: PresupuestoService,
         private bs: BreadcrumbService,
         private router: Router,
-        private ms: MessageService,
-        private datePipe: DatePipe,
-        private confirmationService: ConfirmationService,
-        private gS: GlobalService
     ) {
         //variables de edición
 
@@ -106,7 +104,7 @@ export class VouchercontableComponent implements OnInit {
     cargarDatos() {
         //cargar cabecera voucher contable
         this.presupuestoservice
-            .obtenerVoucherContableCabecera('01', '00232')
+            .obtenerVoucherContableCabecera(this.navigationData.empresa,this.navigationData.PagoNro)
             .subscribe({
                 next: (data) => {
                     this.voucherContableCabecera = data;
@@ -137,7 +135,7 @@ export class VouchercontableComponent implements OnInit {
         //cargar tabla detalle voucher contable
         this.load = true;
         this.presupuestoservice
-            .obtenerVoucherContableDetalle('01', '00232')
+            .obtenerVoucherContableDetalle(this.navigationData.empresa,this.navigationData.PagoNro) //empresa y pago numero 
             .subscribe({
                 next: (data) => {
                     this.voucherContableDetalle = data;

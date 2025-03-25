@@ -176,6 +176,7 @@ export class CabecerapresupuestoComponent implements OnInit {
     }
 
     verDetalles(presupuesto: cabeceraPresupuesto) {
+
         const formattedDate = this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy');
 
         const navigationExtras = {
@@ -190,14 +191,11 @@ export class CabecerapresupuestoComponent implements OnInit {
 
     }
     verVouchercontable(presupuesto: cabeceraPresupuesto){
-        const formattedDate = this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy');
 
         const navigationExtras = {
             state: {
+                empresa:this.gS.getCodigoEmpresa(),
                 PagoNro: presupuesto.pagoNumero,
-                Fecha: formattedDate,
-                motivo: presupuesto.motivo,
-                nombreMedioPago: presupuesto.nombreMedioPago
             }
         }
         this.router.navigate(['Home/voucher_contable'], navigationExtras)
