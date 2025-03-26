@@ -244,6 +244,7 @@
                                     "
                                 ></p-button>
                                 <p-button icon="pi pi-file" styleClass="p-button-info p-button-sm"
+                                tooltipPosition="left"
                                             pTooltip="Ver voucher contable" [text]="true" (onClick)="verVouchercontable(presupuesto)"
                                             [disabled]="botonesDeshabilitados"></p-button>
 
@@ -366,7 +367,7 @@
         </p-table>
     </div>
     <!-- confirmar pago -->
-    <div class="card p-2">
+    <div class="card p-2" *ngIf="verConfirmarPago">
         <ng-template #title> Confirmar pago </ng-template>
         <ng-template #body>
             <p>
