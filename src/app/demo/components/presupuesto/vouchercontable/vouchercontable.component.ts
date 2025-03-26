@@ -120,7 +120,7 @@ export class VouchercontableComponent implements OnInit {
                         this.messageService.add({
                             severity: 'warn',
                             summary: 'Advertencia',
-                            detail: 'No se encontró cabecera',
+                            detail: 'No se encontró libro de nrovoucher',
                         });
                     }
                 },
@@ -147,7 +147,7 @@ export class VouchercontableComponent implements OnInit {
                         this.messageService.add({
                             severity: 'warn',
                             summary: 'Advertencia',
-                            detail: 'No se encontraron detalles del presupuesto',
+                            detail: 'No se encontraron voucher contables',
                         });
                         this.load = false;
                     } else {
@@ -158,7 +158,7 @@ export class VouchercontableComponent implements OnInit {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'Error al cargar presupuesto: ' + error.message,
+                        detail: 'Error al cargar voucher contables: ' + error.message,
                     });
                 },
             });
