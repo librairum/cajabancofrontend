@@ -19,3 +19,35 @@ $gutter: 1rem; //for primeflex grid system
 .p-calendar{
     width: 100% !important;
 }
+
+
+/* Estilo global para todos los dropdowns de PrimeNG */
+.p-dropdown {
+    font-size: 0.8rem !important; /* Tamaño de texto general */
+}
+
+/* Placeholder */
+.p-dropdown .p-dropdown-label {
+    font-size: 0.8rem !important;
+}
+
+/* Opciones en el panel desplegable */
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    font-size: 0.8rem !important;
+}
+
+/* Mensaje "No results found" */
+.p-dropdown-panel .p-dropdown-empty-message {
+    font-size: 0.8rem !important;
+}
+
+/* Ícono del dropdown */
+.p-dropdown .p-dropdown-trigger {
+    width: 2rem !important;
+}
+/*
+
+ body {
+    zoom: 90%;
+}
+*/

@@ -84,6 +84,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
 
     ngOnInit(): void {
         this.cargarDatosActualizar();
+        
     }
     cargarDatosActualizar() {
         console.log('Detalle recibido:', this.detalleSelected); // Verifica si los datos llegan correctamente
@@ -103,7 +104,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
             cuentaCorriente: [''],
             tipDoc: [''],
             nroDoc: [''],
-            fechaDoc: [null], // Para fechas, inicializa con null
+            fechaDoc: [null],
             AnioDUA: [''],
             fechaVencim: [null],
             fechaPago: [null],
