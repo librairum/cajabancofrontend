@@ -139,6 +139,48 @@ export class UsuarioComponent implements OnInit {
         }
     }
 
+// Inicializa edición
+onRowEditInit(usuario: Usuario) {
+    this.seleccionarusuario = { ...usuario }; // Guardamos una copia por si se cancela
+}
+
+// // Guarda los cambios
+// onRowEditSave(usuario: Usuario) {
+//     this.uS.actualizar_usuario(usuario.Nombre, usuario).subscribe(() => {
+//         this.cargarUsuarios(); // Recarga la tabla
+//     });
+// }
+
+onRowEditSave(usuario: Usuario) {
+    // Verificar que los datos sean válidos antes de guardar
+    if (!usuario.Nombre || !usuario.Clave || !usuario.Sistema) {
+        alert("Todos los campos son obligatorios.");
+        return;
+    }
+
+    // Buscar la posición del usuario en la lista
+    const index = this.usuarios.findIndex(u => u.Nombre === usuario.Nombre);
+
+    if (index !== -1) {
+        // Actualizar usuario en la lista
+        this.usuarios[index] = usuario;
+
+        // Llamar al servicio para actualizar en el backend
+        this.uS.actualizar_usuario(usuario.Nombre, usuario).subscribe(() => {
+            console.log("Usuario actualizado con éxito.");
+        });
+    }
+}
+
+
+// Cancela la edición y revierte los cambios
+onRowEditCancel(usuario: Usuario, index: number) {
+    this.usuarios[index] = this.seleccionarusuario!;
+    this.seleccionarusuario = null;
+    this.cargarUsuarios();
+}
+
+
     limpiarForm(): void {
         this.usuarioForm.reset();
         this.usuarioeditando = false;
