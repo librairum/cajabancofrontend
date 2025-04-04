@@ -9,7 +9,7 @@ export class ConfigService {
     private config: any = {}; // Inicialmente vacío
 
     constructor(private http: HttpClient) {
-         
+
     }
 
     async loadConfig(): Promise<void> {
@@ -28,9 +28,9 @@ export class ConfigService {
 
     }
     getApiUrl(): string{
-        
+
         // return (window as any).config?.apiUrl || 'http://192.168.1.44:7277'; //produccion
-        return this.config?.url || 'http://localhost:7277'; // Valor por defecto
+        return this.config?.url || 'https://localhost:7277'; // Valor por defecto // verificar si va se http o https
 
     }
 }

@@ -105,7 +105,7 @@ export class AgregarPagoComponent implements OnInit {
         console.log("evento on init agregarpago");
         console.log(this.numeropresupuesto);
         console.log(this.fechapresupuesto);
-        
+
         this.numeropresupuestoMod = this.numeropresupuesto;
         this.fechapresupuestoMod = this.fechapresupuesto;
         this.primeng.setTranslation(calendario_traduccion());
@@ -259,6 +259,7 @@ export class AgregarPagoComponent implements OnInit {
                         summary: 'Éxito',
                         detail: 'Detalle insertado correctamente',
                     });
+
                     /*const formattedDate = this.fechapresupuestoMod
                     const navigationExtras = {
                         state: {
