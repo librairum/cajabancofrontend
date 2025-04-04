@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
 <p-dialog
-*ngIf="verConfirmarActualizacion" 
+*ngIf="verConfirmarActualizacion"
     [(visible)]="verConfirmarActualizacion"
     [modal]="true"
     header="Actualizar voucher contable"
@@ -82,7 +82,7 @@
         >
             <ng-template pTemplate="header">
                 <tr>
-                    
+
                     <th colspan="1"></th>
                     <th rowspan="2">Tipo</th>
                     <th rowspan="2">Cuenta</th>
@@ -106,7 +106,7 @@
                     <td>
                         <div class="flex gap-2">
                             <ng-container
-                               
+
                             >
                                 <p-button
                                     icon="pi pi-pencil"
@@ -124,7 +124,7 @@
                                     (onClick)="eliminarPago(detalle)"
                                     [disabled]="botonesDeshabilitados"
                                 ></p-button>
-                              
+
 
                             </ng-container>
                         </div>
@@ -143,9 +143,20 @@
                     <td class="text-right">{{ detalle.importeHaber | currency:'':'':'1.2-2' }}</td>
                     <td class="text-right">{{ detalle.importeDebeEquivalencia | currency:'':'':'1.2-2' }}</td>
                     <td class="text-right">{{ detalle.importeHaberEquivalencia | currency:'':'':'1.2-2' }}</td>
-                      
+
                 </tr>
             </ng-template>
+
+            <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="11" class="text-right font-bold">Total:</td>
+                    <td class="text-right font-bold">{{ calcularTotalDebe() | currency:'':'':'1.2-2' }}</td>
+                    <td class="text-right font-bold">{{ calcularTotalHaber() | currency:'':'':'1.2-2' }}</td>
+                    <td class="text-right font-bold">{{ calcularTotalCargo() | currency:'':'':'1.2-2' }}</td>
+                    <td class="text-right font-bold">{{ calcularTotalAbono() | currency:'':'':'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+
             <ng-template pTemplate="emptymessage">
                 <tr>
                     <td

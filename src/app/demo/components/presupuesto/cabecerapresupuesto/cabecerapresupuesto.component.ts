@@ -254,7 +254,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             NombreMedioPago: ''
         };
     }
-    
+
     guardarNuevoPresupuesto() {
 
 
@@ -294,6 +294,9 @@ export class CabecerapresupuestoComponent implements OnInit {
     iniciarEdicion(presupuesto: cabeceraPresupuesto) {
         this.editingPresupuesto[presupuesto.pagoNumero] = true;
         const fechaSeleccionada = new Date(presupuesto.fecha);
+        const foundMedioPago = this.medioPagoLista.find(
+            mp => mp.ban01Descripcion === presupuesto.nombreMedioPago
+        );
         this.editForm = {
             ban01Empresa: this.gS.getCodigoEmpresa(),
             ban01Numero: presupuesto.pagoNumero,
@@ -305,8 +308,8 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
             ban01FechaRegistro: this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '',
-            ban01mediopago: '',
-            NombreMedioPago: ''
+            ban01mediopago: foundMedioPago ? foundMedioPago.ban01IdTipoPago : '',
+            NombreMedioPago: '',
         };
     }
 
@@ -520,5 +523,5 @@ export class CabecerapresupuestoComponent implements OnInit {
 
     }
 
-    
+
 }

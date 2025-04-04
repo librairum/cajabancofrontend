@@ -1,20 +1,9 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
-<p-dialog
-    [(visible)]="verConfirmarPago"
-    [modal]="true"
-    header="Confirmar pago"
-    [style]="{ width: '20vw', height: 'auto' }"
-    [draggable]="false"
-    [resizable]="false"
-    [maximizable]="true"
-    [baseZIndex]="10000"
-    (onHide)="selectedPagoNumero = ''; onCloseModal()"
->
-    <app-confirmar-pago
-        [pagoNumero]="selectedPagoNumero"
-        (onClose)="onCloseModal()"
-    ></app-confirmar-pago>
+<p-dialog [(visible)]="verConfirmarPago" [modal]="true" header="Confirmar pago"
+    [style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false" [maximizable]="true"
+    [baseZIndex]="10000" (onHide)="selectedPagoNumero = ''; onCloseModal()">
+    <app-confirmar-pago [pagoNumero]="selectedPagoNumero" (onClose)="onCloseModal()"></app-confirmar-pago>
 </p-dialog>
 
 <div class="container">
@@ -23,35 +12,20 @@
         <br />
 
         <br />
-        <p-button
-            label="Nuevo"
-            icon="pi pi-plus"
-            (onClick)="iniciarNuevoPresupuesto()"
-            [disabled]="mostrarNuevaFila"
-        />
+        <p-button label="Nuevo" icon="pi pi-plus" (onClick)="iniciarNuevoPresupuesto()" [disabled]="mostrarNuevaFila" />
     </p-panel>
     <br />
     <div class="card p-2">
-        <p-table
-            [value]="presupuesto"
-            [scrollable]="true"
-            [loading]="loading"
-            [globalFilterFields]="['pagoNumero']"
-            [tableStyle]="{ width: '100%', border: '0px solid black' }"
-        >
+        <p-table [value]="presupuesto" [scrollable]="true" [loading]="loading" [globalFilterFields]="['pagoNumero']"
+            [tableStyle]="{ width: '100%', border: '0px solid black' }">
             <ng-template pTemplate="header">
                 <tr>
                     <th rowspan="2">
                         Pago Nro
                         <br />
                         <br />
-                        <p-columnFilter
-                            type="text"
-                            field="pagoNumero"
-                            placeholder="Buscar"
-                            ariaLabel="Pago Nro"
-                            [showMenu]="false"
-                        ></p-columnFilter>
+                        <p-columnFilter type="text" field="pagoNumero" placeholder="Buscar" ariaLabel="Pago Nro"
+                            [showMenu]="false"></p-columnFilter>
                     </th>
                     <th rowspan="2">Fecha</th>
                     <th rowspan="2">Motivo</th>
@@ -80,62 +54,35 @@
                 <tr>
                     <td>{{ presupuesto.pagoNumero }}</td>
                     <td>
-                        <ng-container
-                            *ngIf="!editingPresupuesto[presupuesto.pagoNumero]"
-                        >
+                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{ presupuesto.fecha | date : "dd/MM/yyyy" }}
                         </ng-container>
-                        <ng-container
-                            *ngIf="editingPresupuesto[presupuesto.pagoNumero]"
-                        >
-                            <p-calendar
-                                [(ngModel)]="editForm.ban01Fecha"
-                                dateFormat="dd/mm/yy"
-                                (onSelect)="actualizarFechaEdicion($event)"
-                                [showIcon]="true"
-                                appendTo="body"
-                                class="w-full"
-                            ></p-calendar>
+                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
+                            <p-calendar [(ngModel)]="editForm.ban01Fecha" dateFormat="dd/mm/yy"
+                                (onSelect)="actualizarFechaEdicion($event)" [showIcon]="true" appendTo="body"
+                                class="w-full"></p-calendar>
                         </ng-container>
                     </td>
                     <td>
-                        <ng-container
-                            *ngIf="!editingPresupuesto[presupuesto.pagoNumero]"
-                        >
+                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{ presupuesto.motivo }}
                         </ng-container>
-                        <ng-container
-                            *ngIf="editingPresupuesto[presupuesto.pagoNumero]"
-                        >
-                            <input
-                                pInputText
-                                [(ngModel)]="editForm.ban01Descripcion"
-                                placeholder="Descripción"
-                                class="w-full"
-                            />
+                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
+                            <input pInputText [(ngModel)]="editForm.ban01Descripcion" placeholder="Descripción"
+                                class="w-full" />
                         </ng-container>
                     </td>
                     <td>
-                        <ng-container
-                            *ngIf="!editingPresupuesto[presupuesto.pagoNumero]"
-                        >
+                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{ presupuesto.nombreMedioPago }}
                         </ng-container>
-                        <ng-container
-                            *ngIf="editingPresupuesto[presupuesto.pagoNumero]"
-                        >
-                            <p-dropdown
-                                [options]="medioPagoLista"
-                                optionLabel="ban01Descripcion"
-                                optionValue="ban01IdTipoPago"
-                                [(ngModel)]="editForm.ban01mediopago"
-                                class="p-inputtext-sm w-full"
-                                [filter]="true"
-                                filterMatchMode="contains"
-                                filterBy="ban01Descripcion"
-                                placeholder="medio"
-                                appendTo="body"
-                            ></p-dropdown>
+                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
+                            <p-dropdown [options]="medioPagoLista" optionLabel="ban01Descripcion"
+                                optionValue="ban01IdTipoPago" [(ngModel)]="editForm.ban01mediopago"
+                                class="p-inputtext-sm w-full" [filter]="true" filterMatchMode="contains"
+                                filterBy="ban01Descripcion" placeholder="medio" appendTo="body"
+                                [style]="{'width': '150px'}"
+                                [panelStyle]="{'max-width': '300px', 'overflow-x': 'auto'}"></p-dropdown>
                         </ng-container>
                         <!-- -->
                     </td>
@@ -159,119 +106,67 @@
                     <td>{{ presupuesto.estado }}</td>
                     <td>
                         {{
-                            presupuesto.ban01FechaEjecucionPago
-                                | date : "dd/MM/yyyy"
+                        presupuesto.ban01FechaEjecucionPago
+                        | date : "dd/MM/yyyy"
                         }}
                     </td>
                     <td>{{ presupuesto.ban01NroOperacion }}</td>
                     <td>
-                        <p-button
-                            *ngIf="presupuesto.ban01EnlacePago"
-                            label=""
-                            icon="pi pi-file"
-                            styleClass="p-button-sm p-button-info"
-                            (onClick)="
+                        <p-button *ngIf="presupuesto.ban01EnlacePago" label="" icon="pi pi-file"
+                            styleClass="p-button-sm p-button-info" (onClick)="
                                 abrirdocumento(presupuesto.ban01EnlacePago)
-                            "
-                            [text]="false"
-                        >
+                            " [text]="false">
                         </p-button>
-                        <p-button
-                            *ngIf="!presupuesto.ban01EnlacePago"
-                            label=""
-                            icon="pi pi-file-excel"
-                            styleClass="p-button-sm p-button-danger"
-                            [disabled]="true"
-                            [text]="false"
-                        >
+                        <p-button *ngIf="!presupuesto.ban01EnlacePago" label="" icon="pi pi-file-excel"
+                            styleClass="p-button-sm p-button-danger" [disabled]="true" [text]="false">
                         </p-button>
                     </td>
                     <td>
                         <div class="flex gap-2">
-                            <ng-container
-                                *ngIf="
+                            <ng-container *ngIf="
                                     !editingPresupuesto[presupuesto.pagoNumero]
-                                "
-                            >
-                                <p-button
-                                    icon="pi pi-eye"
-                                    styleClass="p-button-info p-button-sm"
-                                    pTooltip="Ver Detalles"
-                                    [text]="true"
-                                    (onClick)="verDetalles(presupuesto)"
-                                    [disabled]="botonesDeshabilitados"
-                                ></p-button>
-                                <p-button
-                                    icon="pi pi-pencil"
-                                    styleClass="p-button-info p-button-sm"
-                                    pTooltip="Modificar"
-                                    [text]="true"
-                                    (onClick)="iniciarEdicion(presupuesto)"
-                                    [disabled]="botonesDeshabilitados"
-                                ></p-button>
-                                <p-button
-                                    icon="pi pi-trash"
-                                    styleClass="p-button-danger p-button-sm"
-                                    pTooltip="Eliminar"
-                                    [text]="true"
-                                    (onClick)="eliminarPago(presupuesto)"
-                                    [disabled]="botonesDeshabilitados"
-                                ></p-button>
-                                <p-button
-                                    icon="pi pi-money-bill"
-                                    styleClass="p-button-success p-button-sm"
-                                    pTooltip="Confirmar Pago"
-                                    [text]="true"
-                                    (onClick)="confirmarPago(presupuesto)"
+                                ">
+                                <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
+                                    pTooltip="Ver Detalles" [text]="true" (onClick)="verDetalles(presupuesto)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                                <p-button icon="pi pi-pencil" styleClass="p-button-info p-button-sm"
+                                    pTooltip="Modificar" [text]="true" (onClick)="iniciarEdicion(presupuesto)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                                <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
+                                    pTooltip="Eliminar" [text]="true" (onClick)="eliminarPago(presupuesto)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                                <p-button icon="pi pi-money-bill" styleClass="p-button-success p-button-sm"
+                                    pTooltip="Confirmar Pago" [text]="true" (onClick)="confirmarPago(presupuesto)"
                                     [disabled]="
                                         botonesDeshabilitados ||
                                         presupuesto.ban01EnlacePago ||
                                             presupuesto.ban01NroOperacion ||
                                             presupuesto.ban01FechaEjecucionPago
-                                    "
-                                ></p-button>
-                                <p-button
-                                    icon="pi pi-ban"
-                                    styleClass="p-button-danger p-button-sm"
-                                    (onClick)="anularPago(presupuesto)"
-                                    [text]="true"
-                                    pTooltip="Anular pago"
-                                    [disabled]="
+                                    "></p-button>
+                                <p-button icon="pi pi-ban" styleClass="p-button-danger p-button-sm"
+                                    (onClick)="anularPago(presupuesto)" [text]="true" pTooltip="Anular pago" [disabled]="
                                         botonesDeshabilitados ||
                                         (!presupuesto.ban01EnlacePago &&
                                             !presupuesto.ban01NroOperacion &&
                                             !presupuesto.ban01FechaEjecucionPago)
-                                    "
-                                ></p-button>
+                                    "></p-button>
                                 <p-button icon="pi pi-file" styleClass="p-button-info p-button-sm"
-                                tooltipPosition="left"
-                                            pTooltip="Ver voucher contable" [text]="true" (onClick)="verVouchercontable(presupuesto)"
-                                            [disabled]="botonesDeshabilitados"></p-button>
+                                    tooltipPosition="left" pTooltip="Ver voucher contable" [text]="true"
+                                    (onClick)="verVouchercontable(presupuesto)"
+                                    [disabled]="botonesDeshabilitados || !presupuesto.ban01EnlacePago"></p-button>
 
                             </ng-container>
-                            <ng-container
-                                *ngIf="
+                            <ng-container *ngIf="
                                     editingPresupuesto[presupuesto.pagoNumero]
-                                "
-                            >
-                                <p-button
-                                    icon="pi pi-check"
-                                    styleClass="p-button-success p-button-sm"
-                                    [text]="true"
+                                ">
+                                <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
                                     (onClick)="
                                         guardarEdicion(presupuesto.pagoNumero)
-                                    "
-                                    pTooltip="Actualizar"
-                                ></p-button>
-                                <p-button
-                                    icon="pi pi-times"
-                                    styleClass="p-button-danger p-button-sm"
-                                    [text]="true"
+                                    " pTooltip="Actualizar"></p-button>
+                                <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
                                     (onClick)="
                                         cancelarEdicion(presupuesto.pagoNumero)
-                                    "
-                                    pTooltip="Cancelar"
-                                ></p-button>
+                                    " pTooltip="Cancelar"></p-button>
                             </ng-container>
                         </div>
                     </td>
@@ -285,38 +180,19 @@
                             class="w-full"> -->
                     </td>
                     <td style="min-width: 130px">
-                        <p-calendar
-                            [(ngModel)]="nuevoPresupuesto.ban01Fecha"
-                            dateFormat="dd/mm/yy"
-                            placeholder="Fecha"
-                            (onSelect)="actualizarFecha($event)"
-                            [showIcon]="true"
-                            appendTo="body"
-                            class="w-full"
-                        ></p-calendar>
+                        <p-calendar [(ngModel)]="nuevoPresupuesto.ban01Fecha" dateFormat="dd/mm/yy" placeholder="Fecha"
+                            (onSelect)="actualizarFecha($event)" [showIcon]="true" appendTo="body"
+                            class="w-full"></p-calendar>
                     </td>
                     <td style="min-width: 200px">
-                        <input
-                            pInputText
-                            [(ngModel)]="nuevoPresupuesto.ban01Descripcion"
-                            placeholder="Descripción"
-                            class="w-full"
-                        />
+                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Descripcion" placeholder="Descripción"
+                            class="w-full" />
                     </td>
                     <td style="min-width: 100px; min-height: 100px">
-                        <p-dropdown
-                            [options]="medioPagoLista"
-                            optionLabel="ban01Descripcion"
-                            optionValue="ban01IdTipoPago"
-                            [(ngModel)]="nuevoPresupuesto.ban01mediopago"
-                            class="p-inputtext-sm w-full"
-                            (onChange)="onMedioChange($event)"
-                            [filter]="true"
-                            filterBy="ban01Descripcion"
-                            filterMatchMode="contains"
-                            placeholder="medio"
-                            appendTo="body"
-                        >
+                        <p-dropdown [options]="medioPagoLista" optionLabel="ban01Descripcion"
+                            optionValue="ban01IdTipoPago" [(ngModel)]="nuevoPresupuesto.ban01mediopago"
+                            class="p-inputtext-sm w-full" (onChange)="onMedioChange($event)" [filter]="true"
+                            filterBy="ban01Descripcion" filterMatchMode="contains" placeholder="medio" appendTo="body">
                         </p-dropdown>
                         <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Anio" placeholder="Año" class="w-full"> -->
                     </td>
@@ -332,34 +208,21 @@
                     <td colspan="5"></td>
                     <td>
                         <div class="flex gap-2">
-                            <p-button
-                                icon="pi pi-save"
-                                styleClass="p-button-success p-button-sm"
-                                [text]="true"
-                                (onClick)="guardarNuevoPresupuesto()"
-                                pTooltip="Guardar"
-                            ></p-button>
-                            <p-button
-                                icon="pi pi-times"
-                                styleClass="p-button-danger p-button-sm"
-                                [text]="true"
-                                (onClick)="cancelarNuevo()"
-                                pTooltip="Cancelar"
-                            ></p-button>
+                            <p-button icon="pi pi-save" styleClass="p-button-success p-button-sm" [text]="true"
+                                (onClick)="guardarNuevoPresupuesto()" pTooltip="Guardar"></p-button>
+                            <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
+                                (onClick)="cancelarNuevo()" pTooltip="Cancelar"></p-button>
                         </div>
                     </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td
-                        colspan="16"
-                        style="
+                    <td colspan="16" style="
                             text-align: center;
                             font-weight: bold;
                             padding: 1rem;
-                        "
-                    >
+                        ">
                         No se encontraron registros
                     </td>
                 </tr>
@@ -372,28 +235,13 @@
         <ng-template #body>
             <p>
                 <label>Fecha ejecucion pago</label>
-                <p-calendar
-                    dateFormat="dd/mm/yy"
-                    [showIcon]="true"
-                    appendTo="body"
-                    class="w-full"
-                ></p-calendar>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" class="w-full"></p-calendar>
 
                 <label>Nro operacion</label>
-                <input
-                    pInputText
-                    id="nropago"
-                    aria-describedby="motivo-help"
-                    [value]="nro"
-                />
+                <input pInputText id="nropago" aria-describedby="motivo-help" [value]="nro" />
 
                 <label>Adjuntar comprobante:</label>
-                <input
-                    pInputText
-                    id="rutacomprobante"
-                    aria-describedby="motivo-help"
-                    [value]="rutacomprobante"
-                />
+                <input pInputText id="rutacomprobante" aria-describedby="motivo-help" [value]="rutacomprobante" />
             </p>
         </ng-template>
     </div>

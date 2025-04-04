@@ -27,21 +27,21 @@ import { ActualizarVouchercontableComponent } from "../actualizar-vouchercontabl
     selector: 'app-vouchercontable',
     standalone: true,
     imports: [
-    BreadcrumbModule,
-    RouterModule,
-    ToastModule,
-    ConfirmDialogModule,
-    TableModule,
-    PanelModule,
-    CalendarModule,
-    InputTextModule,
-    InputNumberModule,
-    ButtonModule,
-    CommonModule,
-    FormsModule,
-    DialogModule,
-    ActualizarVouchercontableComponent
-],
+        BreadcrumbModule,
+        RouterModule,
+        ToastModule,
+        ConfirmDialogModule,
+        TableModule,
+        PanelModule,
+        CalendarModule,
+        InputTextModule,
+        InputNumberModule,
+        ButtonModule,
+        CommonModule,
+        FormsModule,
+        DialogModule,
+        ActualizarVouchercontableComponent
+    ],
     templateUrl: './vouchercontable.component.html',
     styleUrl: './vouchercontable.component.css',
     providers: [MessageService, DatePipe],
@@ -63,9 +63,9 @@ export class VouchercontableComponent implements OnInit {
     editingIndex: number | null = null; // Índice de la fila en edición
     // fecha hoy
     fechahoy: Date;
-    detalleSelected:VoucherContableDetalle;
+    detalleSelected: VoucherContableDetalle;
 
-    
+
     verConfirmarActualizacion: boolean = false;
     selectedVoucherC: string;
 
@@ -104,7 +104,7 @@ export class VouchercontableComponent implements OnInit {
     cargarDatos() {
         //cargar cabecera voucher contable
         this.presupuestoservice
-            .obtenerVoucherContableCabecera(this.navigationData.empresa,this.navigationData.PagoNro)
+            .obtenerVoucherContableCabecera(this.navigationData.empresa, this.navigationData.PagoNro)
             .subscribe({
                 next: (data) => {
                     this.voucherContableCabecera = data;
@@ -135,7 +135,7 @@ export class VouchercontableComponent implements OnInit {
         //cargar tabla detalle voucher contable
         this.load = true;
         this.presupuestoservice
-            .obtenerVoucherContableDetalle(this.navigationData.empresa,this.navigationData.PagoNro) //empresa y pago numero 
+            .obtenerVoucherContableDetalle(this.navigationData.empresa, this.navigationData.PagoNro) //empresa y pago numero
             .subscribe({
                 next: (data) => {
                     this.voucherContableDetalle = data;
@@ -165,7 +165,7 @@ export class VouchercontableComponent implements OnInit {
     }
 
     ActualizarVoucherContable(vc: VoucherContableDetalle) {
-        this.detalleSelected=vc;
+        this.detalleSelected = vc;
         this.verConfirmarActualizacion = true;
     }
 
@@ -185,4 +185,30 @@ export class VouchercontableComponent implements OnInit {
         });
         */
     }
+
+    // Añade estos métodos a tu clase VouchercontableComponent
+
+    // Métodos corregidos para la clase VouchercontableComponent
+
+calcularTotalDebe(): number {
+    return this.voucherContableDetalle
+        .reduce((sum, item) => sum + (Number(item.importeDebe) || 0), 0);
+}
+
+calcularTotalHaber(): number {
+    return this.voucherContableDetalle
+        .reduce((sum, item) => sum + (Number(item.importeHaber) || 0), 0);
+}
+
+calcularTotalCargo(): number {
+    return this.voucherContableDetalle
+        .reduce((sum, item) => sum + (Number(item.importeDebeEquivalencia) || 0), 0);
+}
+
+calcularTotalAbono(): number {
+    return this.voucherContableDetalle
+        .reduce((sum, item) => sum + (Number(item.importeHaberEquivalencia) || 0), 0);
+}
+
+
 }
