@@ -57,6 +57,14 @@ export class PresupuestoService {
             { params }).pipe(map(response => response.data));
     }
     public insertarDetallePresupuesto(detalle: insert_detalle): Observable<any> {
+        console.log("parametros insertar detalle presupuesto");
+        console.log(detalle.empresa);                            
+        console.log(detalle.numeropresupuesto);
+        console.log(detalle.tipoaplicacion);
+        console.log(detalle.fechapresupuesto);
+        console.log(detalle.bcoliquidacion);
+        console.log(detalle.xmlDetalle);
+        console.log("-------------------------");
         const params = new HttpParams()
             .set('Empresa', detalle.empresa)
             .set('numeropresupuesto', detalle.numeropresupuesto)

@@ -112,6 +112,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     cargarDetalles() {
         this.load = true;
+                
         this.presupuestoservice
             .obtenerDetallePresupuesto('01', this.navigationData.PagoNro)
             .subscribe({
@@ -141,6 +142,7 @@ export class DetallepresupuestoComponent implements OnInit {
     valoresCampos() {
         this.pagnro = this.navigationData?.PagoNro || '';
         this.fechaString = this.navigationData?.Fecha;
+        
         if (this.fechaString) {
             const [day, month, year] = this.fechaString.split('/').map(Number);
             this.fecha = new Date(year, month - 1, day); // Mes comienza desde 0
@@ -267,7 +269,7 @@ export class DetallepresupuestoComponent implements OnInit {
     saveEditing() {
         if (this.editingRow && this.editingIndex !== null) {
             const payload = this.buildBackendPayload(this.editingRow);
-            console.log('save editing');
+            
             console.log(payload);
             this.presupuestoservice
                 .actualizarDetallePresupuesto(payload)
@@ -364,6 +366,7 @@ export class DetallepresupuestoComponent implements OnInit {
             accept: () => {
                 const empresa = this.gS.getCodigoEmpresa();
                 //const numero = presupuesto.pagoNumero;
+   
                 const numeroPresupuesto = this.navigationData.PagoNro;
                 const numeroPresupuestoDetalle = detalle.ban02Codigo;
                 this.presupuestoservice
@@ -497,12 +500,12 @@ export class DetallepresupuestoComponent implements OnInit {
         this.editingRow.ban02NetoDolares = netoDolares;
         console.log('Editing Row ban02NetoSoles');
         this.editingRow.ban02NetoSoles = netoSoles;
-        console.log(this.editingRow.ban02NetoSoles);
+        
         detalle.ban02NetoDolares = netoDolares;
 
         console.log('detalle objeto neto soles');
         detalle.ban02NetoSoles = netoSoles;
-        console.log(detalle.ban02NetoSoles);
+        
 
         // if (montoPagoSoles> 0 && montoPagoSoles == importeSoles ){
 
