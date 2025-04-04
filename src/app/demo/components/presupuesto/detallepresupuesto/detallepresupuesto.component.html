@@ -2,7 +2,8 @@
 <p-confirmDialog></p-confirmDialog>
 <p-dialog [(visible)]="displayAgregarModal" [modal]="true" [style]="{width: '90vw', height: '90vh'}" [draggable]="false"
     [resizable]="false" [maximizable]="true" header="Agregar Documento por Pagar" (onHide)="onCloseModal()">
-    
+    <app-agregar-pago [numeropresupuesto]="navigationData.PagoNro" [fechapresupuesto]="navigationData.Fecha"
+        (onClose)="onCloseModal()"></app-agregar-pago>
 </p-dialog>
 <div class="container">
     <p-panel header="Lista de Pagos" class="mb-3">
@@ -10,47 +11,42 @@
     </p-panel>
     <br>
     <div class="card p-2">
-        <!-- Fila 1: Username y botones -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <div style="display: inline;">
-                <div [style]="{'display':'inline',  'margin-right':'30px' }">
-                    <label for="username" class="text-sm">Pago Nro: </label>
-                    <input pInputText id="username" aria-describedby="username-help" [value]="pagnro" [disabled]="true"
-                        [style]="{'min-width': '200px', 'height': '2.5rem'}" />
-                </div>
-
-                <div [style]="{'display':'inline' , 'margin-right':'30px'}">
-                    <label for="fecha" class="text-sm">Fecha: </label>
-                    <p-calendar [disabled]="true" [(ngModel)]="fecha"
-                        [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}"
-                        inputStyleClass="p-input-sm" dateFormat="dd/mm/yy"></p-calendar>
-                </div>
-                <div [style]="{'display':'inline', 'margin-right':'30px'}">
-                    <label for="motivo" class="text-sm">Motivo: </label>
-                    <input pInputText id="motivo" aria-describedby="motivo-help" [value]="motivo" [disabled]="true"
-                        [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
-                </div>
-                <div [style]="{'display':'inline'}">
-                    <label for="medio-pago" class="text-sm">Medio Pago: </label>
-                    <input pInputText id="medio-pago" aria-describedby="medio-pago-help" [value]="medio"
-                        [disabled]="true" [style]="{'min-width': '200px', 'max-width': '100%', 'height': '2.5rem'}" />
-                </div>
+        <!-- First row with 2 elements -->
+        <div style="display: flex; width: 100%; margin-bottom: 1rem;">
+            <div style="margin-right: 20px; flex: 1;">
+                <label for="username" class="text-sm">Pago Nro: </label>
+                <input pInputText id="username" aria-describedby="username-help" [value]="pagnro" [disabled]="true"
+                    style="width: 100%; height: 2.5rem;" />
             </div>
 
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-
-
-        </div>
-
-        <!-- Fila 4: Medio de Pago y botón -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <div style="display: flex; justify-content: flex-end;">
-                <p-button label="Agregar Doc x Pagar" icon="pi pi-plus" styleClass="p-button-sm mr-2"
-                    (onClick)="DatosdeRegistro()"></p-button>
-                <p-button label="Exportar a PDF" icon="pi pi-file-pdf" styleClass="p-button-sm p-button-success"
-                    (onClick)="exportarPDF()"></p-button>
+            <div style="flex: 1;">
+                <label for="fecha" class="text-sm">Fecha: </label>
+                <p-calendar [disabled]="true" [(ngModel)]="fecha" style="width: 100%; height: 2.5rem;"
+                    inputStyleClass="p-input-sm" dateFormat="dd/mm/yy"></p-calendar>
             </div>
+        </div>
+
+        <!-- Second row with 2 elements -->
+        <div style="display: flex; width: 100%; margin-bottom: 1rem;">
+            <div style="margin-right: 20px; flex: 1;">
+                <label for="motivo" class="text-sm">Motivo: </label>
+                <input pInputText id="motivo" aria-describedby="motivo-help" [value]="motivo" [disabled]="true"
+                    style="width: 100%; height: 2.5rem;" />
+            </div>
+
+            <div style="flex: 1;">
+                <label for="medio-pago" class="text-sm">Medio Pago: </label>
+                <input pInputText id="medio-pago" aria-describedby="medio-pago-help" [value]="medio"
+                    [disabled]="true" style="width: 100%; height: 2.5rem;" />
+            </div>
+        </div>
+
+        <!-- Row with buttons -->
+        <div style="display: flex; justify-content: flex-start; margin-bottom: 0.5rem;">
+            <p-button label="Agregar Doc x Pagar" icon="pi pi-plus" styleClass="p-button-sm mr-2"
+                (onClick)="DatosdeRegistro()"></p-button>
+            <p-button label="Exportar a PDF" icon="pi pi-file-pdf" styleClass="p-button-sm p-button-success"
+                (onClick)="exportarPDF()"></p-button>
         </div>
     </div>
 
@@ -158,8 +154,10 @@
                         {{ detalle.nombremoneda }}</td>
                     <td>{{detalle.ban02FechaEmision}}</td>
                     <td>{{detalle.ban02FechaVencimiento}}</td>
-                    <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}">{{ detalle.ban02Soles | number:'1.2-2' }}</td>
-                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}">{{ detalle.ban02Dolares | number:'1.2-2' }}</td>
+                    <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}">{{ detalle.ban02Soles |
+                        number:'1.2-2' }}</td>
+                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}">{{ detalle.ban02Dolares |
+                        number:'1.2-2' }}</td>
 
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
@@ -168,7 +166,7 @@
                         </ng-container>
                         <ng-template #viewMode><span
                                 [style.font-weight]="detalle.nombremoneda === 'SOLES' ? 'bold' : 'normal'">
-                                {{ detalle.ban02PagoSoles | number:'1.2-2'  }}
+                                {{ detalle.ban02PagoSoles | number:'1.2-2' }}
                             </span></ng-template>
                     </td>
                     <td>
@@ -178,7 +176,7 @@
                         </ng-container>
                         <ng-template #viewModeDolares><span
                                 [style.font-weight]="detalle.nombremoneda === 'DOLARES' ? 'bold' : 'normal'">
-                                {{ detalle.ban02PagoDolares | number:'1.2-2'  }}
+                                {{ detalle.ban02PagoDolares | number:'1.2-2' }}
                             </span></ng-template>
                     </td>
                     <td>
@@ -198,19 +196,22 @@
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionSoles"
                                 (change)="calcularNetoPago(editingRow)" />
                         </ng-container>
-                        <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles  | number:'1.2-2'  }}</ng-template>
+                        <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles | number:'1.2-2'
+                            }}</ng-template>
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteRetencion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteRetencionSoles" />
                         </ng-container>
-                        <ng-template #viewModeImporteRetencion>{{ detalle.ban02ImporteRetencionSoles | number:'1.2-2'  }}</ng-template>
+                        <ng-template #viewModeImporteRetencion>{{ detalle.ban02ImporteRetencionSoles | number:'1.2-2'
+                            }}</ng-template>
                     </td>
                     <td>
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImportePercepcion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImportePercepcionSoles" />
                         </ng-container>
-                        <ng-template #viewModeImportePercepcion>{{ detalle.ban02ImportePercepcionSoles | number:'1.2-2'  }}</ng-template>
+                        <ng-template #viewModeImportePercepcion>{{ detalle.ban02ImportePercepcionSoles | number:'1.2-2'
+                            }}</ng-template>
                     </td>
 
                     <td>{{ detalle.ban02NetoSoles | number:'1.2-2' }}</td>
