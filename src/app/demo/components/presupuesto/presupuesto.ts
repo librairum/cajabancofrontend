@@ -205,6 +205,7 @@ export interface DatosSeleccionados{
 }
 
 export interface ObtenerInformacion{
+    codigoEmpresa: string,
     orden: string,
     cuenta: string,
     comprobante: string,
@@ -224,7 +225,7 @@ export interface ObtenerInformacion{
     docModTipo: string,
     docModNumero: string,
     docModFecha: string,
-    afecta: string,
+    afecto: string,
     moneda: string,
     tipoCambio: number,
     importeDebe: number,
@@ -232,3 +233,41 @@ export interface ObtenerInformacion{
     importeDebeEquivalencia: number,
     importeHaberEquivalencia: number
 }
+
+
+export interface InfoVoucherCompleto {
+    codigoEmpresa?: string;
+    anio?: string;
+    mes?: string;
+    libro?: string;
+    numeroVoucher?: string;
+    cuenta?: string;
+    importeDebe?: number;
+    importeHaber?: number;
+    glosa?: string;
+    tipoDocumento?: string;
+    numDoc?: string;
+    fechaDoc?: string;
+    fechaVencimiento?: string;
+    cuentaCorriente?: string;
+    moneda?: string;
+    tipoCambio?: number;
+    afecto?: string;
+    cenCos?: string;
+    cenGes?: string;
+    asientoTipo?: string;
+    valida?: string;
+    fechaVoucher?: string;
+    amarre?: string;
+    importeDebeEquivalencia?: number;
+    importeHaberEquivalencia?: number;
+    transa?: string;
+    orden?: number;
+    nroPago?: string;
+    fechaPago?: string;
+    porcentaje?: string;
+    docModTipo?: string;
+    docModNumero?: string;
+    docModFecha?: string;
+}
+

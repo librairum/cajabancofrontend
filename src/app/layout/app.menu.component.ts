@@ -6,6 +6,7 @@ import { PermisosxPerfilService } from '../demo/service/permisosxperfil.service'
 import { PermisosxPerfil } from '../demo/api/permisosxperfil';
 import { LoginService } from '../demo/service/login.service';
 import { MenuxPerfil } from '../demo/components/login/MenuxPerfil';
+import { GlobalService } from '../demo/service/global.service';
 @Component({
     selector: 'app-menu',
     templateUrl: './app.menu.component.html',
@@ -13,8 +14,13 @@ import { MenuxPerfil } from '../demo/components/login/MenuxPerfil';
 export class AppMenuComponent implements OnInit {
     constructor(
         public permisosService: LoginService,
-        layoutService: LayoutService
-    ) {}
+        layoutService: LayoutService,
+        public gS: GlobalService
+    ) {
+        this.selectedDate = new Date();
+    }
+
+    selectedDate: Date = new Date();
 
     model: any[] = [];
     //permisos: MenuxPerfil[] = []; // Lista para almacenar los resultados
@@ -23,14 +29,11 @@ export class AppMenuComponent implements OnInit {
         // Llama al método para obtener permisos al inicializar el componente
         this.permisosService.TraerMenuxPerfil('03', '01').subscribe({
             next: (data) => {
-               
-                
                 var datosMenu = data.data;
-                
+
                 //console.log(this.permisos);
-                
+
                 this.loadMenu(datosMenu);
-                
             },
             error: (error) => {
                 console.error('Error al obtener datos de permisos:', error);
@@ -38,12 +41,16 @@ export class AppMenuComponent implements OnInit {
         });
     }
 
-    loadMenu(menuAsignados: PermisosxPerfil[]){
+    onDateSelect(date: Date) {
+        this.gS.updateSelectedDate(date);
+    }
+
+    loadMenu(menuAsignados: PermisosxPerfil[]) {
         // Paso 1: Clasificar elementos por niveles
         const nivel1 = menuAsignados.filter((element) =>
             element.codigoFormulario.endsWith('0000')
         );
-        const nivel2 =  menuAsignados.filter(
+        const nivel2 = menuAsignados.filter(
             (element) =>
                 element.codigoFormulario.endsWith('00') &&
                 !element.codigoFormulario.endsWith('0000')
@@ -72,7 +79,9 @@ export class AppMenuComponent implements OnInit {
                         .map((l3) => ({
                             label: l3.etiqueta,
                             icon: l3.nombreIcono,
-                            routerLink: [`/Home/${l2.nombreFormulario}/${l3.nombreFormulario}`],
+                            routerLink: [
+                                `/Home/${l2.nombreFormulario}/${l3.nombreFormulario}`,
+                            ],
                         }));
 
                     return {
@@ -83,24 +92,20 @@ export class AppMenuComponent implements OnInit {
                                 ? [`/Home/${l2.nombreFormulario}`]
                                 : null,
                         items:
-                            subItemsNivel3.length > 0
-                                ? subItemsNivel3
-                                : null,
+                            subItemsNivel3.length > 0 ? subItemsNivel3 : null,
                     };
                 });
 
             return {
                 label: l1.etiqueta,
-                items:
-                    subItemsNivel2.length > 0 ? subItemsNivel2 : null,
+                items: subItemsNivel2.length > 0 ? subItemsNivel2 : null,
             };
         });
-
     }
 }
 
 /**
- 
+
 
 this.model = [
             {

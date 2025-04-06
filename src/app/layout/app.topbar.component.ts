@@ -21,16 +21,10 @@ export class AppTopBarComponent {
     @ViewChild('topbarmenu') menu!: ElementRef;
 
     constructor(public layoutService: LayoutService,private link:Router,private gS:GlobalService,private aS:LoginService,private primeng: PrimeNGConfig) {
-        this.selectedDate = new Date();
         this.primeng.setTranslation(calendario_traduccion());
     }
 
     nombre:string=this.gS.getNombreUsuario();
-    selectedDate: Date = new Date();
-
-    onDateSelect(date: Date){
-        this.gS.updateSelectedDate(date);
-    }
 
 
 

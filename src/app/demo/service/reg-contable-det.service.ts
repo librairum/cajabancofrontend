@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { ObtenerCuentaCorriente, ObtenerCuentaHaby, ObtenerInformacion, obtenerTipoDocumento } from '../components/presupuesto/presupuesto';
+import { InfoVoucherCompleto, ObtenerCuentaCorriente, ObtenerCuentaHaby, ObtenerInformacion, obtenerTipoDocumento, VoucherContableDetalle } from '../components/presupuesto/presupuesto';
 import { map, Observable, tap } from 'rxjs';
 
 @Injectable({
@@ -58,21 +58,47 @@ export class RegContableDetService {
             .pipe(map((response) => response.data));
     }
 
-    public obtenerInformacionDetallada(anio, mes, libro, voucher, nroOrden): Observable<ObtenerInformacion> {
-    const params = new HttpParams()
-        .set('empresa', '01')
-        .set('anio', anio)
-        .set('mes', mes)
-        .set('libro', libro)
-        .set('voucher', voucher)
-        .set('nroOrden', nroOrden);
+    public obtenerInformacionDetallada(
+        anio,
+        mes,
+        libro,
+        voucher,
+        nroOrden
+    ): Observable<InfoVoucherCompleto> {
+        const params = new HttpParams()
+            .set('empresa', '01')
+            .set('anio', anio)
+            .set('mes', mes)
+            .set('libro', libro)
+            .set('voucher', voucher)
+            .set('nroOrden', nroOrden);
 
-    return this.http
-        .get<RespuestaAPIInformacion<ObtenerInformacion>>(
-            `${this.urlApi}/SpTraeRegContableDet`,
-            { params }
-        )
-        .pipe(map((response) => response.data));
+        return this.http
+            .get<RespuestaAPIInformacion<InfoVoucherCompleto>>(
+                `${this.urlApi}/SpTraeRegContableDet`,
+                { params }
+            )
+            .pipe(map((response) => response.data));
+    }
+
+    public actualizarVoucher(
+        voucherInfo: InfoVoucherCompleto
+    ): Observable<any> {
+        let urlModificarVoucher = this.urlApi + '/SpActualiza';
+        return this.http.put<any>(urlModificarVoucher, voucherInfo);
+    }
+
+    public EliminarPago(
+        anio: string,
+        mes: string,
+        libro: string,
+        voucher: string,
+        nroOrden: number
+    ): Observable<any> {
+
+        let urlEliminar = `${this.urlApi}/SpElimina?empresa=01&anio=${anio}&mes=${mes}&libro=${libro}&numeroVoucher=${voucher}&nroOrden=${nroOrden}}`
+        return this.http
+            .delete<any>(urlEliminar);
     }
 }
 

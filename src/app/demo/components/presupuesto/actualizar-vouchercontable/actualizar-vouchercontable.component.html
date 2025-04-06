@@ -15,7 +15,10 @@
                                     optionValue="valueCuenta"
                                     [virtualScroll]="true"
                                     [itemSize]="30"
-                                    class="flex-1 w-full">
+                                    class="flex-1 w-full" [filter]="true" filterMatchMode="contains"
+                                filterBy="labelCuenta"
+                                [panelStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }"
+                                >
                         </p-dropdown>
                     </div>
                     <div class="field col-12 md:col-6 flex align-items-center  gap-1 mb-0  pb-1">
@@ -23,7 +26,7 @@
                         <p-dropdown id="cuenta2" formControlName="cuenta2"
                                     [options]=""
                                     placeholder="Seleccione"
-                                    class="flex-1 w-full">
+                                    class="flex-1 w-full" >
                         </p-dropdown>
                     </div>
                     <div class="field col-12 md:col-12 flex align-items-center  gap-2 mb-0  pt-1  pb-1">
@@ -85,7 +88,10 @@
                                     [virtualScroll]="true"
                                     [itemSize]="30"
                                     placeholder="Seleccione"
-                                    class="flex-1">
+                                    class="flex-1" class="flex-1 w-full" [filter]="true" filterMatchMode="contains"
+                                filterBy="labelCCorriente"
+                                [panelStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }"
+                                >
                            </p-dropdown>
                         </div>
 
@@ -103,7 +109,10 @@
                                     [virtualScroll]="true"
                                     [itemSize]="30"
                                     placeholder="Seleccione"
-                                    class="flex-1 w-full">
+                                    class="flex-1 w-full" class="flex-1 w-full" [filter]="true" filterMatchMode="contains"
+                                filterBy="labelTDocumento"
+                                [panelStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }"
+                                >
                         </p-dropdown>
                     </div>
                     <div class="field col-12 md:col-12 lg:col-4 flex align-items-center  gap-0 mb-0   pb-1">
@@ -144,7 +153,10 @@
                                     [virtualScroll]="true"
                                     [itemSize]="30"
                                     placeholder="Seleccione"
-                                    class="flex-1 w-full">
+                                    class="flex-1 w-full" class="flex-1 w-full" [filter]="true" filterMatchMode="contains"
+                                filterBy="labelTDocumento"
+                                [panelStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }"
+                                >
                                  </p-dropdown>
                             </div>
                             <div class="field col-12 md:col-6 lg:col-4  flex align-items-center  gap-0 mb-0  pb-0">
@@ -172,7 +184,7 @@
                     <div class="field col-12 md:col-6 lg:col-2  flex align-items-center  gap-2 mb-0  pb-0">
                         <label for="moneda" class="w-3rem">Moneda </label>
                         <p-dropdown id="moneda" formControlName="moneda"
-                                    [options]=""
+                                    [options]="monedas"
                                     placeholder="Seleccione"
                                     class="flex-1 w-3rem">
                         </p-dropdown>
@@ -213,7 +225,7 @@
                         <p-dropdown id="tipTranRet" formControlName="tipTranRet"
                                     [options]=""
                                     placeholder="Seleccione"
-                                    class="flex-1">
+                                    class="flex-1" >
                          </p-dropdown>
                     </div>
                     <div class="field col-12 md:col-6 lg:col-2  flex align-items-center  gap-0 mb-0 pb-0">

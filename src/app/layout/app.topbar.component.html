@@ -18,8 +18,6 @@
             <i class="pi pi-ellipsis-v"></i>
         </button>
 
-        <p-calendar view="month" dateFormat="mm/yy" [readonlyInput]="true" [(ngModel)]="selectedDate" (onSelect)="onDateSelect($event)" [showIcon]="true" ></p-calendar>
-
         <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
             <button class="p-link layout-topbar-button" (click)="op.toggle($event)">
                 <i class="pi pi-user"></i>

@@ -28,7 +28,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { DatosSeleccionados, ObtenerCuentaCorriente, ObtenerCuentaHaby, ObtenerInformacion, obtenerTipoDocumento, VoucherContableDetalle } from '../presupuesto';
+import { DatosSeleccionados, InfoVoucherCompleto, ObtenerCuentaCorriente, ObtenerCuentaHaby, ObtenerInformacion, obtenerTipoDocumento, VoucherContableDetalle } from '../presupuesto';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.service';
@@ -66,7 +66,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
 
     vouchercontableForm: FormGroup;
     actVCForm: FormGroup;
-    infoAdicional: ObtenerInformacion;
+    infoAdicional: InfoVoucherCompleto;
 
     // despliegue
 
@@ -89,11 +89,52 @@ export class ActualizarVouchercontableComponent implements OnInit {
         private regContableService: RegContableDetService
     ) {}
 
+    monedas: any[] = [
+        {label: 'Soles', value: 'S'},
+        {label: 'Dólares', value: 'D'}
+    ]
+
     ngOnInit(): void {
-        this.cargarDatosActualizar();
+
+        this.actVCForm = this.fb.group({
+            cuenta: [''],
+            cuenta2: [''],
+            comprobante: [''],
+            glosa: [''],
+            centroCosto: [''],
+            centroGestion: [''],
+            maquina: [''],
+            trabajoCurso: [''],
+            cuentaCorriente: [''],
+            tipDoc: [''],
+            nroDoc: [''],
+            fechaDoc: [null],
+            AnioDUA: [''],
+            fechaVencim: [null],
+            fechaPago: [null],
+            numeroPago: [''],
+            tipoDocDocModifica: [''],
+            numeroDocModifica: [''],
+            fechaDocModifica: [null],
+            columna: [''],
+            moneda: [''],
+            tipoCambio: [''],
+            debe: [''],
+            debe2: [''],
+            haber: [''],
+            haber2: [''],
+            afectoRet: [''],
+            tipTranRet: [''],
+            tipDocRet: [''],
+            numeroRet: [''],
+            fechaRet: [null],
+            fechaPagoRet: [null],
+        });
+
         this.obtenerCuenta(); // obtiene cuenta de HabyMov del Servicio Reg Contable
         this.obtenerCuentaCorriente();
         this.obtenerTipoDocumento();
+        this.cargarDatosActualizar();
     }
 
     //Inicializamos los datos del servicio para los dropdown
@@ -154,7 +195,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
 
     cargarDatosAdicionales(){
         this.regContableService.obtenerInformacionDetallada(this.detalleSelected.anio, this.detalleSelected.mes, this.detalleSelected.libro, this.detalleSelected.numeroVoucher, this.detalleSelected.orden).subscribe({
-            next: (data: ObtenerInformacion) => {
+            next: (data: InfoVoucherCompleto) => {
                 this.infoAdicional = data
             }
         })
@@ -163,89 +204,141 @@ export class ActualizarVouchercontableComponent implements OnInit {
 
     cargarDatosActualizar() {
         console.log('Detalle recibido:', this.detalleSelected); // Verifica si los datos llegan correctamente
-        console.log('info', this.cargarDatosAdicionales());
+
         const fechaVenc = this.formatFecha(
             this.detalleSelected.fechaVencimiento
         );
-        this.actVCForm = this.fb.group({
-            cuenta: [this.detalleSelected.cuenta || ''],
-            cuenta2: [''],
-            comprobante: [this.detalleSelected.amarre || ''],
-            glosa: [''],
-            centroCosto: [''],
-            centroGestion: [''],
-            maquina: [''],
-            trabajoCurso: [''],
-            cuentaCorriente: [''],
-            tipDoc: [''],
-            nroDoc: [this.detalleSelected.numDoc || ''],
-            fechaDoc: [null],
-            AnioDUA: [''],
-            fechaVencim: [null],
-            fechaPago: [null],
-            numeroPago: [''],
-            tipoDocDocModifica: [''],
-            numeroDocModifica: [''],
-            fechaDocModifica: [null],
-            columna: [''],
-            moneda: [''],
-            tipoCambio: [''],
-            debe: [''],
-            debe2: [''],
-            haber: [''],
-            haber2: [''],
-            afectoRet: [''],
-            tipTranRet: [''],
-            tipDocRet: [''],
-            numeroRet: [''],
-            fechaRet: [null],
-            fechaPagoRet: [null],
-        });
 
-        // Inicializar el formulario
-        this.vouchercontableForm = this.fb.group({
-            orden: [this.detalleSelected.orden || ''],
-            amarre: [this.detalleSelected.amarre || ''],
-            cuenta: [this.detalleSelected.cuenta || ''],
-            ctaCbleDesc: [this.detalleSelected.ctaCbleDesc || ''],
-            concepto: [this.detalleSelected.concepto || ''],
-            ctactecod: [this.detalleSelected.ctactecod || ''],
-            ctaCteDesc: [this.detalleSelected.ctaCteDesc || ''],
-            afecto: [this.detalleSelected.afecto || ''],
-            moneda: [this.detalleSelected.moneda || ''],
-            tipoDocumento: [this.detalleSelected.tipoDocumento || ''],
-            tipDocDes: [this.detalleSelected.tipDocDes || ''],
-            numDoc: [this.detalleSelected.numDoc || ''],
-            fechaDoc: [this.detalleSelected.fechaDoc || ''],
-            fechaVencimiento: [fechaVenc], // Fecha convertida correctamente
-            tipoCambio: [this.detalleSelected.tipoCambio || ''],
-            importeDebe: [this.detalleSelected.importeDebe || ''],
-            importeHaber: [this.detalleSelected.importeHaber || ''],
-            importeDebeEquivalencia: [
-                this.detalleSelected.importeDebeEquivalencia || '',
-            ],
-            importeHaberEquivalencia: [
-                this.detalleSelected.importeHaberEquivalencia || '',
-            ],
-            cencos: [this.detalleSelected.cencos || ''],
-            cCostoDesc: [this.detalleSelected.cCostoDesc || ''],
-            cenGes: [this.detalleSelected.cenGes || ''],
-            cGestionDesc: [this.detalleSelected.cGestionDesc || ''],
-            totalRecords: [this.detalleSelected.totalRecords || ''],
-        });
-        // Asignar valores al formulario
-        this.vouchercontableForm.patchValue(this.detalleSelected);
-        console.log('registro a actualizar', this.vouchercontableForm.value);
+        this.obtenerDatos();
     }
 
-    /*ngOnChanges(changes: SimpleChanges) {
-        // Update nroOperacion whenever pagoNumero changes
-        if (changes['pagoNumero'] && changes['pagoNumero'].currentValue) {
-          this.nroOperacion = changes['pagoNumero'].currentValue;
-        } por si se desea pasar el nro de pago
-      }*/
+    obtenerDatos(): void{
 
-    guardarConfirmacion() {}
+        if(!this.detalleSelected){
+            console.error('No hay detalle seleccionado');
+            return
+        }
+
+        this.actVCForm.patchValue({
+            cuenta: this.detalleSelected.cuenta || ''
+        })
+
+        this.regContableService
+            .obtenerInformacionDetallada(
+        this.detalleSelected.anio,
+        this.detalleSelected.mes,
+        this.detalleSelected.libro,
+        this.detalleSelected.numeroVoucher,
+        this.detalleSelected.orden
+      )
+      .subscribe({
+        next: (data: InfoVoucherCompleto) => {
+          this.infoAdicional = data;
+          console.log('infoAdicional', this.infoAdicional);
+
+          this.actVCForm.patchValue({
+              glosa: this.infoAdicional[0].glosa || '',
+              comprobante: this.infoAdicional[0].comprobante || '',
+              centroCosto: this.infoAdicional[0].cencos || '',
+              centroGestion: this.infoAdicional[0].cenges || '',
+              maquina: this.infoAdicional[0].codigoMaquina || '',
+              trabajoCurso: [''],
+              cuentaCorriente: this.infoAdicional[0].cuentaCorriente || '',
+              tipDoc: this.infoAdicional[0].tipoDocumento || '',
+              nroDoc: this.infoAdicional[0].numDoc || '',
+              fechaDoc: this.infoAdicional[0].fechaDoc || '',
+              AnioDUA: this.infoAdicional[0].anioDua || '',
+              fechaVencim: this.infoAdicional[0].fechaVencimiento || '',
+              fechaPago: this.infoAdicional[0].fechaRetencion || '',
+              numeroPago: this.infoAdicional[0].nroPago || '',
+              tipoDocDocModifica: this.infoAdicional[0].docModTipo || '',
+              numeroDocModifica: this.infoAdicional[0].docModNumero || '',
+              fechaDocModifica: this.infoAdicional[0].docModFecha || '',
+              columna: this.infoAdicional[0].afecto || '',
+              moneda: this.infoAdicional[0].moneda || '',
+              tipoCambio: Number(this.infoAdicional[0].tipoCambio).toFixed(2) || '',
+              debe: Number(this.infoAdicional[0].importeDebe).toFixed(2) || '',
+              debe2: Number(this.infoAdicional[0].importeDebeEquivalencia).toFixed(2) || '',
+              haber: Number(this.infoAdicional[0].importeHaber).toFixed(2) || '',
+              haber2: Number(this.infoAdicional[0].importeHaberEquivalencia).toFixed(2) || '',
+              tipTranRet: this.infoAdicional[0].numDoc || '',
+              tipDocRet: this.infoAdicional[0].tipoDocRetencion || '',
+              numeroRet: this.infoAdicional[0].numDoc || '',
+              fechaRet: this.infoAdicional[0].fechaRetencion || '',
+              fechaPagoRet: this.infoAdicional[0].fechaPagoRetencion || '',
+          });
+        },
+        error: (err) => {
+          console.error('Error al obtener los datos', err);
+        }
+      });
+  }
+
+    guardarConfirmacion() {
+        const datosActualizar = {
+            codigoEmpresa: '01', // Necesitarás este valor
+            anio: this.detalleSelected.anio,
+            mes: this.detalleSelected.mes,
+            libro: this.detalleSelected.libro,
+            numeroVoucher: this.detalleSelected.numeroVoucher,
+            cuenta: this.actVCForm.value.cuenta,
+            importeDebe: parseFloat(this.actVCForm.value.debe) || 0,
+            importeHaber: parseFloat(this.actVCForm.value.haber) || 0,
+            glosa: this.actVCForm.value.glosa,
+            tipoDocumento: this.actVCForm.value.tipDoc,
+            numDoc: this.actVCForm.value.nroDoc,
+            fechaDoc: this.actVCForm.value.fechaDoc,
+            fechaVencimiento: this.actVCForm.value.fechaVencim,
+            cuentaCorriente: this.actVCForm.value.cuentaCorriente,
+            moneda: this.actVCForm.value.moneda,
+            tipoCambio: parseFloat(this.actVCForm.value.tipoCambio) || 0,
+            afecto: this.actVCForm.value.columna,
+            cenCos: this.actVCForm.value.centroCosto,
+            cenGes: this.actVCForm.value.centroGestion,
+            asientoTipo: '', // Agregar este valor o usar uno existente
+            valida: '', // Agregar este valor o usar uno existente
+            fechaVoucher: '', // Agregar este valor o usar uno existente
+            amarre: this.detalleSelected.amarre || '',
+            importeDebeEquivalencia:
+                parseFloat(this.actVCForm.value.debe2) || 0,
+            importeHaberEquivalencia:
+                parseFloat(this.actVCForm.value.haber2) || 0,
+            transa: '', // Agregar este valor o usar uno existente
+            orden: this.detalleSelected.orden,
+            nroPago: this.actVCForm.value.numeroPago,
+            fechaPago: this.actVCForm.value.fechaPago,
+            porcentaje: '', // Agregar este valor o usar uno existente
+            docModTipo: this.actVCForm.value.tipoDocDocModifica,
+            docModNumero: this.actVCForm.value.numeroDocModifica,
+            docModFecha: this.actVCForm.value.fechaDocModifica,
+        };
+
+        console.log('Datos enviados: ', datosActualizar);
+
+
+        this.regContableService.actualizarVoucher(datosActualizar).subscribe({
+            next: (respuesta) => {
+                this.messageService.add({
+                    severity: 'sucess',
+                    summary: 'Éxito',
+                    detail: 'El voucher contable fue actualizado correctamente.',
+                });
+                console.log('Enviado correctamente: ', respuesta)
+                this.mostrarDialogoExito = true;
+                this.mensajeExito = 'Actualización exitosa';
+                this.onClose.emit();
+            },
+            error: (err) => {
+                console.error('Error al actualizar el voucher: ', err);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'No se pudo actualizar el voucher.',
+                });
+            },
+        });
+
+    }
 
     finalizarGuardado() {
         this.mostrarDialogoExito = true;
@@ -254,12 +347,11 @@ export class ActualizarVouchercontableComponent implements OnInit {
     onConfirmOk() {
         this.mostrarDialogoExito = false;
         // Limpiamos y cerramos al confirmar el diálogo
-        this.limpiarCampos();
         this.onClose.emit();
     }
 
     limpiarCampos() {
-        this.vouchercontableForm.reset();
+        this.actVCForm.reset();
     }
 
     cancelar() {
@@ -277,4 +369,5 @@ export class ActualizarVouchercontableComponent implements OnInit {
         if (isNaN(dia) || isNaN(mes) || isNaN(anio)) return null; // Validamos que sean números válidos
         return new Date(anio, mes - 1, dia); // Retornamos un objeto Date (mes en base 0)
     }
+
 }

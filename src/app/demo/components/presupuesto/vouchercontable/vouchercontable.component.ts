@@ -42,7 +42,7 @@ import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.ser
         CommonModule,
         FormsModule,
         DialogModule,
-        ActualizarVouchercontableComponent
+        ActualizarVouchercontableComponent,
     ],
     templateUrl: './vouchercontable.component.html',
     styleUrl: './vouchercontable.component.css',
@@ -71,17 +71,17 @@ export class VouchercontableComponent implements OnInit {
     detalleSelected: VoucherContableDetalle;
     informacionEnviar: ObtenerInformacion;
 
-
     verConfirmarActualizacion: boolean = false;
     selectedVoucherC: string;
-
 
     constructor(
         private messageService: MessageService,
         private presupuestoservice: PresupuestoService,
         private bs: BreadcrumbService,
         private router: Router,
-        private regContableService: RegContableDetService
+        private regContableService: RegContableDetService,
+        private mS: MessageService,
+        private confirmationService: ConfirmationService
     ) {
         //variables de edición
 
@@ -105,13 +105,15 @@ export class VouchercontableComponent implements OnInit {
         });
 
         this.cargarDatos();
-
     }
 
     cargarDatos() {
         //cargar cabecera voucher contable
         this.presupuestoservice
-            .obtenerVoucherContableCabecera(this.navigationData.empresa, this.navigationData.PagoNro)
+            .obtenerVoucherContableCabecera(
+                this.navigationData.empresa,
+                this.navigationData.PagoNro
+            )
             .subscribe({
                 next: (data) => {
                     this.voucherContableCabecera = data;
@@ -142,7 +144,10 @@ export class VouchercontableComponent implements OnInit {
         //cargar tabla detalle voucher contable
         this.load = true;
         this.presupuestoservice
-            .obtenerVoucherContableDetalle(this.navigationData.empresa, this.navigationData.PagoNro) //empresa y pago numero
+            .obtenerVoucherContableDetalle(
+                this.navigationData.empresa,
+                this.navigationData.PagoNro
+            ) //empresa y pago numero
             .subscribe({
                 next: (data) => {
                     this.voucherContableDetalle = data;
@@ -165,7 +170,9 @@ export class VouchercontableComponent implements OnInit {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'Error al cargar voucher contables: ' + error.message,
+                        detail:
+                            'Error al cargar voucher contables: ' +
+                            error.message,
                     });
                 },
             });
@@ -174,17 +181,7 @@ export class VouchercontableComponent implements OnInit {
     ActualizarVoucherContable(vc: VoucherContableDetalle) {
         this.detalleSelected = vc;
         this.verConfirmarActualizacion = true;
-        this.obtenerInformacion();
-    }
-
-    obtenerInformacion(){
-        this.regContableService.obtenerInformacionDetallada(this.detalleSelected.anio, this.detalleSelected.mes, this.detalleSelected.libro, this.libro_numero, this.detalleSelected.orden).subscribe({
-            next: (data: ObtenerInformacion) => {
-                this.informacionEnviar = data;
-                console.log('Datos Enviar',data)
-            }
-        });
-
+        // this.obtenerInformacion();
     }
 
     onCloseModal() {
@@ -208,25 +205,66 @@ export class VouchercontableComponent implements OnInit {
 
     // Métodos corregidos para la clase VouchercontableComponent
 
-calcularTotalDebe(): number {
-    return this.voucherContableDetalle
-        .reduce((sum, item) => sum + (Number(item.importeDebe) || 0), 0);
-}
+    calcularTotalDebe(): number {
+        return this.voucherContableDetalle.reduce(
+            (sum, item) => sum + (Number(item.importeDebe) || 0),
+            0
+        );
+    }
 
-calcularTotalHaber(): number {
-    return this.voucherContableDetalle
-        .reduce((sum, item) => sum + (Number(item.importeHaber) || 0), 0);
-}
+    calcularTotalHaber(): number {
+        return this.voucherContableDetalle.reduce(
+            (sum, item) => sum + (Number(item.importeHaber) || 0),
+            0
+        );
+    }
 
-calcularTotalCargo(): number {
-    return this.voucherContableDetalle
-        .reduce((sum, item) => sum + (Number(item.importeDebeEquivalencia) || 0), 0);
-}
+    calcularTotalCargo(): number {
+        return this.voucherContableDetalle.reduce(
+            (sum, item) => sum + (Number(item.importeDebeEquivalencia) || 0),
+            0
+        );
+    }
 
-calcularTotalAbono(): number {
-    return this.voucherContableDetalle
-        .reduce((sum, item) => sum + (Number(item.importeHaberEquivalencia) || 0), 0);
-}
+    calcularTotalAbono(): number {
+        return this.voucherContableDetalle.reduce(
+            (sum, item) => sum + (Number(item.importeHaberEquivalencia) || 0),
+            0
+        );
+    }
 
-
+    eliminarPago(vc: VoucherContableDetalle) {
+        this.detalleSelected = vc;
+        this.confirmationService.confirm({
+            message: `¿Está seguro que desea eliminar el pago de anio ${
+                (this.detalleSelected.anio)
+            }, ${this.detalleSelected.mes}, ${this.detalleSelected.libro}, ${this.detalleSelected.numeroVoucher}, ${this.detalleSelected.orden}?`,
+            header: 'Confirmar Eliminación',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí, eliminar',
+            rejectLabel: 'No, cancelar',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button',
+            accept: () => {
+                this.regContableService
+                    .EliminarPago(
+                        this.detalleSelected.anio,
+                        this.detalleSelected.mes,
+                        this.detalleSelected.libro,
+                        this.detalleSelected.numeroVoucher,
+                        this.detalleSelected.orden
+                    )
+                    .subscribe({
+                        next: () => {
+                            this.mS.add({
+                                severity: 'success',
+                                summary: 'Éxito',
+                                detail: 'Registro eliminado',
+                            });
+                            this.cargarDatos();
+                        },
+                    });
+            },
+        });
+    }
 }
