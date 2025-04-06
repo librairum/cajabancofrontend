@@ -28,9 +28,11 @@ import { TooltipModule } from 'primeng/tooltip';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { VoucherContableDetalle } from '../presupuesto';
+import { DatosSeleccionados, ObtenerCuentaCorriente, ObtenerCuentaHaby, ObtenerInformacion, obtenerTipoDocumento, VoucherContableDetalle } from '../presupuesto';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
+import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.service';
+import { last } from 'rxjs';
 
 @Component({
     selector: 'app-actualizar-vouchercontable',
@@ -64,6 +66,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
 
     vouchercontableForm: FormGroup;
     actVCForm: FormGroup;
+    infoAdicional: ObtenerInformacion;
 
     // despliegue
 
@@ -73,29 +76,101 @@ export class ActualizarVouchercontableComponent implements OnInit {
 
     // Inicializamos  listas de los conboox o p-dropdown
     cuentas: any[] = [];
+    cuentasCorrientes: any[] = [];
+    tipoDocumentos: any[] = [];
+    informacionDetallada: any;
 
     //checkbox
     afectoRetencion = false;
 
     constructor(
         private fb: FormBuilder,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private regContableService: RegContableDetService
     ) {}
 
     ngOnInit(): void {
         this.cargarDatosActualizar();
-        
+        this.obtenerCuenta(); // obtiene cuenta de HabyMov del Servicio Reg Contable
+        this.obtenerCuentaCorriente();
+        this.obtenerTipoDocumento();
     }
+
+    //Inicializamos los datos del servicio para los dropdown
+    ayudaHabyMovList: ObtenerCuentaHaby[] = [];
+    ayudaCuentaCorriente: ObtenerCuentaCorriente[] = [];
+    ayudaTipoDocumento: obtenerTipoDocumento[] = [];
+
+    obtenerCuenta() {
+        this.regContableService.obtenerCuenta().subscribe({
+            next: (data) => {
+                this.ayudaHabyMovList = data;
+                this.cuentas = this.ayudaHabyMovList.map((item) => ({
+                    labelCuenta: item.ccm01des,
+                    valueCuenta: item.ccm01cta,
+                }));
+            },
+            error: (err) => {
+                console.error('Error al obtener datos:', err);
+            },
+        });
+    }
+
+    obtenerCuentaCorriente() {
+        this.regContableService.obtenerCuentaCorriente().subscribe({
+            next: (data) => {
+                this.ayudaCuentaCorriente = data;
+                this.cuentasCorrientes = this.ayudaCuentaCorriente.map(
+                    (item) => ({
+                        labelCCorriente: item.ccm02nom,
+                        valueCCorriente: item.ccm02cod,
+                    })
+                );
+                console.log(this.cuentasCorrientes);
+            },
+            error: (err) => {
+                console.error('Error al obtener datos:', err);
+            },
+        });
+    }
+
+    obtenerTipoDocumento() {
+        this.regContableService.obtenerTipoDocumentos().subscribe({
+            next: (data) => {
+                this.ayudaTipoDocumento = data;
+                this.tipoDocumentos = this.ayudaTipoDocumento.map(
+                    (item) => ({
+                        labelTDocumento: item.ccb02des,
+                        valueTDocumento: item.ccb02cod,
+                    })
+                );
+                console.log('Tipo doc: ', this.tipoDocumentos);
+            },
+            error: (err) => {
+                console.error('Error al obtener datos:', err);
+            },
+        });
+    }
+
+    cargarDatosAdicionales(){
+        this.regContableService.obtenerInformacionDetallada(this.detalleSelected.anio, this.detalleSelected.mes, this.detalleSelected.libro, this.detalleSelected.numeroVoucher, this.detalleSelected.orden).subscribe({
+            next: (data: ObtenerInformacion) => {
+                this.infoAdicional = data
+            }
+        })
+        return this.infoAdicional;
+    }
+
     cargarDatosActualizar() {
         console.log('Detalle recibido:', this.detalleSelected); // Verifica si los datos llegan correctamente
-
+        console.log('info', this.cargarDatosAdicionales());
         const fechaVenc = this.formatFecha(
             this.detalleSelected.fechaVencimiento
         );
         this.actVCForm = this.fb.group({
-            cuenta: [''],
+            cuenta: [this.detalleSelected.cuenta || ''],
             cuenta2: [''],
-            comprobante: [''],
+            comprobante: [this.detalleSelected.amarre || ''],
             glosa: [''],
             centroCosto: [''],
             centroGestion: [''],
@@ -103,7 +178,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
             trabajoCurso: [''],
             cuentaCorriente: [''],
             tipDoc: [''],
-            nroDoc: [''],
+            nroDoc: [this.detalleSelected.numDoc || ''],
             fechaDoc: [null],
             AnioDUA: [''],
             fechaVencim: [null],

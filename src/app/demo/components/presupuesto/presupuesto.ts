@@ -140,8 +140,8 @@ export interface VoucherContableDetalle{
   tipoDocumento: string;
   tipDocDes: string;
   numDoc: string;
-  fechaDoc: string; 
-  fechaVencimiento: string; 
+  fechaDoc: string;
+  fechaVencimiento: string;
   tipoCambio: number;
   importeDebe: number;
   importeHaber: number;
@@ -152,6 +152,11 @@ export interface VoucherContableDetalle{
   cenGes: string;
   cGestionDesc: string;
   totalRecords: number;
+
+  anio: string;
+  mes: string;
+  libro: string;
+  numeroVoucher: string;
 }
 
 
@@ -167,5 +172,63 @@ export interface VoucherContableCabecera{
     asientotipo:string;
     transaccion:string;
     totalRecords:number;
+}
 
+export interface ObtenerCuentaHaby{
+    ccm01cta: string;
+    ccm01des: string;
+    ccm01dn: string;
+    ccm01ana: string;
+    ccm01cc: string;
+    ccm01cg: string;
+}
+
+export interface ObtenerCuentaCorriente{
+    ccm02emp: string,
+    ccm02tipana: string,
+    ccm02cod: string,
+    ccm02nom: string,
+    ccm02dir: string
+}
+
+export interface obtenerTipoDocumento{
+    ccb02cod: string,
+    ccb02des: string
+}
+
+export interface DatosSeleccionados{
+    anio: string,
+    mes: string,
+    libro: string,
+    voucher: string,
+    nroOrden: number
+}
+
+export interface ObtenerInformacion{
+    orden: string,
+    cuenta: string,
+    comprobante: string,
+    glosa: string,
+    cencos: string,
+    cenges: string,
+    codigoMaquina: string,
+    codigotrabajoCurs: string,
+    cuentaCorriente: string,
+    tipoDocumento: string,
+    numDoc: string,
+    fechaDoc: string,
+    anioDua: string,
+    fechaVcimiento: string,
+    fechaRetencion: string,
+    nroPago: string,
+    docModTipo: string,
+    docModNumero: string,
+    docModFecha: string,
+    afecta: string,
+    moneda: string,
+    tipoCambio: number,
+    importeDebe: number,
+    importeHaber: number,
+    importeDebeEquivalencia: number,
+    importeHaberEquivalencia: number
 }

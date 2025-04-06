@@ -3,21 +3,25 @@
 <!-- Formulario principal -->
 <p-panel  *ngIf="actVCForm">
     <form [formGroup]="actVCForm">
-        <div class="grid"> 
+        <div class="grid">
             <fieldset class="input-group w-full m-0 ">
                 <div class="grid">
                     <div class="field col-12 md:col-6 flex align-items-center  gap-2 mb-0  pb-1">
                         <label for="cuenta" class="w-3rem">Cuenta </label>
-                        <p-dropdown id="cuenta" formControlName="cuenta" 
-                                    [options]="cuentas" 
+                        <p-dropdown id="cuenta" formControlName="cuenta"
+                                    [options]="cuentas"
                                     placeholder="Seleccione"
+                                    optionLabel="labelCuenta"
+                                    optionValue="valueCuenta"
+                                    [virtualScroll]="true"
+                                    [itemSize]="30"
                                     class="flex-1 w-full">
                         </p-dropdown>
                     </div>
                     <div class="field col-12 md:col-6 flex align-items-center  gap-1 mb-0  pb-1">
                         <label for="cuenta2" class="w-3rem">Cuenta </label>
-                        <p-dropdown id="cuenta2" formControlName="cuenta2" 
-                                    [options]="" 
+                        <p-dropdown id="cuenta2" formControlName="cuenta2"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1 w-full">
                         </p-dropdown>
@@ -37,59 +41,67 @@
                 <div class="grid">
                         <div class="field col-12 md:col-6 flex align-items-center  gap-1 mb-0   pb-0">
                             <label for="centroCosto" class="w-4rem">Centro de costo </label>
-                           
-                            <p-dropdown id="centroCosto" formControlName="centroCosto" 
-                                    [options]="" 
+
+                            <p-dropdown id="centroCosto" formControlName="centroCosto"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1">
                            </p-dropdown>
                         </div>
                         <div class="field col-12 md:col-6 flex align-items-center  gap-1 mb-0   pb-0">
                             <label for="centroGestion" class="w-4rem">Centro de gestión </label>
-                            
-                            <p-dropdown id="centroGestion" formControlName="centroGestion" 
-                                    [options]="" 
+
+                            <p-dropdown id="centroGestion" formControlName="centroGestion"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1">
                            </p-dropdown>
                         </div>
                         <div class="field col-12 md:col-6 flex align-items-center  gap-1 mb-0  pt-0  pb-0">
                             <label for="maquina" class="w-4rem">Máquina </label>
-                           
-                            <p-dropdown id="maquina" formControlName="maquina" 
-                                    [options]="" 
+
+                            <p-dropdown id="maquina" formControlName="maquina"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1">
                            </p-dropdown>
                         </div>
                         <div class="field col-12 md:col-6 flex align-items-center  gap-1 mb-0  pt-0  pb-0">
                             <label for="trabajoCurso" class="w-4rem">Trabajo en curso </label>
-                          
-                            <p-dropdown id="trabajoCurso" formControlName="trabajoCurso" 
-                                    [options]="" 
+
+                            <p-dropdown id="trabajoCurso" formControlName="trabajoCurso"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1">
                            </p-dropdown>
                         </div>
                         <div class="field col-12 md:col-12 flex align-items-center  gap-1 mb-0  pt-0 pb-0">
                             <label for="cuentaCorriente" class="w-4rem">Cuenta corriente </label>
-                          
-                            <p-dropdown id="cuentaCorriente" formControlName="cuentaCorriente" 
-                                    [options]="" 
+
+                            <p-dropdown id="cuentaCorriente" formControlName="cuentaCorriente"
+                                    [options]="cuentasCorrientes"
+                                    optionLabel="labelCCorriente"
+                                    optionValue="valueCCorriente"
+                                    [virtualScroll]="true"
+                                    [itemSize]="30"
                                     placeholder="Seleccione"
                                     class="flex-1">
                            </p-dropdown>
                         </div>
-                    
+
                 </div>
             </fieldset>
             <fieldset class="input-group w-full m-0">
                 <div class="grid">
                     <div class="field col-12 md:col-6 lg:col-4 flex align-items-center  gap-0 mb-0   pb-1">
                         <label for="tipDoc" class="w-2rem">Tipo Doc. </label>
-                        
-                        <p-dropdown id="tipDoc" formControlName="tipDoc" 
-                                    [options]="" 
+
+                        <p-dropdown id="tipDoc" formControlName="tipDoc"
+                                    [options]="tipoDocumentos"
+                                    optionLabel="labelTDocumento"
+                                    optionValue="valueTDocumento"
+                                    [virtualScroll]="true"
+                                    [itemSize]="30"
                                     placeholder="Seleccione"
                                     class="flex-1 w-full">
                         </p-dropdown>
@@ -120,13 +132,17 @@
                     </div>
                     <fieldset class="input-group w-full mt-1 mx-3">
                         <legend> Doc. Modifica</legend>
-                        
+
                         <div class="grid">
                             <div class="field col-12 md:col-6 lg:col-4 flex align-items-center  gap-0 mb-0  pb-0">
                                 <label for="tipoDocDocModifica" class="w-4rem">Tipo Doc </label>
-                            
-                                <p-dropdown id="tipoDocDocModifica" formControlName="tipoDocDocModifica" 
-                                    [options]="" 
+
+                                <p-dropdown id="tipoDocDocModifica" formControlName="tipoDocDocModifica"
+                                    [options]="tipoDocumentos"
+                                    optionLabel="labelTDocumento"
+                                    optionValue="valueTDocumento"
+                                    [virtualScroll]="true"
+                                    [itemSize]="30"
                                     placeholder="Seleccione"
                                     class="flex-1 w-full">
                                  </p-dropdown>
@@ -147,16 +163,16 @@
                 <div class="grid">
                     <div class="field col-12 md:col-6 lg:col-3 flex align-items-center  gap-3 mb-0   pb-0">
                         <label for="columna" class="w-3rem">Columna </label>
-                        <p-dropdown id="columna" formControlName="columna" 
-                                    [options]="" 
+                        <p-dropdown id="columna" formControlName="columna"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1 w-6rem">
                         </p-dropdown>
                     </div>
                     <div class="field col-12 md:col-6 lg:col-2  flex align-items-center  gap-2 mb-0  pb-0">
                         <label for="moneda" class="w-3rem">Moneda </label>
-                        <p-dropdown id="moneda" formControlName="moneda" 
-                                    [options]="" 
+                        <p-dropdown id="moneda" formControlName="moneda"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1 w-3rem">
                         </p-dropdown>
@@ -188,22 +204,22 @@
                 <p-checkbox id="afectoRet" name="afectoRet" [(ngModel)]="afectoRetencion" formControlName="afectoRet"  binary="true"></p-checkbox>
                 <label for="afectoRet">Afecto a retención</label>
             </div>
-            
+
             <fieldset *ngIf="afectoRetencion" class="input-group w-full m-0">
                 <legend> Datos de retención</legend>
-                <div class="grid"> 
+                <div class="grid">
                     <div class="field col-12 md:col-6 lg:col-3 flex align-items-center  gap-1 mb-0 pb-0">
                         <label for="tipTranRet" class="w-3rem">Tip. Tran </label>
-                        <p-dropdown id="tipTranRet" formControlName="tipTranRet" 
-                                    [options]="" 
+                        <p-dropdown id="tipTranRet" formControlName="tipTranRet"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1">
                          </p-dropdown>
                     </div>
                     <div class="field col-12 md:col-6 lg:col-2  flex align-items-center  gap-0 mb-0 pb-0">
                         <label for="tipDocRet" class="w-2rem">Tip. Doc. </label>
-                        <p-dropdown id="tipDocRet" formControlName="tipDocRet" 
-                                    [options]="" 
+                        <p-dropdown id="tipDocRet" formControlName="tipDocRet"
+                                    [options]=""
                                     placeholder="Seleccione"
                                     class="flex-1 w-4rem">
                          </p-dropdown>

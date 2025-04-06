@@ -84,6 +84,7 @@
                 <tr>
 
                     <th colspan="1"></th>
+                    <th *ngIf="mostrarInfo" rowspan="2">Orden</th>
                     <th rowspan="2">Tipo</th>
                     <th rowspan="2">Cuenta</th>
                     <th rowspan="2">Cuenta Desc</th>
@@ -98,6 +99,11 @@
                     <th rowspan="2">Haber</th>
                     <th rowspan="2">Cargo</th>
                     <th rowspan="2">Abono</th>
+                    <th *ngIf="mostrarInfo"  rowspan="2">Año</th>
+                    <th *ngIf="mostrarInfo"  rowspan="2">Mes</th>
+                    <th *ngIf="mostrarInfo" rowspan="2">Libro</th>
+                    <th *ngIf="mostrarInfo"  rowspan="2">Número Voucher</th>
+
                 </tr>
             </ng-template>
 
@@ -129,6 +135,7 @@
                             </ng-container>
                         </div>
                     </td>
+                    <td *ngIf="mostrarInfo">{{detalle.orden}}</td>
                     <td>{{ detalle.amarre }}</td>
                     <td>{{ detalle.cuenta }}</td>
                     <td>{{ detalle.ctaCbleDesc }}</td>
@@ -143,6 +150,10 @@
                     <td class="text-right">{{ detalle.importeHaber | currency:'':'':'1.2-2' }}</td>
                     <td class="text-right">{{ detalle.importeDebeEquivalencia | currency:'':'':'1.2-2' }}</td>
                     <td class="text-right">{{ detalle.importeHaberEquivalencia | currency:'':'':'1.2-2' }}</td>
+                    <td *ngIf="mostrarInfo">{{detalle.anio}}</td>
+                    <td *ngIf="mostrarInfo">{{detalle.mes}}</td>
+                    <td *ngIf="mostrarInfo">{{detalle.libro}}</td>
+                    <td *ngIf="mostrarInfo">{{detalle.numeroVoucher}}</td>
 
                 </tr>
             </ng-template>

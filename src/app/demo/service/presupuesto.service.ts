@@ -9,14 +9,14 @@ import { ConfigService } from './config.service';
 })
 export class PresupuestoService {
     private http = inject(HttpClient);
-    
+
     private urlApi:string = '';
     private urlBase:string = '';
     apiUrl: any;
     constructor(private httpClient: HttpClient,
-         private configService:ConfigService) 
-         { 
-            
+         private configService:ConfigService)
+         {
+
       this.apiUrl = (window as any).config?.url
             const config = `${this.apiUrl}/Presupuesto`;
            this.urlApi = config;
@@ -58,7 +58,7 @@ export class PresupuestoService {
     }
     public insertarDetallePresupuesto(detalle: insert_detalle): Observable<any> {
         console.log("parametros insertar detalle presupuesto");
-        console.log(detalle.empresa);                            
+        console.log(detalle.empresa);
         console.log(detalle.numeropresupuesto);
         console.log(detalle.tipoaplicacion);
         console.log(detalle.fechapresupuesto);
@@ -176,7 +176,7 @@ export class PresupuestoService {
         return this.http.get<RespuestaAPI6>(`${this.urlBase}/CtaCtable/SpTraeDetalle?`, { params })
             .pipe(map(response => response.data));
     }
-    
+
     public obtenerVoucherContableCabecera(empresa: string, numero: string): Observable<VoucherContableCabecera[]> {
         const params = new HttpParams()
             .set('empresa', empresa)
@@ -187,16 +187,16 @@ export class PresupuestoService {
 
 
     public eliminarVoucherContableDetalle(
-        empresa: string, 
+        empresa: string,
         orden: number
     ): Observable<any> {
         const params = new HttpParams()
             .set('empresa', empresa)
             .set('orden', orden.toString()); // Ajuste para que coincida con la interfaz
-    
+
         return this.http.delete(`${this.urlApi}/SpEliminaDet`, { params });
     }
-  
+
 
 }
 

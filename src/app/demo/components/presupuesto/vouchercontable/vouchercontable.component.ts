@@ -14,6 +14,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import {
     Detallepresupuesto,
+    ObtenerInformacion,
     VoucherContableCabecera,
     VoucherContableDetalle,
 } from '../presupuesto';
@@ -22,6 +23,7 @@ import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { ActualizarVouchercontableComponent } from "../actualizar-vouchercontable/actualizar-vouchercontable.component";
+import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.service';
 
 @Component({
     selector: 'app-vouchercontable',
@@ -58,12 +60,16 @@ export class VouchercontableComponent implements OnInit {
     load: boolean = false;
     displayAgregarModal: boolean = false;
 
+    //variable para mostrar informacion de la tabla
+    mostrarInfo: boolean = false;
+
     editingRow: VoucherContableDetalle | null = null;
     isAnyRowEditing: boolean = false;
     editingIndex: number | null = null; // Índice de la fila en edición
     // fecha hoy
     fechahoy: Date;
     detalleSelected: VoucherContableDetalle;
+    informacionEnviar: ObtenerInformacion;
 
 
     verConfirmarActualizacion: boolean = false;
@@ -75,6 +81,7 @@ export class VouchercontableComponent implements OnInit {
         private presupuestoservice: PresupuestoService,
         private bs: BreadcrumbService,
         private router: Router,
+        private regContableService: RegContableDetService
     ) {
         //variables de edición
 
@@ -167,6 +174,17 @@ export class VouchercontableComponent implements OnInit {
     ActualizarVoucherContable(vc: VoucherContableDetalle) {
         this.detalleSelected = vc;
         this.verConfirmarActualizacion = true;
+        this.obtenerInformacion();
+    }
+
+    obtenerInformacion(){
+        this.regContableService.obtenerInformacionDetallada(this.detalleSelected.anio, this.detalleSelected.mes, this.detalleSelected.libro, this.libro_numero, this.detalleSelected.orden).subscribe({
+            next: (data: ObtenerInformacion) => {
+                this.informacionEnviar = data;
+                console.log('Datos Enviar',data)
+            }
+        });
+
     }
 
     onCloseModal() {
