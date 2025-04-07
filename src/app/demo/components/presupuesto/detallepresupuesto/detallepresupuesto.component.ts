@@ -112,7 +112,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     cargarDetalles() {
         this.load = true;
-                
+
         this.presupuestoservice
             .obtenerDetallePresupuesto('01', this.navigationData.PagoNro)
             .subscribe({
@@ -142,7 +142,7 @@ export class DetallepresupuestoComponent implements OnInit {
     valoresCampos() {
         this.pagnro = this.navigationData?.PagoNro || '';
         this.fechaString = this.navigationData?.Fecha;
-        
+
         if (this.fechaString) {
             const [day, month, year] = this.fechaString.split('/').map(Number);
             this.fecha = new Date(year, month - 1, day); // Mes comienza desde 0
@@ -208,15 +208,6 @@ export class DetallepresupuestoComponent implements OnInit {
     }
 
     DatosdeRegistro() {
-        /*const formattedDate = this.datePipe.transform(this.fecha, 'dd/MM/yyyy');
-        const navigationExtras = {
-          state: {
-            pagonro: this.pagnro,
-            fechaformateada: formattedDate
-          }
-        };
-
-        this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);*/
         this.displayAgregarModal = true;
     }
     onCloseModal() {
@@ -269,7 +260,7 @@ export class DetallepresupuestoComponent implements OnInit {
     saveEditing() {
         if (this.editingRow && this.editingIndex !== null) {
             const payload = this.buildBackendPayload(this.editingRow);
-            
+
             console.log(payload);
             this.presupuestoservice
                 .actualizarDetallePresupuesto(payload)
@@ -366,7 +357,7 @@ export class DetallepresupuestoComponent implements OnInit {
             accept: () => {
                 const empresa = this.gS.getCodigoEmpresa();
                 //const numero = presupuesto.pagoNumero;
-   
+
                 const numeroPresupuesto = this.navigationData.PagoNro;
                 const numeroPresupuestoDetalle = detalle.ban02Codigo;
                 this.presupuestoservice
@@ -500,32 +491,11 @@ export class DetallepresupuestoComponent implements OnInit {
         this.editingRow.ban02NetoDolares = netoDolares;
         console.log('Editing Row ban02NetoSoles');
         this.editingRow.ban02NetoSoles = netoSoles;
-        
+
         detalle.ban02NetoDolares = netoDolares;
 
         console.log('detalle objeto neto soles');
         detalle.ban02NetoSoles = netoSoles;
-        
-
-        // if (montoPagoSoles> 0 && montoPagoSoles == importeSoles ){
-
-        // }
-        // const importeDetraccionSoles : number = this.editingRow.ban02ImporteDetraccionSoles;
-        // const importeRetencionSoles: number = this.editingRow.ban02ImporteRetencionSoles;
-        // const importePercepcionSoles: number = this.editingRow.ban02ImportePercepcionSoles;
-
-        // let netoSoles: number = 0;
-        // netoSoles = montoPagoSoles -  (importeDetraccionSoles + importeRetencionSoles +  importePercepcionSoles);
-
-        // importeNetoSoles=detalle.ban02Soles -  detalle.ban02ImporteDetraccionSoles -
-        // detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionSoles;
-        // detalle.ban02NetoSoles = importeNetoSoles;
-
-        // let importeNetoDolares: number = 0;
-        // importeNetoDolares = detalle.ban02Dolares - detalle.ban02ImporteDetraccionDolares -
-        // detalle.ban02ImporteRetencionDolares - detalle.ban02ImportePercepcionDolares;
-
-        // detalle.ban02NetoDolares = importeNetoDolares;
     }
 
     exportarPDF() {
@@ -861,37 +831,23 @@ export class DetallepresupuestoComponent implements OnInit {
 
         // Generamos el pdf
         //pdfMake.createPdf(docDefinition).download('DetallePrespupuesto_' + this.pagnro + '.pdf');
+        const fileName = 'DetallePrespupuesto_' +
+            this.pagnro +
+            '_' +
+            this.formatFecha((this.fechahoy = new Date())) +
+            '.pdf';
 
-        pdfMake.createPdf(docDefinition).getBlob((blob) => {
-            // Crear un objeto URL para el blob
+        pdfMake.createPdf(docDefinition).open({
+            filename: fileName
+        });
+        /*pdfMake.createPdf(docDefinition).getBlob((blob) => {
             const blobUrl = URL.createObjectURL(blob);
+            window.open(blobUrl, '_blank');
 
-            
-
-            // Crear un elemento <a> invisible
-            const link = document.createElement('a');
-            link.href = blobUrl;
-
-            link.download =
-                'DetallePrespupuesto_' +
-                this.pagnro +
-                '_' +
-                this.formatFecha((this.fechahoy = new Date()));
-            +'.pdf';
-
-            // Añadir al documento, hacer clic y limpiar
-            document.body.appendChild(link);
-            link.click();//
-
-            // Abrir en una nueva pestaña/ventana
-            //window.open(blobUrl, '_blank');
-
-            // Limpiar después
             setTimeout(() => {
-                document.body.removeChild(link);
                 URL.revokeObjectURL(blobUrl);
             }, 100);
-        });
+        });*/
     }
 
     formatFecha(fecha: Date): string {
