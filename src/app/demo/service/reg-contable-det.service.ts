@@ -82,7 +82,7 @@ export class RegContableDetService {
     }
 
     public actualizarVoucher(
-        voucherInfo: InfoVoucherCompleto
+        voucherInfo
     ): Observable<any> {
         let urlModificarVoucher = this.urlApi + '/SpActualiza';
         return this.http.put<any>(urlModificarVoucher, voucherInfo);
@@ -96,7 +96,7 @@ export class RegContableDetService {
         nroOrden: number
     ): Observable<any> {
 
-        let urlEliminar = `${this.urlApi}/SpElimina?empresa=01&anio=${anio}&mes=${mes}&libro=${libro}&numeroVoucher=${voucher}&nroOrden=${nroOrden}}`
+        let urlEliminar = `${this.urlApi}/SpElimina?empresa=01&anio=${anio}&mes=${mes}&libro=${libro}&numeroVoucher=${voucher}&nroOden=${nroOrden}`
         return this.http
             .delete<any>(urlEliminar);
     }

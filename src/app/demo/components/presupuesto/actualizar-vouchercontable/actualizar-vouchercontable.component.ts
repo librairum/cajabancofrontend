@@ -90,12 +90,11 @@ export class ActualizarVouchercontableComponent implements OnInit {
     ) {}
 
     monedas: any[] = [
-        {label: 'Soles', value: 'S'},
-        {label: 'Dólares', value: 'D'}
-    ]
+        { label: 'Soles', value: 'S' },
+        { label: 'Dólares', value: 'D' },
+    ];
 
     ngOnInit(): void {
-
         this.actVCForm = this.fb.group({
             cuenta: [''],
             cuenta2: [''],
@@ -179,12 +178,10 @@ export class ActualizarVouchercontableComponent implements OnInit {
         this.regContableService.obtenerTipoDocumentos().subscribe({
             next: (data) => {
                 this.ayudaTipoDocumento = data;
-                this.tipoDocumentos = this.ayudaTipoDocumento.map(
-                    (item) => ({
-                        labelTDocumento: item.ccb02des,
-                        valueTDocumento: item.ccb02cod,
-                    })
-                );
+                this.tipoDocumentos = this.ayudaTipoDocumento.map((item) => ({
+                    labelTDocumento: item.ccb02des,
+                    valueTDocumento: item.ccb02cod,
+                }));
                 console.log('Tipo doc: ', this.tipoDocumentos);
             },
             error: (err) => {
@@ -193,12 +190,20 @@ export class ActualizarVouchercontableComponent implements OnInit {
         });
     }
 
-    cargarDatosAdicionales(){
-        this.regContableService.obtenerInformacionDetallada(this.detalleSelected.anio, this.detalleSelected.mes, this.detalleSelected.libro, this.detalleSelected.numeroVoucher, this.detalleSelected.orden).subscribe({
-            next: (data: InfoVoucherCompleto) => {
-                this.infoAdicional = data
-            }
-        })
+    cargarDatosAdicionales() {
+        this.regContableService
+            .obtenerInformacionDetallada(
+                this.detalleSelected.anio,
+                this.detalleSelected.mes,
+                this.detalleSelected.libro,
+                this.detalleSelected.numeroVoucher,
+                this.detalleSelected.orden
+            )
+            .subscribe({
+                next: (data: InfoVoucherCompleto) => {
+                    this.infoAdicional = data;
+                },
+            });
         return this.infoAdicional;
     }
 
@@ -212,67 +217,88 @@ export class ActualizarVouchercontableComponent implements OnInit {
         this.obtenerDatos();
     }
 
-    obtenerDatos(): void{
-
-        if(!this.detalleSelected){
+    obtenerDatos(): void {
+        if (!this.detalleSelected) {
             console.error('No hay detalle seleccionado');
-            return
+            return;
         }
 
         this.actVCForm.patchValue({
-            cuenta: this.detalleSelected.cuenta || ''
-        })
+            cuenta: this.detalleSelected.cuenta || '',
+        });
 
         this.regContableService
             .obtenerInformacionDetallada(
-        this.detalleSelected.anio,
-        this.detalleSelected.mes,
-        this.detalleSelected.libro,
-        this.detalleSelected.numeroVoucher,
-        this.detalleSelected.orden
-      )
-      .subscribe({
-        next: (data: InfoVoucherCompleto) => {
-          this.infoAdicional = data;
-          console.log('infoAdicional', this.infoAdicional);
+                this.detalleSelected.anio,
+                this.detalleSelected.mes,
+                this.detalleSelected.libro,
+                this.detalleSelected.numeroVoucher,
+                this.detalleSelected.orden
+            )
+            .subscribe({
+                next: (data: InfoVoucherCompleto) => {
+                    this.infoAdicional = data;
+                    console.log('infoAdicional', this.infoAdicional);
 
-          this.actVCForm.patchValue({
-              glosa: this.infoAdicional[0].glosa || '',
-              comprobante: this.infoAdicional[0].comprobante || '',
-              centroCosto: this.infoAdicional[0].cencos || '',
-              centroGestion: this.infoAdicional[0].cenges || '',
-              maquina: this.infoAdicional[0].codigoMaquina || '',
-              trabajoCurso: [''],
-              cuentaCorriente: this.infoAdicional[0].cuentaCorriente || '',
-              tipDoc: this.infoAdicional[0].tipoDocumento || '',
-              nroDoc: this.infoAdicional[0].numDoc || '',
-              fechaDoc: this.infoAdicional[0].fechaDoc || '',
-              AnioDUA: this.infoAdicional[0].anioDua || '',
-              fechaVencim: this.infoAdicional[0].fechaVencimiento || '',
-              fechaPago: this.infoAdicional[0].fechaRetencion || '',
-              numeroPago: this.infoAdicional[0].nroPago || '',
-              tipoDocDocModifica: this.infoAdicional[0].docModTipo || '',
-              numeroDocModifica: this.infoAdicional[0].docModNumero || '',
-              fechaDocModifica: this.infoAdicional[0].docModFecha || '',
-              columna: this.infoAdicional[0].afecto || '',
-              moneda: this.infoAdicional[0].moneda || '',
-              tipoCambio: Number(this.infoAdicional[0].tipoCambio).toFixed(2) || '',
-              debe: Number(this.infoAdicional[0].importeDebe).toFixed(2) || '',
-              debe2: Number(this.infoAdicional[0].importeDebeEquivalencia).toFixed(2) || '',
-              haber: Number(this.infoAdicional[0].importeHaber).toFixed(2) || '',
-              haber2: Number(this.infoAdicional[0].importeHaberEquivalencia).toFixed(2) || '',
-              tipTranRet: this.infoAdicional[0].numDoc || '',
-              tipDocRet: this.infoAdicional[0].tipoDocRetencion || '',
-              numeroRet: this.infoAdicional[0].numDoc || '',
-              fechaRet: this.infoAdicional[0].fechaRetencion || '',
-              fechaPagoRet: this.infoAdicional[0].fechaPagoRetencion || '',
-          });
-        },
-        error: (err) => {
-          console.error('Error al obtener los datos', err);
-        }
-      });
-  }
+                    this.actVCForm.patchValue({
+                        // glosa: this.infoAdicional[0].glosa || '',
+                        glosa: null,
+                        comprobante: this.infoAdicional[0].comprobante || '',
+                        centroCosto: this.infoAdicional[0].cencos || '',
+                        centroGestion: this.infoAdicional[0].cenges || '',
+                        maquina: this.infoAdicional[0].codigoMaquina || '',
+                        trabajoCurso: [''],
+                        cuentaCorriente:
+                            this.infoAdicional[0].cuentaCorriente || '',
+                        tipDoc: this.infoAdicional[0].tipoDocumento || '',
+                        nroDoc: this.infoAdicional[0].numDoc || '',
+                        fechaDoc: this.infoAdicional[0].fechaDoc || '',
+                        AnioDUA: this.infoAdicional[0].anioDua || '',
+                        fechaVencim:
+                            this.infoAdicional[0].fechaVencimiento || '',
+                        fechaPago: this.infoAdicional[0].fechaRetencion || '',
+                        numeroPago: this.infoAdicional[0].nroPago || '',
+                        tipoDocDocModifica:
+                            this.infoAdicional[0].docModTipo || '',
+                        numeroDocModifica:
+                            this.infoAdicional[0].docModNumero || '',
+                        fechaDocModifica:
+                            this.infoAdicional[0].docModFecha || '',
+                        columna: this.infoAdicional[0].afecto || '',
+                        moneda: this.infoAdicional[0].moneda || '',
+                        tipoCambio:
+                            Number(this.infoAdicional[0].tipoCambio).toFixed(
+                                2
+                            ) || '',
+                        debe:
+                            Number(this.infoAdicional[0].importeDebe).toFixed(
+                                2
+                            ) || '',
+                        debe2:
+                            Number(
+                                this.infoAdicional[0].importeDebeEquivalencia
+                            ).toFixed(2) || '',
+                        haber:
+                            Number(this.infoAdicional[0].importeHaber).toFixed(
+                                2
+                            ) || '',
+                        haber2:
+                            Number(
+                                this.infoAdicional[0].importeHaberEquivalencia
+                            ).toFixed(2) || '',
+                        tipTranRet: this.infoAdicional[0].numDoc || '',
+                        tipDocRet: this.infoAdicional[0].tipoDocRetencion || '',
+                        numeroRet: this.infoAdicional[0].numDoc || '',
+                        fechaRet: this.infoAdicional[0].fechaRetencion || '',
+                        fechaPagoRet:
+                            this.infoAdicional[0].fechaPagoRetencion || '',
+                    });
+                },
+                error: (err) => {
+                    console.error('Error al obtener los datos', err);
+                },
+            });
+    }
 
     guardarConfirmacion() {
         const datosActualizar = {
@@ -284,11 +310,11 @@ export class ActualizarVouchercontableComponent implements OnInit {
             cuenta: this.actVCForm.value.cuenta,
             importeDebe: parseFloat(this.actVCForm.value.debe) || 0,
             importeHaber: parseFloat(this.actVCForm.value.haber) || 0,
-            glosa: this.actVCForm.value.glosa,
+            glosa: this.retornarInfo(this.actVCForm.value.glosa),
             tipoDocumento: this.actVCForm.value.tipDoc,
             numDoc: this.actVCForm.value.nroDoc,
-            fechaDoc: this.actVCForm.value.fechaDoc,
-            fechaVencimiento: this.actVCForm.value.fechaVencim,
+            fechaDoc: this.formatFechaString(this.actVCForm.value.fechaDoc),
+            fechaVencimiento: this.formatFechaString(this.actVCForm.value.fechaVencim),
             cuentaCorriente: this.actVCForm.value.cuentaCorriente,
             moneda: this.actVCForm.value.moneda,
             tipoCambio: parseFloat(this.actVCForm.value.tipoCambio) || 0,
@@ -296,8 +322,8 @@ export class ActualizarVouchercontableComponent implements OnInit {
             cenCos: this.actVCForm.value.centroCosto,
             cenGes: this.actVCForm.value.centroGestion,
             asientoTipo: '', // Agregar este valor o usar uno existente
-            valida: '', // Agregar este valor o usar uno existente
-            fechaVoucher: '', // Agregar este valor o usar uno existente
+            valida: this.actVCForm.value.valida,
+            fechaVoucher: this.actVCForm.value.fechaVoucher,
             amarre: this.detalleSelected.amarre || '',
             importeDebeEquivalencia:
                 parseFloat(this.actVCForm.value.debe2) || 0,
@@ -306,7 +332,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
             transa: '', // Agregar este valor o usar uno existente
             orden: this.detalleSelected.orden,
             nroPago: this.actVCForm.value.numeroPago,
-            fechaPago: this.actVCForm.value.fechaPago,
+            fechaPago: this.formatFechaString(this.actVCForm.value.fechaPago),
             porcentaje: '', // Agregar este valor o usar uno existente
             docModTipo: this.actVCForm.value.tipoDocDocModifica,
             docModNumero: this.actVCForm.value.numeroDocModifica,
@@ -315,7 +341,6 @@ export class ActualizarVouchercontableComponent implements OnInit {
 
         console.log('Datos enviados: ', datosActualizar);
 
-
         this.regContableService.actualizarVoucher(datosActualizar).subscribe({
             next: (respuesta) => {
                 this.messageService.add({
@@ -323,7 +348,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
                     summary: 'Éxito',
                     detail: 'El voucher contable fue actualizado correctamente.',
                 });
-                console.log('Enviado correctamente: ', respuesta)
+                console.log('Enviado correctamente: ', respuesta);
                 this.mostrarDialogoExito = true;
                 this.mensajeExito = 'Actualización exitosa';
                 this.onClose.emit();
@@ -337,7 +362,6 @@ export class ActualizarVouchercontableComponent implements OnInit {
                 });
             },
         });
-
     }
 
     finalizarGuardado() {
@@ -367,7 +391,25 @@ export class ActualizarVouchercontableComponent implements OnInit {
         if (partes.length !== 3) return null; // Validamos que tenga tres partes
         const [dia, mes, anio] = partes.map(Number); // Convertimos los valores a números
         if (isNaN(dia) || isNaN(mes) || isNaN(anio)) return null; // Validamos que sean números válidos
-        return new Date(anio, mes - 1, dia); // Retornamos un objeto Date (mes en base 0)
+        return new Date(dia, mes - 1, anio); // Retornamos un objeto Date (mes en base 0)
     }
 
+    formatFechaString(fecha: Date | string | null): string | null {
+        if (!fecha || (typeof fecha === 'string' && fecha.trim() === '')) {
+            return '';
+        }
+        if (typeof fecha === 'string') return fecha;
+
+        const year = fecha.getFullYear();
+        const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        const day = fecha.getDate().toString().padStart(2, '0');
+        return `${day}/${month}/${year}`;
+    }
+
+    retornarInfo(value){
+        if(value === null){
+            return ''
+        }
+        return value
+    }
 }

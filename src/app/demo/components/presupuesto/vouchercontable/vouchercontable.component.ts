@@ -234,6 +234,15 @@ export class VouchercontableComponent implements OnInit {
     }
 
     eliminarPago(vc: VoucherContableDetalle) {
+        console.log(
+            'EliminarPago parámetros:',
+            vc.anio,
+            vc.mes,
+            vc.libro,
+            vc.numeroVoucher,
+            vc.orden
+        );
+
         this.detalleSelected = vc;
         this.confirmationService.confirm({
             message: `¿Está seguro que desea eliminar el pago de anio ${
@@ -248,19 +257,20 @@ export class VouchercontableComponent implements OnInit {
             accept: () => {
                 this.regContableService
                     .EliminarPago(
-                        this.detalleSelected.anio,
-                        this.detalleSelected.mes,
-                        this.detalleSelected.libro,
-                        this.detalleSelected.numeroVoucher,
-                        this.detalleSelected.orden
+                        vc.anio,
+                        vc.mes,
+                        vc.libro,
+                        vc.numeroVoucher,
+                        vc.orden
                     )
                     .subscribe({
-                        next: () => {
+                        next: (m) => {
                             this.mS.add({
                                 severity: 'success',
                                 summary: 'Éxito',
                                 detail: 'Registro eliminado',
                             });
+                            console.log(m)
                             this.cargarDatos();
                         },
                     });
