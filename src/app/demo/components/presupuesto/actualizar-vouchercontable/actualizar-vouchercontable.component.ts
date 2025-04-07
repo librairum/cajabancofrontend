@@ -241,8 +241,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
                     console.log('infoAdicional', this.infoAdicional);
 
                     this.actVCForm.patchValue({
-                        // glosa: this.infoAdicional[0].glosa || '',
-                        glosa: null,
+                        glosa: this.infoAdicional[0].glosa || '',
                         comprobante: this.infoAdicional[0].comprobante || '',
                         centroCosto: this.infoAdicional[0].cencos || '',
                         centroGestion: this.infoAdicional[0].cenges || '',
@@ -302,7 +301,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
 
     guardarConfirmacion() {
         const datosActualizar = {
-            codigoEmpresa: '01', // Necesitarás este valor
+            codigoEmpresa: '01',
             anio: this.detalleSelected.anio,
             mes: this.detalleSelected.mes,
             libro: this.detalleSelected.libro,
@@ -322,9 +321,9 @@ export class ActualizarVouchercontableComponent implements OnInit {
             cenCos: this.actVCForm.value.centroCosto,
             cenGes: this.actVCForm.value.centroGestion,
             asientoTipo: '', // Agregar este valor o usar uno existente
-            valida: this.actVCForm.value.valida,
-            fechaVoucher: this.actVCForm.value.fechaVoucher,
-            amarre: this.detalleSelected.amarre || '',
+            valida: this.retornarInfo(this.actVCForm.value.valida),
+            fechaVoucher: this.formatFechaString(this.actVCForm.value.fechaVoucher),
+            amarre: this.retornarInfo(this.detalleSelected.amarre || ''),
             importeDebeEquivalencia:
                 parseFloat(this.actVCForm.value.debe2) || 0,
             importeHaberEquivalencia:
@@ -407,7 +406,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
     }
 
     retornarInfo(value){
-        if(value === null){
+        if(value === null || value === undefined){
             return ''
         }
         return value
