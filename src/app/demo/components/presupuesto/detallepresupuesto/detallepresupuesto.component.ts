@@ -12,13 +12,14 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
-import { Detallepresupuesto } from '../presupuesto';
+import { Detallepresupuesto, mediopago_lista } from '../presupuesto';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 
 import { InputNumberModule } from 'primeng/inputnumber';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { DialogModule } from 'primeng/dialog';
 import { AgregarPagoComponent } from '../agregar-pago/agregar-pago.component';
+import { saveAs } from 'file-saver';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
@@ -64,6 +65,7 @@ export class DetallepresupuestoComponent implements OnInit {
     editingIndex: number | null = null; // Índice de la fila en edición
     // fecha hoy
     fechahoy: Date;
+    //generar txt
     constructor(
         private messageService: MessageService,
         private presupuestoservice: PresupuestoService,
@@ -499,6 +501,14 @@ export class DetallepresupuestoComponent implements OnInit {
     }
 
     exportarPDF() {
+        if (!this.DetallePago || this.DetallePago.length === 0) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No hay datos para exportar'
+            });
+            return;
+        }
         // Definimos las cabeceras
         const headers = [
             [
@@ -860,4 +870,76 @@ export class DetallepresupuestoComponent implements OnInit {
 
         return `${dia}/${mes}/${año}_${horas}:${minutos}:${segundos}`;
     }
+
+    generarTXT() {
+        if (!this.DetallePago || this.DetallePago.length === 0) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No hay datos para exportar'
+            });
+            return;
+        }
+        const codempresa = this.gS.getCodigoEmpresa();
+        this.presupuestoservice.obtenerMedioPago(codempresa).subscribe(
+            (mediosPago: mediopago_lista[]) => {
+                try {
+                    const medioPagoEncontrado = mediosPago.find(m => m.ban01Descripcion === this.medio);
+                    const idTipoPago = medioPagoEncontrado ? medioPagoEncontrado.ban01IdTipoPago : '00';
+                    let contenido = '';
+                    this.DetallePago.forEach((detalle: Detallepresupuesto) => {
+                        const linea = `${detalle.item}|${idTipoPago}|${detalle.ban02NroDoc}|${this.formatearFecha(detalle.ban02FechaEmision)}|${this.formatearNumero(detalle.ban02Soles)}|${this.formatearNumero(detalle.ban02Dolares)}|${this.formatearNumero(detalle.ban02PagoSoles)}|${this.formatearNumero(detalle.ban02PagoDolares)}|${this.formatearNumero(detalle.ban02NetoSoles)}\n`;
+                        contenido += linea;
+                    });
+                    const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+                    const fechaActual = new Date();
+                    const nombreArchivo = `archivocarga_${this.formatearFechaArchivo(fechaActual)}.txt`;
+                    //ejecuta los comandos en la terminal
+                    //npm install file-saver --legacy-peer-deps
+                    //npm install @types/file-saver --save-dev --legacy-peer-deps
+                    saveAs(blob, nombreArchivo);
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: 'Archivo TXT generado correctamente'
+                    });
+                } catch (error) {
+                    console.error('Error al generar el archivo TXT:', error);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Ocurrió un error al generar el archivo TXT'
+                    });
+                }
+            })
+    }
+    //esto es para dar formato de fecha en el txt
+    private formatearFecha(fecha: string | Date): string {
+        if (!fecha) return '';
+        const fechaObj = fecha instanceof Date ? fecha : new Date(fecha);
+        if (isNaN(fechaObj.getTime())) return '';
+        const dia = fechaObj.getDate().toString().padStart(2, '0');
+        const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0');
+        const anio = fechaObj.getFullYear();
+
+        return `${dia}/${mes}/${anio}`;
+    }
+    //esto es para dar formato de fecha en el nombre del txt
+    private formatearFechaArchivo(fecha: Date): string {
+        const dia = fecha.getDate().toString().padStart(2, '0');
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        const anio = fecha.getFullYear();
+
+        return `${dia}${mes}${anio}`;
+    }
+    //esto para dar formato a los numeros decimales
+    private formatearNumero(valor: number | string): string {
+        if (valor === null || valor === undefined || valor === '') return '0.00';
+        const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
+        if (isNaN(numero)) return '0.00';
+
+        return numero.toFixed(2);
+    }
+
+
 }

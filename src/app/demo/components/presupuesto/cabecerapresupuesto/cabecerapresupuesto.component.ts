@@ -184,7 +184,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                 PagoNro: presupuesto.pagoNumero,
                 Fecha: formattedDate,
                 motivo: presupuesto.motivo,
-                nombreMedioPago: presupuesto.nombreMedioPago
+                nombreMedioPago: presupuesto.nombreMedioPago,
             }
         }
         this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
