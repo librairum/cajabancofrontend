@@ -70,18 +70,18 @@
             <ng-template pTemplate="body" let-ayudapago>
                 <tr>
 
-                    <td>{{ayudapago.ruc}}</td>
-                    <td>{{ayudapago.razonSocial}}</td>
-                    <td>{{ayudapago.nombreTipoDOc}}</td>
-                    <td>{{ayudapago.numeroDOcumento}}</td>
-                    <td>{{ayudapago.monedaOriginal}}</td>
-                    <td>{{ayudapago.soles | number:'1.2-2'}}</td>
-                    <td>{{ayudapago.dolares | number:'1.2-2'}}</td>
-                    <td>{{ayudapago.fechaEmision}}</td>
-                    <td>{{ayudapago.fechaVencimiento}}</td>
-                    <td>{{ayudapago.diasAtrazo}}</td>
-                    <td>{{ayudapago.afectoDetraccion}}</td>
-                    <td>{{ayudapago.afectoRetencion}}</td>
+                    <td style="text-align: left;">{{ayudapago.ruc}}</td>
+                    <td style="text-align: left;">{{ayudapago.razonSocial}}</td>
+                    <td style="text-align: left;">{{ayudapago.nombreTipoDOc}}</td>
+                    <td style="text-align: left;">{{ayudapago.numeroDOcumento}}</td>
+                    <td style="text-align: left;">{{ayudapago.monedaOriginal}}</td>
+                    <td style="text-align: right;">{{ayudapago.soles | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{ayudapago.dolares | number:'1.2-2'}}</td>
+                    <td style="text-align: left;">{{ayudapago.fechaEmision}}</td>
+                    <td style="text-align: left;">{{ayudapago.fechaVencimiento}}</td>
+                    <td style="text-align: left;">{{ayudapago.diasAtrazo}}</td>
+                    <td style="text-align: left;">{{ayudapago.afectoDetraccion}}</td>
+                    <td style="text-align: left;">{{ayudapago.afectoRetencion}}</td>
                     <td>
                         <p-tableCheckbox [value]="ayudapago"></p-tableCheckbox>
                     </td>

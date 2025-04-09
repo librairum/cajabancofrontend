@@ -119,49 +119,49 @@
                 <tr>
                     <td colspan="8">
                     </td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') |
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Dolares') |
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Dolares') |
                         number:'1.2-2' }}</td>
 
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc,
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
                         'ban02ImporteDetraccionSoles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc,
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
                         'ban02ImporteRetencionSoles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc,
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
                         'ban02ImportePercepcionSoles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoSoles') |
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoSoles') |
                         number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoDolares') |
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoDolares') |
                         number:'1.2-2' }}</td>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-detalle>
                 <tr>
-                    <td>{{ detalle.item }}</td>
-                    <td>{{ detalle.ban02Ruc }}</td>
-                    <td>{{ detalle.razonsocial }}</td>
-                    <td>{{ detalle.nombreTipoDocumento }}</td>
-                    <td>{{ detalle.ban02NroDoc }}</td>
+                    <td style="text-align: left;">{{ detalle.item }}</td>
+                    <td style="text-align: left;">{{ detalle.ban02Ruc }}</td>
+                    <td style="text-align: left;">{{ detalle.razonsocial }}</td>
+                    <td style="text-align: left;">{{ detalle.nombreTipoDocumento }}</td>
+                    <td style="text-align: left;">{{ detalle.ban02NroDoc }}</td>
                     <td
-                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 'dolares-class': detalle.nombremoneda === 'DOLARES'}">
+                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 'dolares-class': detalle.nombremoneda === 'DOLARES'}" style="text-align: left;">
                         {{ detalle.nombremoneda }}</td>
-                    <td>{{detalle.ban02FechaEmision}}</td>
-                    <td>{{detalle.ban02FechaVencimiento}}</td>
-                    <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}">{{ detalle.ban02Soles |
+                    <td style="text-align: left;">{{detalle.ban02FechaEmision}}</td>
+                    <td style="text-align: left;">{{detalle.ban02FechaVencimiento}}</td>
+                    <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" style="text-align: right;">{{ detalle.ban02Soles |
                         number:'1.2-2' }}</td>
-                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}">{{ detalle.ban02Dolares |
+                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" style="text-align: right;">{{ detalle.ban02Dolares |
                         number:'1.2-2' }}</td>
 
-                    <td>
+                    <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles"
                                 [disabled]="!esEditablePagoSoles" (change)="calcularNetoPago(detalle,'S')" />
@@ -171,7 +171,7 @@
                                 {{ detalle.ban02PagoSoles | number:'1.2-2' }}
                             </span></ng-template>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeDolares">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoDolares"
                                 [disabled]="!esEditablePagoDolares" (change)="calcularNetoPago(detalle,'D')" />
@@ -181,19 +181,19 @@
                                 {{ detalle.ban02PagoDolares | number:'1.2-2' }}
                             </span></ng-template>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTipoDetraccion">
                             <input pInputText type="text" [(ngModel)]="editingRow.ban02TipoDetraccion" />
                         </ng-container>
                         <ng-template #viewModeTipoDetraccion>{{ detalle.ban02TipoDetraccion }}</ng-template>
                     </td>
-                    <td>
+                    <td style="text-align: left;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTasaDetraccion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02Tasadetraccion" />
                         </ng-container>
                         <ng-template #viewModeTasaDetraccion>{{ detalle.ban02Tasadetraccion }}</ng-template>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionSoles"
                                 (change)="calcularNetoPago(editingRow)" />
@@ -201,14 +201,14 @@
                         <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles | number:'1.2-2'
                             }}</ng-template>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteRetencion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteRetencionSoles" />
                         </ng-container>
                         <ng-template #viewModeImporteRetencion>{{ detalle.ban02ImporteRetencionSoles | number:'1.2-2'
                             }}</ng-template>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImportePercepcion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImportePercepcionSoles" />
                         </ng-container>
@@ -216,8 +216,8 @@
                             }}</ng-template>
                     </td>
 
-                    <td>{{ detalle.ban02NetoSoles | number:'1.2-2' }}</td>
-                    <td>{{ detalle.ban02NetoDolares | number:'1.2-2' }}</td>
+                    <td style="text-align: right;">{{ detalle.ban02NetoSoles | number:'1.2-2' }}</td>
+                    <td style="text-align: right;">{{ detalle.ban02NetoDolares | number:'1.2-2' }}</td>
                     <td>
 
                         <!-- <div
@@ -228,7 +228,7 @@
                                 [text]="true" (onClick)="eliminarPago(detalle)"></p-button>
                         </div> -->
                         <div class="flex gap-2 justify-content-end">
-                            <ng-container *ngIf="editingIndex === index; else editButtons">
+                            <ng-container *ngIf="editingRow?.item === detalle.item; else editButtons">
                                 <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
                                     (onClick)="saveEditing()" pTooltip="Guardar" [text]="true"></p-button>
                                 <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm"
@@ -250,18 +250,18 @@
             <ng-template pTemplate="footer">
                 <tr>
                     <td colspan="7" class="text-right font-bold"></td>
-                    <td class="font-bold">Sumas</td>
-                    <td class="font-bold">{{ getTotalColumn('ban02Soles') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('ban02Dolares') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: left;">Sumas</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02Soles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02Dolares') | number:'1.2-2' }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="font-bold">{{ getTotalColumn('ban02ImporteDetraccionSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('ban02ImporteRetencionSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('ban02ImportePercepcionSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('ban02NetoSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold">{{ getTotalColumn('ban02NetoDolares') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImporteDetraccionSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImporteRetencionSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImportePercepcionSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02NetoSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02NetoDolares') | number:'1.2-2' }}</td>
                     <td></td>
                 </tr>
             </ng-template>

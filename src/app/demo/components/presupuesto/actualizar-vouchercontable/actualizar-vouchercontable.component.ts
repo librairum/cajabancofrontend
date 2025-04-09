@@ -83,6 +83,8 @@ export class ActualizarVouchercontableComponent implements OnInit {
     //checkbox
     afectoRetencion = false;
 
+    //desactivar
+
     constructor(
         private fb: FormBuilder,
         private messageService: MessageService,
@@ -97,13 +99,13 @@ export class ActualizarVouchercontableComponent implements OnInit {
     ngOnInit(): void {
         this.actVCForm = this.fb.group({
             cuenta: [''],
-            cuenta2: [''],
+            cuenta2: [{ value: '', disabled: true }],
             comprobante: [''],
             glosa: [''],
-            centroCosto: [''],
-            centroGestion: [''],
-            maquina: [''],
-            trabajoCurso: [''],
+            centroCosto: [{ value: '', disabled: true }],
+            centroGestion: [{ value: '', disabled: true }],
+            maquina: [{ value: '', disabled: true }],
+            trabajoCurso: [{ value: '', disabled: true }],
             cuentaCorriente: [''],
             tipDoc: [''],
             nroDoc: [''],
@@ -118,10 +120,10 @@ export class ActualizarVouchercontableComponent implements OnInit {
             columna: [''],
             moneda: [''],
             tipoCambio: [''],
-            debe: [''],
-            debe2: [''],
-            haber: [''],
-            haber2: [''],
+            debe: [{ value: '', disabled: true }],
+            debe2: [{ value: '', disabled: true }],
+            haber: [{ value: '', disabled: true }],
+            haber2: [{ value: '', disabled: true }],
             afectoRet: [''],
             tipTranRet: [''],
             tipDocRet: [''],

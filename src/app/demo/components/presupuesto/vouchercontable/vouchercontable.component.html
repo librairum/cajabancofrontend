@@ -135,25 +135,25 @@
                             </ng-container>
                         </div>
                     </td>
-                    <td *ngIf="mostrarInfo">{{detalle.orden}}</td>
-                    <td>{{ detalle.amarre }}</td>
-                    <td>{{ detalle.cuenta }}</td>
-                    <td>{{ detalle.ctaCbleDesc }}</td>
-                    <td>{{ detalle.ctactecod }}</td>
-                    <td>{{ detalle.ctaCteDesc }}</td>
-                    <td>{{ detalle.tipDocDes }}</td>
-                    <td>{{ detalle.numDoc }}</td>
-                    <td>{{ detalle.fechaDoc }}</td>
-                    <td>{{ detalle.fechaVencimiento }}</td>
+                    <td *ngIf="mostrarInfo" style="text-align: left;">{{detalle.orden}}</td>
+                    <td style="text-align: left;">{{ detalle.amarre }}</td>
+                    <td style="text-align: left;">{{ detalle.cuenta }}</td>
+                    <td style="text-align: left;">{{ detalle.ctaCbleDesc }}</td>
+                    <td style="text-align: left;">{{ detalle.ctactecod }}</td>
+                    <td style="text-align: left;">{{ detalle.ctaCteDesc }}</td>
+                    <td style="text-align: left;">{{ detalle.tipDocDes }}</td>
+                    <td style="text-align: left;">{{ detalle.numDoc }}</td>
+                    <td style="text-align: left;">{{ detalle.fechaDoc }}</td>
+                    <td style="text-align: left;">{{ detalle.fechaVencimiento }}</td>
                     <td class="text-right">{{ detalle.tipoCambio | number:'1.2-2' }}</td>
                     <td class="text-right">{{ detalle.importeDebe | currency:'':'':'1.2-2' }}</td>
                     <td class="text-right">{{ detalle.importeHaber | currency:'':'':'1.2-2' }}</td>
                     <td class="text-right">{{ detalle.importeDebeEquivalencia | currency:'':'':'1.2-2' }}</td>
                     <td class="text-right">{{ detalle.importeHaberEquivalencia | currency:'':'':'1.2-2' }}</td>
-                    <td *ngIf="mostrarInfo">{{detalle.anio}}</td>
-                    <td *ngIf="mostrarInfo">{{detalle.mes}}</td>
-                    <td *ngIf="mostrarInfo">{{detalle.libro}}</td>
-                    <td *ngIf="mostrarInfo">{{detalle.numeroVoucher}}</td>
+                    <td style="text-align: left;" *ngIf="mostrarInfo">{{detalle.anio}}</td>
+                    <td style="text-align: left;" *ngIf="mostrarInfo">{{detalle.mes}}</td>
+                    <td style="text-align: left;" *ngIf="mostrarInfo">{{detalle.libro}}</td>
+                    <td style="text-align: left;" *ngIf="mostrarInfo">{{detalle.numeroVoucher}}</td>
 
                 </tr>
             </ng-template>

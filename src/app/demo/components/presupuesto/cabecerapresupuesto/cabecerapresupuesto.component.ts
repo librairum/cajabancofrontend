@@ -78,7 +78,6 @@ export class CabecerapresupuestoComponent implements OnInit {
     //para pasar el pagonro
     selectedPagoNumero: string = '';
 
-
     constructor(private gS: GlobalService, private bS: BreadcrumbService,
         private confirmationService: ConfirmationService,
         private router: Router,
@@ -113,20 +112,12 @@ export class CabecerapresupuestoComponent implements OnInit {
                 });
             }
         });
-        /*
-        this.medioPagoLista =[
-            {id:"01", nombre:"Cheque"},
-            {id:"02", nombre:"Paylink"},
-            {id:"03", nombre:"Caja"}
-        ];
-        */
     }
 
     onMedioChange(event: any) {
         this.selectMedioPago = event.value;
 
     }
-
 
     ngOnInit(): void {
         this.bS.setBreadcrumbs([
@@ -145,10 +136,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         });
         this.cargarMedioPago();
-
-
     }
-
     cargarPresupuesto(empresa: string, anio: string, mes: string): void {
         this.loading = true;
         this.presupuestoService.obtenerPresupuesto(empresa, anio, mes).subscribe({
@@ -174,7 +162,6 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         });
     }
-
     verDetalles(presupuesto: cabeceraPresupuesto) {
 
         const formattedDate = this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy');
@@ -188,29 +175,17 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         }
         this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
-
     }
-    verVouchercontable(presupuesto: cabeceraPresupuesto){
+    verVouchercontable(presupuesto: cabeceraPresupuesto) {
 
         const navigationExtras = {
             state: {
-                empresa:this.gS.getCodigoEmpresa(),
+                empresa: this.gS.getCodigoEmpresa(),
                 PagoNro: presupuesto.pagoNumero,
             }
         }
         this.router.navigate(['Home/voucher_contable'], navigationExtras)
     }
-    /*modificarPago(presupuesto:cabeceraPresupuesto){
-        const formattedDate=this.datePipe.transform(presupuesto.fecha,'dd/MM/yyyy');
-        const navigationExtras = {
-            state: {
-                numeropresupuesto: presupuesto.pagoNumero,
-                fechapresupuesto: formattedDate,
-                isModificacion: true
-            }
-        };
-        this.router.navigate(['/Home/nuevo-presupuesto'], navigationExtras);
-    }*/
     iniciarNuevoPresupuesto() {
         this.mostrarNuevaFila = true;
         this.botonesDeshabilitados = true;
@@ -273,6 +248,27 @@ export class CabecerapresupuestoComponent implements OnInit {
                         this.nuevoPresupuesto.ban01Anio,
                         this.nuevoPresupuesto.ban01Mes
                     );
+
+                    const nuevoPagoNumero = response.item;
+                    if (nuevoPagoNumero) {
+                        const formattedDate = this.datePipe.transform(this.nuevoPresupuesto.ban01Fecha, 'dd/MM/yyyy');
+                        let nombreMedioPago = '';
+                        if (this.nuevoPresupuesto.ban01mediopago) {
+                            const medioPago = this.medioPagoLista.find(mp => mp.ban01IdTipoPago === this.nuevoPresupuesto.ban01mediopago);
+                            if (medioPago) {
+                                nombreMedioPago = medioPago.ban01Descripcion;
+                            }
+                        }
+                        const navigationExtras = {
+                            state: {
+                                PagoNro: nuevoPagoNumero,
+                                Fecha: formattedDate,
+                                motivo: this.nuevoPresupuesto.ban01Descripcion,
+                                nombreMedioPago: nombreMedioPago,
+                            }
+                        };
+                        this.router.navigate(['Home/detalle-presupuesto'], navigationExtras);
+                    }
                 },
                 error: (error) => {
                     this.messageService.add({
@@ -326,7 +322,6 @@ export class CabecerapresupuestoComponent implements OnInit {
             this.editForm.ban01FechaRegistro = this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '';
         }
     }
-
     guardarEdicion(pagoNumero: string) {
         // Asegurar que la fecha de registro sea la actual al momento de guardar
         this.editForm.ban01FechaRegistro = this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '';
@@ -354,7 +349,6 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         });
     }
-
     eliminarPago(presupuesto: cabeceraPresupuesto) {
         this.confirmationService.confirm({
             message: `
@@ -410,14 +404,11 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         });
     }
-
-
     confirmarPago(presupuesto: cabeceraPresupuesto) {
         this.selectedPagoNumero = presupuesto.pagoNumero;
         console.log(this.selectedPagoNumero)
         this.verConfirmarPago = true;
     }
-
     onCloseModal() {
         if (this.confirmarpagocomponente) {
             this.confirmarpagocomponente.limpiar();
@@ -433,14 +424,12 @@ export class CabecerapresupuestoComponent implements OnInit {
         });
     }
     uploadFunction() { }
-
     abrirdocumento(filePath: string): void {
         if (filePath) {
             // Solo abre una nueva ventana y coloca la ruta directamente en la barra de direcciones
             window.open(filePath, '_blank');
         }
     }
-
 
     anio_dato: string = ""
     mes_dato: string = ""
@@ -476,7 +465,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     flagOperacion: 'E',
                     fechapago: '',
                     numerooperacion: '',
-                    enlacepago: presupuesto.ban01EnlacePago ,
+                    enlacepago: presupuesto.ban01EnlacePago,
                 };
                 this.presupuestoService.actualizarComprobante(parametrosanulacion).subscribe({
                     next: (response) => {

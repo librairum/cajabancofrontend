@@ -39,7 +39,7 @@
             <ng-template pTemplate="body" let-mediopago let-ri="rowIndex" let-editing="editing">
                 <tr [pEditableRow]="mediopago">
                     <!-- Código -->
-                    <td>
+                    <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01IdTipoPago"
@@ -52,7 +52,7 @@
                     </td>
 
                     <!-- Descripción -->
-                    <td>
+                    <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01Descripcion"
@@ -65,7 +65,7 @@
                     </td>
 
                     <!-- Prefijo -->
-                    <td>
+                    <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConPrefijo"
@@ -78,7 +78,7 @@
                     </td>
 
                     <!-- CtaBanco -->
-                    <td>
+                    <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaBanco"
@@ -91,7 +91,7 @@
                     </td>
 
                     <!-- CtaITF -->
-                    <td>
+                    <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaITF"
@@ -105,7 +105,7 @@
 
                     <!-- Acciones -->
                     <td>
-                        <div class="flex justify-content-start gap-2">
+                        <div class="flex justify-content-center gap-2">
                             <button *ngIf="!editing" pButton pInitEditableRow
                                     (click)="onRowEditInit(mediopago)"
                                     icon="pi pi-pencil"

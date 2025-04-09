@@ -36,7 +36,7 @@
             <ng-template pTemplate="body" let-banco let-ri="rowIndex" let-editing="editing">
                 <tr [pEditableRow]="banco">
                     <!-- Columna ID -->
-                    <td>
+                    <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="banco.ban01IdBanco"
@@ -49,7 +49,7 @@
                     </td>
 
                     <!-- Columna Descripción -->
-                    <td>
+                    <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="banco.ban01Descripcion"
@@ -62,7 +62,7 @@
                     </td>
 
                     <!-- Columna Prefijo -->
-                    <td>
+                    <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="banco.ban01Prefijo"
@@ -76,7 +76,7 @@
 
                     <!-- Columna Acciones -->
                     <td>
-                        <div class="flex justify-content-start gap-2">
+                        <div class="flex justify-content-center gap-2">
                             <!-- Botón Editar -->
                             <button *ngIf="!editing" pButton
                                     pInitEditableRow
@@ -84,7 +84,8 @@
                                     icon="pi pi-pencil"
                                     pTooltip="Editar Banco"
                                     [disabled]="isNew || isEditingAnyRow"
-                                    class="p-button-rounded p-button-text p-button-sm"></button>
+                                    class="p-button-rounded p-button-text p-button-sm"
+                                    ></button>
 
                             <!-- Botón Guardar -->
                             <button *ngIf="editing" pButton
