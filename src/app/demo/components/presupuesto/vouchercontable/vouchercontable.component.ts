@@ -49,6 +49,7 @@ import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.ser
     providers: [MessageService, DatePipe],
 })
 export class VouchercontableComponent implements OnInit {
+    @ViewChild(ActualizarVouchercontableComponent) actualizarvoucherComponent:ActualizarVouchercontableComponent;
     voucherContableDetalle: VoucherContableDetalle[] = [];
     voucherContableCabecera: VoucherContableCabecera[] = [];
     navigationData: any;
@@ -199,6 +200,8 @@ export class VouchercontableComponent implements OnInit {
             }
         });
         */
+        this.verConfirmarActualizacion = false; // Cierra el modal
+        this.cargarDatos(); // Recarga los datos de la grilla
     }
 
     // Añade estos métodos a tu clase VouchercontableComponent

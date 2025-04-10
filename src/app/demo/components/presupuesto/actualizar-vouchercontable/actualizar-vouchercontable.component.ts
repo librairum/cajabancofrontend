@@ -400,8 +400,8 @@ export class ActualizarVouchercontableComponent implements OnInit {
                 });
                 console.log('Enviado correctamente: ', respuesta);
                 this.mostrarDialogoExito = true;
-                this.mensajeExito = 'Actualización exitosa';
-                this.onClose.emit();
+                //this.mensajeExito = 'Actualización exitosa';
+                //this.onClose.emit();
             },
             error: (err) => {
                 console.error('Error al actualizar el voucher: ', err);
