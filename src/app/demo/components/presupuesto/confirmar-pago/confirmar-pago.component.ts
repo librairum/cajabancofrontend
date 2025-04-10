@@ -33,6 +33,7 @@ export class ConfirmarPagoComponent implements OnInit {
     @Output() onClose = new EventEmitter<void>();
 
     pagoForm: FormGroup;
+    destinationPath: string = '';
 
     fechaEjecucionPago: Date | null = null;
     nroOperacion: string = '';
@@ -59,13 +60,13 @@ export class ConfirmarPagoComponent implements OnInit {
             nroOperacion: ['',Validators.required],
             rutaComprobante: ['',Validators.required]
         });
-        
+
       this.apiUrl = (window as any).config?.url
         this.urlApi = this.apiUrl;
     }
 
     ngOnInit(): void {
-    
+
         if (this.pagoNumero) {
             this.nroOperacion = this.pagoNumero;
         }
@@ -75,6 +76,7 @@ export class ConfirmarPagoComponent implements OnInit {
                 this.mes_combo = (date.getMonth() + 1).toString().padStart(2, '0');
             }
         })
+        this.destinationPath = this.configService.getRutaDoc();
     }
 
     /*ngOnChanges(changes: SimpleChanges) {
@@ -97,7 +99,10 @@ export class ConfirmarPagoComponent implements OnInit {
         }
 //
         this.cargandoArchivo = true;
-        const destinationPath = 'D:/GMINGENIEROS/fronent/cajabancofrontend/src/assets/documentos';
+        // const destinationPath =
+        //     'C:UsersUSERDesktopproyecto v2cajabancofrontendsrcassetsdocumentos';
+                    const destinationPath =
+                        'C:\\Users\\USER\\Desktop\\proyecto v2\\cajabancofrontend\\src\\assets\\documentos';
         //const destinationPath = this.rutaDoc;
         const originalFileName = this.archivoSeleccionado?.name || '';
         const fileName = originalFileName.split('.').length > 1

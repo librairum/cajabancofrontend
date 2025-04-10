@@ -33,4 +33,8 @@ export class ConfigService {
         return this.config?.url || 'https://localhost:7277'; // Valor por defecto // verificar si va se http o https
 
     }
+
+    getRutaDoc(): string{
+        return this.config?.rutaDoc;
+    }
 }
