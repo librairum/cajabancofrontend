@@ -280,7 +280,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
                         maquina: this.infoAdicional[0].codigoMaquina || '',
                         trabajoCurso: [''],
                         cuentaCorriente:
-                            this.infoAdicional[0].cuentaCorriente || 'No se guardó',
+                            this.infoAdicional[0].cuentaCorriente || '',
                         tipDoc: this.infoAdicional[0].tipoDocumento || '',
                         nroDoc: this.infoAdicional[0].numDoc || '',
                         fechaDoc: this.infoAdicional[0].fechaDoc || '',
