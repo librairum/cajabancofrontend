@@ -158,24 +158,6 @@ export class ActualizarVouchercontableComponent implements OnInit {
         });
     }
 
-    // obtenerCuentaCorriente() {
-    //     this.regContableService.obtenerCuentaCorriente().subscribe({
-    //         next: (data) => {
-    //             this.ayudaCuentaCorriente = data;
-    //             this.cuentasCorrientes = this.ayudaCuentaCorriente.map(
-    //                 (item) => ({
-    //                     labelCCorriente: item.ccm02nom,
-    //                     valueCCorriente: item.ccm02cod,
-    //                 })
-    //             );
-    //             console.log(this.cuentasCorrientes);
-    //         },
-    //         error: (err) => {
-    //             console.error('Error al obtener datos:', err);
-    //         },
-    //     });
-    // }
-
     obtenerCuentaCorriente(): Promise<void> {
     return new Promise((resolve) => {
         this.regContableService.obtenerCuentaCorriente().subscribe({
@@ -298,7 +280,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
                         maquina: this.infoAdicional[0].codigoMaquina || '',
                         trabajoCurso: [''],
                         cuentaCorriente:
-                            this.infoAdicional[0].cuentaCorriente || '',
+                            this.infoAdicional[0].cuentaCorriente || 'No se guardó',
                         tipDoc: this.infoAdicional[0].tipoDocumento || '',
                         nroDoc: this.infoAdicional[0].numDoc || '',
                         fechaDoc: this.infoAdicional[0].fechaDoc || '',
@@ -316,13 +298,9 @@ export class ActualizarVouchercontableComponent implements OnInit {
                         columna: this.infoAdicional[0].afecto || '',
                         moneda: this.infoAdicional[0].moneda || '',
                         tipoCambio:
-                            Number(this.infoAdicional[0].tipoCambio).toFixed(
-                                2
-                            ) || '',
+                            Number(this.infoAdicional[0].tipoCambio).toFixed(2),
                         debe:
-                            Number(this.infoAdicional[0].importeDebe).toFixed(
-                                2
-                            ) || '',
+                            Number(this.infoAdicional[0].importeDebe).toFixed(2),
                         debe2:
                             Number(
                                 this.infoAdicional[0].importeDebeEquivalencia
@@ -356,16 +334,26 @@ export class ActualizarVouchercontableComponent implements OnInit {
             anio: this.retornarInfo(this.detalleSelected.anio),
             mes: this.retornarInfo(this.detalleSelected.mes),
             libro: this.retornarInfo(this.detalleSelected.libro),
-            numeroVoucher: this.retornarInfo(this.detalleSelected.numeroVoucher),
+            numeroVoucher: this.retornarInfo(
+                this.detalleSelected.numeroVoucher
+            ),
             cuenta: this.retornarInfo(this.actVCForm.value.cuenta),
-            importeDebe: parseFloat(this.actVCForm.value.debe) || 0,
-            importeHaber: parseFloat(this.actVCForm.value.haber) || 0,
+            importeDebe:
+                parseFloat(this.actVCForm.value.debe) ||
+                Number(this.infoAdicional[0].importeDebe).toFixed(2),
+            importeHaber:
+                parseFloat(this.actVCForm.value.haber) ||
+                Number(this.infoAdicional[0].importeHaber).toFixed(2),
             glosa: this.retornarInfo(this.actVCForm.value.glosa),
             tipoDocumento: this.retornarInfo(this.actVCForm.value.tipDoc),
             numDoc: this.retornarInfo(this.actVCForm.value.nroDoc),
             fechaDoc: this.formatFechaString(this.actVCForm.value.fechaDoc),
-            fechaVencimiento: this.formatFechaString(this.actVCForm.value.fechaVencim),
-            cuentaCorriente: this.retornarInfo(this.actVCForm.value.cuentaCorriente),
+            fechaVencimiento: this.formatFechaString(
+                this.actVCForm.value.fechaVencim
+            ),
+            cuentaCorriente: this.retornarInfo(
+                this.actVCForm.value.cuentaCorriente
+            ),
             moneda: this.retornarInfo(this.actVCForm.value.moneda),
             tipoCambio: parseFloat(this.actVCForm.value.tipoCambio) || 0,
             afecto: this.retornarInfo(this.actVCForm.value.columna),
@@ -373,20 +361,32 @@ export class ActualizarVouchercontableComponent implements OnInit {
             cenGes: this.retornarInfo(this.actVCForm.value.centroGestion),
             asientoTipo: this.retornarInfo(this.actVCForm.value.asientoTipo),
             valida: this.retornarInfo(this.actVCForm.value.valida),
-            fechaVoucher: this.formatFechaString(this.actVCForm.value.fechaVoucher),
+            fechaVoucher: this.formatFechaString(
+                this.actVCForm.value.fechaVoucher
+            ),
             amarre: this.retornarInfo(this.detalleSelected.amarre || ''),
             importeDebeEquivalencia:
-                parseFloat(this.actVCForm.value.debe2) || 0,
+                parseFloat(this.actVCForm.value.debe2) ||
+                Number(this.infoAdicional[0].importeDebeEquivalencia).toFixed(
+                    2
+                ),
             importeHaberEquivalencia:
-                parseFloat(this.actVCForm.value.haber2) || 0,
+                parseFloat(this.actVCForm.value.haber2) ||
+                Number(this.infoAdicional[0].importeHaberEquivalencia).toFixed(2),
             transa: this.retornarInfo(this.actVCForm.value.transa),
             orden: this.retornarInfo(this.detalleSelected.orden),
             nroPago: this.retornarInfo(this.actVCForm.value.numeroPago),
             fechaPago: this.formatFechaString(this.actVCForm.value.fechaPago),
             porcentaje: this.retornarInfo(this.actVCForm.value.porcentaje),
-            docModTipo: this.retornarInfo(this.actVCForm.value.tipoDocDocModifica),
-            docModNumero: this.retornarInfo(this.actVCForm.value.numeroDocModifica),
-            docModFecha: this.retornarInfo(this.actVCForm.value.fechaDocModifica)
+            docModTipo: this.retornarInfo(
+                this.actVCForm.value.tipoDocDocModifica
+            ),
+            docModNumero: this.retornarInfo(
+                this.actVCForm.value.numeroDocModifica
+            ),
+            docModFecha: this.retornarInfo(
+                this.actVCForm.value.fechaDocModifica
+            ),
         };
 
         console.log('Datos enviados: ', datosActualizar);
