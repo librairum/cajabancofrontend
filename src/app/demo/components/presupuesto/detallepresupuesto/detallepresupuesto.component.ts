@@ -407,10 +407,14 @@ export class DetallepresupuestoComponent implements OnInit {
         let importeNetoSoles: number = 0;
         let montoPagoSoles: number = this.editingRow.ban02PagoSoles;
         let montoPagoDolares: number = this.editingRow.ban02PagoDolares;
-
+        console.log("calcular neto pago");
         const tasaRetencion = this.editingRow.ban02TasaRetencion;
         const tasaDetraccion = this.editingRow.ban02Tasadetraccion;
         const tasaPercepcion = this.editingRow.ban02TasaPercepcion;
+
+        console.log(montoPagoSoles);
+        console.log(montoPagoDolares);
+
         let importeDetraccionSoles: number = 0,
             importeRetencionSoles: number = 0,
             importePercepcionSoles: number = 0;
@@ -436,7 +440,12 @@ export class DetallepresupuestoComponent implements OnInit {
                     importePercepcionSoles);
             console.log(netoSoles);
             //calcular los valores de dolares
+            console.log("moneda soles y se calcula monto pago dolares");
+            
             montoPagoDolares = montoPagoSoles / numeroTipoCambio;
+            console.log(montoPagoSoles);
+            console.log(numeroTipoCambio);
+            console.log(montoPagoDolares.toFixed(2));
             importeDetraccionDolares =
                 (tasaDetraccion / 100) * montoPagoDolares;
             importeRetencionDolares = (tasaRetencion / 100) * montoPagoDolares;
@@ -452,6 +461,8 @@ export class DetallepresupuestoComponent implements OnInit {
             importeRetencionDolares = (tasaRetencion / 100) * montoPagoDolares;
             importePercepcionDolares =
                 (tasaPercepcion / 100) * montoPagoDolares;
+
+            
             netoDolares =
                 montoPagoDolares -
                 (importeDetraccionDolares +
@@ -461,7 +472,8 @@ export class DetallepresupuestoComponent implements OnInit {
             //cambio en soles soles
             //Convertir segun el tiop de cambio mont de pago dolares a monto pago soles ;
             montoPagoSoles = montoPagoDolares * numeroTipoCambio;
-
+            console.log("moneda dolares y monto a pagar soles");
+                    console.log(montoPagoSoles);
             importeDetraccionSoles = (tasaDetraccion / 100) * montoPagoSoles;
             importeRetencionSoles = (tasaRetencion / 100) * montoPagoSoles;
             importePercepcionSoles = (tasaRetencion / 100) * montoPagoSoles;
@@ -497,6 +509,7 @@ export class DetallepresupuestoComponent implements OnInit {
         detalle.ban02NetoDolares = netoDolares;
 
         console.log('detalle objeto neto soles');
+        console.log(netoSoles);
         detalle.ban02NetoSoles = netoSoles;
     }
 
