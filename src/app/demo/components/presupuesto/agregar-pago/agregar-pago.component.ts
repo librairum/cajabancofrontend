@@ -302,5 +302,5 @@ export class AgregarPagoComponent implements OnInit {
         //this.onClose.emit();
     }
 
-    
+
 }
