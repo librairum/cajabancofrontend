@@ -54,5 +54,8 @@
     padding: 1rem;
 }
 
+.p-dropdown-panel .p-dropdown-items-wrapper .p-dropdown-items-wrapper {
+    overflow: hidden !important;
+}
 
-  
+

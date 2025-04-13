@@ -248,13 +248,11 @@ export class VouchercontableComponent implements OnInit {
 
         this.detalleSelected = vc;
         this.confirmationService.confirm({
-            message: `¿Está seguro que desea eliminar el pago de anio ${
-                (this.detalleSelected.anio)
-            }, ${this.detalleSelected.mes}, ${this.detalleSelected.libro}, ${this.detalleSelected.numeroVoucher}, ${this.detalleSelected.orden}?`,
+            message: `¿Está seguro que desea eliminar el pago? `,
             header: 'Confirmar Eliminación',
             icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sí, eliminar',
-            rejectLabel: 'No, cancelar',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button',
             accept: () => {

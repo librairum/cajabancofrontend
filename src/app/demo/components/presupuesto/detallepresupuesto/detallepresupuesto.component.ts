@@ -173,7 +173,6 @@ export class DetallepresupuestoComponent implements OnInit {
                     totalNetoPagarDolares: 0,
                 };
             }
-
             acc[item.ban02Ruc].totalSoles += item.ban02Soles || 0;
             acc[item.ban02Ruc].totalDolares += item.ban02Dolares || 0;
             acc[item.ban02Ruc].totalMontoPagarSoles += item.ban02PagoSoles || 0;
@@ -292,6 +291,8 @@ export class DetallepresupuestoComponent implements OnInit {
     }
 
     buildBackendPayload(detalle: Detallepresupuesto): any {
+
+
         return {
             ban02Empresa: this.gS.getCodigoEmpresa(),
             ban02Ruc: detalle.ban02Ruc,
@@ -343,19 +344,23 @@ export class DetallepresupuestoComponent implements OnInit {
     eliminarPago(detalle: Detallepresupuesto) {
         this.confirmationService.confirm({
             message: `
-                    <div class="text-center">
-                        <i class="pi pi-exclamation-circle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
-                        <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
-                        <p style="color: var(--text-color-secondary);">Número documento: ${detalle.ban02NroDoc}</p>
-
-                    </div>
+                <p style="text-align: center;">
+                    ¿Está seguro de eliminar el presupuesto?
+                </p>
+                <div style="text-align: center; margin-top: 10px;">
+                    <p>
+                        <strong>Número documento: </strong>${
+                            detalle.ban02NroDoc
+                        }
+                    </p>
+                </div>
                 `,
             header: 'Confirmar Eliminación',
-            //icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sí, eliminar',
-            rejectLabel: 'No, cancelar',
-            acceptButtonStyleClass: 'p-button-danger p-button-raised',
-            rejectButtonStyleClass: 'p-button-outlined p-button-raised',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button',
             accept: () => {
                 const empresa = this.gS.getCodigoEmpresa();
                 //const numero = presupuesto.pagoNumero;
@@ -566,8 +571,20 @@ export class DetallepresupuestoComponent implements OnInit {
 
         // Formato para los numeros
         const formatNumber = (num) => {
-            return num ? num.toFixed(2) : '0.00';
+            const numero = Number(num);
+            if (isNaN(numero)) return '0.00';
+
+            return numero.toLocaleString('es-PE', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
         };
+
+        const formatCell = (value: any) => ({
+            text: formatNumber(value),
+            alignment: 'right'
+        })
+
 
         // Cuerpo de la tabla
         const body = [...headers];
@@ -584,17 +601,17 @@ export class DetallepresupuestoComponent implements OnInit {
                     item.nombremoneda,
                     item.ban02FechaEmision,
                     item.ban02FechaVencimiento,
-                    formatNumber(item.ban02Soles),
-                    formatNumber(item.ban02Dolares),
-                    formatNumber(item.ban02PagoSoles),
-                    formatNumber(item.ban02PagoDolares),
+                    formatCell(item.ban02Soles),
+                    formatCell(item.ban02Dolares),
+                    formatCell(item.ban02PagoSoles),
+                    formatCell(item.ban02PagoDolares),
                     item.ban02TipoDetraccion || '',
                     item.ban02Tasadetraccion || '',
-                    formatNumber(item.ban02ImporteDetraccionSoles),
-                    formatNumber(item.ban02ImporteRetencionSoles),
-                    formatNumber(item.ban02ImportePercepcionSoles),
-                    formatNumber(item.ban02NetoSoles),
-                    formatNumber(item.ban02NetoDolares),
+                    formatCell(item.ban02ImporteDetraccionSoles),
+                    formatCell(item.ban02ImporteRetencionSoles),
+                    formatCell(item.ban02ImportePercepcionSoles),
+                    formatCell(item.ban02NetoSoles),
+                    formatCell(item.ban02NetoDolares),
                 ]);
             });
 
@@ -697,8 +714,8 @@ export class DetallepresupuestoComponent implements OnInit {
             '',
             '',
             '',
-            { text: 'Sumas', style: 'total', colSpan: 1 },
-            { text: formatNumber(totalSoles), style: 'total', colSpan: 1 },
+            { text: 'Sumas', style: 'total', colSpan: 1, alignment: 'left'} as any,
+            { text: formatNumber(totalSoles), style: 'total', colSpan: 1},
             { text: formatNumber(totalDolares), style: 'total', colSpan: 1 },
             { text: '', style: 'total', colSpan: 1 },
             { text: '', style: 'total', colSpan: 1 },
@@ -825,17 +842,17 @@ export class DetallepresupuestoComponent implements OnInit {
                 subtotal: {
                     bold: true,
                     fontSize: 6,
-                    alignment: 'center',
+                    alignment: 'right',
                 },
                 total: {
                     bold: true,
                     fontSize: 6,
-                    alignment: 'center',
+                    alignment: 'right',
                 },
             },
             defaultStyle: {
                 fontSize: 6,
-                alignment: 'center',
+                alignment: 'left',
             },
         };
 
@@ -940,6 +957,5 @@ export class DetallepresupuestoComponent implements OnInit {
 
         return numero.toFixed(2);
     }
-
 
 }

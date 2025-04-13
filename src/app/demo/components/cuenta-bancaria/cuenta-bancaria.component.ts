@@ -21,6 +21,7 @@ import { CardModule } from 'primeng/card';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { TooltipModule } from 'primeng/tooltip';
 import {Router} from '@angular/router';
+import { GlobalService } from '../../service/global.service';
 @Component({
     selector: 'app-cuenta-bancaria',
     standalone: true,
@@ -66,11 +67,11 @@ export class CuentaBancariaComponent implements OnInit {
     descripcion: string;
     navigationData : any;
 
-    constructor(private fb: FormBuilder, private cbS: CuentaBancariaService, 
-        private messageService: MessageService, private confirmationsService: ConfirmationService, 
+    constructor(private fb: FormBuilder, private cbS: CuentaBancariaService,
+        private messageService: MessageService, private confirmationsService: ConfirmationService,
         private bS: BancoService, private route: ActivatedRoute, private cdRef: ChangeDetectorRef,
-        private bSc: BreadcrumbService, 
-        private rout: Router) {
+        private bSc: BreadcrumbService,
+        private rout: Router, private globalService: GlobalService) {
             const navigation = rout.getCurrentNavigation();
             if(navigation?.extras?.state){
                 this.navigationData = navigation.extras.state;
@@ -92,12 +93,12 @@ export class CuentaBancariaComponent implements OnInit {
         //this.idBanco = params['idBanco'];
             //this.descripcion =params['descripcion'];
         //});
-            
+
             console.log('idBanco:', this.idBanco);
             console.log('descripcion:', this.descripcion);
-            
+
           if (this.idBanco && this.descripcion) {
-            this.CuentaBancariaForm.patchValue({ idBanco: this.idBanco }); 
+            this.CuentaBancariaForm.patchValue({ idBanco: this.idBanco });
             this.CuentaBancariaForm.patchValue({descripcion: this.descripcion});
             this.loadCuentasBancarias();
             this.loadMonedas();
@@ -110,7 +111,7 @@ export class CuentaBancariaComponent implements OnInit {
                 this.items = bc;
             })
           }
-        
+
       }
     initForm() {
         this.CuentaBancariaForm = this.fb.group({
@@ -151,7 +152,7 @@ export class CuentaBancariaComponent implements OnInit {
     onMonedaChange(event: any) {
         this.selectMoneda = event.value;
         console.log(this.selectMoneda);
-        
+
     }
 
     onBancoChange(event: any) {
@@ -161,7 +162,7 @@ export class CuentaBancariaComponent implements OnInit {
     onRowEditInit(cuentaBancaria: Cuenta_Bancaria, index: number) {
         this.editingRowIndex = index;
         this.editingCuentaBancaria = { ...cuentaBancaria }
-         
+
         this.isEditingAnyRow = true;
         console.log("verificacion datos: ", this.editingCuentaBancaria);
 
@@ -177,12 +178,17 @@ export class CuentaBancariaComponent implements OnInit {
     onRowEditSave(rowData: any) {
         if (rowData) {
             const updCuentaBancaria: updCuenta_Bancaria = {
-                ban01Empresa: '01',
+                ban01Empresa: this.globalService.getCodigoEmpresa(),
                 ban01IdBanco: rowData.idBanco,
                 ban01IdCuenta: rowData.idCuenta,
                 ban01IdNro: rowData.id,
                 ban01Moneda: rowData.moneda,
-                ban01Descripcion: rowData.idBanco + ' ' + rowData.nombreBanco + ' ' + rowData.idCuenta,
+                ban01Descripcion:
+                    rowData.idBanco +
+                    ' ' +
+                    rowData.nombreBanco +
+                    ' ' +
+                    rowData.idCuenta,
                 ban01CuentaContable: rowData.ctaContable,
                 ban01Itf: rowData.ctaITF,
                 ban01Prefijo: rowData.pref,
@@ -200,9 +206,9 @@ export class CuentaBancariaComponent implements OnInit {
                         severity: 'success',
                         summary: 'Éxito',
                         detail: 'Registro actualizado',
-                        life: 3000  
+                        life: 3000
                     });
-                
+
                     this.cdRef.detectChanges();
                 }
             });
@@ -217,8 +223,8 @@ export class CuentaBancariaComponent implements OnInit {
                 message: `¿Está seguro que desea eliminar la cuenta bancaria?`,
                 header: 'Confirmar Eliminación',
                 icon: 'pi pi-exclamation-triangle',
-                acceptLabel: 'Sí, eliminar',
-                rejectLabel: 'No, cancelar',
+                acceptLabel: 'Sí',
+                rejectLabel: 'No',
                 acceptButtonStyleClass: 'p-button-danger',
                 rejectButtonStyleClass: 'p-button',
                 accept: () => {
@@ -249,17 +255,21 @@ export class CuentaBancariaComponent implements OnInit {
             const formData = this.CuentaBancariaForm.value;
 
             const createCuentaBancaria: insertCuenta_Bancaria = {
-                ban01Empresa: '01',
-                ban01IdBanco:  this.idBanco,
+                ban01Empresa: this.globalService.getCodigoEmpresa(),
+                ban01IdBanco: this.idBanco,
                 ban01IdCuenta: formData.idCuenta,
-                ban01IdNro:  this.descripcion,
+                ban01IdNro: this.descripcion,
                 ban01Moneda: formData.moneda,
-                ban01Descripcion: this.idBanco + ' ' + this.descripcion + ' ' + formData.idCuenta,
+                ban01Descripcion:
+                    this.idBanco +
+                    ' ' +
+                    this.descripcion +
+                    ' ' +
+                    formData.idCuenta,
                 ban01CuentaContable: formData.ctaContable || '',
                 ban01Itf: formData.ctaITF || '',
                 ban01Prefijo: formData.pref || '',
                 ban01CtaDet: formData.ctaGastos || '',
-
             };
             console.log("createCuentaBancaria: ", createCuentaBancaria);
             this.cbS.CreateCuentaBancaria(createCuentaBancaria).subscribe({
@@ -270,7 +280,7 @@ export class CuentaBancariaComponent implements OnInit {
                     this.CuentaBancariaForm.reset();
                     this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro guardado', life: 3000 });
                     this.loadCuentasBancarias();
-                    
+
                 },
                 error: (err) => {
                     console.error('Error al guardar:', err);

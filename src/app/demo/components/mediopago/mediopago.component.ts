@@ -23,7 +23,7 @@ import { GlobalService } from '../../service/global.service';
   templateUrl: './mediopago.component.html',
   styleUrl: './mediopago.component.css',
   imports: [
-    ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule, 
+    ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule,
     InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule
   ],
   providers: [MessageService, ConfirmationService]
@@ -44,7 +44,7 @@ export class MediopagoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private breadcrumbService: BreadcrumbService,
     private router: Router,
-    private gS: GlobalService,
+    private globalService: GlobalService,
   ) {}
 
   ngOnInit(): void {
@@ -58,32 +58,35 @@ export class MediopagoComponent implements OnInit {
     this.initForm();
     this.cargarMediosPago();
   }
-   
+
   initForm(): void {
     this.mediopagoForm = this.fb.group({
-      ban01Empresa: ['01', Validators.required],
-      ban01IdTipoPago: ['', Validators.required],
-      ban01Descripcion: ['', Validators.required],
-      ban01AsiConPrefijo: ['', Validators.required],
-      ban01AsiConCtaBanco: ['', Validators.required],
-      ban01AsiConCtaITF: ['', Validators.required]
+        ban01Empresa: [
+            this.globalService.getCodigoEmpresa(),
+            Validators.required,
+        ],
+        ban01IdTipoPago: ['', Validators.required],
+        ban01Descripcion: ['', Validators.required],
+        ban01AsiConPrefijo: ['', Validators.required],
+        ban01AsiConCtaBanco: ['', Validators.required],
+        ban01AsiConCtaITF: ['', Validators.required],
     });
   }
 
   cargarMediosPago(): void {
-    const codigoEmpresa:string=this.gS.getCodigoEmpresa()
+    const codigoEmpresa:string=this.globalService.getCodigoEmpresa()
     this.mediopagoService.GetMediosPago(codigoEmpresa).subscribe({
       next: (data) => this.mediopagoList = data,
       error: () => {
-        this.messageService.add({ 
-            severity: 'error', 
-            summary: 'Error', 
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
             detail: 'Error al cargar medios de pago' });
       }
     });
   }
 
- 
+
   onRowEditInit(mediopago: MedioPago): void {
     this.editingMedioPago = { ...mediopago };
     this.isEditingAnyRow = true;
@@ -116,12 +119,14 @@ export class MediopagoComponent implements OnInit {
   showAddRow(){
     this.isEditing = true;
     this.isNew = true;
-    this.mediopagoForm.reset({ ban01Empresa: '01' });
+    this.mediopagoForm.reset({
+        ban01Empresa: this.globalService.getCodigoEmpresa(),
+    });
   }
 
   onSave() {
     if (this.mediopagoForm.valid) {
-        
+
       const newMedioPago: MedioPago = this.mediopagoForm.value;
     //  console.log('Datos enviados al backend:', newMedioPago)
       this.mediopagoService.CrearMedioPago(newMedioPago).subscribe({
@@ -135,7 +140,7 @@ export class MediopagoComponent implements OnInit {
         error: () => {
           //console.error(' Error en la petición DELETE:', error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el registro' });
-        
+
         }
       });
     }
@@ -144,24 +149,26 @@ export class MediopagoComponent implements OnInit {
   onCancel() {
     this.isEditing = false;
     this.isNew = false;
-    this.mediopagoForm.reset({  ban01Empresa: '01' });
+    this.mediopagoForm.reset({
+        ban01Empresa: this.globalService.getCodigoEmpresa(),
+    });
   }
-  
+
   onDelete(mediopago: MedioPago, index: number): void {
     this.confirmationService.confirm({
       message: `¿Está seguro que desea eliminar el medio de pago <b>${mediopago.ban01Descripcion}</b>?`,
       header: 'Confirmar Eliminación',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí, eliminar',
-      rejectLabel: 'No, cancelar',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
       acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button',
       accept: () => {
         this.mediopagoService.EliminarMedioPago(mediopago.ban01Empresa, mediopago.ban01IdTipoPago).subscribe({
           next: () => {
             this.mediopagoList.splice(index, 1);
-            this.messageService.add({ severity: 'success', 
-                summary: 'Éxito', 
+            this.messageService.add({ severity: 'success',
+                summary: 'Éxito',
                 detail: 'Registro eliminado' });
             this.cargarMediosPago();
           }

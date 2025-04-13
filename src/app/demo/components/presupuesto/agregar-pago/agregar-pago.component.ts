@@ -102,7 +102,7 @@ export class AgregarPagoComponent implements OnInit {
 
     ngOnInit(): void {
         this.filtroFRM.reset();
-        console.log("evento on init agregarpago");
+        console.log('evento on init agregarpago');
         console.log(this.numeropresupuesto);
         console.log(this.fechapresupuesto);
 
@@ -237,10 +237,10 @@ export class AgregarPagoComponent implements OnInit {
 
         const xmlString = new XMLSerializer().serializeToString(xmlDoc);
         console.log(xmlString);
-        console.log("--- component agregar pago typscript");
+        console.log('--- component agregar pago typscript');
         console.log(this.numeropresupuestoMod);
         console.log(this.fechapresupuestoMod);
-        console.log("--- end component agregar pago typscript");
+        console.log('--- end component agregar pago typscript');
         const detallePresupuesto: insert_detalle = {
             empresa: this.gS.getCodigoEmpresa(),
             numeropresupuesto: this.numeropresupuestoMod || '', // Si es null, enviar string vacío
@@ -301,4 +301,6 @@ export class AgregarPagoComponent implements OnInit {
         this.ayudapago = [];
         //this.onClose.emit();
     }
+
+    
 }

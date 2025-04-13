@@ -9,7 +9,7 @@
                     <p-dropdown [options]="proveedores" optionLabel="razonsocial" optionValue="ruc" formControlName="ruc"
                         (onChange)="onProveedorChallenge($event)" [filter]="true" filterBy="razonsocial" [showClear]="true"
                         placeholder="Seleccione un proveedor" styleClass="w-15rem" [virtualScroll]="true"
-                        [virtualScrollItemSize]="38" [panelStyle]="{width:'350px', overflow: 'hidden'}">
+                        [virtualScrollItemSize]="38" [panelStyle]="{width:'350px', overflow: 'hidden', 'max-height': '300px' }">
                     </p-dropdown>
                 </div>
 

@@ -45,7 +45,7 @@
         <div style="display: flex; justify-content: flex-start; margin-bottom: 0.5rem;">
             <p-button label="Agregar Doc x Pagar" icon="pi pi-plus" styleClass="p-button-sm mr-2"
                 (onClick)="DatosdeRegistro()"></p-button>
-            <p-button label="Exportar a PDF" icon="pi pi-file-pdf" styleClass="p-button-sm p-button-success mr-2"
+            <p-button label="Imprimir PDF" icon="pi pi-file-pdf" styleClass="p-button-sm p-button-success mr-2"
                 (onClick)="exportarPDF()"></p-button>
             <p-button label="Generar txt" icon="pi pi-file-export" styleClass="p-button-sm p-button-success"
                 (onClick)="generarTXT()"></p-button>
@@ -235,7 +235,7 @@
                                     (onClick)="cancelEditing()" pTooltip="Cancelar" [text]="true"></p-button>
                             </ng-container>
                             <ng-template #editButtons>
-                                <p-button icon="pi pi-pencil" styleClass="p-button-warning p-button-sm"
+                                <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-sm"
                                     (onClick)="startEditing(detalle,index)" [disabled]="isAnyRowEditing"
                                     pTooltip="Modificar" [text]="true"></p-button>
                                 <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"

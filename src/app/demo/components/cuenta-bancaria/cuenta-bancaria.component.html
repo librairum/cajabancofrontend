@@ -17,12 +17,12 @@
         </div>
 
 
-        <p-table [value]="Cuenta_BancariaList" 
-            dataKey="iCuenta" 
-            [paginator]="true" 
+        <p-table [value]="Cuenta_BancariaList"
+            dataKey="iCuenta"
+            [paginator]="true"
             [rows]="5"
-            [rowsPerPageOptions]="[5, 10, 20]" 
-            selectionMode="single" 
+            [rowsPerPageOptions]="[5, 10, 20]"
+            selectionMode="single"
             editMode="row"
             [tableStyle]="{ 'width': '100%', 'border': '0px solid black' }">
             <ng-template pTemplate="header">
@@ -51,7 +51,7 @@
                     <td class="centered" style="width: 120px;">
                         <div *ngIf="editingRowIndex === ri">
                             <p-dropdown [options]="moneda" optionLabel="nombre" optionValue="id"
-                                [(ngModel)]="rowData.moneda" (onChange)="onMonedaChange($event)" 
+                                [(ngModel)]="rowData.moneda" (onChange)="onMonedaChange($event)"
                                 [filter]="true"
                                 filterBy="nombre" placeholder="Moneda" appendTo="body">
                             </p-dropdown>
@@ -108,7 +108,7 @@
 
                             <!-- Guardar -->
                             <button *ngIf="editingRowIndex === ri" pButton pSaveEditableRow
-                                (click)="onRowEditSave(rowData, ri)" icon="pi pi-save" tooltipPosition="top"
+                                (click)="onRowEditSave(rowData, ri)" icon="pi pi-check" tooltipPosition="top"
                                 class="p-button-rounded p-button-text p-button-sm p-button-success"
                                 pTooltip="Guardar"></button>
 
@@ -145,11 +145,11 @@
                             </td>
                             <td style="width: 120px;padding-left: 10px;">
                                 <div>
-                                    <p-dropdown [options]="moneda" 
-                                    formControlName="moneda" 
+                                    <p-dropdown [options]="moneda"
+                                    formControlName="moneda"
                                     optionLabel="nombre"
-                                        optionValue="id" 
-                                        class="p-inputtext-sm w-full" 
+                                        optionValue="id"
+                                        class="p-inputtext-sm w-full"
                                         [filter]="true" filterBy="label"
                                         [(ngModel)]="selectMoneda" (onchange)="onMonedaChange($event)" placeholder="Moneda"
                                         appendTo="body"></p-dropdown>
@@ -191,7 +191,7 @@
                             </td>
                             <td style="width: 100px;  padding-left: 10px;">
                                 <div class="flex gap-2 justify-start">
-                                    <button pButton icon="pi pi-save" (click)="onSave()" pTooltip="Guardar"
+                                    <button pButton icon="pi pi-check" (click)="onSave()" pTooltip="Guardar"
                                         tooltipPosition="top"
                                         class="p-button-rounded p-button-text p-button-sm p-button-success"></button>
                                     <button pButton icon="pi pi-times" (click)="onCancel()" pTooltip="Cancelar"

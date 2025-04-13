@@ -23,6 +23,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
+import {ProgressSpinnerModule} from 'primeng/progressspinner'
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { HttpClientModule } from '@angular/common/http';
@@ -33,6 +34,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.service';
 import { last } from 'rxjs';
+import { GlobalService } from 'src/app/demo/service/global.service';
+
 
 @Component({
     selector: 'app-actualizar-vouchercontable',
@@ -54,6 +57,7 @@ import { last } from 'rxjs';
         ReactiveFormsModule,
         CheckboxModule,
         DropdownModule,
+        ProgressSpinnerModule
     ],
     templateUrl: './actualizar-vouchercontable.component.html',
     styleUrl: './actualizar-vouchercontable.component.css',
@@ -68,7 +72,8 @@ export class ActualizarVouchercontableComponent implements OnInit {
     actVCForm: FormGroup;
     infoAdicional: InfoVoucherCompleto;
 
-    // despliegue
+    // agregando spinner
+    loading: boolean = true;
 
     // Variables para el diálogo de confirmación
     mostrarDialogoExito: boolean = false;
@@ -88,7 +93,8 @@ export class ActualizarVouchercontableComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private messageService: MessageService,
-        private regContableService: RegContableDetService
+        private regContableService: RegContableDetService,
+        private globalService: GlobalService
     ) {}
 
     monedas: any[] = [
@@ -159,6 +165,8 @@ export class ActualizarVouchercontableComponent implements OnInit {
     }
 
     obtenerCuentaCorriente(): Promise<void> {
+
+        this.loading = true;
     return new Promise((resolve) => {
         this.regContableService.obtenerCuentaCorriente().subscribe({
             next: (data) => {
@@ -227,8 +235,11 @@ export class ActualizarVouchercontableComponent implements OnInit {
     obtenerDatos(): void {
         if (!this.detalleSelected) {
             console.error('No hay detalle seleccionado');
+            this.loading = false;
             return;
         }
+
+        this.loading = true;
 
 
         this.actVCForm.patchValue({
@@ -271,6 +282,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
                             cuentaCorrienteValor
                         );
                     }
+                    setTimeout(()=>{
 
                     this.actVCForm.patchValue({
                         glosa: this.infoAdicional[0].glosa || '',
@@ -320,9 +332,12 @@ export class ActualizarVouchercontableComponent implements OnInit {
                         fechaPagoRet:
                             this.infoAdicional[0].fechaPagoRetencion || '',
                     });
+                    this.loading = false;
+                }, 3000)
                 },
                 error: (err) => {
                     console.error('Error al obtener los datos', err);
+                    this.loading = false;
                 },
             });
     }
@@ -330,7 +345,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
     guardarConfirmacion() {
         // const cuentaCorrienteSeleccion = this.cuentasCorrientes.find(mp => mp.)
         const datosActualizar = {
-            codigoEmpresa: '01',
+            codigoEmpresa: this.globalService.getCodigoEmpresa(),
             anio: this.retornarInfo(this.detalleSelected.anio),
             mes: this.retornarInfo(this.detalleSelected.mes),
             libro: this.retornarInfo(this.detalleSelected.libro),
@@ -372,7 +387,9 @@ export class ActualizarVouchercontableComponent implements OnInit {
                 ),
             importeHaberEquivalencia:
                 parseFloat(this.actVCForm.value.haber2) ||
-                Number(this.infoAdicional[0].importeHaberEquivalencia).toFixed(2),
+                Number(this.infoAdicional[0].importeHaberEquivalencia).toFixed(
+                    2
+                ),
             transa: this.retornarInfo(this.actVCForm.value.transa),
             orden: this.retornarInfo(this.detalleSelected.orden),
             nroPago: this.retornarInfo(this.actVCForm.value.numeroPago),
@@ -400,7 +417,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
                 });
                 console.log('Enviado correctamente: ', respuesta);
                 this.mostrarDialogoExito = true;
-                //this.mensajeExito = 'Actualización exitosa';
+                this.mensajeExito = 'Actualización exitosa';
                 //this.onClose.emit();
             },
             error: (err) => {

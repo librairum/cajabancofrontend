@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
 import { InfoVoucherCompleto, ObtenerCuentaCorriente, ObtenerCuentaHaby, ObtenerInformacion, obtenerTipoDocumento, VoucherContableDetalle } from '../components/presupuesto/presupuesto';
 import { map, Observable, tap } from 'rxjs';
+import { GlobalService } from './global.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +16,8 @@ export class RegContableDetService {
 
     constructor(
         private httpClient: HttpClient,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private globalService: GlobalService
     ) {
         this.apiUrl = (window as any).config?.url;
         const config = `${this.apiUrl}/CtaCtable`;
@@ -25,7 +27,7 @@ export class RegContableDetService {
 
     public obtenerCuenta(): Observable<ObtenerCuentaHaby[]> {
         const params = new HttpParams()
-            .set('empresa', '01')
+            .set('empresa', this.globalService.getCodigoEmpresa())
             .set('anio', '2024');
 
         return this.http
@@ -37,7 +39,10 @@ export class RegContableDetService {
     }
 
     public obtenerCuentaCorriente(): Observable<ObtenerCuentaCorriente[]> {
-        const params = new HttpParams().set('empresa', '01');
+        const params = new HttpParams().set(
+            'empresa',
+            this.globalService.getCodigoEmpresa()
+        );
 
         return this.http
             .get<RespuestaAPI<ObtenerCuentaCorriente>>(
@@ -48,7 +53,10 @@ export class RegContableDetService {
     }
 
     public obtenerTipoDocumentos(): Observable<obtenerTipoDocumento[]> {
-        const params = new HttpParams().set('empresa', '01');
+        const params = new HttpParams().set(
+            'empresa',
+            this.globalService.getCodigoEmpresa()
+        );
 
         return this.http
             .get<RespuestaAPI<obtenerTipoDocumento>>(
@@ -66,7 +74,7 @@ export class RegContableDetService {
         nroOrden
     ): Observable<InfoVoucherCompleto> {
         const params = new HttpParams()
-            .set('empresa', '01')
+            .set('empresa', this.globalService.getCodigoEmpresa())
             .set('anio', anio)
             .set('mes', mes)
             .set('libro', libro)
@@ -96,7 +104,9 @@ export class RegContableDetService {
         nroOrden: number
     ): Observable<any> {
 
-        let urlEliminar = `${this.urlApi}/SpElimina?empresa=01&anio=${anio}&mes=${mes}&libro=${libro}&numeroVoucher=${voucher}&nroOden=${nroOrden}`
+        let urlEliminar = `${
+            this.urlApi
+        }/SpElimina?empresa=${this.globalService.getCodigoEmpresa()}&anio=${anio}&mes=${mes}&libro=${libro}&numeroVoucher=${voucher}&nroOden=${nroOrden}`;
         return this.http
             .delete<any>(urlEliminar);
     }

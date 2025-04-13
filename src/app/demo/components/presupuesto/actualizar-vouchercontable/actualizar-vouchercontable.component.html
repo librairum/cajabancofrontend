@@ -1,7 +1,10 @@
 
+<div *ngIf="loading" class="overlay-spinner">
+    <p-progressSpinner strokeWidth="4" animationDuration="5s"></p-progressSpinner>
+</div>
 
 <!-- Formulario principal <p-toast></p-toast> -->
-<p-panel  *ngIf="actVCForm">
+<p-panel  *ngIf="actVCForm" [style.opacity]="loading? '0.6' : '1'">
     <form [formGroup]="actVCForm">
         <div class="grid">
             <fieldset class="input-group w-full m-0 ">

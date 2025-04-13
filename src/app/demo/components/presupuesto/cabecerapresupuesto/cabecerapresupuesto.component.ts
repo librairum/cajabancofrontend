@@ -352,56 +352,73 @@ export class CabecerapresupuestoComponent implements OnInit {
     eliminarPago(presupuesto: cabeceraPresupuesto) {
         this.confirmationService.confirm({
             message: `
-                <div class="text-center">
-                    <i class="pi pi-exclamation-circle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
-                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de eliminar el presupuesto?</p>
-                    <p style="color: var(--text-color-secondary);">Número de pago: ${presupuesto.pagoNumero}</p>
-                    <p style="color: var(--text-color-secondary);">Fecha: ${this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy')}</p>
-
+                <p style="text-align: center;">
+                    ¿Está seguro de eliminar el presupuesto?
+                </p>
+                <div style="text-align: center; margin-top: 10px;">
+                    <p>
+                        <strong>Número de pago: </strong>${
+                            presupuesto.pagoNumero
+                        }
+                    </p>
+                    <p>
+                        <strong>Fecha:</strong> ${this.datePipe.transform(
+                            presupuesto.fecha,
+                            'dd/MM/yyyy'
+                        )}
+                    </p>
                 </div>
             `,
             header: 'Confirmar Eliminación',
-            //icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sí, eliminar',
-            rejectLabel: 'No, cancelar',
-            acceptButtonStyleClass: 'p-button-danger p-button-raised',
-            rejectButtonStyleClass: 'p-button-outlined p-button-raised',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button',
             accept: () => {
                 const empresa = this.gS.getCodigoEmpresa();
                 const numero = presupuesto.pagoNumero;
 
-                this.presupuestoService.eliminarPresupuesto(empresa, numero).subscribe({
-                    next: (response) => {
-                        if (response.isSuccess) {
-                            this.messageService.add({
-                                severity: 'success',
-                                summary: 'Éxito',
-                                detail: 'Presupuesto eliminado correctamente'
-                            });
-                            // Recargar la lista de presupuestos
-                            const fecha = new Date();
-                            this.cargarPresupuesto(
-                                empresa,
-                                fecha.getFullYear().toString(),
-                                (fecha.getMonth() + 1).toString().padStart(2, '0')
-                            );
-                        } else {
+                this.presupuestoService
+                    .eliminarPresupuesto(empresa, numero)
+                    .subscribe({
+                        next: (response) => {
+                            if (response.isSuccess) {
+                                this.messageService.add({
+                                    severity: 'success',
+                                    summary: 'Éxito',
+                                    detail: 'Presupuesto eliminado correctamente',
+                                });
+                                // Recargar la lista de presupuestos
+                                const fecha = new Date();
+                                this.cargarPresupuesto(
+                                    empresa,
+                                    fecha.getFullYear().toString(),
+                                    (fecha.getMonth() + 1)
+                                        .toString()
+                                        .padStart(2, '0')
+                                );
+                            } else {
+                                this.messageService.add({
+                                    severity: 'error',
+                                    summary: 'Error',
+                                    detail:
+                                        response.message ||
+                                        'Error al eliminar el presupuesto',
+                                });
+                            }
+                        },
+                        error: (error) => {
                             this.messageService.add({
                                 severity: 'error',
                                 summary: 'Error',
-                                detail: response.message || 'Error al eliminar el presupuesto'
+                                detail:
+                                    'Error al eliminar el presupuesto: ' +
+                                    error.message,
                             });
-                        }
-                    },
-                    error: (error) => {
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'Error al eliminar el presupuesto: ' + error.message
-                        });
-                    }
-                });
-            }
+                        },
+                    });
+            },
         });
     }
     confirmarPago(presupuesto: cabeceraPresupuesto) {
@@ -437,24 +454,30 @@ export class CabecerapresupuestoComponent implements OnInit {
     anularPago(presupuesto: cabeceraPresupuesto) {
         this.confirmationService.confirm({
             message: `
-                <div class="text-center">
-                    <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: var(--yellow-500); margin-bottom: 1rem; display: block;"></i>
-                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">¿Está seguro de anular?</p>
-                    <p style="color: var(--text-color-secondary);">Número de pago: ${presupuesto.pagoNumero}</p>
+                <p style="text-align: center;">
+                    ¿Está seguro de anular?
+                </p>
+                <div style="text-align: center; margin-top: 10px;">
+                    <p>
+                        <strong>Número de pago: </strong>${
+                            presupuesto.pagoNumero
+                        }
+                    </p>
                 </div>
             `,
             header: 'Anular comprobante de pago',
             icon: 'pi pi-exclamation-triangle',
             acceptLabel: 'Sí',
             rejectLabel: 'No',
-            acceptButtonStyleClass: 'p-button-danger p-button-raised',
-            rejectButtonStyleClass: 'p-button-outlined p-button-raised',
+            acceptButtonStyleClass: 'p-button-danger ',
+            rejectButtonStyleClass: 'p-button',
             accept: () => {
-
-                this.gS.selectedDate$.subscribe(date => {
+                this.gS.selectedDate$.subscribe((date) => {
                     if (date) {
                         this.anio_dato = date.getFullYear().toString();
-                        this.mes_dato = (date.getMonth() + 1).toString().padStart(2, '0');
+                        this.mes_dato = (date.getMonth() + 1)
+                            .toString()
+                            .padStart(2, '0');
                     }
                 });
                 const parametrosanulacion = {
@@ -467,45 +490,58 @@ export class CabecerapresupuestoComponent implements OnInit {
                     numerooperacion: '',
                     enlacepago: presupuesto.ban01EnlacePago,
                 };
-                this.presupuestoService.actualizarComprobante(parametrosanulacion).subscribe({
-                    next: (response) => {
-                        if (response.isSuccess) {
-                            this.messageService.add({
-                                severity: 'success',
-                                summary: 'Éxito',
-                                detail: 'Pago anulado correctamente'
-                            });
-                            this.gS.selectedDate$.subscribe(date => {
-                                if (date) {
-                                    const year = date.getFullYear().toString();
-                                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                                    this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
-                                }
-                            });
-                        } else {
+                this.presupuestoService
+                    .actualizarComprobante(parametrosanulacion)
+                    .subscribe({
+                        next: (response) => {
+                            if (response.isSuccess) {
+                                this.messageService.add({
+                                    severity: 'success',
+                                    summary: 'Éxito',
+                                    detail: 'Pago anulado correctamente',
+                                });
+                                this.gS.selectedDate$.subscribe((date) => {
+                                    if (date) {
+                                        const year = date
+                                            .getFullYear()
+                                            .toString();
+                                        const month = (date.getMonth() + 1)
+                                            .toString()
+                                            .padStart(2, '0');
+                                        this.cargarPresupuesto(
+                                            this.gS.getCodigoEmpresa(),
+                                            year,
+                                            month
+                                        );
+                                    }
+                                });
+                            } else {
+                                this.messageService.add({
+                                    severity: 'error',
+                                    summary: 'Error',
+                                    detail:
+                                        response.message ||
+                                        'Error al anular el pago',
+                                });
+                            }
+                        },
+                        error: (error) => {
                             this.messageService.add({
                                 severity: 'error',
                                 summary: 'Error',
-                                detail: response.message || 'Error al anular el pago'
+                                detail:
+                                    'Error al anular el pago: ' + error.message,
                             });
-                        }
-                    },
-                    error: (error) => {
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'Error al anular el pago: ' + error.message
-                        });
-                    }
-                });
+                        },
+                    });
             },
             reject: () => {
                 this.messageService.add({
                     severity: 'info',
                     summary: 'Cancelado',
-                    detail: 'Anulación de pago cancelada'
+                    detail: 'Anulación de pago cancelada',
                 });
-            }
+            },
         });
 
 
