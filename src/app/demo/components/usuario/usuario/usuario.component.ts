@@ -167,7 +167,7 @@ onRowEditSave(usuario: Usuario) {
 
         // Llamar al servicio para actualizar en el backend
         this.uS.actualizar_usuario(usuario.Nombre, usuario).subscribe(() => {
-            console.log("Usuario actualizado con éxito.");
+            // console.log("Usuario actualizado con éxito.");
         });
     }
 }

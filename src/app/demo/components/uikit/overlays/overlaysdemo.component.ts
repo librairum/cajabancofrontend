@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/api/product';
 import { ProductService } from 'src/app/demo/service/product.service';
+import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 
 @Component({
     templateUrl: './overlaysdemo.component.html',
@@ -65,10 +66,10 @@ export class OverlaysDemoComponent implements OnInit {
             message: 'Are you sure that you want to proceed?',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
+                verMensajeInformativo(this.messageService,'info', 'Confirmed', 'You have accepted');
             },
             reject: () => {
-                this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+                verMensajeInformativo(this.messageService,'error', 'Rejected', 'You have rejected');
             }
         });
     }
@@ -76,5 +77,5 @@ export class OverlaysDemoComponent implements OnInit {
     formatCurrency(value: number) {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     }
-    
+
 }

@@ -32,6 +32,7 @@ import {
 } from '@angular/forms';
 import { calendario_traduccion } from 'src/app/shared/Calendarios';
 import { InputTextModule } from 'primeng/inputtext';
+import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 
 @Component({
     selector: 'app-agregar-pago',
@@ -102,9 +103,9 @@ export class AgregarPagoComponent implements OnInit {
 
     ngOnInit(): void {
         this.filtroFRM.reset();
-        console.log('evento on init agregarpago');
-        console.log(this.numeropresupuesto);
-        console.log(this.fechapresupuesto);
+        // console.log('evento on init agregarpago');
+        // console.log(this.numeropresupuesto);
+        // console.log(this.fechapresupuesto);
 
         this.numeropresupuestoMod = this.numeropresupuesto;
         this.fechapresupuestoMod = this.fechapresupuesto;
@@ -147,21 +148,17 @@ export class AgregarPagoComponent implements OnInit {
 
                     this.loading = false;
                     if (data.length === 0) {
-                        this.messageService.add({
-                            severity: 'warn',
-                            summary: 'Advertencia',
-                            detail: 'No se encontraron registros del proveedor',
-                        });
+                        verMensajeInformativo(
+                            this.messageService,
+                            'warn',
+                            'Advertencia',
+                            'No se encontraron registros del proveedor'
+                        );
                     }
                 },
                 error: (error) => {
                     this.loading = false;
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail:
-                            'Error al cargar los registros: ' + error.message,
-                    });
+                    verMensajeInformativo(this.messageService, 'error', 'Error', `Error al cargar los registros ${error.message}`);
                 },
             });
     }
@@ -195,11 +192,7 @@ export class AgregarPagoComponent implements OnInit {
     //checkbox
     onAddSelected() {
         if (this.selectedItems.length === 0) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'Advertencia',
-                detail: 'Seleccione al menos un registro',
-            });
+            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'Seleccione al menos un registro');
             return;
         }
 
@@ -236,11 +229,11 @@ export class AgregarPagoComponent implements OnInit {
         });
 
         const xmlString = new XMLSerializer().serializeToString(xmlDoc);
-        console.log(xmlString);
-        console.log('--- component agregar pago typscript');
-        console.log(this.numeropresupuestoMod);
-        console.log(this.fechapresupuestoMod);
-        console.log('--- end component agregar pago typscript');
+        // console.log(xmlString);
+        // console.log('--- component agregar pago typscript');
+        // console.log(this.numeropresupuestoMod);
+        // console.log(this.fechapresupuestoMod);
+        // console.log('--- end component agregar pago typscript');
         const detallePresupuesto: insert_detalle = {
             empresa: this.gS.getCodigoEmpresa(),
             numeropresupuesto: this.numeropresupuestoMod || '', // Si es null, enviar string vacío
@@ -254,11 +247,7 @@ export class AgregarPagoComponent implements OnInit {
             .insertarDetallePresupuesto(detallePresupuesto)
             .subscribe({
                 next: (response) => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Detalle insertado correctamente',
-                    });
+                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Detalle insertado correctamente');
 
                     /*const formattedDate = this.fechapresupuestoMod
                     const navigationExtras = {
@@ -274,12 +263,7 @@ export class AgregarPagoComponent implements OnInit {
                     this.onClose.emit();
                 },
                 error: (error) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail:
-                            'Error al insertar el detalle: ' + error.message,
-                    });
+                    verMensajeInformativo(this.messageService,'error', 'Error', `Error al insertar el detalle: ${error.message}`);
                 },
             });
     }
@@ -301,6 +285,4 @@ export class AgregarPagoComponent implements OnInit {
         this.ayudapago = [];
         //this.onClose.emit();
     }
-
-
 }

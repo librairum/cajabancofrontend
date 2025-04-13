@@ -115,7 +115,7 @@ export class LoginService {
         return diffHours >= 4;
     }
     getEmpresa(codigomodulo: string): Observable<EmpresasxModulo[]> {
-        console.log('url api', this.apiUrl);
+        // console.log('url api', this.apiUrl);
 
         //let ippuerto = this.configService.getApiUrl;
         //let ipPuerto : string = this.configService.getConfigValue().apiUrl;

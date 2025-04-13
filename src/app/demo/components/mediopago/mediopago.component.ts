@@ -16,6 +16,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { MedioPago } from './mediopago';
 import { MediopagoService } from '../../service/mediopago.service';
 import { GlobalService } from '../../service/global.service';
+import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
 
 @Component({
   selector: 'app-mediopago',
@@ -78,10 +79,7 @@ export class MediopagoComponent implements OnInit {
     this.mediopagoService.GetMediosPago(codigoEmpresa).subscribe({
       next: (data) => this.mediopagoList = data,
       error: () => {
-        this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Error al cargar medios de pago' });
+            verMensajeInformativo(this.messageService,'error', 'Error', 'Error al cargar medios de pago');
       }
     });
   }
@@ -98,10 +96,10 @@ export class MediopagoComponent implements OnInit {
         next: () => {
           this.editingMedioPago = null;
           this.isEditingAnyRow = false;
-          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro actualizado' });
+          verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro actualizado');
         },
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar' });
+          verMensajeInformativo(this.messageService,'error', 'Error', 'Error al actualizar');
         }
       });
     }
@@ -134,12 +132,12 @@ export class MediopagoComponent implements OnInit {
           this.isEditing = false;
           this.isNew = false;
           this.mediopagoForm.reset();
-          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro guardado' });
+          verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro guardado');
           this.cargarMediosPago();
         },
         error: () => {
           //console.error(' Error en la petición DELETE:', error);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el registro' });
+          verMensajeInformativo(this.messageService,'error', 'Error', 'No se pudo guardar el registro');
 
         }
       });
@@ -167,9 +165,7 @@ export class MediopagoComponent implements OnInit {
         this.mediopagoService.EliminarMedioPago(mediopago.ban01Empresa, mediopago.ban01IdTipoPago).subscribe({
           next: () => {
             this.mediopagoList.splice(index, 1);
-            this.messageService.add({ severity: 'success',
-                summary: 'Éxito',
-                detail: 'Registro eliminado' });
+            verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro eliminado');
             this.cargarMediosPago();
           }
         });

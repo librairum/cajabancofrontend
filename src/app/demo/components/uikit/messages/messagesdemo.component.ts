@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Message, MessageService } from 'primeng/api';
+import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 
 @Component({
     templateUrl: './messagesdemo.component.html',
@@ -9,22 +10,22 @@ export class MessagesDemoComponent {
 
     msgs: Message[] = [];
 
-    constructor(private service: MessageService) { }
+    constructor(private messageService: MessageService) { }
 
     showInfoViaToast() {
-        this.service.add({ key: 'tst', severity: 'info', summary: 'Info Message', detail: 'PrimeNG rocks' });
+        verMensajeInformativo(this.messageService,'info', 'Info Message', 'PrimeNG rocks');
     }
 
     showWarnViaToast() {
-        this.service.add({ key: 'tst', severity: 'warn', summary: 'Warn Message', detail: 'There are unsaved changes' });
+        verMensajeInformativo(this.messageService,'warn', 'Warn Message', 'There are unsaved changes');
     }
 
     showErrorViaToast() {
-        this.service.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'Validation failed' });
+        verMensajeInformativo(this.messageService,'error', 'Error Message', 'Validation failed');
     }
 
     showSuccessViaToast() {
-        this.service.add({ key: 'tst', severity: 'success', summary: 'Success Message', detail: 'Message sent' });
+        verMensajeInformativo(this.messageService,'success', 'Success Message', 'Message sent');
     }
 
     showInfoViaMessages() {
@@ -46,5 +47,5 @@ export class MessagesDemoComponent {
         this.msgs = [];
         this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Message sent' });
     }
-    
+
 }

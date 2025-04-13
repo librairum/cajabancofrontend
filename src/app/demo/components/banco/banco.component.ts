@@ -18,6 +18,7 @@ import { CardModule } from 'primeng/card';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { Router} from  '@angular/router';
 import { GlobalService } from '../../service/global.service';
+import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
 
 @Component({
   selector: 'app-banco',
@@ -42,8 +43,8 @@ export class BancoComponent implements OnInit {
     isEditingAnyRow: boolean = false;
 
     constructor(private bancoService: BancoService, private fb:FormBuilder,
-        private mS:MessageService,private confirmationService:ConfirmationService,
-        private bS:BreadcrumbService, private router: Router, private globalService: GlobalService){
+        private confirmationService:ConfirmationService,
+        private bS:BreadcrumbService, private router: Router, private globalService: GlobalService, private messageService: MessageService){
 
     }
 
@@ -103,11 +104,7 @@ export class BancoComponent implements OnInit {
         this.bancoService.GetBancos().subscribe({
             next:(data)=>this.bancoList=data,
             error: (error) => {
-                this.mS.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: 'Error al cargar bancos'
-                });
+                verMensajeInformativo(this.messageService,'error', 'Error', 'Error al cargar bancos');
               }
         });
     }
@@ -122,10 +119,10 @@ export class BancoComponent implements OnInit {
                 next:()=>{
                     this.editingBanco=null;
                     this.isEditingAnyRow=false;
-                    this.mS.add({ severity: 'success', summary: 'Éxito', detail: 'Registro actualizado' });
+                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro actualizado');
                 },
                 error: () => {
-                  this.mS.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar' });
+                    verMensajeInformativo(this.messageService,'error', 'Error', 'Error al actualizar');
                 }
             })
         }
@@ -154,12 +151,12 @@ export class BancoComponent implements OnInit {
                     this.isEditing=false;
                     this.isNew=false;
                     this.bancoForm.reset();
-                    this.mS.add({ severity: 'success', summary: 'Éxito', detail: 'Registro guardado' });
+                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro guardado');
                     this.cargarBancos();
                 },
                 error: (err) => {
                     console.error('Error al guardar:', err);
-                    this.mS.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el registro' });
+                    verMensajeInformativo(this.messageService,'error', 'Error', 'No se pudo guardar el registro');
                 },
             })
         }
@@ -186,11 +183,7 @@ export class BancoComponent implements OnInit {
                 this.bancoService.EliminarBanco(banco.ban01Empresa,banco.ban01IdBanco).subscribe({
                     next:()=>{
                         this.bancoList.splice(index,1);
-                        this.mS.add({
-                            severity: 'success',
-                            summary: 'Éxito',
-                            detail: 'Registro eliminado'
-                        });
+                        verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro Eliminado');
                         this.cargarBancos()
                     }
                 })

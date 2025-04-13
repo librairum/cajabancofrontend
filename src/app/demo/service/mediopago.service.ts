@@ -17,10 +17,10 @@ private http = inject(HttpClient);
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
-      
+
       this.apiUrl = (window as any).config?.url
       this.urlAPI = `${this.apiUrl}/MedioPago`;
-      console.log(this.urlAPI);
+    //   console.log(this.urlAPI);
     }
 
 
@@ -34,7 +34,7 @@ private http = inject(HttpClient);
       console.error(errorMessage);
       return throwError(() => new Error(errorMessage));
     }
-  
+
     //AQUI SE CAMBIA///////////////////
     public GetMediosPago(empresa:string): Observable<MedioPago[]> {
       const params=new HttpParams()
@@ -42,40 +42,40 @@ private http = inject(HttpClient);
       return this.http.get<RespuestaAPI>(`${this.urlAPI}/SpTrae`, { params }).pipe(
         map(response => response.data));
 
-     
+
     }
-   
+
     public CrearMedioPago(mediopago: MedioPago): Observable<any> {
-      console.log(mediopago)
+    //   console.log(mediopago)
         return this.http.post<any>(this.urlAPI + '/SpInserta', mediopago);
-      
+
     }
-    
-    
+
+
     public ActualizarMedioPago(mediopago: MedioPago): Observable<any> {
-      
+
         let urlmodificada = this.urlAPI + '/SpActualiza';
         return this.http.put<any>(urlmodificada, mediopago);
-      
+
     }
-    
-    public EliminarMedioPago(idempresa: string, idtipopago: string): Observable<any> { 
+
+    public EliminarMedioPago(idempresa: string, idtipopago: string): Observable<any> {
       let urlmodificada = `${this.urlAPI}/SpElimina?empresa=${idempresa}&idtipopago=${idtipopago}`;
       return this.http.delete<any>(urlmodificada);
   }
-  
-  
-    
+
+
+
     public getData(): Observable<MedioPago[]> {
-      
+
         return this.http.get<MedioPago[]>(this.urlAPI);
-      
+
     }
-    
+
     ComboboxMedioPago(): Observable<MedioPago[]> {
-      
+
         return this.httpClient.get<MedioPago[]>(this.urlAPI);
-      
+
     }
 }
 

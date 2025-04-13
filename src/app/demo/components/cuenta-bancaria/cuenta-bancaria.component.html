@@ -133,17 +133,17 @@
                 <tr *ngIf="isEditing">
                     <td colspan="9" class="p-0">
                         <form [formGroup]="CuentaBancariaForm" style="padding-bottom: 10px;">
-                            <td style="width: 150px;">
+                            <td style="width: 184px;">
                                 <div><input id="nombreBanco" pInputText class="p-inputtext-sm w-full" [value]="descripcion" readonly/></div>
                             </td>
 
-                            <td style="width: 150px; padding-left: 10px;">
+                            <td style="width: 185px; padding-left: 10px;">
                                 <div>
                                     <input id="idCuenta" pInputText formControlName="idCuenta" class="p-inputtext-sm w-full"
                                         placeholder="ID Cuenta" />
                                 </div>
                             </td>
-                            <td style="width: 120px;padding-left: 10px;">
+                            <td style="width: 148px;padding-left: 10px;">
                                 <div>
                                     <p-dropdown [options]="moneda"
                                     formControlName="moneda"
@@ -155,41 +155,41 @@
                                         appendTo="body"></p-dropdown>
                                 </div>
                             </td>
-                            <td style="width: 180px; padding-left: 10px;">
+                            <td style="width: 222px; padding-left: 10px;">
                                 <div>
 
                                 </div>
                             </td>
 
-                            <td style="width: 150px; padding-left: 10px;">
+                            <td style="width: 185px; padding-left: 10px;">
                                 <div>
                                     <input id="ctaContable" pInputText formControlName="ctaContable"
                                         class="p-inputtext-sm w-full" placeholder="Cuenta Contable" />
                                 </div>
                             </td>
 
-                            <td style="width: 150px; padding-left: 10px;">
+                            <td style="width: 185px; padding-left: 10px;">
                                 <div>
                                     <input id="ctaITF" pInputText formControlName="ctaITF" class="p-inputtext-sm w-full"
                                         placeholder="Cuenta ITF" />
                                 </div>
                             </td>
 
-                            <td style="width: 120px; padding-left: 10px; padding-right: 20px;">
+                            <td style="width: 149px; padding-left: 10px; padding-right: 20px;">
                                 <div>
                                     <input id="pref" pInputText formControlName="pref" class="p-inputtext-sm w-full"
                                         placeholder="Pref" />
                                 </div>
                             </td>
 
-                            <td style="width: 150px;">
+                            <td style="width: 185px;">
                                 <div>
                                     <input id="ctaGastos" pInputText formControlName="ctaGastos" class="p-inputtext-sm w-full"
                                         placeholder="Cuenta Gasto" />
                                 </div>
 
                             </td>
-                            <td style="width: 100px;  padding-left: 10px;">
+                            <td style="width: 122px;  padding-left: 10px;">
                                 <div class="flex gap-2 justify-start">
                                     <button pButton icon="pi pi-check" (click)="onSave()" pTooltip="Guardar"
                                         tooltipPosition="top"

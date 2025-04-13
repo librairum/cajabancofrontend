@@ -127,50 +127,41 @@
                             <!-- Campo ID -->
                             <div class="col-2" style="width: 20%">
                                 <span class="p-input-icon-left w-full">
-                                    <i class="pi pi-tag"></i>
                                     <input pInputText
                                            formControlName="ban01IdBanco"
                                            placeholder="Código Banco"
-                                           class="p-inputtext-sm"/>
+                                           class="p-inputtext-sm w-full"/>
                                 </span>
                             </div>
 
                             <!-- Campo Descripción -->
                             <div class="col-4" style="width: 40%">
                                 <span class="p-input-icon-left w-full">
-                                    <i class="pi pi-file"></i>
                                     <input pInputText
                                            formControlName="ban01Descripcion"
                                            placeholder="Descripción del Banco"
-                                           class="p-inputtext-sm"/>
+                                           class="p-inputtext-sm w-full"/>
                                 </span>
                             </div>
 
                             <!-- Campo Prefijo -->
                             <div class="col-2" style="width: 20%">
                                 <span class="p-input-icon-left w-full">
-                                    <i class="pi pi-tag"></i>
                                     <input pInputText
                                            formControlName="ban01Prefijo"
                                            placeholder="Prefijo"
-                                           class="p-inputtext-sm"/>
+                                           class="p-inputtext-sm w-full"/>
                                 </span>
                             </div>
 
                             <!-- Botones de Acción -->
                             <div class="col-2" style="width: 20%">
-                                <div class="flex gap-2">
-                                    <button type="button" pButton
-                                            icon="pi pi-check"
-                                            (click)="onSave()"
-                                            [disabled]="!bancoForm.valid"
-                                            pTooltip="Guardar"
-                                            styleClass="p-button-sm"></button>
-                                    <button type="button" pButton
-                                            icon="pi pi-times"
-                                            (click)="onCancel()"
-                                            pTooltip="Cancelar"
-                                            class="p-button-sm p-button-secondary"></button>
+                                <div class="flex gap-2 justify-content-center">
+
+                                    <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
+                                            (onClick)="onSave()" pTooltip="Guardar"></p-button>
+                                    <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
+                                            (onClick)="onCancel()" pTooltip="Cancelar"></p-button>
                                 </div>
                             </div>
                         </form>

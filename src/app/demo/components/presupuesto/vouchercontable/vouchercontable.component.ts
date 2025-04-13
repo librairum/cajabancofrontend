@@ -24,6 +24,7 @@ import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { ActualizarVouchercontableComponent } from "../actualizar-vouchercontable/actualizar-vouchercontable.component";
 import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.service';
+import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 
 @Component({
     selector: 'app-vouchercontable',
@@ -122,24 +123,16 @@ export class VouchercontableComponent implements OnInit {
 
                     this.libro_numero =
                         this.voucherContableCabecera[0]?.numero ?? '';
-                    console.log(
-                        'Cabecera data: ',
-                        this.voucherContableCabecera
-                    );
+                    // console.log(
+                    //     'Cabecera data: ',
+                    //     this.voucherContableCabecera
+                    // );
                     if (data.length === 0) {
-                        this.messageService.add({
-                            severity: 'warn',
-                            summary: 'Advertencia',
-                            detail: 'No se encontró libro de nrovoucher',
-                        });
+                        verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontró libro de nro voucher');
                     }
                 },
                 error: (error) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Error al cargar cabecera: ' + error.message,
-                    });
+                    verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar cabecera ${error.message}`);
                 },
             });
         //cargar tabla detalle voucher contable
@@ -152,29 +145,19 @@ export class VouchercontableComponent implements OnInit {
             .subscribe({
                 next: (data) => {
                     this.voucherContableDetalle = data;
-                    console.log(
-                        'Voucher contable detalle data: ',
-                        this.voucherContableDetalle
-                    );
+                    // console.log(
+                    //     'Voucher contable detalle data: ',
+                    //     this.voucherContableDetalle
+                    // );
                     if (data.length === 0) {
-                        this.messageService.add({
-                            severity: 'warn',
-                            summary: 'Advertencia',
-                            detail: 'No se encontraron voucher contables',
-                        });
+                        verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron voucher contables');
                         this.load = false;
                     } else {
                         this.load = false;
                     }
                 },
                 error: (error) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail:
-                            'Error al cargar voucher contables: ' +
-                            error.message,
-                    });
+                    verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar voucher contables: ${error.message}`);
                 },
             });
     }
@@ -237,14 +220,14 @@ export class VouchercontableComponent implements OnInit {
     }
 
     eliminarPago(vc: VoucherContableDetalle) {
-        console.log(
-            'EliminarPago parámetros:',
-            vc.anio,
-            vc.mes,
-            vc.libro,
-            vc.numeroVoucher,
-            vc.orden
-        );
+        // console.log(
+        //     'EliminarPago parámetros:',
+        //     vc.anio,
+        //     vc.mes,
+        //     vc.libro,
+        //     vc.numeroVoucher,
+        //     vc.orden
+        // );
 
         this.detalleSelected = vc;
         this.confirmationService.confirm({
@@ -266,12 +249,8 @@ export class VouchercontableComponent implements OnInit {
                     )
                     .subscribe({
                         next: (m) => {
-                            this.mS.add({
-                                severity: 'success',
-                                summary: 'Éxito',
-                                detail: 'Registro eliminado',
-                            });
-                            console.log(m)
+                            verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro eliminado');
+                            // console.log(m)
                             this.cargarDatos();
                         },
                     });

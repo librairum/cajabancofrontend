@@ -156,14 +156,12 @@
                                        placeholder="CtaITF" class="p-inputtext-sm w-full"/>
                             </div>
                             <div class="col-2" style="width: 20%">
-                                <div class="flex gap-2">
-                                    <button type="button" pButton icon="pi pi-check"
-                                            (click)="onSave()"
-                                            [disabled]="!mediopagoForm.valid"
-                                            class="p-button-sm"></button>
-                                    <button type="button" pButton icon="pi pi-times"
-                                            (click)="onCancel()"
-                                            class="p-button-sm p-button-secondary"></button>
+                                <div class="flex gap-2 justify-content-center">
+
+                                    <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
+                                            (onClick)="onSave()" pTooltip="Guardar"></p-button>
+                                    <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
+                                            (onClick)="onCancel()" pTooltip="Cancelar"></p-button>
                                 </div>
                             </div>
                         </form>

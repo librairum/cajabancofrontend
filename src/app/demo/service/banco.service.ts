@@ -27,7 +27,7 @@ export class BancoService {
     ) {
         this.apiUrl = (window as any).config?.url;
         this.urlAPI = `${this.apiUrl}/Banco`;
-        console.log(this.urlAPI);
+        // console.log(this.urlAPI);
     }
 
     //private urlAPI = `${this.apiUrl}/Banco`;
@@ -50,7 +50,7 @@ export class BancoService {
             .pipe(
                 map((response: RespuestaAPI) => {
                     if (response.isSuccess && response.data) {
-                        console.log(response.data);
+                        // console.log(response.data);
                         return response.data;
                     } else {
                         console.error(
@@ -64,7 +64,7 @@ export class BancoService {
                 catchError(this.handleError)
             );
     }
-    
+
     public CrearBanco(banco: Banco): Observable<any> {
         return this.http.post<any>(this.urlAPI + '/SpCreate', banco);
     }

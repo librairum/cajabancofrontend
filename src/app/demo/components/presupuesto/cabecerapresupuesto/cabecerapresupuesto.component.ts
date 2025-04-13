@@ -21,6 +21,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmarPagoComponent } from '../confirmar-pago/confirmar-pago.component';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
+import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 @Component({
     selector: 'app-cabecerapresupuesto',
     standalone: true,
@@ -91,25 +92,17 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.loading = true;
         this.presupuestoService.obtenerMedioPago(codempresa).subscribe({
             next: (data) => {
-                console.log(data);
+                // console.log(data);
                 this.medioPagoLista = data;
-                console.log(this.medioPagoLista);
+                // console.log(this.medioPagoLista);
                 this.loading = false;
                 if (data.length === 0) {
-                    this.messageService.add({
-                        severity: 'warn',
-                        summary: 'Advertencia',
-                        detail: 'No se encontraron registros de presupuesto'
-                    });
+                    verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron registros de presupuesto');
                 }
             },
             error: (error) => {
                 this.loading = false;
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar presupuesto: ' + error.message
-                });
+                verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar presupuesto: ${error.message}`);
             }
         });
     }
@@ -145,20 +138,12 @@ export class CabecerapresupuestoComponent implements OnInit {
 
                 this.loading = false;
                 if (data.length === 0) {
-                    this.messageService.add({
-                        severity: 'warn',
-                        summary: 'Advertencia',
-                        detail: 'No se encontraron registros de presupuesto'
-                    });
+                    verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron registros de presupuesto');
                 }
             },
             error: (error) => {
                 this.loading = false;
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar presupuesto: ' + error.message
-                });
+                verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar presupuesto: ${error.message}`);
             }
         });
     }
@@ -236,11 +221,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.presupuestoService.insertarPresupuesto(this.nuevoPresupuesto)
             .subscribe({
                 next: (response) => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Presupuesto guardado correctamente'
-                    });
+                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Presupuesto guardado correctamente');
                     this.mostrarNuevaFila = false;
                     this.botonesDeshabilitados = false;
                     this.cargarPresupuesto(
@@ -271,11 +252,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     }
                 },
                 error: (error) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Error al guardar el presupuesto: ' + error.message
-                    });
+                    verMensajeInformativo(this.messageService,'error', 'Error', `Error al guardar el presupuesto: ${error.message}`);
                 }
             });
     }
@@ -328,11 +305,7 @@ export class CabecerapresupuestoComponent implements OnInit {
 
         this.presupuestoService.actualizarPresupuesto(this.editForm).subscribe({
             next: (response) => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Éxito',
-                    detail: 'Presupuesto actualizado correctamente'
-                });
+                verMensajeInformativo(this.messageService,'success', 'Éxito', 'Presupuesto actualizado correctamente');
                 delete this.editingPresupuesto[pagoNumero];
                 this.cargarPresupuesto(
                     this.editForm.ban01Empresa,
@@ -341,11 +314,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                 );
             },
             error: (error) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al actualizar el presupuesto: ' + error.message
-                });
+                verMensajeInformativo(this.messageService,'error', 'Error', `Error al actualizar el presupuesto ${error.message}`);
             }
         });
     }
@@ -384,11 +353,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     .subscribe({
                         next: (response) => {
                             if (response.isSuccess) {
-                                this.messageService.add({
-                                    severity: 'success',
-                                    summary: 'Éxito',
-                                    detail: 'Presupuesto eliminado correctamente',
-                                });
+                                verMensajeInformativo(this.messageService,'success', 'Éxito', 'Presupuesto eliminado correctamente');
                                 // Recargar la lista de presupuestos
                                 const fecha = new Date();
                                 this.cargarPresupuesto(
@@ -399,23 +364,11 @@ export class CabecerapresupuestoComponent implements OnInit {
                                         .padStart(2, '0')
                                 );
                             } else {
-                                this.messageService.add({
-                                    severity: 'error',
-                                    summary: 'Error',
-                                    detail:
-                                        response.message ||
-                                        'Error al eliminar el presupuesto',
-                                });
+                                verMensajeInformativo(this.messageService,'error', 'Error', response.message || `Error al eliminar el presupuesto`);
                             }
                         },
                         error: (error) => {
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Error',
-                                detail:
-                                    'Error al eliminar el presupuesto: ' +
-                                    error.message,
-                            });
+                            verMensajeInformativo(this.messageService,'error', 'Error', `Error al eliminar el presupuesto ${error.message}`);
                         },
                     });
             },
@@ -423,7 +376,7 @@ export class CabecerapresupuestoComponent implements OnInit {
     }
     confirmarPago(presupuesto: cabeceraPresupuesto) {
         this.selectedPagoNumero = presupuesto.pagoNumero;
-        console.log(this.selectedPagoNumero)
+        // console.log(this.selectedPagoNumero)
         this.verConfirmarPago = true;
     }
     onCloseModal() {
@@ -495,11 +448,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     .subscribe({
                         next: (response) => {
                             if (response.isSuccess) {
-                                this.messageService.add({
-                                    severity: 'success',
-                                    summary: 'Éxito',
-                                    detail: 'Pago anulado correctamente',
-                                });
+                                verMensajeInformativo(this.messageService,'success', 'Éxito', 'Pago anulado correctamente');
                                 this.gS.selectedDate$.subscribe((date) => {
                                     if (date) {
                                         const year = date
@@ -516,37 +465,17 @@ export class CabecerapresupuestoComponent implements OnInit {
                                     }
                                 });
                             } else {
-                                this.messageService.add({
-                                    severity: 'error',
-                                    summary: 'Error',
-                                    detail:
-                                        response.message ||
-                                        'Error al anular el pago',
-                                });
+                                verMensajeInformativo(this.messageService,'error', 'Error', response.message || `Error al anular el pago`);
                             }
                         },
                         error: (error) => {
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Error',
-                                detail:
-                                    'Error al anular el pago: ' + error.message,
-                            });
+                            verMensajeInformativo(this.messageService,'error', 'Error', `Error al anular el pago: ${error.message}`);
                         },
                     });
             },
             reject: () => {
-                this.messageService.add({
-                    severity: 'info',
-                    summary: 'Cancelado',
-                    detail: 'Anulación de pago cancelada',
-                });
+                verMensajeInformativo(this.messageService,'info', 'Cancelado', 'Anulación de pago cancelada');
             },
         });
-
-
-
     }
-
-
 }

@@ -22,6 +22,7 @@ import { AgregarPagoComponent } from '../agregar-pago/agregar-pago.component';
 import { saveAs } from 'file-saver';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 
 @Component({
     selector: 'app-detallepresupuesto',
@@ -121,22 +122,14 @@ export class DetallepresupuestoComponent implements OnInit {
                 next: (data) => {
                     this.DetallePago = data;
                     if (data.length === 0) {
-                        this.messageService.add({
-                            severity: 'warn',
-                            summary: 'Advertencia',
-                            detail: 'No se encontraron detalles del presupuesto',
-                        });
+                        verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron detalles del presupuesto');
                         this.load = false;
                     } else {
                         this.load = false;
                     }
                 },
                 error: (error) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Error al cargar presupuesto: ' + error.message,
-                    });
+                    verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar presupuesto: ${error.message}`);
                 },
             });
     }
@@ -225,11 +218,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     startEditing(detalle: Detallepresupuesto, index: number) {
         if (this.isAnyRowEditing) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'Advertencia',
-                detail: 'Termina la edición actual antes de editar otra fila.',
-            });
+            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'Termina la edición actual antes de editar otra fila.');
             return;
         }
         //editar la columna  pago segun el tipo de moneda
@@ -262,7 +251,7 @@ export class DetallepresupuestoComponent implements OnInit {
         if (this.editingRow && this.editingIndex !== null) {
             const payload = this.buildBackendPayload(this.editingRow);
 
-            console.log(payload);
+            // console.log(payload);
             this.presupuestoservice
                 .actualizarDetallePresupuesto(payload)
                 .subscribe({
@@ -271,20 +260,12 @@ export class DetallepresupuestoComponent implements OnInit {
                         this.DetallePago[this.editingIndex] = {
                             ...this.editingRow,
                         };
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Éxito',
-                            detail: 'Detalle actualizado correctamente',
-                        });
+                        verMensajeInformativo(this.messageService,'success', 'Éxito', 'Detalle actualizado correctamente');
                         this.cancelEditing();
                         this.cargarDetalles();
                     },
                     error: (error) => {
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'Error al actualizar: ' + error.message,
-                        });
+                        verMensajeInformativo(this.messageService,'error', 'Error', `Error al actualizar: ${error.message}`);
                     },
                 });
         }
@@ -376,30 +357,14 @@ export class DetallepresupuestoComponent implements OnInit {
                     .subscribe({
                         next: (response) => {
                             if (response.isSuccess) {
-                                this.messageService.add({
-                                    severity: 'success',
-                                    summary: 'Éxito',
-                                    detail: 'Presupuesto detalle eliminado correctamente',
-                                });
+                                verMensajeInformativo(this.messageService,'success', 'Éxito', 'Presupuesto detalle eliminado correctamente');
                                 this.cargarDetalles();
                             } else {
-                                this.messageService.add({
-                                    severity: 'error',
-                                    summary: 'Error',
-                                    detail:
-                                        response.message ||
-                                        'Error al eliminar el presupuesto',
-                                });
+                                verMensajeInformativo(this.messageService,'error', 'Error', response.message || 'Error al eliminar el presupuesto');
                             }
                         },
                         error: (error) => {
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Error',
-                                detail:
-                                    'Error al eliminar el presupuesto: ' +
-                                    error.message,
-                            });
+                            verMensajeInformativo(this.messageService,'error', 'Error', `Error al eliminar el presupuesto: ${error.message}`);
                         },
                     });
             },
@@ -412,13 +377,13 @@ export class DetallepresupuestoComponent implements OnInit {
         let importeNetoSoles: number = 0;
         let montoPagoSoles: number = this.editingRow.ban02PagoSoles;
         let montoPagoDolares: number = this.editingRow.ban02PagoDolares;
-        console.log("calcular neto pago");
+        // console.log("calcular neto pago");
         const tasaRetencion = this.editingRow.ban02TasaRetencion;
         const tasaDetraccion = this.editingRow.ban02Tasadetraccion;
         const tasaPercepcion = this.editingRow.ban02TasaPercepcion;
 
-        console.log(montoPagoSoles);
-        console.log(montoPagoDolares);
+        // console.log(montoPagoSoles);
+        // console.log(montoPagoDolares);
 
         let importeDetraccionSoles: number = 0,
             importeRetencionSoles: number = 0,
@@ -429,7 +394,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
         let netoSoles = 0,
             netoDolares = 0;
-        console.log('canculo de importe detraccion soles');
+        // console.log('canculo de importe detraccion soles');
         let numeroTipoCambio: number = Number(tipoCambio);
         if (monedaEdicion == 'S') {
             //calculo de importe en soles de afectaciones
@@ -443,14 +408,14 @@ export class DetallepresupuestoComponent implements OnInit {
                 (importeDetraccionSoles +
                     importeRetencionSoles +
                     importePercepcionSoles);
-            console.log(netoSoles);
-            //calcular los valores de dolares
-            console.log("moneda soles y se calcula monto pago dolares");
-            
+            // console.log(netoSoles);
+            // //calcular los valores de dolares
+            // console.log("moneda soles y se calcula monto pago dolares");
+
             montoPagoDolares = montoPagoSoles / numeroTipoCambio;
-            console.log(montoPagoSoles);
-            console.log(numeroTipoCambio);
-            console.log(montoPagoDolares.toFixed(2));
+            // console.log(montoPagoSoles);
+            // console.log(numeroTipoCambio);
+            // console.log(montoPagoDolares.toFixed(2));
             importeDetraccionDolares =
                 (tasaDetraccion / 100) * montoPagoDolares;
             importeRetencionDolares = (tasaRetencion / 100) * montoPagoDolares;
@@ -467,7 +432,7 @@ export class DetallepresupuestoComponent implements OnInit {
             importePercepcionDolares =
                 (tasaPercepcion / 100) * montoPagoDolares;
 
-            
+
             netoDolares =
                 montoPagoDolares -
                 (importeDetraccionDolares +
@@ -477,8 +442,8 @@ export class DetallepresupuestoComponent implements OnInit {
             //cambio en soles soles
             //Convertir segun el tiop de cambio mont de pago dolares a monto pago soles ;
             montoPagoSoles = montoPagoDolares * numeroTipoCambio;
-            console.log("moneda dolares y monto a pagar soles");
-                    console.log(montoPagoSoles);
+            // console.log("moneda dolares y monto a pagar soles");
+                    // console.log(montoPagoSoles);
             importeDetraccionSoles = (tasaDetraccion / 100) * montoPagoSoles;
             importeRetencionSoles = (tasaRetencion / 100) * montoPagoSoles;
             importePercepcionSoles = (tasaRetencion / 100) * montoPagoSoles;
@@ -508,23 +473,19 @@ export class DetallepresupuestoComponent implements OnInit {
         this.editingRow.ban02ImportePercepcionDolares =
             importePercepcionDolares;
         this.editingRow.ban02NetoDolares = netoDolares;
-        console.log('Editing Row ban02NetoSoles');
+        // console.log('Editing Row ban02NetoSoles');
         this.editingRow.ban02NetoSoles = netoSoles;
 
         detalle.ban02NetoDolares = netoDolares;
 
-        console.log('detalle objeto neto soles');
-        console.log(netoSoles);
+        // console.log('detalle objeto neto soles');
+        // console.log(netoSoles);
         detalle.ban02NetoSoles = netoSoles;
     }
 
     exportarPDF() {
         if (!this.DetallePago || this.DetallePago.length === 0) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'Advertencia',
-                detail: 'No hay datos para exportar'
-            });
+            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
             return;
         }
         // Definimos las cabeceras
@@ -903,11 +864,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     generarTXT() {
         if (!this.DetallePago || this.DetallePago.length === 0) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'Advertencia',
-                detail: 'No hay datos para exportar'
-            });
+            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
             return;
         }
         const codempresa = this.gS.getCodigoEmpresa();
@@ -928,18 +885,10 @@ export class DetallepresupuestoComponent implements OnInit {
                     //npm install file-saver --legacy-peer-deps
                     //npm install @types/file-saver --save-dev --legacy-peer-deps
                     saveAs(blob, nombreArchivo);
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Archivo TXT generado correctamente'
-                    });
+                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Archivo TXT generado correctamente');
                 } catch (error) {
                     console.error('Error al generar el archivo TXT:', error);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Ocurrió un error al generar el archivo TXT'
-                    });
+                    verMensajeInformativo(this.messageService,'error', 'Error', 'Ocurrió un error al generar el archivo TXT');
                 }
             })
     }

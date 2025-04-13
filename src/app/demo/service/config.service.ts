@@ -13,11 +13,11 @@ export class ConfigService {
     }
 
     async loadConfig(): Promise<void> {
-        console.log("Cargando configuración desde config.json...");
+        // console.log("Cargando configuración desde config.json...");
         try {
             this.config = await firstValueFrom(this.http.get('/assets/config.json'));
             (window as any).config = this.config; // Guardar en window para acceso global
-            console.log(" Configuración cargada:", this.config);
+            // console.log(" Configuración cargada:", this.config);
         } catch (error) {
             console.error(" Error cargando config.json", error);
         }

@@ -36,6 +36,8 @@ import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.ser
 import { last } from 'rxjs';
 import { GlobalService } from 'src/app/demo/service/global.service';
 
+import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
+
 
 @Component({
     selector: 'app-actualizar-vouchercontable',
@@ -94,7 +96,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
         private fb: FormBuilder,
         private messageService: MessageService,
         private regContableService: RegContableDetService,
-        private globalService: GlobalService
+        private globalService: GlobalService,
     ) {}
 
     monedas: any[] = [
@@ -177,7 +179,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
                         valueCCorriente: item.ccm02cod,
                     })
                 );
-                console.log('Cuentas corrientes cargadas:', this.cuentasCorrientes);
+                // console.log('Cuentas corrientes cargadas:', this.cuentasCorrientes);
                 resolve();
             },
             error: (err) => {
@@ -197,7 +199,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
                     labelTDocumento: item.ccb02des,
                     valueTDocumento: item.ccb02cod,
                 }));
-                console.log('Tipo doc: ', this.tipoDocumentos);
+                // console.log('Tipo doc: ', this.tipoDocumentos);
             },
             error: (err) => {
                 console.error('Error al obtener datos:', err);
@@ -223,7 +225,7 @@ export class ActualizarVouchercontableComponent implements OnInit {
     }
 
     cargarDatosActualizar() {
-        console.log('Detalle recibido:', this.detalleSelected); // Verifica si los datos llegan correctamente
+        // console.log('Detalle recibido:', this.detalleSelected); // Verifica si los datos llegan correctamente
 
         const fechaVenc = this.formatFecha(
             this.detalleSelected.fechaVencimiento
@@ -257,24 +259,21 @@ export class ActualizarVouchercontableComponent implements OnInit {
             .subscribe({
                 next: (data: InfoVoucherCompleto) => {
                     this.infoAdicional = data;
-                    console.log('infoAdicional', this.infoAdicional);
+                    // console.log('infoAdicional', this.infoAdicional);
 
                     const cuentaCorrienteValor =
                         this.infoAdicional[0].cuentaCorriente;
-                    console.log(
-                        'Valor cuentaCorriente a asignar:',
-                        cuentaCorrienteValor
-                    );
+                    // console.log('Valor cuentaCorriente a asignar:',cuentaCorrienteValor);
 
                     // Verificar si el valor existe en las opciones del dropdown
                     const existeEnDropdown = this.cuentasCorrientes.some(
                         (cc) => cc.valueCCorriente === cuentaCorrienteValor
                     );
-                    console.log('¿Existe en dropdown?', existeEnDropdown);
-                    console.log(
-                        'Opciones disponibles:',
-                        this.cuentasCorrientes.map((cc) => cc.valueCCorriente)
-                    );
+                    // console.log('¿Existe en dropdown?', existeEnDropdown);
+                    // console.log(
+                    //     'Opciones disponibles:',
+                    //     this.cuentasCorrientes.map((cc) => cc.valueCCorriente)
+                    // );
 
                     if (!existeEnDropdown && cuentaCorrienteValor) {
                         console.warn(
@@ -406,27 +405,19 @@ export class ActualizarVouchercontableComponent implements OnInit {
             ),
         };
 
-        console.log('Datos enviados: ', datosActualizar);
+        // console.log('Datos enviados: ', datosActualizar);
 
         this.regContableService.actualizarVoucher(datosActualizar).subscribe({
             next: (respuesta) => {
-                this.messageService.add({
-                    severity: 'sucess',
-                    summary: 'Éxito',
-                    detail: 'El voucher contable fue actualizado correctamente.',
-                });
-                console.log('Enviado correctamente: ', respuesta);
+                verMensajeInformativo(this.messageService,'success', 'Éxito', 'El voucher contable fue actualizado correctamente');
+                // console.log('Enviado correctamente: ', respuesta);
                 this.mostrarDialogoExito = true;
                 this.mensajeExito = 'Actualización exitosa.';
                 //this.onClose.emit();
             },
             error: (err) => {
                 console.error('Error al actualizar el voucher: ', err);
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'No se pudo actualizar el voucher.',
-                });
+                verMensajeInformativo(this.messageService,'error','Error','No se pudo actualizar el voucher');
             },
         });
     }

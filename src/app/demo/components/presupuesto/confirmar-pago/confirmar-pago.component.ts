@@ -16,6 +16,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { ConfigService } from 'src/app/demo/service/config.service';
+import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 @Component({
     selector: 'app-confirmar-pago',
     standalone: true,
@@ -90,11 +91,7 @@ export class ConfirmarPagoComponent implements OnInit {
         // Verificar que todos los campos esten llenos
         this.pagoForm.markAllAsTouched();
         if (this.pagoForm.invalid) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Por favor complete todos los campos requeridos'
-            });
+            verMensajeInformativo(this.messageService,'error', 'Error', 'Por favor complete los campos requeridos');
             return;
         }
 //
@@ -141,11 +138,7 @@ export class ConfirmarPagoComponent implements OnInit {
                     },
                     error: (error) => {
                         this.cargandoArchivo = false;
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'No se pudo actualizar el comprobante'
-                        });
+                        verMensajeInformativo(this.messageService,'error', 'Error', 'No se pudo actualizar el comprobante');
                         this.cargandoArchivo = false;
                     }
                 });

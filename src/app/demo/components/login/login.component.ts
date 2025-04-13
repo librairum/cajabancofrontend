@@ -15,6 +15,7 @@ import { CardModule } from 'primeng/card';
 import { EmpresasxModulo, Login } from './Login';
 import { DropdownModule } from 'primeng/dropdown';
 import { GlobalService } from '../../service/global.service';
+import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
 
 @Component({
   selector: 'app-login',
@@ -82,23 +83,19 @@ export class LoginComponent implements OnInit {
                                localStorage.removeItem('rememberedUser');
                            }
                         } else{
-                            this.showToast('error', 'Credenciales invalidas','Usuario y/o clave incorrecta');
+                            verMensajeInformativo(this.messageService,'error', 'Credenciales inválidas', 'Usuario y/o clave incorrecta');
 
                         }
 
                     }, error:(error) =>{
-                        this.showToast('error', 'Credenciales invalidas','Usuario y/o clave incorrecta');
+                        verMensajeInformativo(this.messageService, 'error', 'Credenciales invalidas','Usuario y/o clave incorrecta');
 
                     }
                 });
         } else {
-            this.showToast('warn', 'Campos incompletos', 'Por favor completa los campos correctamente.');
+            verMensajeInformativo(this.messageService, 'warn', 'Campos incompletos', 'Por favor completa los campos correctamente.');
         }
     }
-
-    showToast(severity: string, summary: string, detail: string) {
-        this.messageService.add({ severity, summary, detail }); // Muestra el toast
-      }
 
     loadEmpresa(){
         const codigomodulo='01'
@@ -107,7 +104,7 @@ export class LoginComponent implements OnInit {
                 this.Empresa = data;
                 if(this.selectedEmpresa){
                     const empresaEncontrada=this.Empresa.find(p=>p.codigomodulo===this.selectedEmpresa);
-                    console.log(data);
+                    // console.log(data);
                 }
             }
         )

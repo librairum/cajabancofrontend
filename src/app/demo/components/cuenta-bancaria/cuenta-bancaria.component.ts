@@ -22,6 +22,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { TooltipModule } from 'primeng/tooltip';
 import {Router} from '@angular/router';
 import { GlobalService } from '../../service/global.service';
+import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
 @Component({
     selector: 'app-cuenta-bancaria',
     standalone: true,
@@ -94,8 +95,8 @@ export class CuentaBancariaComponent implements OnInit {
             //this.descripcion =params['descripcion'];
         //});
 
-            console.log('idBanco:', this.idBanco);
-            console.log('descripcion:', this.descripcion);
+            // console.log('idBanco:', this.idBanco);
+            // console.log('descripcion:', this.descripcion);
 
           if (this.idBanco && this.descripcion) {
             this.CuentaBancariaForm.patchValue({ idBanco: this.idBanco });
@@ -151,7 +152,7 @@ export class CuentaBancariaComponent implements OnInit {
     }
     onMonedaChange(event: any) {
         this.selectMoneda = event.value;
-        console.log(this.selectMoneda);
+        // console.log(this.selectMoneda);
 
     }
 
@@ -164,7 +165,7 @@ export class CuentaBancariaComponent implements OnInit {
         this.editingCuentaBancaria = { ...cuentaBancaria }
 
         this.isEditingAnyRow = true;
-        console.log("verificacion datos: ", this.editingCuentaBancaria);
+        // console.log("verificacion datos: ", this.editingCuentaBancaria);
 
     }
     onRowEditCancel(index: number) {
@@ -202,12 +203,7 @@ export class CuentaBancariaComponent implements OnInit {
                     this.editingCuentaBancaria = null;
                     this.isEditingAnyRow = false;
                     this.editingRowIndex = null;
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Registro actualizado',
-                        life: 3000
-                    });
+                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro actualizado');
 
                     this.cdRef.detectChanges();
                 }
@@ -231,12 +227,7 @@ export class CuentaBancariaComponent implements OnInit {
                     this.cbS.DeleteCuentaBancaria(idBanco,idnro).subscribe({
                         next: () => {
                             this.Cuenta_BancariaList.splice(index, 1);
-                            this.messageService.add({
-                                severity: 'success',
-                                summary: 'Éxito',
-                                detail: 'Registro eliminado',
-                                life: 3000
-                            });
+                            verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro eliminado');
                             this.loadCuentasBancarias();
                         }
                     });
@@ -271,20 +262,20 @@ export class CuentaBancariaComponent implements OnInit {
                 ban01Prefijo: formData.pref || '',
                 ban01CtaDet: formData.ctaGastos || '',
             };
-            console.log("createCuentaBancaria: ", createCuentaBancaria);
+            // console.log("createCuentaBancaria: ", createCuentaBancaria);
             this.cbS.CreateCuentaBancaria(createCuentaBancaria).subscribe({
                 next: () => {
                     this.loadMonedas();
                     this.isEditing = false;
                     this.isNew = false;
                     this.CuentaBancariaForm.reset();
-                    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro guardado', life: 3000 });
+                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro guardado');
                     this.loadCuentasBancarias();
 
                 },
                 error: (err) => {
                     console.error('Error al guardar:', err);
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el registro', life: 3000 });
+                    verMensajeInformativo(this.messageService,'error', 'Error', 'No se pudo guardar el registro');
                 },
             });
         }

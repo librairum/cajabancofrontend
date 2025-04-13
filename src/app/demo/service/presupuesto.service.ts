@@ -57,14 +57,14 @@ export class PresupuestoService {
             { params }).pipe(map(response => response.data));
     }
     public insertarDetallePresupuesto(detalle: insert_detalle): Observable<any> {
-        console.log("parametros insertar detalle presupuesto");
-        console.log(detalle.empresa);
-        console.log(detalle.numeropresupuesto);
-        console.log(detalle.tipoaplicacion);
-        console.log(detalle.fechapresupuesto);
-        console.log(detalle.bcoliquidacion);
-        console.log(detalle.xmlDetalle);
-        console.log("-------------------------");
+        // console.log("parametros insertar detalle presupuesto");
+        // console.log(detalle.empresa);
+        // console.log(detalle.numeropresupuesto);
+        // console.log(detalle.tipoaplicacion);
+        // console.log(detalle.fechapresupuesto);
+        // console.log(detalle.bcoliquidacion);
+        // console.log(detalle.xmlDetalle);
+        // console.log("-------------------------");
         const params = new HttpParams()
             .set('Empresa', detalle.empresa)
             .set('numeropresupuesto', detalle.numeropresupuesto)
@@ -79,7 +79,7 @@ export class PresupuestoService {
         );
     }
     public insertarPresupuesto(presupuesto: insert_presupuesto): Observable<any> {
-        console.log(presupuesto)
+        // console.log(presupuesto)
         return this.http.post(`${this.urlApi}/SpInsert`, presupuesto);
     }
     public actualizarPresupuesto(presupuesto: insert_presupuesto): Observable<any> {
@@ -129,7 +129,7 @@ export class PresupuestoService {
 
     //metodo para guardar en la carpeta de assest, solo simulación porque esto no funcionaria sin servidor
     simularSubidaArchivo(file: File): Observable<string> {
-        console.log(`Simulando guardado de archivo en: cajabancofrontend/src/assets/${file.name}`);
+        // console.log(`Simulando guardado de archivo en: cajabancofrontend/src/assets/${file.name}`);
         const objectUrl = URL.createObjectURL(file);
         return of(`assets/${file.name}`).pipe(
             delay(800) // Tiempo de carga
