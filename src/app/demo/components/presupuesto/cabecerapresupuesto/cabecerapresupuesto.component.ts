@@ -232,7 +232,10 @@ export class CabecerapresupuestoComponent implements OnInit {
 
                     const nuevoPagoNumero = response.item;
                     if (nuevoPagoNumero) {
-                        const formattedDate = this.datePipe.transform(this.nuevoPresupuesto.ban01Fecha, 'dd/MM/yyyy');
+                        const fechaOriginal = this.nuevoPresupuesto.ban01Fecha;
+                        const fechaConvertida = typeof fechaOriginal === 'string' ? this.convertirStringADate(fechaOriginal) : fechaOriginal;
+                        const formattedDate = this.datePipe.transform(fechaConvertida, 'dd/MM/yyyy');
+
                         let nombreMedioPago = '';
                         if (this.nuevoPresupuesto.ban01mediopago) {
                             const medioPago = this.medioPagoLista.find(mp => mp.ban01IdTipoPago === this.nuevoPresupuesto.ban01mediopago);
@@ -256,6 +259,17 @@ export class CabecerapresupuestoComponent implements OnInit {
                 }
             });
     }
+
+    convertirStringADate(fechaStr: string): Date {
+    // Asumiendo formato dd/MM/yyyy
+    const partes = fechaStr.split('/');
+    const dia = parseInt(partes[0], 10);
+    const mes = parseInt(partes[1], 10) - 1; // los meses en JS empiezan desde 0
+    const anio = parseInt(partes[2], 10);
+    return new Date(anio, mes, dia);
+}
+
+
     actualizarFecha(event: Date) {
         if (event) {
             this.nuevoPresupuesto.ban01Anio = event.getFullYear().toString();
