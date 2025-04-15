@@ -172,7 +172,7 @@ export class DetallepresupuestoComponent implements OnInit {
             acc[item.ban02Ruc].totalMontoPagarDolares +=
                 item.ban02PagoDolares || 0;
             acc[item.ban02Ruc].totalImporte +=
-                item.ban02ImporteDetraccionSoles || 0;
+                item.importeDetraccion || 0;
             acc[item.ban02Ruc].totalRetencion +=
                 item.ban02ImporteRetencionSoles || 0;
             acc[item.ban02Ruc].totalPercepcion +=
@@ -307,7 +307,7 @@ export class DetallepresupuestoComponent implements OnInit {
             ban02pagosoles: detalle.ban02PagoSoles,
             ban02PagoDolares: detalle.ban02PagoDolares,
             ban02TasaDetraccion: detalle.ban02Tasadetraccion,
-            ban02ImporteDetraccionSoles: detalle.ban02ImporteDetraccionSoles,
+            importeDetraccion: detalle.importeDetraccion,
             ban02ImporteDetraccionDolares:
                 detalle.ban02ImporteDetraccionDolares,
             ban02TasaRetencion: detalle.ban02TasaRetencion,
@@ -457,14 +457,14 @@ export class DetallepresupuestoComponent implements OnInit {
         }
 
         //asignar valor de improte detraccion
-        detalle.ban02ImporteDetraccionSoles = importeDetraccionSoles;
+        detalle.importeDetraccion = importeDetraccionSoles;
         detalle.ban02ImporteRetencionSoles = importeRetencionSoles;
         detalle.ban02ImportePercepcionSoles = importePercepcionSoles;
 
         this.editingRow.ban02PagoDolares = montoPagoDolares;
         this.editingRow.ban02PagoSoles = montoPagoSoles;
         this.editingRow.ban02ImporteRetencionSoles = importeRetencionSoles;
-        this.editingRow.ban02ImporteDetraccionSoles = importeDetraccionSoles;
+        this.editingRow.importeDetraccion = importeDetraccionSoles;
         this.editingRow.ban02ImportePercepcionSoles = importePercepcionSoles;
 
         this.editingRow.ban02ImporteRetencionDolares = importeRetencionDolares;
@@ -581,7 +581,7 @@ export class DetallepresupuestoComponent implements OnInit {
                     formatCell(item.ban02PagoDolares),
                     item.ban02TipoDetraccion || '',
                     item.ban02Tasadetraccion || '',
-                    formatCell(item.ban02ImporteDetraccionSoles),
+                    formatCell(item.importeDetraccion),
                     formatCell(item.ban02ImporteRetencionSoles),
                     formatCell(item.ban02ImportePercepcionSoles),
                     formatCell(item.ban02NetoSoles),
@@ -596,7 +596,7 @@ export class DetallepresupuestoComponent implements OnInit {
             );
             const detraccionSubtotal = this.calculateGroupTotal(
                 ruc,
-                'ban02ImporteDetraccionSoles'
+                'importeDetraccion'
             );
             const retencionSubtotal = this.calculateGroupTotal(
                 ruc,
@@ -669,7 +669,7 @@ export class DetallepresupuestoComponent implements OnInit {
         const totalSoles = this.getTotalColumn('ban02Soles');
         const totalDolares = this.getTotalColumn('ban02Dolares');
         const totalDetraccion = this.getTotalColumn(
-            'ban02ImporteDetraccionSoles'
+            'importeDetraccion'
         );
         const totalRetencion = this.getTotalColumn(
             'ban02ImporteRetencionSoles'
@@ -876,6 +876,8 @@ export class DetallepresupuestoComponent implements OnInit {
                     let contenido = '';
                     this.DetallePago.forEach((detalle: Detallepresupuesto) => {
                         const linea = `${detalle.item}|${idTipoPago}|${detalle.ban02NroDoc}|${this.formatearFecha(detalle.ban02FechaEmision)}|${this.formatearNumero(detalle.ban02Soles)}|${this.formatearNumero(detalle.ban02Dolares)}|${this.formatearNumero(detalle.ban02PagoSoles)}|${this.formatearNumero(detalle.ban02PagoDolares)}|${this.formatearNumero(detalle.ban02NetoSoles)}\n`;
+                        // const linea = `${detalle.item}|${idTipoPago}|${detalle.ban02NroDoc}|${this.formatearFecha(detalle.ban02FechaEmision)}|${this.formatearNumero(detalle.ban02Soles)}|${this.formatearNumero(detalle.ban02Dolares)}|${this.formatearNumero(detalle.ban02PagoSoles)}|${this.formatearNumero(detalle.ban02PagoDolares)}|
+                        // ${this.formatearNumero(detalle.nombremoneda === "SOLES" ? detalle.ban02Soles - detalle.importeDetraccion : detalle.ban02Dolares - detalle.importeDetraccion)}\n`;
                         contenido += linea;
                     });
                     const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });

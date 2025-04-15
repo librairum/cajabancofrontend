@@ -61,6 +61,8 @@ export interface Detallepresupuesto {
     ban02NetoDolares: number;
     ban02FechaEmision: string;
     ban02FechaVencimiento: string;
+
+    importeDetraccion: number;
 }
 
 export interface agregar_Pago {
