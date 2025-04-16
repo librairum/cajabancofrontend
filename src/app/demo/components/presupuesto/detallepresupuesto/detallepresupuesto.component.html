@@ -129,7 +129,7 @@
                     <td></td>
                     <td></td>
                     <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImporteDetraccionSoles') |
+                        'importeDetraccion') |
                         number:'1.2-2' }}</td>
                     <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
                         'ban02ImporteRetencionSoles') |
@@ -195,10 +195,10 @@
                     </td>
                     <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionSoles"
+                            <input pInputText type="number" [(ngModel)]="editingRow.importeDetraccion"
                                 (change)="calcularNetoPago(editingRow)" />
                         </ng-container>
-                        <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles | number:'1.2-2'
+                        <ng-template #viewModeImporteDetraccion>{{ detalle.importeDetraccion     | number:'1.2-2'
                             }}</ng-template>
                     </td>
                     <td style="text-align: right;">
@@ -257,7 +257,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImporteDetraccionSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('importeDetraccion') | number:'1.2-2' }}</td>
                     <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImporteRetencionSoles') | number:'1.2-2' }}</td>
                     <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImportePercepcionSoles') | number:'1.2-2' }}</td>
                     <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02NetoSoles') | number:'1.2-2' }}</td>
