@@ -9,7 +9,8 @@
     font-size: 13px; /* Tamaño compacto */
     text-align: center;
     background-color: #f9f9f9; /* Fondo suave para diferenciar la cabecera */
-    border-bottom: 2px solid #ddd; /* Solo líneas horizontales */
+    border-bottom: 1px solid #ccc; /* Agregar líneas horizontales */
+    border-right: 1px solid #ccc; /* Agregar líneas verticales */
 }
 
 ::ng-deep .p-datatable td {
@@ -18,6 +19,7 @@
     text-align: center; /* Centra el contenido */
     word-wrap: break-word; /* Permite ajustar texto largo */
     border: 1px solid #ddd; /* Líneas horizontales y verticales */
+    border-right: 1px solid #ccc; /* Nuevo: líneas verticales */
 }
 
 ::ng-deep .p-datatable .p-datatable-tbody > tr > td {

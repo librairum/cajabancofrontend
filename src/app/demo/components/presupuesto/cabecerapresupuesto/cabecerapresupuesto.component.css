@@ -9,7 +9,8 @@
     font-size: 13px; /* Tamaño compacto */
     text-align: center;
     background-color: #f9f9f9; /* Fondo suave para diferenciar la cabecera */
-    border-bottom: 2px solid #ddd; /* Solo líneas horizontales */
+    border-bottom: 1px solid #ccc; /* Linea Horizontal */
+    border-right: 1px solid #ccc; /* Nuevo: Linea Vertical */
 }
 
 ::ng-deep .p-datatable td {

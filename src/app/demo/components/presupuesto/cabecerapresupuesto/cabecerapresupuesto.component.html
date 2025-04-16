@@ -25,7 +25,7 @@
                         <br />
                         <br />
                         <p-columnFilter type="text" field="pagoNumero" placeholder="Buscar" ariaLabel="Pago Nro"
-                            [showMenu]="false"></p-columnFilter>
+                            [showMenu]="false" matchMode="contains"></p-columnFilter>
                     </th>
                     <th rowspan="2">Fecha</th>
                     <th rowspan="2">Motivo</th>
@@ -52,8 +52,8 @@
             </ng-template>
             <ng-template pTemplate="body" let-presupuesto>
                 <tr>
-                    <td style="text-align: left;">{{ presupuesto.pagoNumero }}</td>
-                    <td style="text-align: left;">
+                    <td style="text-align: left; white-space: nowrap;">{{ presupuesto.pagoNumero }}</td>
+                    <td style="text-align: left; white-space: nowrap;">
                         <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{ presupuesto.fecha | date : "dd/MM/yyyy" }}
                         </ng-container>
@@ -63,7 +63,7 @@
                                 class="w-full"></p-calendar>
                         </ng-container>
                     </td>
-                    <td style="text-align: left;">
+                    <td style="text-align: left; white-space: nowrap;">
                         <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{ presupuesto.motivo }}
                         </ng-container>
@@ -72,7 +72,7 @@
                                 class="w-full" />
                         </ng-container>
                     </td>
-                    <td style="text-align: left;">
+                    <td style="text-align: left; white-space: nowrap;">
                         <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{ presupuesto.nombreMedioPago }}
                         </ng-container>
@@ -86,31 +86,31 @@
                         </ng-container>
                         <!-- -->
                     </td>
-                    <td style="text-align: right;">{{ presupuesto.impBrutoSoles | number : "1.2-2" }}</td>
-                    <td style="text-align: right;">
+                    <td style="text-align: right; white-space: nowrap;">{{ presupuesto.impBrutoSoles | number : "1.2-2" }}</td>
+                    <td style="text-align: right; white-space: nowrap;">
                         {{ presupuesto.impBrutoDolares | number : "1.2-2" }}
                     </td>
-                    <td style="text-align: right;">
+                    <td style="text-align: right; white-space: nowrap;">
                         {{ presupuesto.impDetraccionSoles | number : "1.2-2" }}
                     </td>
-                    <td style="text-align: right;">
+                    <td style="text-align: right; white-space: nowrap;">
                         {{ presupuesto.impRetencionSoles | number : "1.2-2" }}
                     </td>
-                    <td style="text-align: right;">
+                    <td style="text-align: right; white-space: nowrap;">
                         {{ presupuesto.impPercepcionSoles | number : "1.2-2" }}
                     </td>
-                    <td style="text-align: right;">{{ presupuesto.netoPagaSoles | number : "1.2-2" }}</td>
-                    <td style="text-align: right;">
+                    <td style="text-align: right; white-space: nowrap;">{{ presupuesto.netoPagaSoles | number : "1.2-2" }}</td>
+                    <td style="text-align: right; white-space: nowrap;">
                         {{ presupuesto.netoPagoDolares | number : "1.2-2" }}
                     </td >
-                    <td style="text-align: left;">{{ presupuesto.estado }}</td>
-                    <td style="text-align: left;">
+                    <td style="text-align: left; white-space: nowrap;">{{ presupuesto.estado }}</td>
+                    <td style="text-align: left; white-space: nowrap;">
                         {{
                         presupuesto.ban01FechaEjecucionPago
                         | date : "dd/MM/yyyy"
                         }}
                     </td>
-                    <td style="text-align: left;">{{ presupuesto.ban01NroOperacion }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ presupuesto.ban01NroOperacion }}</td>
                     <td>
                         <p-button *ngIf="presupuesto.ban01EnlacePago" label="" icon="pi pi-file"
                             styleClass="p-button-sm p-button-info" (onClick)="
