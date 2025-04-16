@@ -12,6 +12,7 @@ import {
 } from 'rxjs';
 import { Banco } from '../components/banco/Banco';
 import { ConfigService } from './config.service';
+import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 @Injectable({
     providedIn: 'root',
 })
@@ -46,9 +47,9 @@ export class BancoService {
     // Ejemplo de cómo usar el método de verificación con GetBancos
     public GetBancos(): Observable<Banco[]> {
         return this.http
-            .get<RespuestaAPI>(this.urlAPI + '/SpList?empresa=01')
+            .get<RespuestaAPIBase<Banco[]>>(this.urlAPI + '/SpList?empresa=01')
             .pipe(
-                map((response: RespuestaAPI) => {
+                map((response: RespuestaAPIBase<Banco[]>) => {
                     if (response.isSuccess && response.data) {
                         // console.log(response.data);
                         return response.data;
@@ -88,13 +89,3 @@ export class BancoService {
     }
 }
 
-interface RespuestaAPI {
-    message: string;
-    messageException: string | null;
-    isSuccess: boolean;
-    item: any | null; // Puedes tipar 'item' si conoces su estructura
-    data: Banco[];
-    total: number;
-    mensajeRetorno: string | null;
-    flagRetorno: number;
-}
