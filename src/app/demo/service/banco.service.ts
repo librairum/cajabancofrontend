@@ -1,16 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable, OnInit } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     catchError,
-    filter,
-    first,
-    firstValueFrom,
     map,
     Observable,
-    switchMap,
     throwError,
 } from 'rxjs';
-import { Banco } from '../components/banco/Banco';
+import { Banco } from '../model/Banco';
 import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 @Injectable({
@@ -26,7 +22,7 @@ export class BancoService {
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
-        this.apiUrl = (window as any).config?.url;
+        this.apiUrl = configService.getApiUrl();
         this.urlAPI = `${this.apiUrl}/Banco`;
         // console.log(this.urlAPI);
     }

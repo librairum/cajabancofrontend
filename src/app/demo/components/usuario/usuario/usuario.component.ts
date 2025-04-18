@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../login/Login';
+import { Usuario } from '../../../model/Login';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from 'src/app/demo/service/usuario.service';
 import { PanelModule } from 'primeng/panel';
@@ -8,7 +8,6 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { MensajemodalComponent } from '../../mensajemodal/mensajemodal.component';
 import { CommonModule } from '@angular/common';
 
 @Component({

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { InfoVoucherCompleto, ObtenerCuentaCorriente, ObtenerCuentaHaby, ObtenerInformacion, obtenerTipoDocumento, VoucherContableDetalle } from '../components/presupuesto/presupuesto';
+import { InfoVoucherCompleto, ObtenerCuentaCorriente, ObtenerCuentaHaby, obtenerTipoDocumento } from '../model/presupuesto';
 import { map, Observable, tap } from 'rxjs';
 import { GlobalService } from './global.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
@@ -20,7 +20,7 @@ export class RegContableDetService {
         private configService: ConfigService,
         private globalService: GlobalService
     ) {
-        this.apiUrl = (window as any).config?.url;
+        this.apiUrl = configService.getApiUrl();
         const config = `${this.apiUrl}/CtaCtable`;
         this.urlApi = config;
         this.urlBase = `${this.apiUrl}`;

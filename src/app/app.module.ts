@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
@@ -17,7 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
     imports: [AppRoutingModule, AppLayoutModule,FormsModule,BrowserModule,ReactiveFormsModule,ToastModule,LoginComponent],
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
-            
+
          ConfirmationService,HttpClientModule
     ],
     bootstrap: [AppComponent],

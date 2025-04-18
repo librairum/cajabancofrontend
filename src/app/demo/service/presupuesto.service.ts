@@ -1,11 +1,10 @@
 import { Injectable , inject} from '@angular/core';
-import { agregar_Pago, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista, VoucherContableCabecera, VoucherContableDetalle } from '../components/presupuesto/presupuesto';
+import { agregar_Pago, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista, VoucherContableCabecera, VoucherContableDetalle } from '../model/presupuesto';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
-import { formatDate } from '@angular/common';
 import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
-import { MedioPago } from '../components/presupuesto/presupuesto';
+import { MedioPago } from '../model/presupuesto';
 @Injectable({
     providedIn: 'root',
 })
@@ -19,7 +18,7 @@ export class PresupuestoService {
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
-        this.apiUrl = (window as any).config?.url;
+        this.apiUrl = configService.getApiUrl();
         const config = `${this.apiUrl}/Presupuesto`;
         this.urlApi = config;
         this.urlBase = `${this.apiUrl}`;

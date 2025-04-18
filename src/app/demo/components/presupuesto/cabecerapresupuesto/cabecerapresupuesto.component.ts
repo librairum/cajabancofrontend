@@ -7,7 +7,7 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
-import { cabeceraPresupuesto, insert_presupuesto, mediopago_lista } from '../presupuesto';
+import { cabeceraPresupuesto, insert_presupuesto, mediopago_lista } from '../../../model/presupuesto';
 import { ButtonModule } from 'primeng/button';
 import { Router, RouterModule } from '@angular/router';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';

@@ -1,11 +1,9 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from '../demo/components/service/app.layout.service';
-import { RouterLink } from '@angular/router';
-import { PermisosxPerfilService } from '../demo/service/permisosxperfil.service';
-import { PermisosxPerfil } from '../demo/api/permisosxperfil';
+import { PermisosxPerfil } from '../demo/model/permisosxperfil';
 import { LoginService } from '../demo/service/login.service';
-import { MenuxPerfil } from '../demo/components/login/MenuxPerfil';
+import { MenuxPerfil } from '../demo/model/MenuxPerfil';
 import { GlobalService } from '../demo/service/global.service';
 @Component({
     selector: 'app-menu',

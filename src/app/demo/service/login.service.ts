@@ -1,26 +1,16 @@
 import {
     HttpClient,
     HttpParams,
-    HttpErrorResponse,
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
-    catchError,
-    filter,
-    first,
-    firstValueFrom,
-    switchMap,
     BehaviorSubject,
     map,
     Observable,
-    of,
     tap,
-    throwError,
 } from 'rxjs';
-import { EmpresasxModulo, Login, Usuario } from '../components/login/Login';
-import { Autenticacion } from '../components/login/Autenticacion';
-import { PermisosxPerfil } from '../api/permisosxperfil';
-import { MenuxPerfil } from '../components/login/MenuxPerfil';
+import { EmpresasxModulo, Login } from '../model/Login';
+import { MenuxPerfil } from '../model/MenuxPerfil';
 import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 
@@ -47,7 +37,7 @@ export class LoginService {
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
-        this.apiUrl = (window as any).config?.url
+        this.apiUrl = configService.getApiUrl();
         this.urlAPI = `${this.apiUrl}/Autenticacion`;
 
         window.addEventListener('beforeunload', () => {

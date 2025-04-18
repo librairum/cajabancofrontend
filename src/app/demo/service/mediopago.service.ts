@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpResponse, HttpParams } from '@angular/common/http';
-import { inject, Injectable, OnInit } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { inject, Injectable} from '@angular/core';
 import { ConfigService } from './config.service';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { MedioPago } from '../components/mediopago/mediopago';
+import { map, Observable, throwError } from 'rxjs';
+import { MedioPago } from '../model/mediopago';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 
 @Injectable({
@@ -19,7 +19,7 @@ private http = inject(HttpClient);
         private configService: ConfigService
     ) {
 
-      this.apiUrl = (window as any).config?.url
+      this.apiUrl = configService.getApiUrl();
       this.urlAPI = `${this.apiUrl}/MedioPago`;
     //   console.log(this.urlAPI);
     }

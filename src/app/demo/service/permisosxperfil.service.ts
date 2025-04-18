@@ -1,7 +1,7 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PermisosxPerfil } from '../api/permisosxperfil';
+import { PermisosxPerfil } from '../model/permisosxperfil';
 import { ConfigService } from './config.service';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class PermisosxPerfilService {
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
-        this.apiUrl = (window as any).config?.url;
+        this.apiUrl = configService.getApiUrl();
         this.urlAPI = `${this.apiUrl}/PermisosxPerfil`;
     }
     public GetPermisosxperfil(

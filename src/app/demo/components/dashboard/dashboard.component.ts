@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Product } from '../../api/product';
+import { Product } from '../../model/product';
 
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/demo/components/service/app.layout.service';
@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initChart();
-        
+
 
         this.items = [
             { label: 'Add New', icon: 'pi pi-fw pi-plus' },
