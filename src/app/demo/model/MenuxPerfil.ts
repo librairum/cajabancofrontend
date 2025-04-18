@@ -1,4 +1,4 @@
-import { PermisosxPerfil } from "../../api/permisosxperfil";
+import { PermisosxPerfil } from "./permisosxperfil";
 
 export interface MenuxPerfil{
 

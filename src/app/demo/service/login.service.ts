@@ -1,27 +1,18 @@
 import {
     HttpClient,
     HttpParams,
-    HttpErrorResponse,
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
-    catchError,
-    filter,
-    first,
-    firstValueFrom,
-    switchMap,
     BehaviorSubject,
     map,
     Observable,
-    of,
     tap,
-    throwError,
 } from 'rxjs';
-import { EmpresasxModulo, Login, Usuario } from '../components/login/Login';
-import { Autenticacion } from '../components/login/Autenticacion';
-import { PermisosxPerfil } from '../api/permisosxperfil';
-import { MenuxPerfil } from '../components/login/MenuxPerfil';
+import { EmpresasxModulo, Login } from '../model/Login';
+import { MenuxPerfil } from '../model/MenuxPerfil';
 import { ConfigService } from './config.service';
+import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 
 interface LoginResponse {
     token: string;
@@ -46,7 +37,7 @@ export class LoginService {
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
-        this.apiUrl = (window as any).config?.url
+        this.apiUrl = configService.getApiUrl();
         this.urlAPI = `${this.apiUrl}/Autenticacion`;
 
         window.addEventListener('beforeunload', () => {
@@ -59,10 +50,10 @@ export class LoginService {
         });
     }
 
-    autenticacion(autenticacion: Login): Observable<RespuestaAPI<Login>> {
+    autenticacion(autenticacion: Login): Observable<RespuestaAPIBase<Login[], Login>> {
         const url = `${this.urlAPI}/SpList`;
 
-        return this.http.post<RespuestaAPI<Login>>(url, autenticacion).pipe(
+        return this.http.post<RespuestaAPIBase<Login[], Login>>(url, autenticacion).pipe(
             tap((response) => {
                 if (response.isSuccess) {
                     localStorage.setItem(
@@ -123,7 +114,7 @@ export class LoginService {
         const params = new HttpParams().set('codigomodulo', codigomodulo);
 
         return this.http
-            .get<RespuestaAPI<EmpresasxModulo>>(
+            .get<RespuestaAPIBase<EmpresasxModulo[], EmpresasxModulo>>(
                 `${this.urlAPI}/SpTraeEmpresasxModulo`,
                 { params }
             )
@@ -131,15 +122,4 @@ export class LoginService {
         //  return this.http.get<RespuestaAPI<EmpresasxModulo>>(`https://localhost:7277/Autenticacion/SpTraeEmpresasxModulo`,
         // {params}).pipe(map(response=>response.data));
     }
-}
-
-export interface RespuestaAPI<T> {
-    message: string;
-    messageException: string | null;
-    isSuccess: boolean;
-    item: T | null;
-    data: T[];
-    total: number;
-    mensajeRetorno: string | null;
-    flagRetorno: number;
 }

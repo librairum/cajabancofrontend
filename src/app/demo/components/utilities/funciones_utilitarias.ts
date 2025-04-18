@@ -12,3 +12,14 @@ export function verMensajeInformativo(messageService: MessageService , tipo: str
         life: tiempo_aparicion
     });
 }
+
+export interface RespuestaAPIBase<T, I = any> {
+    message: string;
+    messageException: string | null;
+    isSuccess: boolean;
+    item: I | null; // Puedes tipar 'item' si conoces su estructura
+    data: T; // Puedes tipar esto según la respuesta específica que esperes
+    total: number;
+    mensajeRetorno: string | null;
+    flagRetorno: number;
+}

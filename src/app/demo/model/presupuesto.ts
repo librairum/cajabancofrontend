@@ -273,3 +273,13 @@ export interface InfoVoucherCompleto {
     docModFecha?: string;
 }
 
+
+//service
+
+export interface MedioPago {
+    ban01Empresa: string;
+    ban01IdTipoPago: string;
+    ban01Descripcion: string;
+}
+
+

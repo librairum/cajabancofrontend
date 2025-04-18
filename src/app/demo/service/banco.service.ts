@@ -1,17 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable, OnInit } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     catchError,
-    filter,
-    first,
-    firstValueFrom,
     map,
     Observable,
-    switchMap,
     throwError,
 } from 'rxjs';
-import { Banco } from '../components/banco/Banco';
+import { Banco } from '../model/Banco';
 import { ConfigService } from './config.service';
+import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 @Injectable({
     providedIn: 'root',
 })
@@ -25,7 +22,7 @@ export class BancoService {
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
-        this.apiUrl = (window as any).config?.url;
+        this.apiUrl = configService.getApiUrl();
         this.urlAPI = `${this.apiUrl}/Banco`;
         // console.log(this.urlAPI);
     }
@@ -46,9 +43,9 @@ export class BancoService {
     // Ejemplo de cómo usar el método de verificación con GetBancos
     public GetBancos(): Observable<Banco[]> {
         return this.http
-            .get<RespuestaAPI>(this.urlAPI + '/SpList?empresa=01')
+            .get<RespuestaAPIBase<Banco[]>>(this.urlAPI + '/SpList?empresa=01')
             .pipe(
-                map((response: RespuestaAPI) => {
+                map((response: RespuestaAPIBase<Banco[]>) => {
                     if (response.isSuccess && response.data) {
                         // console.log(response.data);
                         return response.data;
@@ -88,13 +85,3 @@ export class BancoService {
     }
 }
 
-interface RespuestaAPI {
-    message: string;
-    messageException: string | null;
-    isSuccess: boolean;
-    item: any | null; // Puedes tipar 'item' si conoces su estructura
-    data: Banco[];
-    total: number;
-    mensajeRetorno: string | null;
-    flagRetorno: number;
-}

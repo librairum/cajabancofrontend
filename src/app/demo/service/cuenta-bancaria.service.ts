@@ -1,10 +1,10 @@
-import { insertCuenta_Bancaria, updCuenta_Bancaria, delCuenta_Bancaria } from './../components/cuenta-bancaria/Cuenta_Bancaria';
+import { insertCuenta_Bancaria, updCuenta_Bancaria } from '../model/Cuenta_Bancaria';
 import { ApiResponse } from './../model/api_response';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map, catchError, throwError } from 'rxjs';
-import { Cuenta_Bancaria } from '../components/cuenta-bancaria/Cuenta_Bancaria';
+import { Cuenta_Bancaria } from '../model/Cuenta_Bancaria';
 import { ConfigService } from './config.service';
 
 @Injectable({
@@ -16,12 +16,12 @@ export class CuentaBancariaService {
       urlAPI: string = ''; //
       //apiUrl = 'https://localhost:7277/CtaBancaria';
 
-  constructor(private httpClient: HttpClient, private configService: ConfigService) 
+  constructor(private httpClient: HttpClient, private configService: ConfigService)
   {
 
-    this.apiUrl = (window as any).config?.url
+    this.apiUrl = configService.getApiUrl();
     this.urlAPI= `${this.apiUrl}/CtaBancaria`;
-    
+
    }
 
   // método para listar

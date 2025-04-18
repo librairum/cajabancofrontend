@@ -12,7 +12,7 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
-import { Detallepresupuesto, mediopago_lista } from '../presupuesto';
+import { Detallepresupuesto, mediopago_lista } from '../../../model/presupuesto';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 
 import { InputNumberModule } from 'primeng/inputnumber';

@@ -12,16 +12,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
-import {
-    Detallepresupuesto,
-    ObtenerInformacion,
-    VoucherContableCabecera,
-    VoucherContableDetalle,
-} from '../presupuesto';
+import { ObtenerInformacion, VoucherContableCabecera, VoucherContableDetalle} from '../../../model/presupuesto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
-import { GlobalService } from 'src/app/demo/service/global.service';
 import { ActualizarVouchercontableComponent } from "../actualizar-vouchercontable/actualizar-vouchercontable.component";
 import { RegContableDetService } from 'src/app/demo/service/reg-contable-det.service';
 import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';

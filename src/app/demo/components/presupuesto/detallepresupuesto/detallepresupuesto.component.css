@@ -11,6 +11,7 @@
     text-align: center;
     background-color: #f9f9f9;
     border-bottom: 2px solid #ddd;
+    border-right: 1px solid #ddd; /* Línea vertical */
 }
 
 ::ng-deep .p-datatable td {
@@ -19,6 +20,7 @@
     text-align: center;
     word-wrap: break-word;
     border: 1px solid #ddd;
+    border-right: 1px solid #ddd; /* Línea vertical */
 }
 
 ::ng-deep .p-datatable .p-datatable-tbody > tr > td {

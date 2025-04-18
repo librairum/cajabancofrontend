@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { InfoVoucherCompleto, ObtenerCuentaCorriente, ObtenerCuentaHaby, ObtenerInformacion, obtenerTipoDocumento, VoucherContableDetalle } from '../components/presupuesto/presupuesto';
+import { InfoVoucherCompleto, ObtenerCuentaCorriente, ObtenerCuentaHaby, obtenerTipoDocumento } from '../model/presupuesto';
 import { map, Observable, tap } from 'rxjs';
 import { GlobalService } from './global.service';
+import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +20,7 @@ export class RegContableDetService {
         private configService: ConfigService,
         private globalService: GlobalService
     ) {
-        this.apiUrl = (window as any).config?.url;
+        this.apiUrl = configService.getApiUrl();
         const config = `${this.apiUrl}/CtaCtable`;
         this.urlApi = config;
         this.urlBase = `${this.apiUrl}`;
@@ -31,7 +32,7 @@ export class RegContableDetService {
             .set('anio', '2024');
 
         return this.http
-            .get<RespuestaAPI<ObtenerCuentaHaby>>(
+            .get<RespuestaAPIBase<ObtenerCuentaHaby[], ObtenerCuentaHaby[]>>(
                 `${this.urlApi}/SpTraeAyudaHabyMov`,
                 { params }
             )
@@ -45,10 +46,12 @@ export class RegContableDetService {
         );
 
         return this.http
-            .get<RespuestaAPI<ObtenerCuentaCorriente>>(
-                `${this.urlApi}/SpTraeAyudaProveedor`,
-                { params }
-            )
+            .get<
+                RespuestaAPIBase<
+                    ObtenerCuentaCorriente[],
+                    ObtenerCuentaCorriente[]
+                >
+            >(`${this.urlApi}/SpTraeAyudaProveedor`, { params })
             .pipe(map((response) => response.data));
     }
 
@@ -59,10 +62,9 @@ export class RegContableDetService {
         );
 
         return this.http
-            .get<RespuestaAPI<obtenerTipoDocumento>>(
-                `${this.urlApi}/SpTraeAyudaTipoDocumentos`,
-                { params }
-            )
+            .get<
+                RespuestaAPIBase<obtenerTipoDocumento[], obtenerTipoDocumento[]>
+            >(`${this.urlApi}/SpTraeAyudaTipoDocumentos`, { params })
             .pipe(map((response) => response.data));
     }
 
@@ -82,7 +84,7 @@ export class RegContableDetService {
             .set('nroOrden', nroOrden);
 
         return this.http
-            .get<RespuestaAPIInformacion<InfoVoucherCompleto>>(
+            .get<RespuestaAPIBase<InfoVoucherCompleto, InfoVoucherCompleto>>(
                 `${this.urlApi}/SpTraeRegContableDet`,
                 { params }
             )
@@ -110,26 +112,4 @@ export class RegContableDetService {
         return this.http
             .delete<any>(urlEliminar);
     }
-}
-
-interface RespuestaAPI<T> {
-    message: string;
-    messageException: string | null;
-    isSuccess: boolean;
-    item: T | null;
-    data: T[];
-    total: number;
-    mensajeRetorno: string | null;
-    flagRetorno: number;
-}
-
-interface RespuestaAPIInformacion<T> {
-    message: string;
-    messageException: string | null;
-    isSuccess: boolean;
-    item: T | null;
-    data: T;
-    total: number;
-    mensajeRetorno: string | null;
-    flagRetorno: number;
 }

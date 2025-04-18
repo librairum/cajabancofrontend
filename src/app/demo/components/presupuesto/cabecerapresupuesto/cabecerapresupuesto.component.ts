@@ -7,11 +7,10 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
-import { cabeceraPresupuesto, insert_presupuesto, mediopago_lista } from '../presupuesto';
+import { cabeceraPresupuesto, insert_presupuesto, mediopago_lista } from '../../../model/presupuesto';
 import { ButtonModule } from 'primeng/button';
 import { Router, RouterModule } from '@angular/router';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
-import { RespuestaAPI } from 'src/app/demo/service/login.service';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
@@ -135,7 +134,6 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.presupuestoService.obtenerPresupuesto(empresa, anio, mes).subscribe({
             next: (data) => {
                 this.presupuesto = data;
-
                 this.loading = false;
                 if (data.length === 0) {
                     verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron registros de presupuesto');

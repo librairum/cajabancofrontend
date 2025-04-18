@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
@@ -62,7 +62,7 @@ export class ConfirmarPagoComponent implements OnInit {
             rutaComprobante: ['',Validators.required]
         });
 
-      this.apiUrl = (window as any).config?.url
+      this.apiUrl = configService.getApiUrl();
         this.urlApi = this.apiUrl;
     }
 
@@ -96,11 +96,6 @@ export class ConfirmarPagoComponent implements OnInit {
         }
 //
         this.cargandoArchivo = true;
-        // const destinationPath =
-        //     'C:UsersUSERDesktopproyecto v2cajabancofrontendsrcassetsdocumentos';
-                    const destinationPath =
-                        'C:\\Users\\USER\\Desktop\\proyecto v2\\cajabancofrontend\\src\\assets\\documentos';
-        //const destinationPath = this.rutaDoc;
         const originalFileName = this.archivoSeleccionado?.name || '';
         const fileName = originalFileName.split('.').length > 1
             ? originalFileName
@@ -108,7 +103,7 @@ export class ConfirmarPagoComponent implements OnInit {
 
         const fileUrl = `http://localhost:4200/assets/documentos/${fileName}`;
 
-        this.pS.subirArchivo(this.archivoSeleccionado, destinationPath).subscribe({
+        this.pS.subirArchivo(this.archivoSeleccionado, this.destinationPath).subscribe({
             next: (event) => {
                 const fechaPagoInput = this.pagoForm.get('fechaejecucion')?.value;
                 const fechaPagoFormatted = fechaPagoInput
