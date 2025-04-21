@@ -38,6 +38,8 @@ export class CabecerapresupuestoComponent implements OnInit {
     //breadcrumb
     items: any[] = []
     prueba!: any[];
+    anioFecha: string = '';
+    mesFecha: string = '';
     presupuesto: cabeceraPresupuesto[] = []
     loading: boolean = false;
     mostrarNuevaFila: boolean = false;
@@ -56,8 +58,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Usuario: '',
         ban01Pc: '',
         ban01FechaRegistro: '',
-        ban01mediopago: '',
-        NombreMedioPago: ''
+        ban01mediopago: ''
     };
 
     editingPresupuesto: { [key: string]: boolean } = {};
@@ -72,8 +73,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Usuario: '',
         ban01Pc: '',
         ban01FechaRegistro: '',
-        ban01mediopago: '',
-        NombreMedioPago: ''
+        ban01mediopago: ''
     };
     //para pasar el pagonro
     selectedPagoNumero: string = '';
@@ -124,6 +124,8 @@ export class CabecerapresupuestoComponent implements OnInit {
             if (date) {
                 const year = date.getFullYear().toString();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                this.anioFecha = year;
+                this.mesFecha = month;
                 this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
             }
         });
@@ -189,8 +191,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
             ban01FechaRegistro: fechaRegistroFormateada,
-            ban01mediopago: '',
-            NombreMedioPago: ''
+            ban01mediopago: ''
         }
     }
 
@@ -208,8 +209,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Usuario: '',
             ban01Pc: '',
             ban01FechaRegistro: '',
-            ban01mediopago: '',
-            NombreMedioPago: ''
+            ban01mediopago: ''
         };
     }
 
@@ -293,8 +293,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
             ban01FechaRegistro: this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '',
-            ban01mediopago: foundMedioPago ? foundMedioPago.ban01IdTipoPago : '',
-            NombreMedioPago: '',
+            ban01mediopago: foundMedioPago ? foundMedioPago.ban01IdTipoPago : ''
         };
     }
 
@@ -406,11 +405,19 @@ export class CabecerapresupuestoComponent implements OnInit {
         });
     }
     uploadFunction() { }
-    abrirdocumento(filePath: string): void {
-        if (filePath) {
-            // Solo abre una nueva ventana y coloca la ruta directamente en la barra de direcciones
-            window.open(filePath, '_blank');
-        }
+
+
+    abrirdocumento(numeroPresupuesto: string): void {
+        this.presupuestoService.obtenerArchivo(this.gS.getCodigoEmpresa(), this.anioFecha, this.mesFecha, numeroPresupuesto).subscribe({
+            next: (blob: Blob) => {
+                const url = window.URL.createObjectURL(blob)
+                window.open(url, '_blank')
+            },
+            error: (err) => {
+                console.error('Error al obtener el documento: ', err);
+
+            }
+        })
     }
 
     anio_dato: string = ""
@@ -451,8 +458,8 @@ export class CabecerapresupuestoComponent implements OnInit {
                     mes: this.mes_dato,
                     numeropresupuesto: presupuesto.pagoNumero,
                     flagOperacion: 'E',
-                    fechapago: '',
-                    numerooperacion: '',
+                    fechapago: presupuesto.ban01FechaEjecucionPago,
+                    numerooperacion: presupuesto.ban01NroOperacion,
                     enlacepago: presupuesto.ban01EnlacePago,
                 };
                 this.presupuestoService

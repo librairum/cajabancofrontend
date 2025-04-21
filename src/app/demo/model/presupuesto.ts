@@ -112,7 +112,6 @@ export interface insert_presupuesto {
     ban01Pc: string;
     ban01FechaRegistro: string;
     ban01mediopago: string;
-    NombreMedioPago: string;
 }
 
 export interface ComprobanteUpdateParams {
@@ -123,6 +122,8 @@ export interface ComprobanteUpdateParams {
     fechapago?: string;
     numerooperacion?: string;
     enlacepago?: string;
+    nombreArchivo?: string;
+    contenidoArchivo?: string;
     flagOperacion: string;
 }
 

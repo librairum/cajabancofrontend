@@ -113,8 +113,8 @@
                     <td style="text-align: left; white-space: nowrap;">{{ presupuesto.ban01NroOperacion }}</td>
                     <td>
                         <p-button *ngIf="presupuesto.ban01EnlacePago" label="" icon="pi pi-file"
-                            styleClass="p-button-sm p-button-info" (onClick)="
-                                abrirdocumento(presupuesto.ban01EnlacePago)
+                            styleClass="p-button-sm p-button-info"
+                            (onClick)="abrirdocumento(presupuesto.pagoNumero)
                             " [text]="false">
                         </p-button>
                         <p-button *ngIf="!presupuesto.ban01EnlacePago" label="" icon="pi pi-file-excel"

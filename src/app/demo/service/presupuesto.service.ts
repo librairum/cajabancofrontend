@@ -49,7 +49,10 @@ export class PresupuestoService {
             .set('empresa', empresa)
             .set('numerodocumento', numerodocumento);
         return this.http
-            .get<RespuestaAPIBase<Detallepresupuesto[]>>(`${this.urlApi}/SpListaDet`, { params })
+            .get<RespuestaAPIBase<Detallepresupuesto[]>>(
+                `${this.urlApi}/SpListaDet`,
+                { params }
+            )
             .pipe(map((response) => response.data));
     }
     public obtenerProveedores(
@@ -57,7 +60,10 @@ export class PresupuestoService {
     ): Observable<proveedores_lista[]> {
         const params = new HttpParams().set('empresa', empresa);
         return this.http
-            .get<RespuestaAPIBase<proveedores_lista[]>>(`${this.urlApi}/SpTraeProveedores`, { params })
+            .get<RespuestaAPIBase<proveedores_lista[]>>(
+                `${this.urlApi}/SpTraeProveedores`,
+                { params }
+            )
             .pipe(map((response) => response.data));
     }
     public obtenerDocPendiente(
@@ -70,9 +76,12 @@ export class PresupuestoService {
             .set('ruc', ruc)
             .set('numerodocumento', numerodocumento);
         return this.http
-            .get<RespuestaAPIBase<agregar_Pago[]>>(`${this.urlApi}/SpListaDocPendientes`, {
-                params,
-            })
+            .get<RespuestaAPIBase<agregar_Pago[]>>(
+                `${this.urlApi}/SpListaDocPendientes`,
+                {
+                    params,
+                }
+            )
             .pipe(map((response) => response.data));
     }
     public insertarDetallePresupuesto(
@@ -141,9 +150,12 @@ export class PresupuestoService {
         const params = new HttpParams().set('empresa', empresa);
         /*https://localhost:7277/Presupuesto/SpTraeTipoPago?empresa=01*/
         return this.http
-            .get<RespuestaAPIBase<MedioPago[]>>(`${this.urlApi}/SpTraeTipoPago`, {
-                params,
-            })
+            .get<RespuestaAPIBase<MedioPago[]>>(
+                `${this.urlApi}/SpTraeTipoPago`,
+                {
+                    params,
+                }
+            )
             .pipe(map((response) => response.data));
     }
     // subida de archivos
@@ -186,6 +198,29 @@ export class PresupuestoService {
         );
     }
 
+    public actualizarComprobanteconArchivo(
+        params: ComprobanteUpdateParams,
+        file: File
+    ): Observable<any> {
+        const formData = new FormData();
+        formData.append('archivoOriginal', file);
+
+        const httpParams = new HttpParams()
+            .set('empresa', params.empresa)
+            .set('anio', params.anio)
+            .set('mes', params.mes)
+            .set('numeropresupuesto', params.numeropresupuesto)
+            .set('flagOperacion', params.flagOperacion)
+            .set('fechapago', params.fechapago)
+            .set('numerooperacion', params.numerooperacion)
+            .set('enlacepago', params.enlacepago);
+        return this.http.put<RespuestaAPIBase<any>>(
+            `${this.urlApi}/SpActualizaComprobante`,
+            formData,
+            { params: httpParams }
+        );
+    }
+
     public subirArchivo(file: File, destinationPath: string): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
@@ -195,6 +230,13 @@ export class PresupuestoService {
             reportProgress: true,
             observe: 'events',
         });
+    }
+
+    public cargarArchivo(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('archivoOriginal', file);
+
+        return this.http.post(`${this.urlApi}/CargarArchivo`, formData);
     }
 
     public EliminarArchivo(rutaArchivo: string): Observable<any> {
@@ -213,9 +255,12 @@ export class PresupuestoService {
             .set('empresa', empresa)
             .set('numero', numero);
         return this.http
-            .get<RespuestaAPIBase<VoucherContableDetalle[]>>(`${this.urlBase}/CtaCtable/SpTraeDetalle?`, {
-                params,
-            })
+            .get<RespuestaAPIBase<VoucherContableDetalle[]>>(
+                `${this.urlBase}/CtaCtable/SpTraeDetalle?`,
+                {
+                    params,
+                }
+            )
             .pipe(map((response) => response.data));
     }
 
@@ -245,5 +290,18 @@ export class PresupuestoService {
             .set('orden', orden.toString()); // Ajuste para que coincida con la interfaz
 
         return this.http.delete(`${this.urlApi}/SpEliminaDet`, { params });
+    }
+
+    public obtenerArchivo(empresa: string, anio: string, mes: string, numeroPresupuesto: string): Observable<Blob>{
+        const params = new HttpParams()
+        .set('empresa', empresa)
+        .set('anio', anio)
+        .set('mes', mes)
+        .set('numeroPresupuesto', numeroPresupuesto);
+
+        return this.http.get(`${this.urlApi}/spTraeDocumento`, {
+            params,
+            responseType: 'blob'
+        })
     }
 }

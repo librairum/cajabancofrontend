@@ -101,9 +101,9 @@ export class ConfirmarPagoComponent implements OnInit {
             ? originalFileName
             : originalFileName + '.' + originalFileName.split('.').pop();
 
-        const fileUrl = `http://localhost:4200/assets/documentos/${fileName}`;
+        const fileUrl = this.rutaComprobante;
 
-        this.pS.subirArchivo(this.archivoSeleccionado, this.destinationPath).subscribe({
+        this.pS.cargarArchivo(this.archivoSeleccionado).subscribe({
             next: (event) => {
                 const fechaPagoInput = this.pagoForm.get('fechaejecucion')?.value;
                 const fechaPagoFormatted = fechaPagoInput
@@ -123,7 +123,7 @@ export class ConfirmarPagoComponent implements OnInit {
                 }
 
                 //actualizamos
-                this.pS.actualizarComprobante(updateParams).subscribe({
+                this.pS.actualizarComprobanteconArchivo(updateParams, this.archivoSeleccionado).subscribe({
                     next: (response) => {
 
                         setTimeout(() => {
