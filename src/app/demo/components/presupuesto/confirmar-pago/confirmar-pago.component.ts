@@ -103,42 +103,48 @@ export class ConfirmarPagoComponent implements OnInit {
 
         const fileUrl = this.rutaComprobante;
 
-        this.pS.cargarArchivo(this.archivoSeleccionado).subscribe({
-            next: (event) => {
-                const fechaPagoInput = this.pagoForm.get('fechaejecucion')?.value;
-                const fechaPagoFormatted = fechaPagoInput
-                    ? this.formatDate(new Date(fechaPagoInput))
-                    : null;
-                //parametros
-                const updateParams = {
-                    empresa: this.gS.getCodigoEmpresa(),
-                    anio: this.anio_combo,
-                    mes: this.mes_combo,
-                    numeropresupuesto: this.pagoNumero,
-                    flagOperacion: 'I',
-                    fechapago: fechaPagoFormatted, // Fecha formateada como dd/mm/yyyy
-                    numerooperacion: this.pagoForm.get('nroOperacion')?.value,
-                    enlacepago: fileUrl
+        const fechaPagoInput = this.pagoForm.get('fechaejecucion')?.value;
+        const fechaPagoFormatted = fechaPagoInput
+            ? this.formatDate(new Date(fechaPagoInput))
+            : null;
 
-                }
+        // Parametros
+        const updateParams = {
+            empresa: this.gS.getCodigoEmpresa(),
+            anio: this.anio_combo,
+            mes: this.mes_combo,
+            numeropresupuesto: this.pagoNumero,
+            flagOperacion: 'I',
+            fechapago: fechaPagoFormatted, // Fecha formateada como dd/mm/yyyy
+            numerooperacion: this.pagoForm.get('nroOperacion')?.value,
+            enlacepago: fileUrl,
+        };
 
-                //actualizamos
-                this.pS.actualizarComprobanteconArchivo(updateParams, this.archivoSeleccionado).subscribe({
-                    next: (response) => {
-
-                        setTimeout(() => {
-                            this.cargandoArchivo=false;
-                            this.finalizarGuardado();
-                          }, 500);
-                    },
-                    error: (error) => {
+        // Actualizamos el comprobante con archivo
+        this.pS
+            .actualizarComprobanteconArchivo(
+                updateParams,
+                this.archivoSeleccionado
+            )
+            .subscribe({
+                next: (response) => {
+                    setTimeout(() => {
                         this.cargandoArchivo = false;
-                        verMensajeInformativo(this.messageService,'error', 'Error', 'No se pudo actualizar el comprobante');
-                        this.cargandoArchivo = false;
-                    }
-                });
-            }
-        })
+                        this.finalizarGuardado();
+                    }, 500);
+                },
+                error: (error) => {
+                    this.cargandoArchivo = false;
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        'No se pudo actualizar el comprobante'
+                    );
+                    this.cargandoArchivo = false;
+                },
+            });
+
     }
 
     finalizarGuardado() {

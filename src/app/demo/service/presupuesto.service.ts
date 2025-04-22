@@ -248,13 +248,6 @@ export class PresupuestoService {
         });
     }
 
-    public cargarArchivo(file: File): Observable<any> {
-        const formData = new FormData();
-        formData.append('archivoOriginal', file);
-
-        return this.http.post(`${this.urlApi}/CargarArchivo`, formData);
-    }
-
     public EliminarArchivo(rutaArchivo: string): Observable<any> {
         const params = new HttpParams().set('rutaArchivo', rutaArchivo);
         return this.http.delete(`${this.urlApi}/EliminarArchivo`, {
