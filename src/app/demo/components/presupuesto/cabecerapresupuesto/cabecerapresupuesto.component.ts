@@ -24,23 +24,38 @@ import { verMensajeInformativo } from 'src/app/demo/components/utilities/funcion
 @Component({
     selector: 'app-cabecerapresupuesto',
     standalone: true,
-    imports: [BreadcrumbModule, ToastModule, PanelModule,
-        ConfirmDialogModule, TableModule, CommonModule, ButtonModule,
-        RouterModule, FormsModule, CalendarModule, InputTextModule,
-        InputNumberModule, DropdownModule, ReactiveFormsModule,
-        ConfirmarPagoComponent, DialogModule, FileUploadModule],
+    imports: [
+        BreadcrumbModule,
+        ToastModule,
+        PanelModule,
+        ConfirmDialogModule,
+        TableModule,
+        CommonModule,
+        ButtonModule,
+        RouterModule,
+        FormsModule,
+        CalendarModule,
+        InputTextModule,
+        InputNumberModule,
+        DropdownModule,
+        ReactiveFormsModule,
+        ConfirmarPagoComponent,
+        DialogModule,
+        FileUploadModule,
+    ],
     templateUrl: './cabecerapresupuesto.component.html',
     styleUrl: './cabecerapresupuesto.component.css',
-    providers: [ConfirmationService, MessageService, DatePipe]
+    providers: [ConfirmationService, MessageService, DatePipe],
 })
 export class CabecerapresupuestoComponent implements OnInit {
-    @ViewChild(ConfirmarPagoComponent) confirmarpagocomponente: ConfirmarPagoComponent;
+    @ViewChild(ConfirmarPagoComponent)
+    confirmarpagocomponente: ConfirmarPagoComponent;
     //breadcrumb
-    items: any[] = []
+    items: any[] = [];
     prueba!: any[];
     anioFecha: string = '';
     mesFecha: string = '';
-    presupuesto: cabeceraPresupuesto[] = []
+    presupuesto: cabeceraPresupuesto[] = [];
     loading: boolean = false;
     mostrarNuevaFila: boolean = false;
     botonesDeshabilitados: boolean = false;
@@ -58,7 +73,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Usuario: '',
         ban01Pc: '',
         ban01FechaRegistro: '',
-        ban01mediopago: ''
+        ban01mediopago: '',
     };
 
     editingPresupuesto: { [key: string]: boolean } = {};
@@ -73,18 +88,20 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Usuario: '',
         ban01Pc: '',
         ban01FechaRegistro: '',
-        ban01mediopago: ''
+        ban01mediopago: '',
     };
     //para pasar el pagonro
     selectedPagoNumero: string = '';
 
-    constructor(private gS: GlobalService, private bS: BreadcrumbService,
+    constructor(
+        private gS: GlobalService,
+        private bS: BreadcrumbService,
         private confirmationService: ConfirmationService,
         private router: Router,
         private presupuestoService: PresupuestoService,
         private messageService: MessageService,
-        private datePipe: DatePipe) { }
-
+        private datePipe: DatePipe
+    ) {}
 
     cargarMedioPago(): void {
         const codempresa: string = this.gS.getCodigoEmpresa();
@@ -96,31 +113,40 @@ export class CabecerapresupuestoComponent implements OnInit {
                 // console.log(this.medioPagoLista);
                 this.loading = false;
                 if (data.length === 0) {
-                    verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron registros de presupuesto');
+                    verMensajeInformativo(
+                        this.messageService,
+                        'warn',
+                        'Advertencia',
+                        'No se encontraron registros de presupuesto'
+                    );
                 }
             },
             error: (error) => {
                 this.loading = false;
-                verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar presupuesto: ${error.message}`);
-            }
+                verMensajeInformativo(
+                    this.messageService,
+                    'error',
+                    'Error',
+                    `Error al cargar presupuesto: ${error.message}`
+                );
+            },
         });
     }
 
     onMedioChange(event: any) {
         this.selectMedioPago = event.value;
-
     }
 
     ngOnInit(): void {
         this.bS.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
-            { label: 'Presupuesto', routerLink: '/Home/presupuesto' }
+            { label: 'Presupuesto', routerLink: '/Home/presupuesto' },
         ]);
-        this.bS.currentBreadcrumbs$.subscribe(bc => {
+        this.bS.currentBreadcrumbs$.subscribe((bc) => {
             this.items = bc;
-        })
+        });
 
-        this.gS.selectedDate$.subscribe(date => {
+        this.gS.selectedDate$.subscribe((date) => {
             if (date) {
                 const year = date.getFullYear().toString();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -133,23 +159,37 @@ export class CabecerapresupuestoComponent implements OnInit {
     }
     cargarPresupuesto(empresa: string, anio: string, mes: string): void {
         this.loading = true;
-        this.presupuestoService.obtenerPresupuesto(empresa, anio, mes).subscribe({
-            next: (data) => {
-                this.presupuesto = data;
-                this.loading = false;
-                if (data.length === 0) {
-                    verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron registros de presupuesto');
-                }
-            },
-            error: (error) => {
-                this.loading = false;
-                verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar presupuesto: ${error.message}`);
-            }
-        });
+        this.presupuestoService
+            .obtenerPresupuesto(empresa, anio, mes)
+            .subscribe({
+                next: (data) => {
+                    this.presupuesto = data;
+                    this.loading = false;
+                    if (data.length === 0) {
+                        verMensajeInformativo(
+                            this.messageService,
+                            'warn',
+                            'Advertencia',
+                            'No se encontraron registros de presupuesto'
+                        );
+                    }
+                },
+                error: (error) => {
+                    this.loading = false;
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        `Error al cargar presupuesto: ${error.message}`
+                    );
+                },
+            });
     }
     verDetalles(presupuesto: cabeceraPresupuesto) {
-
-        const formattedDate = this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy');
+        const formattedDate = this.datePipe.transform(
+            presupuesto.fecha,
+            'dd/MM/yyyy'
+        );
 
         const navigationExtras = {
             state: {
@@ -157,42 +197,46 @@ export class CabecerapresupuestoComponent implements OnInit {
                 Fecha: formattedDate,
                 motivo: presupuesto.motivo,
                 nombreMedioPago: presupuesto.nombreMedioPago,
-            }
-        }
-        this.router.navigate(['Home/detalle-presupuesto'], navigationExtras)
+            },
+        };
+        this.router.navigate(['Home/detalle-presupuesto'], navigationExtras);
     }
     verVouchercontable(presupuesto: cabeceraPresupuesto) {
-
         const navigationExtras = {
             state: {
                 empresa: this.gS.getCodigoEmpresa(),
                 PagoNro: presupuesto.pagoNumero,
-            }
-        }
-        this.router.navigate(['Home/voucher_contable'], navigationExtras)
+            },
+        };
+        this.router.navigate(['Home/voucher_contable'], navigationExtras);
     }
     iniciarNuevoPresupuesto() {
         this.mostrarNuevaFila = true;
         this.botonesDeshabilitados = true;
 
         const fechaActual = new Date();
-        const fechaRegistroFormateada = this.datePipe.transform(fechaActual, 'dd/MM/yyyy'); //HH:mm:ss.SSS
+        const fechaRegistroFormateada = this.datePipe.transform(
+            fechaActual,
+            'dd/MM/yyyy'
+        ); //HH:mm:ss.SSS
         const anioActual = fechaActual.getFullYear().toString();
-        const mesActual = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+        const mesActual = (fechaActual.getMonth() + 1)
+            .toString()
+            .padStart(2, '0');
 
         this.nuevoPresupuesto = {
             ban01Empresa: this.gS.getCodigoEmpresa(),
             ban01Numero: ' ',
-            ban01Anio: anioActual,  // Set year from current date
-            ban01Mes: mesActual,    // Set month from current date
+            ban01Anio: anioActual, // Set year from current date
+            ban01Mes: mesActual, // Set month from current date
             ban01Descripcion: '',
             ban01Fecha: fechaRegistroFormateada,
             ban01Estado: '01',
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
             ban01FechaRegistro: fechaRegistroFormateada,
-            ban01mediopago: ''
-        }
+            ban01mediopago: '',
+        };
     }
 
     cancelarNuevo() {
@@ -209,17 +253,21 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Usuario: '',
             ban01Pc: '',
             ban01FechaRegistro: '',
-            ban01mediopago: ''
+            ban01mediopago: '',
         };
     }
 
     guardarNuevoPresupuesto() {
-
-
-        this.presupuestoService.insertarPresupuesto(this.nuevoPresupuesto)
+        this.presupuestoService
+            .insertarPresupuesto(this.nuevoPresupuesto)
             .subscribe({
                 next: (response) => {
-                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Presupuesto guardado correctamente');
+                    verMensajeInformativo(
+                        this.messageService,
+                        'success',
+                        'Éxito',
+                        'Presupuesto guardado correctamente'
+                    );
                     this.mostrarNuevaFila = false;
                     this.botonesDeshabilitados = false;
                     this.cargarPresupuesto(
@@ -231,12 +279,22 @@ export class CabecerapresupuestoComponent implements OnInit {
                     const nuevoPagoNumero = response.item;
                     if (nuevoPagoNumero) {
                         const fechaOriginal = this.nuevoPresupuesto.ban01Fecha;
-                        const fechaConvertida = typeof fechaOriginal === 'string' ? this.convertirStringADate(fechaOriginal) : fechaOriginal;
-                        const formattedDate = this.datePipe.transform(fechaConvertida, 'dd/MM/yyyy');
+                        const fechaConvertida =
+                            typeof fechaOriginal === 'string'
+                                ? this.convertirStringADate(fechaOriginal)
+                                : fechaOriginal;
+                        const formattedDate = this.datePipe.transform(
+                            fechaConvertida,
+                            'dd/MM/yyyy'
+                        );
 
                         let nombreMedioPago = '';
                         if (this.nuevoPresupuesto.ban01mediopago) {
-                            const medioPago = this.medioPagoLista.find(mp => mp.ban01IdTipoPago === this.nuevoPresupuesto.ban01mediopago);
+                            const medioPago = this.medioPagoLista.find(
+                                (mp) =>
+                                    mp.ban01IdTipoPago ===
+                                    this.nuevoPresupuesto.ban01mediopago
+                            );
                             if (medioPago) {
                                 nombreMedioPago = medioPago.ban01Descripcion;
                             }
@@ -247,32 +305,42 @@ export class CabecerapresupuestoComponent implements OnInit {
                                 Fecha: formattedDate,
                                 motivo: this.nuevoPresupuesto.ban01Descripcion,
                                 nombreMedioPago: nombreMedioPago,
-                            }
+                            },
                         };
-                        this.router.navigate(['Home/detalle-presupuesto'], navigationExtras);
+                        this.router.navigate(
+                            ['Home/detalle-presupuesto'],
+                            navigationExtras
+                        );
                     }
                 },
                 error: (error) => {
-                    verMensajeInformativo(this.messageService,'error', 'Error', `Error al guardar el presupuesto: ${error.message}`);
-                }
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        `Error al guardar el presupuesto: ${error.message}`
+                    );
+                },
             });
     }
 
     convertirStringADate(fechaStr: string): Date {
-    // Asumiendo formato dd/MM/yyyy
-    const partes = fechaStr.split('/');
-    const dia = parseInt(partes[0], 10);
-    const mes = parseInt(partes[1], 10) - 1; // los meses en JS empiezan desde 0
-    const anio = parseInt(partes[2], 10);
-    return new Date(anio, mes, dia);
-}
-
+        // Asumiendo formato dd/MM/yyyy
+        const partes = fechaStr.split('/');
+        const dia = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10) - 1; // los meses en JS empiezan desde 0
+        const anio = parseInt(partes[2], 10);
+        return new Date(anio, mes, dia);
+    }
 
     actualizarFecha(event: Date) {
         if (event) {
             this.nuevoPresupuesto.ban01Anio = event.getFullYear().toString();
-            this.nuevoPresupuesto.ban01Mes = (event.getMonth() + 1).toString().padStart(2, '0');
-            this.nuevoPresupuesto.ban01Fecha = this.datePipe.transform(event, 'dd/MM/yyyy') || '';
+            this.nuevoPresupuesto.ban01Mes = (event.getMonth() + 1)
+                .toString()
+                .padStart(2, '0');
+            this.nuevoPresupuesto.ban01Fecha =
+                this.datePipe.transform(event, 'dd/MM/yyyy') || '';
         }
     }
 
@@ -280,20 +348,26 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.editingPresupuesto[presupuesto.pagoNumero] = true;
         const fechaSeleccionada = new Date(presupuesto.fecha);
         const foundMedioPago = this.medioPagoLista.find(
-            mp => mp.ban01Descripcion === presupuesto.nombreMedioPago
+            (mp) => mp.ban01Descripcion === presupuesto.nombreMedioPago
         );
         this.editForm = {
             ban01Empresa: this.gS.getCodigoEmpresa(),
             ban01Numero: presupuesto.pagoNumero,
             ban01Anio: fechaSeleccionada.getFullYear().toString(),
-            ban01Mes: (fechaSeleccionada.getMonth() + 1).toString().padStart(2, '0'),
+            ban01Mes: (fechaSeleccionada.getMonth() + 1)
+                .toString()
+                .padStart(2, '0'),
             ban01Descripcion: presupuesto.motivo,
-            ban01Fecha: this.datePipe.transform(fechaSeleccionada, 'dd/MM/yyyy') || '',
+            ban01Fecha:
+                this.datePipe.transform(fechaSeleccionada, 'dd/MM/yyyy') || '',
             ban01Estado: '01',
             ban01Usuario: this.gS.getNombreUsuario(),
             ban01Pc: 'PC',
-            ban01FechaRegistro: this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '',
-            ban01mediopago: foundMedioPago ? foundMedioPago.ban01IdTipoPago : ''
+            ban01FechaRegistro:
+                this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '',
+            ban01mediopago: foundMedioPago
+                ? foundMedioPago.ban01IdTipoPago
+                : '',
         };
     }
 
@@ -305,18 +379,28 @@ export class CabecerapresupuestoComponent implements OnInit {
         if (event) {
             // Actualizar año y mes basado en la fecha seleccionada
             this.editForm.ban01Anio = event.getFullYear().toString();
-            this.editForm.ban01Mes = (event.getMonth() + 1).toString().padStart(2, '0');
-            this.editForm.ban01Fecha = this.datePipe.transform(event, 'dd/MM/yyyy') || '';
-            this.editForm.ban01FechaRegistro = this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '';
+            this.editForm.ban01Mes = (event.getMonth() + 1)
+                .toString()
+                .padStart(2, '0');
+            this.editForm.ban01Fecha =
+                this.datePipe.transform(event, 'dd/MM/yyyy') || '';
+            this.editForm.ban01FechaRegistro =
+                this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '';
         }
     }
     guardarEdicion(pagoNumero: string) {
         // Asegurar que la fecha de registro sea la actual al momento de guardar
-        this.editForm.ban01FechaRegistro = this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '';
+        this.editForm.ban01FechaRegistro =
+            this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '';
 
         this.presupuestoService.actualizarPresupuesto(this.editForm).subscribe({
             next: (response) => {
-                verMensajeInformativo(this.messageService,'success', 'Éxito', 'Presupuesto actualizado correctamente');
+                verMensajeInformativo(
+                    this.messageService,
+                    'success',
+                    'Éxito',
+                    'Presupuesto actualizado correctamente'
+                );
                 delete this.editingPresupuesto[pagoNumero];
                 this.cargarPresupuesto(
                     this.editForm.ban01Empresa,
@@ -325,8 +409,13 @@ export class CabecerapresupuestoComponent implements OnInit {
                 );
             },
             error: (error) => {
-                verMensajeInformativo(this.messageService,'error', 'Error', `Error al actualizar el presupuesto ${error.message}`);
-            }
+                verMensajeInformativo(
+                    this.messageService,
+                    'error',
+                    'Error',
+                    `Error al actualizar el presupuesto ${error.message}`
+                );
+            },
         });
     }
     eliminarPago(presupuesto: cabeceraPresupuesto) {
@@ -364,7 +453,12 @@ export class CabecerapresupuestoComponent implements OnInit {
                     .subscribe({
                         next: (response) => {
                             if (response.isSuccess) {
-                                verMensajeInformativo(this.messageService,'success', 'Éxito', 'Presupuesto eliminado correctamente');
+                                verMensajeInformativo(
+                                    this.messageService,
+                                    'success',
+                                    'Éxito',
+                                    'Presupuesto eliminado correctamente'
+                                );
                                 // Recargar la lista de presupuestos
                                 const fecha = new Date();
                                 this.cargarPresupuesto(
@@ -375,11 +469,22 @@ export class CabecerapresupuestoComponent implements OnInit {
                                         .padStart(2, '0')
                                 );
                             } else {
-                                verMensajeInformativo(this.messageService,'error', 'Error', response.message || `Error al eliminar el presupuesto`);
+                                verMensajeInformativo(
+                                    this.messageService,
+                                    'error',
+                                    'Error',
+                                    response.message ||
+                                        `Error al eliminar el presupuesto`
+                                );
                             }
                         },
                         error: (error) => {
-                            verMensajeInformativo(this.messageService,'error', 'Error', `Error al eliminar el presupuesto ${error.message}`);
+                            verMensajeInformativo(
+                                this.messageService,
+                                'error',
+                                'Error',
+                                `Error al eliminar el presupuesto ${error.message}`
+                            );
                         },
                     });
             },
@@ -396,7 +501,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         }
         this.verConfirmarPago = false;
         this.cargarMedioPago();
-        this.gS.selectedDate$.subscribe(date => {
+        this.gS.selectedDate$.subscribe((date) => {
             if (date) {
                 const year = date.getFullYear().toString();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -404,24 +509,29 @@ export class CabecerapresupuestoComponent implements OnInit {
             }
         });
     }
-    uploadFunction() { }
-
+    uploadFunction() {}
 
     abrirdocumento(numeroPresupuesto: string): void {
-        this.presupuestoService.obtenerArchivo(this.gS.getCodigoEmpresa(), this.anioFecha, this.mesFecha, numeroPresupuesto).subscribe({
-            next: (blob: Blob) => {
-                const url = window.URL.createObjectURL(blob)
-                window.open(url, '_blank')
-            },
-            error: (err) => {
-                console.error('Error al obtener el documento: ', err);
-
-            }
-        })
+        this.presupuestoService
+            .obtenerArchivo(
+                this.gS.getCodigoEmpresa(),
+                this.anioFecha,
+                this.mesFecha,
+                numeroPresupuesto
+            )
+            .subscribe({
+                next: (blob: Blob) => {
+                    const url = window.URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+                },
+                error: (err) => {
+                    console.error('Error al obtener el documento: ', err);
+                },
+            });
     }
 
-    anio_dato: string = ""
-    mes_dato: string = ""
+    anio_dato: string = '';
+    mes_dato: string = '';
 
     anularPago(presupuesto: cabeceraPresupuesto) {
         this.confirmationService.confirm({
@@ -431,9 +541,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                 </p>
                 <div style="text-align: center; margin-top: 10px;">
                     <p>
-                        <strong>Número de pago: </strong>${
-                            presupuesto.pagoNumero
-                        }
+                        <strong>Número de pago: </strong>${presupuesto.pagoNumero}
                     </p>
                 </div>
             `,
@@ -457,17 +565,18 @@ export class CabecerapresupuestoComponent implements OnInit {
                     anio: this.anio_dato,
                     mes: this.mes_dato,
                     numeropresupuesto: presupuesto.pagoNumero,
-                    flagOperacion: 'E',
-                    fechapago: presupuesto.ban01FechaEjecucionPago,
-                    numerooperacion: presupuesto.ban01NroOperacion,
-                    enlacepago: presupuesto.ban01EnlacePago,
                 };
                 this.presupuestoService
-                    .actualizarComprobante(parametrosanulacion)
+                    .anulaComprobante(parametrosanulacion)
                     .subscribe({
                         next: (response) => {
                             if (response.isSuccess) {
-                                verMensajeInformativo(this.messageService,'success', 'Éxito', 'Pago anulado correctamente');
+                                verMensajeInformativo(
+                                    this.messageService,
+                                    'success',
+                                    'Éxito',
+                                    'Pago anulado correctamente'
+                                );
                                 this.gS.selectedDate$.subscribe((date) => {
                                     if (date) {
                                         const year = date
@@ -484,16 +593,32 @@ export class CabecerapresupuestoComponent implements OnInit {
                                     }
                                 });
                             } else {
-                                verMensajeInformativo(this.messageService,'error', 'Error', response.message || `Error al anular el pago`);
+                                verMensajeInformativo(
+                                    this.messageService,
+                                    'error',
+                                    'Error',
+                                    response.message ||
+                                        `Error al anular el pago`
+                                );
                             }
                         },
                         error: (error) => {
-                            verMensajeInformativo(this.messageService,'error', 'Error', `Error al anular el pago: ${error.message}`);
+                            verMensajeInformativo(
+                                this.messageService,
+                                'error',
+                                'Error',
+                                `Error al anular el pago: ${error.message}`
+                            );
                         },
                     });
             },
             reject: () => {
-                verMensajeInformativo(this.messageService,'info', 'Cancelado', 'Anulación de pago cancelada');
+                verMensajeInformativo(
+                    this.messageService,
+                    'info',
+                    'Cancelado',
+                    'Anulación de pago cancelada'
+                );
             },
         });
     }

@@ -127,6 +127,13 @@ export interface ComprobanteUpdateParams {
     flagOperacion: string;
 }
 
+export interface AnularComprobante {
+    empresa: string;
+    anio: string;
+    mes: string;
+    numeropresupuesto: string;
+}
+
 
 
 

@@ -1,5 +1,5 @@
 import { Injectable , inject} from '@angular/core';
-import { agregar_Pago, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista, VoucherContableCabecera, VoucherContableDetalle } from '../model/presupuesto';
+import { agregar_Pago, AnularComprobante, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista, VoucherContableCabecera, VoucherContableDetalle } from '../model/presupuesto';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
 import { ConfigService } from './config.service';
@@ -197,6 +197,22 @@ export class PresupuestoService {
             { params: httpParams }
         );
     }
+
+    public anulaComprobante(
+        params: AnularComprobante
+    ):Observable<RespuestaAPIBase<any>>{
+        const httpParams = new HttpParams()
+            .set('empresa', params.empresa)
+            .set('anio', params.anio)
+            .set('mes', params.mes)
+            .set('numeropresupuesto', params.numeropresupuesto);
+        return this.http.put<RespuestaAPIBase<any>>(
+            `${this.urlApi}/SpAnulaComprobante`,
+            null,
+            {params: httpParams}
+        )
+    }
+
 
     public actualizarComprobanteconArchivo(
         params: ComprobanteUpdateParams,
