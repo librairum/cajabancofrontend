@@ -10,6 +10,7 @@ import { AgregarPagoComponent } from './demo/components/presupuesto/agregar-pago
 import { BancoComponent } from './demo/components/banco/banco.component';
 import { MediopagoComponent } from './demo/components/mediopago/mediopago.component';
 import { VouchercontableComponent } from './demo/components/presupuesto/vouchercontable/vouchercontable.component';
+import { PerfilComponent } from './demo/components/perfil/perfil.component';
 
 @NgModule({
     imports: [
@@ -31,6 +32,7 @@ import { VouchercontableComponent } from './demo/components/presupuesto/voucherc
                     {path:'nuevo-presupuesto',component: AgregarPagoComponent},
                     {path:'medio_pago', component:MediopagoComponent},
                     {path:'voucher_contable', component : VouchercontableComponent},
+                    {path:'perfil',component : PerfilComponent},
 
                 ]
             },

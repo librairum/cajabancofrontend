@@ -1,0 +1,224 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="container">
+    <p-panel header="Mantenimiento de perfil" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
+    </p-panel>
+
+    <div class="card">
+        <div class="flex justify-content-start mb-3">
+            <button
+                [disabled]="!enableAddbutton"
+                type="button"
+                pButton
+                icon="pi pi-plus"
+                label="Nuevo"
+                (click)="showAddRow()"
+                class="p-button-sm"
+            ></button>
+        </div>
+
+        <p-table
+            [value]="mPerfilList"
+            dataKey="Codigo"
+            editMode="row"
+            [paginator]="true"
+            [rows]="10"
+            responsiveLayout="scroll"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th style="width: 10rem">Acciones</th>
+                </tr>
+            </ng-template>
+
+            <ng-template
+                pTemplate="body"
+                let-perfil
+                let-ri="rowIndex"
+                let-editing="editing"
+            >
+                <tr [pEditableRow]="perfil">
+                    <td
+                        [pEditableColumn]="
+                            editingRows[ri] ? perfil.codigo : null
+                        "
+                    >
+                        <p-cellEditor *ngIf="editingRows[ri]">
+                            <ng-template pTemplate="input">
+                                <div class="p-inputgroup">
+                                    {{ perfil.codigo }}
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ perfil.codigo }}
+                            </ng-template>
+                        </p-cellEditor>
+                        <div *ngIf="!editingRows[ri]">
+                            {{ perfil.codigo }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <p-cellEditor *ngIf="editingRows[ri]">
+                            <ng-template pTemplate="input">
+                                <div class="p-inputgroup">
+                                    <input
+                                        pInputText
+                                        [(ngModel)]="perfil.nombre"
+                                        class="p-inputtext-sm"
+                                        required
+                                    />
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ perfil.nombre }}
+                            </ng-template>
+                        </p-cellEditor>
+                        <div *ngIf="!editingRows[ri]">
+                            {{ perfil.nombre }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <p-cellEditor *ngIf="editingRows[ri]">
+                            <ng-template pTemplate="input">
+                                <div class="p-inputgroup">
+                                    <input
+                                        pInputText
+                                        [(ngModel)]="perfil.descripcion"
+                                        class="p-inputtext-sm"
+                                        required
+                                    />
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ perfil.descripcion }}
+                            </ng-template>
+                        </p-cellEditor>
+                        <div *ngIf="!editingRows[ri]">
+                            {{ perfil.descripcion }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="flex justify-content-center gap-2">
+                            <button
+                            [disabled]="!enableAddbutton"
+                                [disabled]="isEditing"
+                                *ngIf="!editingRows[ri]"
+                                pButton
+                                pInitEditableRow
+                                (click)="onRowEditInit(perfil, ri)"
+                                icon="pi pi-pencil"
+                                pTooltip="Editar perfil"
+                                class="p-button-rounded p-button-text p-button-sm"
+                            ></button>
+                            <button
+                                *ngIf="!editingRows[ri]"
+                                pButton
+                                pInitEditableRow
+                                (click)="verasignarPerfiles(perfil)"
+                                pTooltip="Permisos del perfil"
+                                icon="pi pi-cog"
+                                class="p-button-rounded p-button-text p-button-sm"
+                            ></button>
+                            <button
+                                *ngIf="editingRows[ri]"
+                                pButton
+                                pSaveEditableRow
+                                (click)="onRowEditSave(perfil, ri)"
+                                pTooltip="Guardar"
+                                icon="pi pi-save"
+                                class="p-button-rounded p-button-text p-button-sm p-button-success"
+                            ></button>
+                            <button
+                                *ngIf="editingRows[ri]"
+                                pButton
+                                pCancelEditableRow
+                                (click)="onRowEditCancel(perfil, ri)"
+                                pTooltip="Cancelar"
+                                icon="pi pi-times"
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                            ></button>
+                            <button
+                            [disabled]="!enableAddbutton"
+                                [disabled]="isEditing"
+                                *ngIf="!editingRows[ri]"
+                                pButton
+                                (click)="onDelete(perfil, ri)"
+                                pTooltip="Borrar perfil"
+                                icon="pi pi-trash"
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                            ></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <tr *ngIf="isEditing">
+                    <td colspan="4">
+                        <form [formGroup]="mPerfilForm" class="grid">
+                            <div class="col-5">
+                                <span class="w-full">
+                                    <input
+                                        pInputText
+                                        formControlName="Codigo"
+                                        placeholder="Código"
+                                        class="p-inputtext-sm w-full"
+                                    />
+                                </span>
+                            </div>
+
+                            <div class="col-5">
+                                <span class="w-full">
+                                    <input
+                                        pInputText
+                                        formControlName="Nombre"
+                                        placeholder="Nombre"
+                                        class="p-inputtext-sm w-full"
+                                    />
+                                </span>
+                            </div>
+
+                            <div class="col-5">
+                                <span class="w-full">
+                                    <input
+                                        pInputText
+                                        formControlName="Descripcion"
+                                        placeholder="Descripción"
+                                        class="p-inputtext-sm w-full"
+                                    />
+                                </span>
+                            </div>
+
+                            <div class="col-2">
+                                <div class="flex gap-2 justify-content-end">
+                                    <button
+                                        type="button"
+                                        pButton
+                                        icon="pi pi-save"
+                                        (click)="onSave()"
+                                        class="p-button-rounded p-button-text p-button-sm p-button-success"
+                                    ></button>
+                                    <button
+                                        type="button"
+                                        pButton
+                                        icon="pi pi-times"
+                                        (click)="onCancel()"
+                                        class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                                    ></button>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

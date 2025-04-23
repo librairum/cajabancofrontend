@@ -1,163 +1,179 @@
-<div style="margin:10px;">
+<p-confirmDialog></p-confirmDialog>
+<div style="margin: 10px;">
     <p-panel header="Usuarios">
-      <p class="m-0">
-        <p-button (onClick)="agregarFilaUsuario()" icon="pi pi-plus" label="Nuevo" class="mr-3 mt-3"></p-button>
-        <label>Buscar:</label>
-        <input pInputText type="text" (input)="onFilter($event.target.value)" placeholder="Buscar usuario" />
-      </p>
-      <br />
-
-      <!-- Tabla de usuarios -->
-      <p class="m-0">
-        <!-- <p-table
-        editMode="row"
-  [value]="usuarios"
-  [paginator]="true"
-  [rows]="5"
-  [rowsPerPageOptions]="[5, 10, 20]"
-  selectionMode="single"
-  [(selection)]="seleccionarusuario"
-  [tableStyle]="{ 'width': '800px', 'border': '1px solid black' }"
-  [globalFilterFields]="['Nombre', 'NombreComp']"
-> -->
-  <!-- Encabezado de la tabla -->
-  <!-- <ng-template pTemplate="header">
-    <tr>
-      <th pSortableColumn="Sistema">Sistema</th>
-      <th pSortableColumn="Nombre">Nombre</th>
-      <th pSortableColumn="Clave">Clave</th>
-      <th>Acciones</th>
-    </tr>
-  </ng-template> -->
-
-  <!-- Cuerpo de la tabla -->
-  <!-- <ng-template pTemplate="body" let-usuario let-i="rowIndex">
-    <tr [pSelectableRow]="usuario" (click)="selectUsuario(usuario)">
-      <td>
-        <p-cellEditor>
-          <ng-template pTemplate="input">
-            <input pInputText [(ngModel)]="usuario.Sistema" />
-          </ng-template>
-          <ng-template pTemplate="output">
-            {{ usuario.Sistema }}
-          </ng-template>
-        </p-cellEditor>
-      </td>
-      <td>
-        <p-cellEditor>
-          <ng-template pTemplate="input">
-            <input pInputText [(ngModel)]="usuario.Nombre" />
-          </ng-template>
-          <ng-template pTemplate="output">
-            {{ usuario.Nombre }}
-          </ng-template>
-        </p-cellEditor>
-      </td>
-      <td>
-        <p-cellEditor>
-          <ng-template pTemplate="input">
-            <input pInputText [(ngModel)]="usuario.Clave" />
-          </ng-template>
-          <ng-template pTemplate="output">
-            {{ usuario.Clave }}
-          </ng-template>
-        </p-cellEditor>
-      </td>
-      <td>
-        <p-button
-          icon="pi pi-pencil"
-          class="mr-2"
-          [rounded]="true"
-          [outlined]="true"
-          (click)="VerActualizarRegistro(usuario)"
-        ></p-button>
-        <p-button
-          icon="pi pi-trash"
-          severity="danger"
-          [rounded]="true"
-          [outlined]="true"
-          (click)="EliminarRegistro(usuario)"
-        ></p-button>
-      </td>
-    </tr>
-  </ng-template>
-</p-table> -->
-
-<p-table
-  #dt
-  [value]="usuarios"
-  [paginator]="true"
-  [rows]="5"
-  editMode="row"
-  (onRowEditInit)="onRowEditInit($event.data)"
-  (onRowEditSave)="onRowEditSave($event.data)"
-  (onRowEditCancel)="onRowEditCancel($event.data, $event.index)"
->
-  <ng-template pTemplate="header">
-    <tr>
-        <th>Sistema</th>
-      <th>Nombre</th>
-      <th>Clave</th>
-      <th>Acciones</th>
-    </tr>
-  </ng-template>
-
-  <ng-template pTemplate="body" let-usuario let-editing="editing">
-    <tr [pEditableRow]="usuario">
-
-      <td>
-        <p-cellEditor>
-          <ng-template pTemplate="input">
-            <input pInputText [(ngModel)]="usuario.Sistema" />
-          </ng-template>
-          <ng-template pTemplate="output">
-            {{ usuario.Sistema }}
-          </ng-template>
-        </p-cellEditor>
-      </td>
-
-        <td>
-        <p-cellEditor>
-          <ng-template pTemplate="input">
-            <input pInputText [(ngModel)]="usuario.Nombre" />
-          </ng-template>
-          <ng-template pTemplate="output">
-            {{ usuario.Nombre }}
-          </ng-template>
-        </p-cellEditor>
-      </td>
-
-      <td>
-        <p-cellEditor>
-          <ng-template pTemplate="input">
-            <input pInputText [(ngModel)]="usuario.Clave" />
-          </ng-template>
-          <ng-template pTemplate="output">
-            {{ usuario.Clave }}
-          </ng-template>
-        </p-cellEditor>
-      </td>
-
-      <td>
-        <button *ngIf="!editing" (click)="dt.initRowEdit(usuario)">✏️ Editar</button>
-        <button *ngIf="editing" (click)="dt.saveRowEdit(usuario)">💾 Guardar</button>
-        <button *ngIf="editing" (click)="dt.cancelRowEdit(usuario)">❌ Cancelar</button>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
-
-
-      </p>
+        <p-breadcrumb class="max-w-full" [model]="items"></p-breadcrumb>
     </p-panel>
+</div>
 
-    <!-- Modal de creación/edición de usuario -->
-    <p-dialog
-      header="{{ nuevoregistro ? 'Insertar usuario' : 'Editar usuario' }}"
-      [modal]="true"
-      [(visible)]="visible_ventana"
-      [style]="{ width: '30rem' }"
-    >
+<div style="margin: 10px;">
+    <p-toast></p-toast>
+    <p-card>
+        <div class="flex flex-column align-items-start mb-3">
+            <div class="flex gap-2 mb-3">
+                <button type="button" pButton icon="pi pi-plus" label="Nuevo" (click)="showAddRow()" class="p-button-sm"
+                    [disabled]="isEditingAnyRow"></button>
+            </div>
+        </div>
+        <p-table [value]="mUsuarioList" dataKey="codigo" editMode="row" [paginator]="true" [rows]="5"
+            responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="centered">Usuario</th>
+                    <th class="centered">Clave</th>
+                    <th class="centered">Descripción</th>
+                    <th *ngIf="ocultarCodigoPerfil" class="centered">Código Perfil</th>
+                    <th class="centered">Nombre Perfil</th>
+                    <th class="centered">Acciones</th>
+                </tr>
+            </ng-template>
 
-    </p-dialog>
-  </div>
+            <ng-template pTemplate="body" let-rowData let-ri="rowIndex" let-editing="editing">
+                <tr [pEditableRow]="rowData" class="centered">
+                    <td [pEditableColumn]="editingRowIndex === ri ? rowData.codigo : null"
+                        [pEditableColumnField]="'codigo'" class="centered">
+                        <p-cellEditor *ngIf="editingRowIndex === ri">
+                            <ng-template pTemplate="input">
+                                <div class="p-inputgroup">
+                                    <input pInputText type="text" [(ngModel)]="rowData.codigo"
+                                        class="p-inputtext-sm" required>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ rowData.codigo }}
+                            </ng-template>
+                        </p-cellEditor>
+                        <div *ngIf="editingRowIndex !== ri">
+                            {{ rowData.codigo }}
+                        </div>
+                    </td>
+                    <!--COLUMNA CLAVE USUARIO-->
+                    <td class="centered">
+                        <div *ngIf="!editing">
+                            <span *ngIf="!passwordVisibleTable">
+                                {{ocultarTexto(rowData.nombreUsuario) }}
+                            </span>
+                        </div>
+                        <div *ngIf="editing">
+                            <input [type]="passwordVisible ? 'text' : 'password'" pInputText
+                                [(ngModel)]="rowData.claveUsuario" class="p-inputtext-sm" required #claveUsuario="ngModel">
+                            <button type="button" class="p-button p-button-text"
+                                (click)="passwordVisible = !passwordVisible">
+                                <i class="pi" [class.pi-eye]="!passwordVisible"
+                                    [class.pi-eye-slash]="passwordVisible"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <!--COLUMNA NOMBRE USUARIO-->
+                    <td class="centered">
+                        <div *ngIf="!editing">
+                            {{ rowData.nombreUsuario }}
+                        </div>
+                        <div *ngIf="editing">
+                            <input pInputText type="text" [(ngModel)]="rowData.nombreUsuario"
+                                class="p-inputtext-sm w-full" required>
+                        </div>
+                    </td>
+                    <!--COLUMNA CÓDIGO PERFIL-->
+                    <td *ngIf="ocultarCodigoPerfil" [pEditableColumn]="rowData.codigoperfil"
+                        [pEditableColumnField]="'codigoperfil'" class="centered">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <div class="p-inputgroup">
+                                    <input pInputText type="text" [(ngModel)]="rowData.codigoperfil"
+                                        class="p-inputtext-sm" required>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ rowData.codigoperfil }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <!--COLUMNA NOMBRE PERFIL-->
+                    <td class="centered">
+                        <div *ngIf="editing">
+                            <p-dropdown [options]="perfil" optionLabel="nombre" optionValue="codigo"
+                                [(ngModel)]="rowData.codigoperfil" (onchange)="onPerfilChange($event)" [filter]="true"
+                                filterBy="nombre" placeholder="Seleccionar Perfil"  appendTo="body">
+                            </p-dropdown>
+                        </div>
+                        <div *ngIf="!editing">
+                            {{ rowData.nomPerfil }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="flex justify-content-center gap-2">
+                            <button *ngIf="!editing" pButton pInitEditableRow (click)="onRowEditInit(rowData)"
+                                icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm"
+                                [disabled]="isNew || isEditingAnyRow" pTooltip="Editar Usuario"></button>
+                            <button *ngIf="editing" pButton pSaveEditableRow (click)="onRowEditSave(rowData)"
+                                icon="pi pi-save" pTooltip="Guardar"
+                                class="p-button-rounded p-button-text p-button-sm p-button-success" [disabled]="!isPasswordValid(rowData)"></button>
+                            <button *ngIf="editing" pButton pCancelEditableRow (click)="onRowEditCancel(rowData, ri)"
+                                icon="pi pi-times" pTooltip="Cancelar"
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+                            <button *ngIf="!editing" pButton type="button" (click)="onDelete(rowData, ri)"
+                                icon="pi pi-trash" class="p-button-rounded p-button-text p-button-sm p-button-danger" pTooltip="Borrar Usuario"
+                                [disabled]="isNew || isEditingAnyRow"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="footer" style="margin-bottom: 80px;">
+                <tr *ngIf="isEditing">
+                    <td colspan="6">
+                        <!-- Formulario de registro -->
+                        <form [formGroup]="UsuarioForm" class="grid grid-nogutter">
+
+                            <div class="mb-3" style="flex: 1; margin-bottom: 15px;">
+                                <span class="p-input-icon-left w-full">
+                                    <i class="pi pi-tag"></i>
+
+                                    <input id="codigo" pInputText formControlName="codigo" class="p-field"
+                                        style="width: 80%;" placeholder="ID Usuario" />
+                                </span>
+                            </div>
+                            <div class="mb-3" style="flex: 1; margin-bottom: 15px;">
+                                <span class="p-input-icon-left w-full">
+                                    <i class="pi pi-tag"></i>
+                                    <input id="nombreUsuario" pInputText formControlName="nombreUsuario" class="p-field"
+                                        style="width: 80%;" placeholder="nombre Usuario" />
+                                </span>
+                            </div>
+
+                            <div class="mb-3" style="flex: 1; margin-bottom: 15px;">
+                                <span class="p-input-icon-left w-full">
+                                    <div class="password-field" style="display: flex; align-items: center;">
+                                        <input id="claveUsuario" type="password" pInputText
+                                            formControlName="claveUsuario" [type]="showPassword ? 'text' : 'password'"
+                                            class="p-field" style="width: 80%;" placeholder="Ingrese su contraseña" />
+                                        <button type="button" pButton icon="pi pi-eye" (click)="togglePassword()"
+                                            class="password-toggle p-button-text" style="margin-left: 10px;"></button>
+                                    </div>
+                                </span>
+                            </div>
+
+                            <div class="mb-3" style="flex: 1; margin-bottom: 15px;">
+                                <p-dropdown [options]="perfil" formControlName="codigoPerfil" optionLabel="nombre"
+                                    optionValue="codigo" [(ngModel)]="selectPerfil" (onchange)="onPerfilChange($event)"
+                                    [filter]="true" filterBy="nombre" placeholder="Seleccionar Perfil"  appendTo="body">
+                                </p-dropdown>
+                            </div>
+
+                            <div class="mb-3" style="flex: 0; margin-bottom: 15px;">
+                                <div class="flex gap-2 justify-content-end">
+                                    <button type="button" pButton icon="pi pi-save" (click)="onSave()"
+                                        class="p-button-sm"></button>
+                                    <button type="button" pButton icon="pi pi-times" (click)="onCancel()"
+                                        class="p-button-sm p-button-secondary"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+    </p-card>
+</div>

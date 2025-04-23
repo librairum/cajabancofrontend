@@ -1,188 +1,200 @@
-import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../../model/Login';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ListarPerfil, Usuario, UsuarioCrear } from '../../../model/Usuario';
 import { UsuarioService } from 'src/app/demo/service/usuario.service';
-import { PanelModule } from 'primeng/panel';
-import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-import { InputTextModule } from 'primeng/inputtext';
-import { DialogModule } from 'primeng/dialog';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputMaskModule } from 'primeng/inputmask';
+import { PanelModule } from 'primeng/panel';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
     selector: 'app-usuario',
     standalone: true,
-    imports: [
-        PanelModule,
-        ButtonModule,
-        ReactiveFormsModule,
-        TableModule,
-        InputTextModule,
-        DialogModule,
-        FormsModule,
-        ConfirmDialogModule,
-        CommonModule,
-    ],
+    imports: [CardModule, ReactiveFormsModule, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, InputTextModule, ToastModule, DropdownModule, InputMaskModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule],
     templateUrl: './usuario.component.html',
     styleUrl: './usuario.component.scss',
+    providers: [MessageService, ConfirmationService]
 })
 export class UsuarioComponent implements OnInit {
-    usuarios: Usuario[] = [];
-    usuarioForm: FormGroup;
-    usuarioeditando: boolean = false;
-    seleccionarusuario: Usuario | null = null;
-    visible_ventana: boolean = false;
-    nuevoregistro: boolean = false;
+    UsuarioForm: FormGroup;
+    mUsuarioList: Usuario[] = [];
+    ocultarCodigoPerfil = false;
+    showPassword: boolean = false;
+    isEditingData: boolean = false;
+    isEditing: boolean = false;
+    editingRowIndex: number | null = null;
+    editingUsuario: Usuario | null = null;
+    editingRows: { [s: string]: boolean } = {};
+    displayDialog: boolean = false;
+    isNew: boolean = false;
+    clonedUsuario: { [s: string]: Usuario } = {}
+    items: any[] = [];
+    passwordVisible: boolean = false;
+    isEditingAnyRow: boolean = false;
+    perfil: ListarPerfil[] = [];
+    selectPerfil: string | null = null;
+    perfilesL: string[] = [];
 
-    constructor(private uS: UsuarioService, private fb: FormBuilder) {
-        this.usuarioForm = this.fb.group({
-            Sistema: [null, [Validators.maxLength(10)]],
-            Nombre: ['', [Validators.required, Validators.maxLength(8)]],
-            Clave: ['', [Validators.required, Validators.maxLength(8)]],
-            NombreComp: [null, [Validators.maxLength(40)]],
-            Cargo: [null, [Validators.maxLength(20)]],
-            AccPerCerr: [null, [Validators.maxLength(1)]],
-            Periodo: [null, [Validators.maxLength(8)]],
-            Moneda: [null, [Validators.maxLength(1)]],
-            Saldos: [null, [Validators.maxLength(1)]],
-            TipoImp: [null, [Validators.maxLength(1)]],
-            Ajuste: [null, [Validators.maxLength(1)]],
-            AccPerCon: [null, [Validators.maxLength(1)]],
-            VarImpChe: [null, [Validators.maxLength(1)]],
-            CenCosto: [null, [Validators.maxLength(12)]],
-            Tipo: [null, [Validators.maxLength(2)]],
-            AccArea: [null, [Validators.maxLength(10)]],
-        });
+
+    constructor(private fb: FormBuilder, private uS: UsuarioService, private mS: MessageService, private confirmationsService: ConfirmationService, private bS: BreadcrumbService,private cdRef: ChangeDetectorRef) { }
+    loadPerfiles() {
+        this.uS.getAllPerfil()
+            .subscribe(
+                (data: ListarPerfil[]) => {
+                    this.perfil = data;
+                },
+            );
     }
+
+    onPerfilChange(event:any){
+        this.selectPerfil=event.value;
+    }
+
     ngOnInit(): void {
-        this.cargarUsuarios();
+        this.bS.setBreadcrumbs([
+            { icon: 'pi pi-home', routerLink: '/Home' },
+            { label: 'Usuarios', routerLink: 'Home/usuarios' }
+        ]);
+        this.bS.currentBreadcrumbs$.subscribe(bc => {
+            this.items = bc;
+        })
+        this.initForm();
+        this.loadUsuario();
+        this.loadPerfiles();
     }
-
-    agregarFilaUsuario() {
-        const nuevoUsuario = {
-            Sistema: '',
-            Nombre: '',
-            Clave: '',
-            // Agregar otros campos que necesites para la fila editable
-        };
-        this.usuarios.unshift(nuevoUsuario); // Agregar al inicio de la tabla
-    }
-
-    //listar todos los usuarios
-    cargarUsuarios(): void {
-        this.uS.listar_usuarios().subscribe((data) => {
-            this.usuarios = data;
+    initForm() {
+        this.UsuarioForm = this.fb.group({
+            codigo: ['', Validators.required],
+            nombreUsuario: ['', Validators.required],
+            claveUsuario: ['', Validators.required],
+            codigoPerfil: ['', Validators.required],
         });
     }
-    // Método para abrir la ventana de creacion de usuario
-    VerCrearRegistro_usuario(): void {
-        this.usuarioForm.reset();
-        this.usuarioeditando = false;
-        this.seleccionarusuario = null;
-        this.visible_ventana = true;
-        this.nuevoregistro = true;
+
+    loadUsuario(): void {
+        this.uS.getAll()
+            .subscribe({
+                next: (data) => {
+                    this.mUsuarioList = data;
+                },
+            });
     }
-    // metodo para abrir la ventana de edicion
-    VerActualizarRegistro_usuario(): void {
-        if (!this.seleccionarusuario) return;
-        this.usuarioForm.patchValue(this.seleccionarusuario);
-        this.usuarioeditando = true;
-        this.visible_ventana = true;
-        this.nuevoregistro = false;
+    onRowEditInit(usuario: Usuario, index: number) {
+        this.editingRowIndex = index;
+        this.editingUsuario = { ...usuario }
+        this.isEditingAnyRow = true;
     }
-    // registrar o actualizar usuario
-    guardar_usuario(): void {
-        if (this.usuarioForm.valid) {
-            const usuario: Usuario = this.usuarioForm.value;
-            if (this.usuarioeditando && this.seleccionarusuario) {
-                this.uS
-                    .actualizar_usuario(this.seleccionarusuario.Nombre, usuario)
-                    .subscribe(() => {
-                        this.cargarUsuarios();
-                        this.visible_ventana = false;
-                    });
-            } else {
-                this.uS.crear_usuario(usuario).subscribe(() => {
-                    this.cargarUsuarios();
-                    this.visible_ventana = false;
-                });
-            }
+    isPasswordValid(rowData: any): boolean {
+        return rowData.claveUsuario && rowData.claveUsuario.trim() !== '';
+      }
+    //Actualizar datos
+    onRowEditSave(rowData: any) {
+        if (rowData) {
+            const updUsuario: UsuarioCrear = {
+                codigo: rowData.codigo,
+                cuentaCod: '0000001',
+                nombreUsuario: rowData.nombreUsuario,
+                claveUsuario: rowData.claveUsuario,
+                codigoPerfil: rowData.codigoperfil,
+                codigoempresa: '00001'
+            };
+
+            this.uS.update(updUsuario).subscribe({
+                next: () => {
+                    this.loadUsuario();
+                    this.editingUsuario = null;
+                    this.isEditingAnyRow = false;
+                    this.mS.add({ severity: 'success', summary: 'Éxito', detail: 'Registro actualizado' });
+                },
+                error: () => {
+                    this.mS.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar' });
+                }
+            });
         }
     }
-
-    // seleeccionar un nombre de usuaario para la edicion
-    selectusuario(usuario: Usuario): void {
-        this.seleccionarusuario = usuario;
+    onRowEditCancel(usuario: Usuario, index: number) {
+        if (this.editingUsuario) {
+            this.mUsuarioList[index] = { ...this.editingUsuario };
+            this.editingUsuario = null;
+            this.isEditingAnyRow = false;
+            this.loadUsuario()
+        }
     }
+    showAddRow() {
+        this.isEditing = true;
+        this.isNew = true;
+        this.UsuarioForm.reset();
+    }
+    onSave() {
+        if (this.UsuarioForm.valid) {
+            // Obtener los datos del formulario
+            const formData = this.UsuarioForm.value;
 
-    // confirmar y elminar usuario (usando un Nombre como clave)
-    eliminar_usuario(usuario: Usuario): void {
-        if (
-            confirm(`¿Estás seguro de eliminar al usuario ${usuario.Nombre}?`)
-        ) {
-            this.uS.eliminar_usuario(usuario.Nombre).subscribe(() => {
-                this.cargarUsuarios();
+            // Agregar los valores predeterminados
+            const newUsuario: UsuarioCrear = {
+                ...formData,
+                cuentaCod: '0000001',
+                codigoempresa: '00001'
+            };
+            this.uS.create(newUsuario).subscribe({
+                next: () => {
+                    this.isEditing = false;
+                    this.isNew = false;
+                    this.UsuarioForm.reset();
+                    this.mS.add({ severity: 'success', summary: 'Éxito', detail: 'Registro guardado' });
+                    this.loadUsuario();
+                    this.loadPerfiles();
+                },
+                error: (err) => {
+                    console.error('Error al guardar:', err);
+                    this.mS.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el registro' });
+                },
             });
         }
     }
 
-    onFilter(filterValue: string): void {
-        if (filterValue) {
-            const searchTerm = filterValue.toLowerCase();
-            this.usuarios = this.usuarios.filter((usuario) =>
-                usuario.Nombre.toLowerCase().includes(searchTerm)
-            );
-        } else {
-            this.cargarUsuarios();
-        }
+    onCancel() {
+        this.isEditing = false;
+        this.isNew = false;
+        this.UsuarioForm.reset();
     }
 
-// Inicializa edición
-onRowEditInit(usuario: Usuario) {
-    this.seleccionarusuario = { ...usuario }; // Guardamos una copia por si se cancela
-}
-
-// // Guarda los cambios
-// onRowEditSave(usuario: Usuario) {
-//     this.uS.actualizar_usuario(usuario.Nombre, usuario).subscribe(() => {
-//         this.cargarUsuarios(); // Recarga la tabla
-//     });
-// }
-
-onRowEditSave(usuario: Usuario) {
-    // Verificar que los datos sean válidos antes de guardar
-    if (!usuario.Nombre || !usuario.Clave || !usuario.Sistema) {
-        alert("Todos los campos son obligatorios.");
-        return;
-    }
-
-    // Buscar la posición del usuario en la lista
-    const index = this.usuarios.findIndex(u => u.Nombre === usuario.Nombre);
-
-    if (index !== -1) {
-        // Actualizar usuario en la lista
-        this.usuarios[index] = usuario;
-
-        // Llamar al servicio para actualizar en el backend
-        this.uS.actualizar_usuario(usuario.Nombre, usuario).subscribe(() => {
-            // console.log("Usuario actualizado con éxito.");
+    onDelete(usuario: Usuario, index: number) {
+        this.confirmationsService.confirm({
+            message: `¿Está seguro que desea eliminar al usuario <b>${usuario.nombreUsuario}</b>?`,
+            header: 'Confirmar Eliminación',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí, eliminar',
+            rejectLabel: 'No, cancelar',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button',
+            accept: () => {
+                this.uS.delete(usuario).subscribe({
+                    next: () => {
+                        this.mUsuarioList.splice(index, 1);
+                        this.mS.add({
+                            severity: 'success',
+                            summary: 'Éxito',
+                            detail: 'Registro eliminado'
+                        });
+                    }
+                });
+            }
         });
     }
-}
-
-
-// Cancela la edición y revierte los cambios
-onRowEditCancel(usuario: Usuario, index: number) {
-    this.usuarios[index] = this.seleccionarusuario!;
-    this.seleccionarusuario = null;
-    this.cargarUsuarios();
-}
-
-
-    limpiarForm(): void {
-        this.usuarioForm.reset();
-        this.usuarioeditando = false;
-        this.seleccionarusuario = null;
+    togglePassword(): void {
+        this.showPassword = !this.showPassword;
+    }
+    ocultarTexto(rowData: any) {
+        return '••••••••';
     }
 }
