@@ -30,7 +30,7 @@ export class ConfigService {
     getApiUrl(): string{
         return this.getConfig('url'); // Valor por defecto // verificar si va se http o https
     }
-
+     
     getRutaDoc(): string{
         return this.getConfig('rutaDoc');
     }
@@ -41,5 +41,9 @@ export class ConfigService {
 
     getTheme():string{
         return this.getConfig('theme');
+    }
+
+    getCodigoModulo():string{
+        return this.getConfig('codigoModulo');
     }
 }

@@ -1,0 +1,150 @@
+<h3>Documentos Por Pagar</h3>
+<div class="search-bar">
+  <input type="text" pInputText placeholder="f001-4567" />
+  <button pButton type="button" label="Buscar" class="p-ml-2"></button>
+</div>
+<small class="nota">* digitar ruc, nombre, nro doc</small>
+
+<p-table [value]="listarconsultadocporpago" [scrollable]="true" scrollHeight="300px">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>RUC</th>
+      <th>Nombre</th>
+      <th>Tipo Doc</th>
+      <th>Numero</th>
+      <th>Fecha</th>
+      <th>Importe</th>
+      <th>Fecha Pago</th>
+      <th>Importe Pagado</th>
+      <th>Ver Comprobante de pago</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-doc>
+    <tr>
+      <td>{{ doc.ruc }}</td>
+      <td>{{ doc.nombre }}</td>
+      <td>{{ doc.tipoDoc }}</td>
+      <td>{{ doc.numero }}</td>
+      <td>{{ doc.fecha }}</td>
+      <td>{{ doc.importe }}</td>
+      <td>{{ doc.fechaPago }}</td>
+      <td>{{ doc.importePagado }}</td>
+      <td>
+        <button pButton type="button" class="btn-oval" icon="pi pi-eye"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table> 
+
+
+
+
+<!--<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="container">
+    <p-panel header="Cosnsulta de documento por pago" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
+    </p-panel>
+
+    <div class="card">
+         
+          <p-table [value]="consultaDocPorPagoList"
+                 dataKey="ruc"
+                 editMode="row"
+                 [paginator]="true"
+                 [rows]="10"
+                 responsiveLayout="scroll"
+                 styleClass="p-datatable-sm"
+                 style="table-layout: fixed; width: 100%;">
+         
+
+               <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 10%">ruc</th>
+                    <th style="width: 25%">nombre</th>
+                    <th style="width: 15%">tipoDoc</th>
+                    <th style="width: 15%">fecha</th>
+                    <th style="width: 15%">importe</th>
+                    <th style="width: 20%">fechaPago </th>
+                    <th style="width: 20%">importePagado </th>
+                </tr>
+            </ng-template>
+
+       
+            <ng-template pTemplate="body" let-mediopago let-ri="rowIndex" let-editing="editing">
+                <tr [pEditableRow]="mediopago">
+                     
+
+                    <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="consultaDocPorPago.ruc"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01IdTipoPago }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    
+                     <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="consultaDocPorPago.nombre"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01Descripcion }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    
+                  <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="consultaDocPorPago.tipoDoc"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01AsiConPrefijo }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                
+                     <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="consultaDocPorPago.fecha"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01AsiConCtaBanco }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                  
+                     <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="consultaDocPorPago.importe"
+                                       class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01AsiConCtaITF }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                </tr>
+            </ng-template>
+
+
+        </p-table>
+    </div>
+</div>---> 

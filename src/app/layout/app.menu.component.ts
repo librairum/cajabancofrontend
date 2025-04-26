@@ -5,35 +5,42 @@ import { PermisosxPerfil } from '../demo/model/permisosxperfil';
 import { LoginService } from '../demo/service/login.service';
 import { MenuxPerfil } from '../demo/model/MenuxPerfil';
 import { GlobalService } from '../demo/service/global.service';
-
-interface MenuItem {
-    label: string;
-    icon?: string;
-    routerLink?: any[];
-    items?: MenuItem[] | null;
-}
-
+import { ConfigService } from '../demo/service/config.service';
 @Component({
     selector: 'app-menu',
     templateUrl: './app.menu.component.html',
 })
 export class AppMenuComponent implements OnInit {
-    selectedDate: Date = new Date();
-    model: MenuItem[] = [];
-    permisos: MenuxPerfil;
-
+    codigoPerfil : string= '';
+    codigoModulo : string = '';
     constructor(
         public permisosService: LoginService,
         layoutService: LayoutService,
-        public gS: GlobalService
+        public gS: GlobalService,
+        configService :ConfigService 
     ) {
         this.selectedDate = new Date();
+        this.codigoModulo = configService.getCodigoModulo();
+        this.codigoPerfil = gS.getCodigoPerfil();
+        console.log("datos de modulo y perfil");
+        console.log(this.codigoModulo);
+        console.log(this.codigoPerfil);
     }
 
+    selectedDate: Date = new Date();
+
+    model: any[] = [];
+    //permisos: MenuxPerfil[] = []; // Lista para almacenar los resultados
+    permisos: MenuxPerfil;
     ngOnInit() {
-        this.permisosService.TraerMenuxPerfil('03', '01').subscribe({
+        // Llama al método para obtener permisos al inicializar el componente
+        this.permisosService.TraerMenuxPerfil(this.codigoPerfil, 
+            this.codigoModulo).subscribe({
             next: (data) => {
-                const datosMenu: PermisosxPerfil[] = data.data;
+                var datosMenu = data.data;
+
+                //console.log(this.permisos);
+
                 this.loadMenu(datosMenu);
             },
             error: (error) => {
@@ -47,89 +54,77 @@ export class AppMenuComponent implements OnInit {
     }
 
     loadMenu(menuAsignados: PermisosxPerfil[]) {
-        const nivel1Map = new Map<string, PermisosxPerfil>();
-        const nivel2Map = new Map<string, PermisosxPerfil[]>();
-        const nivel3Map = new Map<string, PermisosxPerfil[]>();
+        // Paso 1: Clasificar elementos por niveles
+        const nivel1 = menuAsignados.filter((element) =>
+            element.codigoFormulario.endsWith('0000')
+        );
+        const nivel2 = menuAsignados.filter(
+            (element) =>
+                element.codigoFormulario.endsWith('00') &&
+                !element.codigoFormulario.endsWith('0000')
+        );
+        const nivel3 = menuAsignados.filter(
+            (element) => !element.codigoFormulario.endsWith('00')
+        );
 
-        // Clasificar elementos por niveles
-        menuAsignados.forEach((item) => {
-            const code = item.codigoFormulario;
-            if (code.endsWith('0000')) {
-                nivel1Map.set(code, item);
-            } else if (code.endsWith('00')) {
-                const parentCode = code.substring(0, 2) + '0000';
-                if (!nivel2Map.has(parentCode)) {
-                    nivel2Map.set(parentCode, []);
-                }
-                nivel2Map.get(parentCode)!.push(item);
-            } else {
-                const parentCode = code.substring(0, 4) + '00';
-                if (!nivel3Map.has(parentCode)) {
-                    nivel3Map.set(parentCode, []);
-                }
-                nivel3Map.get(parentCode)!.push(item);
-            }
-        });
+        // Paso 2: Construir la jerarquía del menú
+        this.model = nivel1.map((l1) => {
+            // Encontrar elementos de nivel 2 asociados al nivel 1 actual
+            const subItemsNivel2 = nivel2
+                .filter((l2) =>
+                    l2.codigoFormulario.startsWith(
+                        l1.codigoFormulario.substring(0, 2)
+                    )
+                )
+                .map((l2) => {
+                    // Encontrar elementos de nivel 3 asociados al nivel 2 actual
+                    const subItemsNivel3 = nivel3
+                        .filter((l3) =>
+                            l3.codigoFormulario.startsWith(
+                                l2.codigoFormulario.substring(0, 4)
+                            )
+                        )
+                        .map((l3) => ({
+                            label: l3.etiqueta,
+                            icon: l3.nombreIcono,
+                            routerLink: [
+                                `/Home/${l2.nombreFormulario}/${l3.nombreFormulario}`,
+                            ],
+                        }));
 
-        const menuItems: MenuItem[] = [];
-
-        nivel1Map.forEach((l1Item, l1Code) => {
-            const nivel2Items = nivel2Map.get(l1Code) || [];
-
-            const subItemsNivel2: MenuItem[] = nivel2Items.map((l2Item) => {
-                const l2Code = l2Item.codigoFormulario;
-                const nivel3Items = nivel3Map.get(l2Code) || [];
-
-                const subItemsNivel3: MenuItem[] = nivel3Items.map((l3Item) => ({
-                    label: l3Item.etiqueta,
-                    icon: l3Item.nombreIcono,
-                    routerLink: [`/Home/${l2Item.nombreFormulario}/${l3Item.nombreFormulario}`],
-                }));
-
-                return {
-                    label: l2Item.etiqueta,
-                    icon: l2Item.nombreIcono,
-                    routerLink: subItemsNivel3.length === 0 ? [`/Home/${l2Item.nombreFormulario}`] : null,
-                    items: subItemsNivel3.length > 0 ? subItemsNivel3 : null,
-                };
-            });
-
-            // Insertar "Perfil" como apartado separado debajo de "Usuario"
-            const usuarioIndex = subItemsNivel2.findIndex(
-                (item) => item.label.toLowerCase() === 'usuario'
-            );
-
-            if (usuarioIndex !== -1) {
-                const perfilItemData = nivel2Items.find(
-                    (item) => item.etiqueta.toLowerCase() === 'perfil'
-                );
-
-                let perfilMenuItem: MenuItem;
-
-                if (perfilItemData) {
-                    perfilMenuItem = {
-                        label: perfilItemData.etiqueta,
-                        icon: perfilItemData.nombreIcono,
-                        routerLink: [`/Home/${perfilItemData.nombreFormulario}`],
+                    return {
+                        label: l2.etiqueta,
+                        icon: l2.nombreIcono,
+                        routerLink:
+                            subItemsNivel3.length === 0
+                                ? [`/Home/${l2.nombreFormulario}`]
+                                : null,
+                        items:
+                            subItemsNivel3.length > 0 ? subItemsNivel3 : null,
                     };
-                } else {
-                    // Si no existe en datos, crear manualmente (ajusta icono y ruta si quieres)
-                    perfilMenuItem = {
-                        label: 'Perfil',
-                        icon: 'pi pi-fw pi-user-edit',
-                        routerLink: ['/Home/perfil'],
-                    };
-                }
+                });
 
-                subItemsNivel2.splice(usuarioIndex + 1, 0, perfilMenuItem);
-            }
-
-            menuItems.push({
-                label: l1Item.etiqueta,
+            return {
+                label: l1.etiqueta,
                 items: subItemsNivel2.length > 0 ? subItemsNivel2 : null,
-            });
+            };
         });
-
-        this.model = menuItems;
     }
 }
+
+/**
+
+
+this.model = [
+            {
+                label: 'Home',
+                items: [
+                    {label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/Home'] },
+                    {label:'Banco' , icon:'pi pi-fw pi-building', routerLink:['banco']},
+                    {label:'Cuentas Bancarias' , icon:'pi pi-fw pi-credit-card', routerLink:['cuentas_bancarias']},
+                    {label:'Usuario' , icon:'pi pi-fw pi-user', routerLink:['usuario']}
+                ]
+
+
+
+ */

@@ -68,6 +68,7 @@ export class LoginService {
                         'sesionStartTime',
                         new Date().toISOString()
                     );
+                    console.log(response.data);
                 }
             })
         );

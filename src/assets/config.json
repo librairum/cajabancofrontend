@@ -2,7 +2,8 @@
     "url": "http://localhost:7277",
     "theme": "dark",
     "appVersion": "2.0.0",
-    "rutaDoc":"C:\\Users\\USER\\Desktop\\proyecto v2\\cajabancofrontend\\cajabancofrontend\\src\\assets\\documentos"
+    "rutaDoc":"C:\\Users\\USER\\Desktop\\proyecto v2\\cajabancofrontend\\cajabancofrontend\\src\\assets\\documentos",
+    "codigoModulo":"01"
 }
 
 

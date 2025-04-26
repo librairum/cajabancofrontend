@@ -1,0 +1,78 @@
+<div style="margin: 10px;">
+    <p-panel header="Asignar Perfiles">
+        <p-breadcrumb class="max-w-full" [model]="items"></p-breadcrumb>
+    </p-panel>
+</div>
+
+<div class="form-container" style="margin: 10px;">
+    <form [formGroup]="permisosForm" (ngSubmit)="cargarPermisos()">
+        <table>
+            <tr>
+                <td>
+                    <label for="codigoPerfil">Perfil:</label>
+                </td>
+                <td style="width: 170px;">
+                    <p-dropdown
+                        [options]="perfiles"
+                        formControlName="codigoPerfil"
+                        optionLabel="nombre"
+                        optionValue="codigo"
+                        (onChange)="onPerfilChange($event)"
+                        placeholder="Elija un perfil"
+                        [(ngModel)]="selectedperfil"
+                        [readonly]="true">
+                    </p-dropdown>
+                </td>
+            <!--
+                <td colspan="2">
+                    <button type="submit" pButton label="Cargar Permisos" [disabled]="loading"></button>
+                </td>-->
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div *ngIf="loading" class="loading-spinner" style="text-align: center;">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
+<div>
+    <p-table #dt1 [value]="permisos" [paginator]="true" [rows]="10"
+             [responsiveLayout]="'scroll'" [tableStyle]="'min-width: 75rem'">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Grupo Menu</th>
+                <th>Tipo Menu</th>
+                <th>Etiqueta</th>
+                <th style="text-align: center;">Habilitado</th>
+            </tr>
+        </ng-template>
+
+        <!-- Implementación de habilitado -->
+        <ng-template pTemplate="body" let-permiso>
+            <tr [ngClass]="{
+                'padre-row': isPadre(permiso),
+                'hijo-row': isHijo(permiso),
+                'nieto-row': isNieto(permiso)
+            }">
+                <td>
+                    <span [ngStyle]="{'padding-left':
+                        isPadre(permiso) ? '0px' :
+                        isHijo(permiso) ? '20px' : '40px'
+                    }">
+                        {{ permiso.grupoMenu }}
+                    </span>
+                </td>
+                <td>{{ permiso.tipoMenu }}</td>
+                <td>{{ permiso.etiqueta }}</td>
+                <td style="text-align: center;">
+                    <p-checkbox
+                        [binary]="true"
+                        [ngModel]="permiso.habilitado === 'S'"
+                        (ngModelChange)="onCheckboxChange(permiso, $event)">
+                    </p-checkbox>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

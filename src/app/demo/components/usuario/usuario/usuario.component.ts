@@ -81,7 +81,7 @@ export class UsuarioComponent implements OnInit {
     }
 
     loadUsuario(): void {
-        this.uS.getAll()
+        this.uS.listar_usuarios()
             .subscribe({
                 next: (data) => {
                     this.mUsuarioList = data;
@@ -108,7 +108,7 @@ export class UsuarioComponent implements OnInit {
                 codigoempresa: '00001'
             };
 
-            this.uS.update(updUsuario).subscribe({
+            this.uS.actualizar_usuario(updUsuario).subscribe({
                 next: () => {
                     this.loadUsuario();
                     this.editingUsuario = null;
@@ -145,7 +145,7 @@ export class UsuarioComponent implements OnInit {
                 cuentaCod: '0000001',
                 codigoempresa: '00001'
             };
-            this.uS.create(newUsuario).subscribe({
+            this.uS.crear_usuario(newUsuario).subscribe({
                 next: () => {
                     this.isEditing = false;
                     this.isNew = false;
@@ -178,7 +178,7 @@ export class UsuarioComponent implements OnInit {
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button',
             accept: () => {
-                this.uS.delete(usuario).subscribe({
+                this.uS.eliminar_usuario(usuario).subscribe({
                     next: () => {
                         this.mUsuarioList.splice(index, 1);
                         this.mS.add({

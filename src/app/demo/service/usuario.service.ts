@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { ListarPerfil, Usuario, UsuarioCrear } from '../model/Usuario';
+import { Observable } from 'rxjs';
 import { ConfigService } from './config.service';
+import { catchError, map, throwError } from 'rxjs';
+import { ListarPerfil, Usuario, UsuarioCrear } from '../model/Usuario';
 import { ApiResponse } from '../model/api_response';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class UsuarioService {
   private apiUrl2 = ''
   private apiUrlPerfil = ''
 
-  constructor(private http: HttpClient, private configService: ConfigService) 
+  constructor(private http:HttpClient, private configService: ConfigService) 
   {
     this.apiUrl = configService.getApiUrl();
     this.urlAPI = `${this.apiUrl}/Usuario`;
@@ -28,13 +30,14 @@ export class UsuarioService {
       .pipe(map(response => response.data));
   }
 
-  //listar usuarios
-  getAll(): Observable<Usuario[]> {
+  // para listar
+  listar_usuarios(): Observable<Usuario[]>{
     return this.http.get<ApiResponse<Usuario>>(`${this.urlAPI}/SpLista`)
       .pipe(map(response => response.data));
   }
-  // crear un nuevo usuario
-  create(usuarioCrear: UsuarioCrear): Observable<string> {
+
+  // registrar un usuario
+  crear_usuario(usuarioCrear: UsuarioCrear): Observable<string>{
     return this.http.post<ApiResponse<string>>(`${this.urlAPI}/SpInserta`, usuarioCrear)
       .pipe(
         map(response => response.item || ''),
@@ -44,14 +47,13 @@ export class UsuarioService {
         })
       );
   }
-
-  //editar un usuario
-  update(usuarioActualizar: UsuarioCrear): Observable<string> {
+  // Actuzaliar usuario
+  actualizar_usuario(usuarioActualizar: UsuarioCrear): Observable<string> {
     return this.http.put<ApiResponse<string>>(`${this.urlAPI}/SpActualiza`, usuarioActualizar)
       .pipe(map(response => response.item));
   }
-  // eliminar
-  delete(usuario: Usuario): Observable<void> {
+  // Eliminar "Nombre como ID"
+  eliminar_usuario(usuario: Usuario): Observable<void>{
     return this.http.delete<void>(`${this.urlAPI}/SpElimina?codigo=${usuario.codigo}&cuentacod=0000001&empresacod=00001`)
       .pipe(
         catchError((error) => {

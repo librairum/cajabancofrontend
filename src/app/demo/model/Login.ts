@@ -30,4 +30,5 @@ export interface Login{
     nombreusuario:string;
     claveusuario:string;
     codigoempresa:string;
+    codigoPerfil:string;
 }

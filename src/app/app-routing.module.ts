@@ -11,6 +11,8 @@ import { BancoComponent } from './demo/components/banco/banco.component';
 import { MediopagoComponent } from './demo/components/mediopago/mediopago.component';
 import { VouchercontableComponent } from './demo/components/presupuesto/vouchercontable/vouchercontable.component';
 import { PerfilComponent } from './demo/components/perfil/perfil.component';
+import { PermisosxperfilxtodoComponent } from './demo/components/permisosxperfilxtodo/permisosxperfilxtodo.component';  
+import { ConsultaDocPorPagoComponent } from './demo/components/consulta-doc-por-pago/consulta-doc-por-pago.component';
 
 @NgModule({
     imports: [
@@ -33,6 +35,8 @@ import { PerfilComponent } from './demo/components/perfil/perfil.component';
                     {path:'medio_pago', component:MediopagoComponent},
                     {path:'voucher_contable', component : VouchercontableComponent},
                     {path:'perfil',component : PerfilComponent},
+                    {path:'asignarpermiso',component : PermisosxperfilxtodoComponent},
+                    {path:'ConsultaDocPorPago',component : ConsultaDocPorPagoComponent},
 
                 ]
             },
