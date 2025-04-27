@@ -18,6 +18,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import { calendario_traduccion } from 'src/app/shared/Calendarios';
 import { InputTextModule } from 'primeng/inputtext';
 import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
+import { ConfigService } from 'src/app/demo/service/config.service';
 
 @Component({
     selector: 'app-agregar-pago',
@@ -62,13 +63,14 @@ export class AgregarPagoComponent implements OnInit {
         private link: Router,
         private primeng: PrimeNGConfig,
         private fb: FormBuilder,
-        private gS: GlobalService,
+        private globalService: GlobalService,
         private bS: BreadcrumbService,
         private confirmationService: ConfirmationService,
         private router: Router,
         private presupuestoService: PresupuestoService,
         private messageService: MessageService,
-        private datePipe: DatePipe
+        private datePipe: DatePipe,
+        private configService: ConfigService
     ) {
         /*const navigation = this.router.getCurrentNavigation();
         if (navigation?.extras.state) {
@@ -112,7 +114,7 @@ export class AgregarPagoComponent implements OnInit {
     public resetForm(): void {
         this.filtroFRM.reset();
         this.filtroFRM.setValue({
-            empresa: this.gS.getCodigoEmpresa(),
+            empresa: this.globalService.getCodigoEmpresa(),
             ruc: '',
             nrodoc: '',
         });
@@ -126,7 +128,7 @@ export class AgregarPagoComponent implements OnInit {
         const ruc = this.filtroFRM.get('ruc').value ?? '';
 
         this.presupuestoService
-            .obtenerDocPendiente(this.gS.getCodigoEmpresa(), ruc, nroDoc)
+            .obtenerDocPendiente(this.globalService.getCodigoEmpresa(), ruc, nroDoc)
             .subscribe({
                 next: (data) => {
                     this.ayudapago = data;
@@ -149,7 +151,7 @@ export class AgregarPagoComponent implements OnInit {
     }
 
     cargarproveedores() {
-        const cod_empresa = this.gS.getCodigoEmpresa();
+        const cod_empresa = this.globalService.getCodigoEmpresa();
         this.presupuestoService
             .obtenerProveedores(cod_empresa)
             .subscribe((data: proveedores_lista[]) => {
@@ -220,9 +222,9 @@ export class AgregarPagoComponent implements OnInit {
         // console.log(this.fechapresupuestoMod);
         // console.log('--- end component agregar pago typscript');
         const detallePresupuesto: insert_detalle = {
-            empresa: this.gS.getCodigoEmpresa(),
+            empresa: this.globalService.getCodigoEmpresa(),
             numeropresupuesto: this.numeropresupuestoMod || '', // Si es null, enviar string vacío
-            tipoaplicacion: '01',
+            tipoaplicacion: this.configService.getTipoAplicacion(),
             fechapresupuesto: this.fechapresupuestoMod || '', // Si es null, enviar string vacío
             bcoliquidacion: '00',
             xmlDetalle: xmlString,

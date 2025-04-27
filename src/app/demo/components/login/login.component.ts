@@ -14,6 +14,7 @@ import { EmpresasxModulo, Login } from '../../model/Login';
 import { DropdownModule } from 'primeng/dropdown';
 import { GlobalService } from '../../service/global.service';
 import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
+import { ConfigService } from '../../service/config.service';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +36,7 @@ export class LoginComponent implements OnInit {
 
     constructor(private globalservice:GlobalService,private fb:FormBuilder,
         private LoginServicio:LoginService, private router:Router,
-        private messageService:MessageService, private link:Router){
+        private messageService:MessageService, private link:Router, private configService: ConfigService){
         this.credencialesFRM=fb.group({
             nombreusuario:['',[Validators.required,Validators.maxLength(50)]],
             claveusuario: ['',[Validators.required,Validators.maxLength(50)]],
@@ -101,7 +102,7 @@ export class LoginComponent implements OnInit {
     }
 
     loadEmpresa(){
-        const codigomodulo='01'
+        const codigomodulo = this.configService.getCodigoModulo()
         this.LoginServicio.getEmpresa(codigomodulo).subscribe(
             (data:EmpresasxModulo[])=>{
                 this.Empresa = data;

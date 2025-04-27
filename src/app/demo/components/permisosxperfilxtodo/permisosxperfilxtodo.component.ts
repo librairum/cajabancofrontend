@@ -18,6 +18,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { PermisosxPerfil } from '../../model/permisosxperfil';
 import { DropdownModule } from 'primeng/dropdown';
 import { Router, RouterModule } from '@angular/router';
+import { ConfigService } from '../../service/config.service';
 
 @Component({
   selector: 'app-permisosxperfilxtodo',
@@ -36,7 +37,9 @@ export class PermisosxperfilxtodoComponent implements OnInit {
     selectedperfil:string = "";
     navigationData:any;
 
-    constructor(private fb:FormBuilder,private ptS:PermisosxperfilxtodoService,private gS:GlobalService,private mS:MessageService,private bS:BreadcrumbService,private link: Router) {
+    constructor(
+        private configService: ConfigService,
+        private fb:FormBuilder,private ptS:PermisosxperfilxtodoService,private mS:MessageService,private bS:BreadcrumbService,private link: Router) {
         const navigation=link.getCurrentNavigation();
         if(navigation?.extras?.state){
             this.navigationData=navigation.extras.state
@@ -56,9 +59,9 @@ export class PermisosxperfilxtodoComponent implements OnInit {
             this.items=bc;
         })
         this.loadPerfiles()
-        this.permisosForm=this.fb.group({
-            codigoPerfil:this.navigationData.codigo,
-            codModulo:'01'
+        this.permisosForm = this.fb.group({
+            codigoPerfil: this.navigationData.codigo,
+            codModulo: this.configService.getCodigoModulo(),
         });
         this.cargarPermisos();
 

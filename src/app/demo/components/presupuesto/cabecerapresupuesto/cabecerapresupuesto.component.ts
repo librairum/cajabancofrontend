@@ -22,6 +22,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 import { HttpResponse } from '@angular/common/http';
+import { ConfigService } from 'src/app/demo/service/config.service';
 @Component({
     selector: 'app-cabecerapresupuesto',
     standalone: true,
@@ -70,7 +71,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Mes: '',
         ban01Descripcion: '',
         ban01Fecha: '',
-        ban01Estado: '01',
+        ban01Estado: this.configService.getEstado(),
         ban01Usuario: '',
         ban01Pc: '',
         ban01FechaRegistro: '',
@@ -85,7 +86,7 @@ export class CabecerapresupuestoComponent implements OnInit {
         ban01Mes: '',
         ban01Descripcion: '',
         ban01Fecha: '',
-        ban01Estado: '01',
+        ban01Estado: this.configService.getEstado(),
         ban01Usuario: '',
         ban01Pc: '',
         ban01FechaRegistro: '',
@@ -95,17 +96,18 @@ export class CabecerapresupuestoComponent implements OnInit {
     selectedPagoNumero: string = '';
 
     constructor(
-        private gS: GlobalService,
+        private globalService: GlobalService,
         private bS: BreadcrumbService,
         private confirmationService: ConfirmationService,
         private router: Router,
         private presupuestoService: PresupuestoService,
         private messageService: MessageService,
-        private datePipe: DatePipe
+        private datePipe: DatePipe,
+        private configService: ConfigService
     ) {}
 
     cargarMedioPago(): void {
-        const codempresa: string = this.gS.getCodigoEmpresa();
+        const codempresa: string = this.globalService.getCodigoEmpresa();
         this.loading = true;
         this.presupuestoService.obtenerMedioPago(codempresa).subscribe({
             next: (data) => {
@@ -147,13 +149,17 @@ export class CabecerapresupuestoComponent implements OnInit {
             this.items = bc;
         });
 
-        this.gS.selectedDate$.subscribe((date) => {
+        this.globalService.selectedDate$.subscribe((date) => {
             if (date) {
                 const year = date.getFullYear().toString();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
                 this.anioFecha = year;
                 this.mesFecha = month;
-                this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
+                this.cargarPresupuesto(
+                    this.globalService.getCodigoEmpresa(),
+                    year,
+                    month
+                );
             }
         });
         this.cargarMedioPago();
@@ -205,7 +211,7 @@ export class CabecerapresupuestoComponent implements OnInit {
     verVouchercontable(presupuesto: cabeceraPresupuesto) {
         const navigationExtras = {
             state: {
-                empresa: this.gS.getCodigoEmpresa(),
+                empresa: this.globalService.getCodigoEmpresa(),
                 PagoNro: presupuesto.pagoNumero,
             },
         };
@@ -226,14 +232,14 @@ export class CabecerapresupuestoComponent implements OnInit {
             .padStart(2, '0');
 
         this.nuevoPresupuesto = {
-            ban01Empresa: this.gS.getCodigoEmpresa(),
+            ban01Empresa: this.globalService.getCodigoEmpresa(),
             ban01Numero: ' ',
             ban01Anio: anioActual, // Set year from current date
             ban01Mes: mesActual, // Set month from current date
             ban01Descripcion: '',
             ban01Fecha: fechaRegistroFormateada,
-            ban01Estado: '01',
-            ban01Usuario: this.gS.getNombreUsuario(),
+            ban01Estado: this.configService.getEstado(),
+            ban01Usuario: this.globalService.getNombreUsuario(),
             ban01Pc: 'PC',
             ban01FechaRegistro: fechaRegistroFormateada,
             ban01mediopago: '',
@@ -250,7 +256,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Mes: '',
             ban01Descripcion: '',
             ban01Fecha: '',
-            ban01Estado: '01',
+            ban01Estado: this.configService.getEstado(),
             ban01Usuario: '',
             ban01Pc: '',
             ban01FechaRegistro: '',
@@ -352,7 +358,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             (mp) => mp.ban01Descripcion === presupuesto.nombreMedioPago
         );
         this.editForm = {
-            ban01Empresa: this.gS.getCodigoEmpresa(),
+            ban01Empresa: this.globalService.getCodigoEmpresa(),
             ban01Numero: presupuesto.pagoNumero,
             ban01Anio: fechaSeleccionada.getFullYear().toString(),
             ban01Mes: (fechaSeleccionada.getMonth() + 1)
@@ -361,8 +367,8 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Descripcion: presupuesto.motivo,
             ban01Fecha:
                 this.datePipe.transform(fechaSeleccionada, 'dd/MM/yyyy') || '',
-            ban01Estado: '01',
-            ban01Usuario: this.gS.getNombreUsuario(),
+            ban01Estado: this.configService.getEstado(),
+            ban01Usuario: this.globalService.getNombreUsuario(),
             ban01Pc: 'PC',
             ban01FechaRegistro:
                 this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '',
@@ -446,7 +452,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button',
             accept: () => {
-                const empresa = this.gS.getCodigoEmpresa();
+                const empresa = this.globalService.getCodigoEmpresa();
                 const numero = presupuesto.pagoNumero;
 
                 this.presupuestoService
@@ -502,11 +508,15 @@ export class CabecerapresupuestoComponent implements OnInit {
         }
         this.verConfirmarPago = false;
         this.cargarMedioPago();
-        this.gS.selectedDate$.subscribe((date) => {
+        this.globalService.selectedDate$.subscribe((date) => {
             if (date) {
                 const year = date.getFullYear().toString();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                this.cargarPresupuesto(this.gS.getCodigoEmpresa(), year, month);
+                this.cargarPresupuesto(
+                    this.globalService.getCodigoEmpresa(),
+                    year,
+                    month
+                );
             }
         });
     }
@@ -515,7 +525,7 @@ export class CabecerapresupuestoComponent implements OnInit {
     abrirdocumento(numeroPresupuesto: string): void {
         this.presupuestoService
             .obtenerArchivo(
-                this.gS.getCodigoEmpresa(),
+                this.globalService.getCodigoEmpresa(),
                 this.anioFecha,
                 this.mesFecha,
                 numeroPresupuesto
@@ -563,7 +573,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             acceptButtonStyleClass: 'p-button-danger ',
             rejectButtonStyleClass: 'p-button',
             accept: () => {
-                this.gS.selectedDate$.subscribe((date) => {
+                this.globalService.selectedDate$.subscribe((date) => {
                     if (date) {
                         this.anio_dato = date.getFullYear().toString();
                         this.mes_dato = (date.getMonth() + 1)
@@ -572,7 +582,7 @@ export class CabecerapresupuestoComponent implements OnInit {
                     }
                 });
                 const parametrosanulacion = {
-                    empresa: this.gS.getCodigoEmpresa(),
+                    empresa: this.globalService.getCodigoEmpresa(),
                     anio: this.anio_dato,
                     mes: this.mes_dato,
                     numeropresupuesto: presupuesto.pagoNumero,
@@ -588,21 +598,23 @@ export class CabecerapresupuestoComponent implements OnInit {
                                     'Éxito',
                                     'Pago anulado correctamente'
                                 );
-                                this.gS.selectedDate$.subscribe((date) => {
-                                    if (date) {
-                                        const year = date
-                                            .getFullYear()
-                                            .toString();
-                                        const month = (date.getMonth() + 1)
-                                            .toString()
-                                            .padStart(2, '0');
-                                        this.cargarPresupuesto(
-                                            this.gS.getCodigoEmpresa(),
-                                            year,
-                                            month
-                                        );
+                                this.globalService.selectedDate$.subscribe(
+                                    (date) => {
+                                        if (date) {
+                                            const year = date
+                                                .getFullYear()
+                                                .toString();
+                                            const month = (date.getMonth() + 1)
+                                                .toString()
+                                                .padStart(2, '0');
+                                            this.cargarPresupuesto(
+                                                this.globalService.getCodigoEmpresa(),
+                                                year,
+                                                month
+                                            );
+                                        }
                                     }
-                                });
+                                );
                             } else {
                                 verMensajeInformativo(
                                     this.messageService,

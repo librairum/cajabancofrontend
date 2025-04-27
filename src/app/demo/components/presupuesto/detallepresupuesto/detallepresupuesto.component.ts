@@ -75,7 +75,7 @@ export class DetallepresupuestoComponent implements OnInit {
         private ms: MessageService,
         private datePipe: DatePipe,
         private confirmationService: ConfirmationService,
-        private gS: GlobalService
+        private globalService: GlobalService
     ) {
         //variables de edición
 
@@ -117,19 +117,32 @@ export class DetallepresupuestoComponent implements OnInit {
         this.load = true;
 
         this.presupuestoservice
-            .obtenerDetallePresupuesto('01', this.navigationData.PagoNro)
+            .obtenerDetallePresupuesto(
+                this.globalService.getCodigoEmpresa(),
+                this.navigationData.PagoNro
+            )
             .subscribe({
                 next: (data) => {
                     this.DetallePago = data;
                     if (data.length === 0) {
-                        verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron detalles del presupuesto');
+                        verMensajeInformativo(
+                            this.messageService,
+                            'warn',
+                            'Advertencia',
+                            'No se encontraron detalles del presupuesto'
+                        );
                         this.load = false;
                     } else {
                         this.load = false;
                     }
                 },
                 error: (error) => {
-                    verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar presupuesto: ${error.message}`);
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        `Error al cargar presupuesto: ${error.message}`
+                    );
                 },
             });
     }
@@ -276,7 +289,7 @@ export class DetallepresupuestoComponent implements OnInit {
         // console.log("meto buildbackednpayload");
         // console.log(detalle);
         return {
-            ban02Empresa: this.gS.getCodigoEmpresa(),
+            ban02Empresa: this.globalService.getCodigoEmpresa(),
             ban02Ruc: detalle.ban02Ruc,
             ban02Tipodoc: detalle.nombreTipoDocumento || '01',
             ban02NroDoc: detalle.ban02NroDoc,
@@ -297,7 +310,7 @@ export class DetallepresupuestoComponent implements OnInit {
             ban02GiroOrden: 'No se',
             ban02BcoLiquidacion: '00',
             ban02Redondeo: '0',
-            ban02Usuario: this.gS.getNombreUsuario(),
+            ban02Usuario: this.globalService.getNombreUsuario(),
             ban02Pc: 'PC001',
             ban02FechaRegistro: this.datePipe.transform(
                 new Date(),
@@ -345,7 +358,7 @@ export class DetallepresupuestoComponent implements OnInit {
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button',
             accept: () => {
-                const empresa = this.gS.getCodigoEmpresa();
+                const empresa = this.globalService.getCodigoEmpresa();
                 //const numero = presupuesto.pagoNumero;
 
                 const numeroPresupuesto = this.navigationData.PagoNro;
@@ -888,7 +901,7 @@ export class DetallepresupuestoComponent implements OnInit {
             verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
             return;
         }
-        const codempresa = this.gS.getCodigoEmpresa();
+        const codempresa = this.globalService.getCodigoEmpresa();
         this.presupuestoservice.obtenerMedioPago(codempresa).subscribe(
             (mediosPago: mediopago_lista[]) => {
                 try {
