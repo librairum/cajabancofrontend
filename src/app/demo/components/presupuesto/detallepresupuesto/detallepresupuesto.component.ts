@@ -273,8 +273,8 @@ export class DetallepresupuestoComponent implements OnInit {
 
     buildBackendPayload(detalle: Detallepresupuesto): any {
 
-        console.log("meto buildbackednpayload");
-        console.log(detalle);
+        // console.log("meto buildbackednpayload");
+        // console.log(detalle);
         return {
             ban02Empresa: this.gS.getCodigoEmpresa(),
             ban02Ruc: detalle.ban02Ruc,
@@ -311,7 +311,7 @@ export class DetallepresupuestoComponent implements OnInit {
             //importeDetraccion: detalle.importeDetraccion,
             ban02ImporteDetraccionSoles: detalle.ban02ImporteDetraccionSoles,
             // ban02ImporteDetraccionSoles:196,
-            ban02ImporteDetraccionDolares:detalle.ban02ImporteDetraccionDolares,                
+            ban02ImporteDetraccionDolares:detalle.ban02ImporteDetraccionDolares,
             ban02TasaRetencion: detalle.ban02TasaRetencion,
             ban02ImporteRetencionSoles: detalle.ban02ImporteRetencionSoles,
             ban02ImporteRetencionDolares: detalle.ban02ImporteRetencionDolares,
@@ -464,30 +464,30 @@ export class DetallepresupuestoComponent implements OnInit {
         }else if(monedaEdicion == 'D'){
             detalle.importeDetraccion = importeDetraccionDolares;
         }
-        
-        
+
+
 
         this.editingRow.ban02PagoDolares = montoPagoDolares;
         this.editingRow.ban02PagoSoles = montoPagoSoles;
-        
+
         if(monedaEdicion == 'S'){
             this.editingRow.importeDetraccion = importeDetraccionSoles;
         }else if(monedaEdicion == 'D'){
             this.editingRow.importeDetraccion = importeDetraccionDolares;
         }
-        
+
         //this.editingRow.importeDetraccion = importeDetraccionSoles;
-        
-        console.log("lectura de detalle.ban02ImporteDetraccionSoles dese el evento calculaNetoPago");
+
+        // console.log("lectura de detalle.ban02ImporteDetraccionSoles dese el evento calculaNetoPago");
         detalle.ban02ImporteDetraccionSoles = importeDetraccionSoles;
-        console.log(detalle.ban02ImporteDetraccionSoles);
+        // console.log(detalle.ban02ImporteDetraccionSoles);
         detalle.ban02ImporteRetencionSoles = importeRetencionSoles;
         detalle.ban02ImportePercepcionSoles = importePercepcionSoles;
-        
+
         this.editingRow.ban02ImportePercepcionSoles = importePercepcionSoles;
         this.editingRow.ban02ImporteRetencionSoles = importeRetencionSoles;
         this.editingRow.ban02ImporteDetraccionSoles = importeDetraccionSoles;
-                        
+
         this.editingRow.ban02ImporteRetencionDolares = importeRetencionDolares;
         this.editingRow.ban02ImporteDetraccionDolares =
             importeDetraccionDolares;

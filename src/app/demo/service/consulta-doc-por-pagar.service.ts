@@ -4,6 +4,7 @@ import { ConsultaDocPorPago } from './../model/ConsultaDocPorPago'; // Asegúrat
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,21 +14,18 @@ export class ConsultaDocPorPagoService {
   private http = inject(HttpClient);
       urlAPI: string = ''; //
     apiUrl: any;
-  
+
       constructor(
           private httpClient: HttpClient,
-          private configService: ConfigService
+          private configService: ConfigService,
+          private globalService: GlobalService
       ) {
         this.apiUrl = configService.getApiUrl();
-        this.urlAPI = `${this.apiUrl}/ConsultaDocPorPago`;
+        this.urlAPI = `${this.apiUrl}/Presupuesto`;
     }
-   public GetConsultaDocPorPago(empresa:string): Observable<ConsultaDocPorPago[]> {
-         const params=new HttpParams()
-         .set('empresa',empresa)
-         return this.http.get<RespuestaAPIBase<ConsultaDocPorPago[]>>(`${this.urlAPI}/SpTraeDocPorPagarConsulta?empresa=01&filtro=31`, { params }).pipe(
+   public GetConsultaDocPorPago(filtro:string): Observable<ConsultaDocPorPago[]> {
+         return this.http.get<RespuestaAPIBase<ConsultaDocPorPago[]>>(`${this.urlAPI}/SpTraeDocPorPagarConsulta?empresa=${this.globalService.getCodigoEmpresa()}&filtro=${filtro}`).pipe(
            map(response => response.data));
-   
-   
        }
 
 }

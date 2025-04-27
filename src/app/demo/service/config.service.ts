@@ -17,7 +17,7 @@ export class ConfigService {
         try {
             this.config = await firstValueFrom(this.http.get('/assets/config.json'));
             (window as any).config = this.config; // Guardar en window para acceso global
-            console.log(" Configuración cargada:", this.config);
+            // console.log(" Configuración cargada:", this.config);
         } catch (error) {
             console.error(" Error cargando config.json", error);
         }
@@ -30,7 +30,7 @@ export class ConfigService {
     getApiUrl(): string{
         return this.getConfig('url'); // Valor por defecto // verificar si va se http o https
     }
-     
+
     getRutaDoc(): string{
         return this.getConfig('rutaDoc');
     }

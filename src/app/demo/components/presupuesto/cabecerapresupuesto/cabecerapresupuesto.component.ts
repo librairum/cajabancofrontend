@@ -21,6 +21,7 @@ import { ConfirmarPagoComponent } from '../confirmar-pago/confirmar-pago.compone
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
+import { HttpResponse } from '@angular/common/http';
 @Component({
     selector: 'app-cabecerapresupuesto',
     standalone: true,
@@ -520,9 +521,19 @@ export class CabecerapresupuestoComponent implements OnInit {
                 numeroPresupuesto
             )
             .subscribe({
-                next: (blob: Blob) => {
-                    const url = window.URL.createObjectURL(blob);
-                    window.open(url, '_blank');
+                next: (response: HttpResponse<Blob>) => {
+                    const blob = response.body;
+                    if (blob) {
+                        const url = window.URL.createObjectURL(blob);
+                        window.open(url, '_blank');
+                    } else {
+                        verMensajeInformativo(
+                            this.messageService,
+                            'error',
+                            'Error',
+                            'No se encontró el documento'
+                        );
+                    }
                 },
                 error: (err) => {
                     console.error('Error al obtener el documento: ', err);

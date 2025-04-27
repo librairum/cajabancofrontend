@@ -17,14 +17,14 @@ export class AppMenuComponent implements OnInit {
         public permisosService: LoginService,
         layoutService: LayoutService,
         public gS: GlobalService,
-        configService :ConfigService 
+        configService :ConfigService
     ) {
         this.selectedDate = new Date();
         this.codigoModulo = configService.getCodigoModulo();
         this.codigoPerfil = gS.getCodigoPerfil();
-        console.log("datos de modulo y perfil");
-        console.log(this.codigoModulo);
-        console.log(this.codigoPerfil);
+        // console.log("datos de modulo y perfil");
+        // console.log(this.codigoModulo);
+        // console.log(this.codigoPerfil);
     }
 
     selectedDate: Date = new Date();
@@ -34,7 +34,7 @@ export class AppMenuComponent implements OnInit {
     permisos: MenuxPerfil;
     ngOnInit() {
         // Llama al método para obtener permisos al inicializar el componente
-        this.permisosService.TraerMenuxPerfil(this.codigoPerfil, 
+        this.permisosService.TraerMenuxPerfil(this.codigoPerfil,
             this.codigoModulo).subscribe({
             next: (data) => {
                 var datosMenu = data.data;

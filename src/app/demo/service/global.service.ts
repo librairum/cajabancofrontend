@@ -18,7 +18,7 @@ export class GlobalService {
     setCodigoPerfil(codigo: string) {                                   // nuevo
         sessionStorage.setItem(this.CODIGO_PERFIL_KEY, codigo);
     }
-    getCodigoPerfil(): string {                                         // nuevo            
+    getCodigoPerfil(): string {                                         // nuevo
         return sessionStorage.getItem(this.CODIGO_PERFIL_KEY) || '';
     }
     setNombreUsuario(nombre: string) {

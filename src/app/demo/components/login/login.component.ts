@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
             nombreusuario:['',[Validators.required,Validators.maxLength(50)]],
             claveusuario: ['',[Validators.required,Validators.maxLength(50)]],
             codigoempresa:['',[Validators.required,Validators.maxLength(50)]],
-            
+
         });
     }
     ngOnInit(): void {
@@ -72,9 +72,9 @@ export class LoginComponent implements OnInit {
                             this.globalservice.setNombreUsuario(autenticacion.nombreusuario)
                             this.globalservice.setCodigoEmpresa(autenticacion.codigoempresa)
                             this.globalservice.setCodigoPerfil(response.data[0].codigoPerfil);
-                            console.log("autenticacion");
-                            console.log(this.globalservice.getCodigoPerfil());
-                            
+                            // console.log("autenticacion");
+                            // console.log(this.globalservice.getCodigoPerfil());
+
                             this.router.navigate(['/Home']);
                             if (this.recordarme) {
                                localStorage.setItem('rememberedUser', JSON.stringify({

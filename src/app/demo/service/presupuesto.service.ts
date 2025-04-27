@@ -1,6 +1,6 @@
 import { Injectable , inject} from '@angular/core';
 import { agregar_Pago, AnularComprobante, cabeceraPresupuesto, ComprobanteUpdateParams, Detallepresupuesto, insert_detalle, insert_presupuesto, proveedores_lista, VoucherContableCabecera, VoucherContableDetalle } from '../model/presupuesto';
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
 import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
@@ -301,7 +301,7 @@ export class PresupuestoService {
         return this.http.delete(`${this.urlApi}/SpEliminaDet`, { params });
     }
 
-    public obtenerArchivo(empresa: string, anio: string, mes: string, numeroPresupuesto: string): Observable<Blob>{
+    public obtenerArchivo(empresa: string, anio: string, mes: string, numeroPresupuesto: string): Observable<HttpResponse<Blob>>{
         const params = new HttpParams()
         .set('empresa', empresa)
         .set('anio', anio)
@@ -310,7 +310,8 @@ export class PresupuestoService {
 
         return this.http.get(`${this.urlApi}/spTraeDocumento`, {
             params,
-            responseType: 'blob'
+            observe: 'response',
+            responseType: 'blob',
         })
     }
 }
