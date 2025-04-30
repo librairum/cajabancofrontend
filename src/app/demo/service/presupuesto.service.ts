@@ -112,7 +112,7 @@ export class PresupuestoService {
         presupuesto: insert_presupuesto
     ): Observable<any> {
         // console.log(presupuesto)
-        return this.http.post(`${this.urlApi}/SpInsert`, presupuesto);
+        return this.http.post(`${this.urlApi}/SpInserta`, presupuesto);
     }
     public actualizarPresupuesto(
         presupuesto: insert_presupuesto

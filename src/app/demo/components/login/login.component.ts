@@ -115,9 +115,13 @@ export class LoginComponent implements OnInit {
     }
 
     onEmpresaChallenge(event:any){
+        console.log("onEmpresaChallenge");
         this.credencialesFRM.patchValue({
             codigoempresa: event.value
+            
         });
+        
+        console.log(event.value);
     }
 
 }
