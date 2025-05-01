@@ -14,6 +14,7 @@ import { EmpresasxModulo, Login } from '../../model/Login';
 import { DropdownModule } from 'primeng/dropdown';
 import { GlobalService } from '../../service/global.service';
 import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
+import { ConfigService } from '../../service/config.service';
 
 @Component({
   selector: 'app-login',
@@ -35,12 +36,12 @@ export class LoginComponent implements OnInit {
 
     constructor(private globalservice:GlobalService,private fb:FormBuilder,
         private LoginServicio:LoginService, private router:Router,
-        private messageService:MessageService, private link:Router){
+        private messageService:MessageService, private link:Router, private configService: ConfigService){
         this.credencialesFRM=fb.group({
             nombreusuario:['',[Validators.required,Validators.maxLength(50)]],
             claveusuario: ['',[Validators.required,Validators.maxLength(50)]],
             codigoempresa:['',[Validators.required,Validators.maxLength(50)]],
-            
+
         });
     }
     ngOnInit(): void {
@@ -72,9 +73,9 @@ export class LoginComponent implements OnInit {
                             this.globalservice.setNombreUsuario(autenticacion.nombreusuario)
                             this.globalservice.setCodigoEmpresa(autenticacion.codigoempresa)
                             this.globalservice.setCodigoPerfil(response.data[0].codigoPerfil);
-                            console.log("autenticacion");
-                            console.log(this.globalservice.getCodigoPerfil());
-                            
+                            // console.log("autenticacion");
+                            // console.log(this.globalservice.getCodigoPerfil());
+
                             this.router.navigate(['/Home']);
                             if (this.recordarme) {
                                localStorage.setItem('rememberedUser', JSON.stringify({
@@ -101,7 +102,7 @@ export class LoginComponent implements OnInit {
     }
 
     loadEmpresa(){
-        const codigomodulo='01'
+        const codigomodulo = this.configService.getCodigoModulo()
         this.LoginServicio.getEmpresa(codigomodulo).subscribe(
             (data:EmpresasxModulo[])=>{
                 this.Empresa = data;
@@ -114,9 +115,13 @@ export class LoginComponent implements OnInit {
     }
 
     onEmpresaChallenge(event:any){
+        console.log("onEmpresaChallenge");
         this.credencialesFRM.patchValue({
             codigoempresa: event.value
+            
         });
+        
+        console.log(event.value);
     }
 
 }

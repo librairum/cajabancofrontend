@@ -17,72 +17,141 @@ import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
+import { PresupuestoService } from '../../service/presupuesto.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-consulta-doc-por-pago',
-  standalone: true,
-  templateUrl: './consulta-doc-por-pago.component.html',
-  styleUrl: './consulta-doc-por-pago.component.css',
-  imports: [
-    ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule,
-    InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule
-  ],
-  providers: [MessageService, ConfirmationService]
+    selector: 'app-consulta-doc-por-pago',
+    standalone: true,
+    templateUrl: './consulta-doc-por-pago.component.html',
+    styleUrl: './consulta-doc-por-pago.component.css',
+    imports: [
+        ToastModule,
+        TableModule,
+        ReactiveFormsModule,
+        CommonModule,
+        ButtonModule,
+        CardModule,
+        InputTextModule,
+        PanelModule,
+        BreadcrumbModule,
+        ConfirmDialogModule,
+        FormsModule,
+    ],
+    providers: [MessageService, ConfirmationService],
 })
-export class ConsultaDocPorPagoComponent implements OnInit{
-   consultaDocPorPagoForm: FormGroup;
-   consultaDocPorPagoList: ConsultaDocPorPago[] = [];
-   isEditing: boolean = false;
-   items: any[] = [];
-   isNew: boolean = false;
- 
-   constructor(
-     private ConsultaDocPorPagoService: ConsultaDocPorPagoService,
-     private fb: FormBuilder,
-     private breadcrumbService: BreadcrumbService,
-     private router: Router,
-     private globalService: GlobalService,
-     private messageService: MessageService,
+export class ConsultaDocPorPagoComponent implements OnInit {
+    consultaDocPorPagoForm: FormGroup;
+    consultaDocPorPagoList: ConsultaDocPorPago[] = [];
+    isEditing: boolean = false;
+    items: any[] = [];
+    isNew: boolean = false;
+    textoBuscar: string = '';
 
-   ) {}
- 
-   ngOnInit(): void {
-     this.breadcrumbService.setBreadcrumbs([
-       { icon: 'pi pi-home', routerLink: '/Home' },
-       { label: 'Consulta doc. por pago', routerLink: '/Home/ConsultaDocPorPago' }
-     ]);
-     this.breadcrumbService.currentBreadcrumbs$.subscribe(bc => {
-       this.items = bc;
-     });
-     this.initForm();
-     this.listarconsultadocporpago();
-   }
- 
-   initForm(): void {
-     this.consultaDocPorPagoForm = this.fb.group({
-         ban01Empresa: [
-             this.globalService.getCodigoEmpresa(),
-             Validators.required,
-         ],
-         ruc	: ['', Validators.required],
-         nombreEmpresa: ['', Validators.required],
-         tipoDocumento		: ['', Validators.required],
-         nroDoc	: ['', Validators.required],
-         fechaDocumento	: ['', Validators.required],
-         moneda	: ['', Validators.required],
-         importeDocumento	: ['', Validators.required],
-         importePago	: ['', Validators.required],
-         fechaPago: ['', Validators.required],
-     });
-   }
- 
-   listarconsultadocporpago(): void {
-     const codigoEmpresa:string=this.globalService.getCodigoEmpresa()
-     this.ConsultaDocPorPagoService.GetConsultaDocPorPago(codigoEmpresa).subscribe({
-       next: (data) => this.consultaDocPorPagoList = data,
-       error: () => {
-             verMensajeInformativo(this.messageService,'error', 'Error', 'Error al cargar medios de pago');
-       }
-     });
-   }
- }
+    constructor(
+        private consultaDocPorPagoService: ConsultaDocPorPagoService,
+        private fb: FormBuilder,
+        private breadcrumbService: BreadcrumbService,
+        private router: Router,
+        private globalService: GlobalService,
+        private messageService: MessageService,
+        private presupuestoService: PresupuestoService
+    ) {}
+
+    ngOnInit(): void {
+        this.breadcrumbService.setBreadcrumbs([
+            { icon: 'pi pi-home', routerLink: '/Home' },
+            {
+                label: 'Consulta doc. por pago',
+                routerLink: '/Home/ConsultaDocPorPago',
+            },
+        ]);
+        this.breadcrumbService.currentBreadcrumbs$.subscribe((bc) => {
+            this.items = bc;
+        });
+        this.initForm();
+        this.listarconsultadocporpago();
+    }
+
+    buscar(): void {
+        this.listarconsultadocporpago();
+    }
+
+    initForm(): void {
+        this.consultaDocPorPagoForm = this.fb.group({
+            ban01Empresa: [
+                this.globalService.getCodigoEmpresa(),
+                Validators.required,
+            ],
+            ruc: ['', Validators.required],
+            nombreEmpresa: ['', Validators.required],
+            tipoDocumento: ['', Validators.required],
+            nroDoc: ['', Validators.required],
+            fechaDocumento: ['', Validators.required],
+            moneda: ['', Validators.required],
+            importeDocumento: ['', Validators.required],
+            importePago: ['', Validators.required],
+            fechaPago: ['', Validators.required],
+        });
+    }
+
+    abrirdocumento(fechaPago: string, numeroPresupuesto: string): void {
+        const fecha = fechaPago.split('/');
+        const mesFecha = fecha[1];
+        const anioFecha = fecha[2];
+
+        this.presupuestoService
+            .obtenerArchivo(
+                this.globalService.getCodigoEmpresa(),
+                anioFecha,
+                mesFecha,
+                numeroPresupuesto
+            )
+            .subscribe({
+                next: (response: HttpResponse<Blob>) => {
+                    const blob = response.body;
+                    if (blob && blob.size > 0) {
+                        const url = window.URL.createObjectURL(blob);
+                        window.open(url, '_blank');
+                    } else {
+                        verMensajeInformativo(
+                            this.messageService,
+                            'error',
+                            'Error',
+                            'No se encontró el documento'
+                        );
+                    }
+                },
+                error: (err) => {
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        'Error al cargar el documento'
+                    );
+                },
+            });
+    }
+    listarconsultadocporpago(): void {
+        let filtro = this.textoBuscar.trim(); // aquí ya tienes el texto de búsqueda limpio
+
+        if(filtro === ''){
+            filtro = '1'
+        }
+        this.consultaDocPorPagoService
+            .GetConsultaDocPorPago(filtro) // <-- acá envías el texto al servicio
+            .subscribe({
+                next: (data) => {
+                    this.consultaDocPorPagoList = data;
+                },
+                error: () => {
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        'Error al cargar medios de pago'
+                    );
+                },
+            });
+    }
+}

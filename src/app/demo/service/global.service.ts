@@ -1,24 +1,29 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ConfigService } from './config.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class GlobalService {
-
-    private readonly Nombre_Usuario = 'nombreusuario'
-    private readonly Codigo_Empresa = 'codigoempresa'
-    private readonly urlAPIServidor = 'urlapiservidor'
+    private readonly Nombre_Usuario = 'nombreusuario';
+    private readonly Codigo_Empresa = 'codigoempresa';
+    private readonly urlAPIServidor = 'urlapiservidor';
     private readonly CODIGO_PERFIL_KEY = 'codigoperfil';
+    private readonly Codigo_Modulo = 'codigoModulo';
+    private readonly TipoAplicacion = 'tipoAplicacion';
+    private readonly Estado = 'estado';
     private _selectedDate = new BehaviorSubject<Date>(new Date());
     selectedDate$ = this._selectedDate.asObservable();
 
-    constructor() { }
+    constructor(private configService: ConfigService) {}
 
-    setCodigoPerfil(codigo: string) {                                   // nuevo
+    setCodigoPerfil(codigo: string) {
+        // nuevo
         sessionStorage.setItem(this.CODIGO_PERFIL_KEY, codigo);
     }
-    getCodigoPerfil(): string {                                         // nuevo            
+    getCodigoPerfil(): string {
+        // nuevo
         return sessionStorage.getItem(this.CODIGO_PERFIL_KEY) || '';
     }
     setNombreUsuario(nombre: string) {
@@ -31,6 +36,7 @@ export class GlobalService {
         sessionStorage.setItem(this.Codigo_Empresa, codigo);
     }
     getCodigoEmpresa(): string {
+        console.log(sessionStorage.getItem(this.Codigo_Empresa));
         return sessionStorage.getItem(this.Codigo_Empresa);
     }
     setUrlApi(urlApi: string) {
@@ -40,12 +46,13 @@ export class GlobalService {
     getUrlApi(): string {
         return sessionStorage.getItem(this.urlAPIServidor);
     }
+
     updateSelectedDate(date: Date) {
         this._selectedDate.next(date);
     }
 
     clearSession() {
-        sessionStorage.removeItem(this.CODIGO_PERFIL_KEY);      //nuevo
+        sessionStorage.removeItem(this.CODIGO_PERFIL_KEY); //nuevo
         sessionStorage.removeItem(this.Nombre_Usuario);
         sessionStorage.removeItem(this.Codigo_Empresa);
     }

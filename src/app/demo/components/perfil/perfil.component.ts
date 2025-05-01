@@ -107,7 +107,7 @@ export class PerfilComponent implements OnInit{
             }
         }
         this.link.navigate(['Home/asignarpermiso'],navigationExtras)
-        console.log(navigationExtras);
+        // console.log(navigationExtras);
     }
 
     onRowEditInit(perfil: any, index: number) {

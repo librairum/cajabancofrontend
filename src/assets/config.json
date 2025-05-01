@@ -3,7 +3,8 @@
     "theme": "dark",
     "appVersion": "2.0.0",
     "rutaDoc":"C:\\Users\\USER\\Desktop\\proyecto v2\\cajabancofrontend\\cajabancofrontend\\src\\assets\\documentos",
-    "codigoModulo":"01"
+    "codigoModulo":"07",
+    "codigoempresa": "01",
+    "tipoAplicacion": "01",
+    "estado": "01"
 }
-
-

@@ -75,7 +75,7 @@ export class DetallepresupuestoComponent implements OnInit {
         private ms: MessageService,
         private datePipe: DatePipe,
         private confirmationService: ConfirmationService,
-        private gS: GlobalService
+        private globalService: GlobalService
     ) {
         //variables de edición
 
@@ -117,19 +117,32 @@ export class DetallepresupuestoComponent implements OnInit {
         this.load = true;
 
         this.presupuestoservice
-            .obtenerDetallePresupuesto('01', this.navigationData.PagoNro)
+            .obtenerDetallePresupuesto(
+                this.globalService.getCodigoEmpresa(),
+                this.navigationData.PagoNro
+            )
             .subscribe({
                 next: (data) => {
                     this.DetallePago = data;
                     if (data.length === 0) {
-                        verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No se encontraron detalles del presupuesto');
+                        verMensajeInformativo(
+                            this.messageService,
+                            'warn',
+                            'Advertencia',
+                            'No se encontraron detalles del presupuesto'
+                        );
                         this.load = false;
                     } else {
                         this.load = false;
                     }
                 },
                 error: (error) => {
-                    verMensajeInformativo(this.messageService,'error', 'Error', `Error al cargar presupuesto: ${error.message}`);
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        `Error al cargar presupuesto: ${error.message}`
+                    );
                 },
             });
     }
@@ -273,10 +286,10 @@ export class DetallepresupuestoComponent implements OnInit {
 
     buildBackendPayload(detalle: Detallepresupuesto): any {
 
-        console.log("meto buildbackednpayload");
-        console.log(detalle);
+        // console.log("meto buildbackednpayload");
+        // console.log(detalle);
         return {
-            ban02Empresa: this.gS.getCodigoEmpresa(),
+            ban02Empresa: this.globalService.getCodigoEmpresa(),
             ban02Ruc: detalle.ban02Ruc,
             ban02Tipodoc: detalle.nombreTipoDocumento || '01',
             ban02NroDoc: detalle.ban02NroDoc,
@@ -297,7 +310,7 @@ export class DetallepresupuestoComponent implements OnInit {
             ban02GiroOrden: 'No se',
             ban02BcoLiquidacion: '00',
             ban02Redondeo: '0',
-            ban02Usuario: this.gS.getNombreUsuario(),
+            ban02Usuario: this.globalService.getNombreUsuario(),
             ban02Pc: 'PC001',
             ban02FechaRegistro: this.datePipe.transform(
                 new Date(),
@@ -311,7 +324,7 @@ export class DetallepresupuestoComponent implements OnInit {
             //importeDetraccion: detalle.importeDetraccion,
             ban02ImporteDetraccionSoles: detalle.ban02ImporteDetraccionSoles,
             // ban02ImporteDetraccionSoles:196,
-            ban02ImporteDetraccionDolares:detalle.ban02ImporteDetraccionDolares,                
+            ban02ImporteDetraccionDolares:detalle.ban02ImporteDetraccionDolares,
             ban02TasaRetencion: detalle.ban02TasaRetencion,
             ban02ImporteRetencionSoles: detalle.ban02ImporteRetencionSoles,
             ban02ImporteRetencionDolares: detalle.ban02ImporteRetencionDolares,
@@ -345,7 +358,7 @@ export class DetallepresupuestoComponent implements OnInit {
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button',
             accept: () => {
-                const empresa = this.gS.getCodigoEmpresa();
+                const empresa = this.globalService.getCodigoEmpresa();
                 //const numero = presupuesto.pagoNumero;
 
                 const numeroPresupuesto = this.navigationData.PagoNro;
@@ -464,30 +477,30 @@ export class DetallepresupuestoComponent implements OnInit {
         }else if(monedaEdicion == 'D'){
             detalle.importeDetraccion = importeDetraccionDolares;
         }
-        
-        
+
+
 
         this.editingRow.ban02PagoDolares = montoPagoDolares;
         this.editingRow.ban02PagoSoles = montoPagoSoles;
-        
+
         if(monedaEdicion == 'S'){
             this.editingRow.importeDetraccion = importeDetraccionSoles;
         }else if(monedaEdicion == 'D'){
             this.editingRow.importeDetraccion = importeDetraccionDolares;
         }
-        
+
         //this.editingRow.importeDetraccion = importeDetraccionSoles;
-        
-        console.log("lectura de detalle.ban02ImporteDetraccionSoles dese el evento calculaNetoPago");
+
+        // console.log("lectura de detalle.ban02ImporteDetraccionSoles dese el evento calculaNetoPago");
         detalle.ban02ImporteDetraccionSoles = importeDetraccionSoles;
-        console.log(detalle.ban02ImporteDetraccionSoles);
+        // console.log(detalle.ban02ImporteDetraccionSoles);
         detalle.ban02ImporteRetencionSoles = importeRetencionSoles;
         detalle.ban02ImportePercepcionSoles = importePercepcionSoles;
-        
+
         this.editingRow.ban02ImportePercepcionSoles = importePercepcionSoles;
         this.editingRow.ban02ImporteRetencionSoles = importeRetencionSoles;
         this.editingRow.ban02ImporteDetraccionSoles = importeDetraccionSoles;
-                        
+
         this.editingRow.ban02ImporteRetencionDolares = importeRetencionDolares;
         this.editingRow.ban02ImporteDetraccionDolares =
             importeDetraccionDolares;
@@ -888,7 +901,7 @@ export class DetallepresupuestoComponent implements OnInit {
             verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
             return;
         }
-        const codempresa = this.gS.getCodigoEmpresa();
+        const codempresa = this.globalService.getCodigoEmpresa();
         this.presupuestoservice.obtenerMedioPago(codempresa).subscribe(
             (mediosPago: mediopago_lista[]) => {
                 try {
