@@ -268,6 +268,7 @@ export class PermisosxperfilxtodoComponent implements OnInit {
         }
 
         const xmlPermisos = this.generatePermisosXML();
+        console.log(xmlPermisos);
 
         this.ptS.insertarPermisos('01', this.selectedperfil, xmlPermisos).subscribe({
             next: (response: ApiResponse<permisosxperfilxtodo>) => {
