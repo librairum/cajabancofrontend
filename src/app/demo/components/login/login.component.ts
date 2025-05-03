@@ -73,7 +73,8 @@ export class LoginComponent implements OnInit {
                             this.globalservice.setNombreUsuario(autenticacion.nombreusuario)
                             this.globalservice.setCodigoEmpresa(autenticacion.codigoempresa)
                             this.globalservice.setCodigoPerfil(response.data[0].codigoPerfil);
-                            // console.log("autenticacion");
+
+                             console.log("autenticacion exitosa");
                             // console.log(this.globalservice.getCodigoPerfil());
 
                             this.router.navigate(['/Home']);
@@ -87,6 +88,8 @@ export class LoginComponent implements OnInit {
                                localStorage.removeItem('rememberedUser');
                            }
                         } else{
+                            console.log("Error en autenticaion");
+                            console.log(response);
                             verMensajeInformativo(this.messageService,'error', 'Credenciales inválidas', 'Usuario y/o clave incorrecta');
 
                         }

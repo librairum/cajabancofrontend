@@ -158,7 +158,7 @@ export class PresupuestoService {
             )
             .pipe(map((response) => response.data));
     }
-    // subida de archivos
+    // subida de archivos , metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
     //metodo para subir al servidor
     public subirservidor(file: File): Observable<any> {
         const formData: FormData = new FormData();
@@ -171,6 +171,7 @@ export class PresupuestoService {
     }
 
     //metodo para guardar en la carpeta de assest, solo simulación porque esto no funcionaria sin servidor
+    // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
     simularSubidaArchivo(file: File): Observable<string> {
         // console.log(`Simulando guardado de archivo en: cajabancofrontend/src/assets/${file.name}`);
         const objectUrl = URL.createObjectURL(file);
@@ -179,6 +180,7 @@ export class PresupuestoService {
         );
     }
 
+    // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
     public actualizarComprobante(
         params: ComprobanteUpdateParams
     ): Observable<RespuestaAPIBase<any>> {
@@ -237,6 +239,7 @@ export class PresupuestoService {
         );
     }
 
+    // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
     public subirArchivo(file: File, destinationPath: string): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
@@ -248,6 +251,7 @@ export class PresupuestoService {
         });
     }
 
+    // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
     public EliminarArchivo(rutaArchivo: string): Observable<any> {
         const params = new HttpParams().set('rutaArchivo', rutaArchivo);
         return this.http.delete(`${this.urlApi}/EliminarArchivo`, {
@@ -290,6 +294,7 @@ export class PresupuestoService {
             .pipe(map((response) => response.data));
     }
 
+    // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
     public eliminarVoucherContableDetalle(
         empresa: string,
         orden: number
