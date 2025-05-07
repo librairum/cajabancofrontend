@@ -64,6 +64,7 @@ export class CabecerapresupuestoComponent implements OnInit {
     medioPagoLista: mediopago_lista[] = [];
     selectMedioPago: string | null = null;
     verConfirmarPago: boolean = false;
+    rowsPerPage: number = 10; // Numero de filas por página
     nuevoPresupuesto: insert_presupuesto = {
         ban01Empresa: '',
         ban01Numero: '',
@@ -115,14 +116,14 @@ export class CabecerapresupuestoComponent implements OnInit {
                 this.medioPagoLista = data;
                 // console.log(this.medioPagoLista);
                 this.loading = false;
-                if (data.length === 0) {
-                    verMensajeInformativo(
-                        this.messageService,
-                        'warn',
-                        'Advertencia',
-                        'No se encontraron registros de presupuesto'
-                    );
-                }
+                //if (data.length === 0) {
+                //    verMensajeInformativo(
+                //        this.messageService,
+                //        'warn',
+                //        'Advertencia',
+                //        'No se encontraron registros de presupuesto'
+                //    );
+                //}
             },
             error: (error) => {
                 this.loading = false;
@@ -172,14 +173,14 @@ export class CabecerapresupuestoComponent implements OnInit {
                 next: (data) => {
                     this.presupuesto = data;
                     this.loading = false;
-                    if (data.length === 0) {
-                        verMensajeInformativo(
-                            this.messageService,
-                            'warn',
-                            'Advertencia',
-                            'No se encontraron registros de presupuesto'
-                        );
-                    }
+                    //if (data.length === 0) {
+                    //    verMensajeInformativo(
+                    //        this.messageService,
+                    //        'warn',
+                    //        'Advertencia',
+                    //        'No se encontraron registros de presupuesto'
+                    //    );
+                    //}
                 },
                 error: (error) => {
                     this.loading = false;

@@ -16,6 +16,7 @@ import { MedioPago } from '../../model/mediopago';
 import { MediopagoService } from '../../service/mediopago.service';
 import { GlobalService } from '../../service/global.service';
 import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-mediopago',
@@ -24,7 +25,7 @@ import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
   styleUrl: './mediopago.component.css',
   imports: [
     ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule,
-    InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule
+    InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule, DropdownModule
   ],
   providers: [MessageService, ConfirmationService]
 })
@@ -36,6 +37,7 @@ export class MediopagoComponent implements OnInit {
   isEditingAnyRow: boolean = false;
   items: any[] = [];
   isNew: boolean = false;
+  rowsPerPage: number = 10; // Numero de filas por página
 
   constructor(
     private mediopagoService: MediopagoService,
@@ -123,21 +125,21 @@ export class MediopagoComponent implements OnInit {
 
   onSave() {
     if (this.mediopagoForm.valid) {
-
       const newMedioPago: MedioPago = this.mediopagoForm.value;
-    //  console.log('Datos enviados al backend:', newMedioPago)
       this.mediopagoService.CrearMedioPago(newMedioPago).subscribe({
-        next: () => {
-          this.isEditing = false;
-          this.isNew = false;
-          this.mediopagoForm.reset();
-          verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro guardado');
-          this.cargarMediosPago();
+        next: (response) => {
+          if (response.messageException) {
+            verMensajeInformativo(this.messageService, 'error', 'Error', 'Código existente, verifica las filas');
+          } else {
+            this.isEditing = false;
+            this.isNew = false;
+            this.mediopagoForm.reset();
+            verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro guardado');
+            this.cargarMediosPago();
+          }
         },
         error: () => {
-          //console.error(' Error en la petición DELETE:', error);
-          verMensajeInformativo(this.messageService,'error', 'Error', 'No se pudo guardar el registro');
-
+          verMensajeInformativo(this.messageService, 'error', 'Error', 'No se pudo guardar el registro');
         }
       });
     }

@@ -125,12 +125,12 @@ export class DetallepresupuestoComponent implements OnInit {
                 next: (data) => {
                     this.DetallePago = data;
                     if (data.length === 0) {
-                        verMensajeInformativo(
-                            this.messageService,
-                            'warn',
-                            'Advertencia',
-                            'No se encontraron detalles del presupuesto'
-                        );
+                        //verMensajeInformativo(
+                        //    this.messageService,
+                        //    'warn',
+                        //    'Advertencia',
+                        //    'No se encontraron detalles del presupuesto'
+                        //);
                         this.load = false;
                     } else {
                         this.load = false;
@@ -231,7 +231,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     startEditing(detalle: Detallepresupuesto, index: number) {
         if (this.isAnyRowEditing) {
-            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'Termina la edición actual antes de editar otra fila.');
+            //verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'Termina la edición actual antes de editar otra fila.');
             return;
         }
         //editar la columna  pago segun el tipo de moneda
@@ -519,7 +519,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     exportarPDF() {
         if (!this.DetallePago || this.DetallePago.length === 0) {
-            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
+            // verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
             return;
         }
         // Definimos las cabeceras
@@ -898,7 +898,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     generarTXT() {
         if (!this.DetallePago || this.DetallePago.length === 0) {
-            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
+            // verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
             return;
         }
         const codempresa = this.globalService.getCodigoEmpresa();

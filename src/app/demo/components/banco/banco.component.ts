@@ -16,11 +16,12 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { Router} from  '@angular/router';
 import { GlobalService } from '../../service/global.service';
 import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-banco',
   standalone: true,
-  imports: [ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule, InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule],
+  imports: [ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule, InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule, DropdownModule],
   templateUrl: './banco.component.html',
   styleUrl: './banco.component.css',
   providers:[MessageService,ConfirmationService]
@@ -38,6 +39,7 @@ export class BancoComponent implements OnInit {
     clonedBancos:{[s:string]:Banco}={}
     items:any[] = [];
     isEditingAnyRow: boolean = false;
+    rowsPerPage: number = 10; // Numero de filas por página
 
     constructor(private bancoService: BancoService, private fb:FormBuilder,
         private confirmationService:ConfirmationService,

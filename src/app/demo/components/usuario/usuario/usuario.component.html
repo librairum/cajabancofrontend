@@ -1,13 +1,10 @@
 <p-confirmDialog></p-confirmDialog>
-<div style="margin: 10px;">
+<div class="container">
     <p-panel header="Usuarios">
         <p-breadcrumb class="max-w-full" [model]="items"></p-breadcrumb>
     </p-panel>
-</div>
-
-<div style="margin: 10px;">
-    <p-toast></p-toast>
-    <p-card>
+    <br />
+    <div class="card">
         <div class="flex flex-column align-items-start mb-3">
             <div class="flex gap-2 mb-3">
                 <button type="button" pButton icon="pi pi-plus" label="Nuevo" (click)="showAddRow()" class="p-button-sm"
@@ -34,8 +31,8 @@
                         <p-cellEditor *ngIf="editingRowIndex === ri">
                             <ng-template pTemplate="input">
                                 <div class="p-inputgroup">
-                                    <input pInputText type="text" [(ngModel)]="rowData.codigo"
-                                        class="p-inputtext-sm" required>
+                                    <input pInputText type="text" [(ngModel)]="rowData.codigo" class="p-inputtext-sm"
+                                        required>
                                 </div>
                             </ng-template>
                             <ng-template pTemplate="output">
@@ -55,7 +52,8 @@
                         </div>
                         <div *ngIf="editing">
                             <input [type]="passwordVisible ? 'text' : 'password'" pInputText
-                                [(ngModel)]="rowData.claveUsuario" class="p-inputtext-sm" required #claveUsuario="ngModel">
+                                [(ngModel)]="rowData.claveUsuario" class="p-inputtext-sm" required
+                                #claveUsuario="ngModel">
                             <button type="button" class="p-button p-button-text"
                                 (click)="passwordVisible = !passwordVisible">
                                 <i class="pi" [class.pi-eye]="!passwordVisible"
@@ -93,7 +91,7 @@
                         <div *ngIf="editing">
                             <p-dropdown [options]="perfil" optionLabel="nombre" optionValue="codigo"
                                 [(ngModel)]="rowData.codigoperfil" (onchange)="onPerfilChange($event)" [filter]="true"
-                                filterBy="nombre" placeholder="Seleccionar Perfil"  appendTo="body">
+                                filterBy="nombre" placeholder="Seleccionar Perfil" appendTo="body">
                             </p-dropdown>
                         </div>
                         <div *ngIf="!editing">
@@ -108,13 +106,14 @@
                                 [disabled]="isNew || isEditingAnyRow" pTooltip="Editar Usuario"></button>
                             <button *ngIf="editing" pButton pSaveEditableRow (click)="onRowEditSave(rowData)"
                                 icon="pi pi-save" pTooltip="Guardar"
-                                class="p-button-rounded p-button-text p-button-sm p-button-success" [disabled]="!isPasswordValid(rowData)"></button>
+                                class="p-button-rounded p-button-text p-button-sm p-button-success"
+                                [disabled]="!isPasswordValid(rowData)"></button>
                             <button *ngIf="editing" pButton pCancelEditableRow (click)="onRowEditCancel(rowData, ri)"
                                 icon="pi pi-times" pTooltip="Cancelar"
                                 class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
                             <button *ngIf="!editing" pButton type="button" (click)="onDelete(rowData, ri)"
-                                icon="pi pi-trash" class="p-button-rounded p-button-text p-button-sm p-button-danger" pTooltip="Borrar Usuario"
-                                [disabled]="isNew || isEditingAnyRow"></button>
+                                icon="pi pi-trash" class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                                pTooltip="Borrar Usuario" [disabled]="isNew || isEditingAnyRow"></button>
                         </div>
                     </td>
                 </tr>
@@ -157,7 +156,7 @@
                             <div class="mb-3" style="flex: 1; margin-bottom: 15px;">
                                 <p-dropdown [options]="perfil" formControlName="codigoPerfil" optionLabel="nombre"
                                     optionValue="codigo" [(ngModel)]="selectPerfil" (onchange)="onPerfilChange($event)"
-                                    [filter]="true" filterBy="nombre" placeholder="Seleccionar Perfil"  appendTo="body">
+                                    [filter]="true" filterBy="nombre" placeholder="Seleccionar Perfil" appendTo="body">
                                 </p-dropdown>
                             </div>
 
@@ -175,5 +174,5 @@
             </ng-template>
 
         </p-table>
-    </p-card>
+    </div>
 </div>
