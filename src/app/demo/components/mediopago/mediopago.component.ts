@@ -72,6 +72,10 @@ export class MediopagoComponent implements OnInit {
         ban01AsiConPrefijo: ['', Validators.required],
         ban01AsiConCtaBanco: ['', Validators.required],
         ban01AsiConCtaITF: ['', Validators.required],
+        ban01AsiConDiario: ['', Validators.required],
+    ban01Moneda: ['', Validators.required],
+    ban01AsiConCtaComiOtrosBancos: ['', Validators.required],
+    ban01AsiConFlagITF: ['', Validators.required],
     });
   }
 
@@ -133,7 +137,9 @@ export class MediopagoComponent implements OnInit {
           } else {
             this.isEditing = false;
             this.isNew = false;
-            this.mediopagoForm.reset();
+            this.mediopagoForm.reset({
+                ban01Empresa: this.globalService.getCodigoEmpresa(),
+            });
             verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro guardado');
             this.cargarMediosPago();
           }
@@ -153,7 +159,8 @@ export class MediopagoComponent implements OnInit {
     });
   }
 
-  onDelete(mediopago: MedioPago, index: number): void {
+
+onDelete(mediopago: MedioPago, index: number): void {
     this.confirmationService.confirm({
       message: `¿Está seguro que desea eliminar el medio de pago <b>${mediopago.ban01Descripcion}</b>?`,
       header: 'Confirmar Eliminación',
@@ -163,14 +170,39 @@ export class MediopagoComponent implements OnInit {
       acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button',
       accept: () => {
+        // Verificamos que tengamos todos los datos necesarios para la eliminación
+        if (!mediopago.ban01Empresa || !mediopago.ban01IdTipoPago) {
+          console.error('Error: Datos incompletos para eliminar', mediopago);
+          verMensajeInformativo(this.messageService, 'error', 'Error',
+            'No se puede eliminar: datos incompletos del registro');
+          return;
+        }
+
         this.mediopagoService.EliminarMedioPago(mediopago.ban01Empresa, mediopago.ban01IdTipoPago).subscribe({
-          next: () => {
-            this.mediopagoList.splice(index, 1);
-            verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro eliminado');
+          next: (response) => {
+            // Encontrar el índice exacto en el array por ID para asegurar que eliminamos el correcto
+            const indexToRemove = this.mediopagoList.findIndex(item =>
+              item.ban01IdTipoPago === mediopago.ban01IdTipoPago &&
+              item.ban01Empresa === mediopago.ban01Empresa
+            );
+
+            if (indexToRemove !== -1) {
+              this.mediopagoList.splice(indexToRemove, 1);
+            }
+
+            verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro eliminado');
+
+            // Recargar la lista completa para asegurar sincronización con el servidor
             this.cargarMediosPago();
+          },
+          error: (err) => {
+            console.error('Error al eliminar:', err);
+            verMensajeInformativo(this.messageService, 'error', 'Error',
+              'No se pudo eliminar el registro. Por favor, intente nuevamente.');
           }
         });
       }
     });
   }
+
 }

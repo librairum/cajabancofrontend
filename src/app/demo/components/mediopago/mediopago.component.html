@@ -31,11 +31,16 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th style="width: 10%">Código</th>
-                    <th style="width: 25%">Descripción</th>
-                    <th style="width: 15%">Prefijo</th>
-                    <th style="width: 15%">CtaBanco</th>
-                    <th style="width: 15%">CtaITF</th>
-                    <th style="width: 20%">Acciones</th>
+                    <th style="width: 10%">Descripción</th>
+                    <th style="width: 10%">Prefijo</th>
+                    <th style="width: 10%">CtaBanco</th>
+                    <th style="width: 10%">CtaITF</th>
+                    <th style="width: 10%">Diario</th>
+                    <th style="width: 10%">Moneda</th>
+                    <th style="width: 10%">Otros Bancos </th>
+                    <th style="width: 10%">FlagITF</th>
+                    <th style="width: 10%">Acciones</th>
+                    <
                 </tr>
             </ng-template>
 
@@ -106,6 +111,57 @@
                             </ng-template>
                         </p-cellEditor>
                     </td>
+<!-- Diario -->
+<td style="text-align: left;">
+    <p-cellEditor>
+        <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConDiario"
+                   class="p-inputtext-sm w-full" required>
+        </ng-template>
+        <ng-template pTemplate="output">
+            {{ mediopago.ban01AsiConDiario }}
+        </ng-template>
+    </p-cellEditor>
+</td>
+
+<!-- Moneda -->
+<td style="text-align: left;">
+    <p-cellEditor>
+        <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="mediopago.ban01Moneda"
+                   class="p-inputtext-sm w-full" required>
+        </ng-template>
+        <ng-template pTemplate="output">
+            {{ mediopago.ban01Moneda }}
+        </ng-template>
+    </p-cellEditor>
+</td>
+
+<!-- Otros Bancos -->
+<td style="text-align: left;">
+    <p-cellEditor>
+        <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaComiOtrosBancos"
+                   class="p-inputtext-sm w-full" required>
+        </ng-template>
+        <ng-template pTemplate="output">
+            {{ mediopago.ban01AsiConCtaComiOtrosBancos }}
+        </ng-template>
+    </p-cellEditor>
+</td>
+
+<!-- FlagITF -->
+<td style="text-align: left;">
+    <p-cellEditor>
+        <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConFlagITF"
+                   class="p-inputtext-sm w-full" required>
+        </ng-template>
+        <ng-template pTemplate="output">
+            {{ mediopago.ban01AsiConFlagITF }}
+        </ng-template>
+    </p-cellEditor>
+</td>
 
                     <!-- Acciones -->
                     <td>
@@ -137,29 +193,45 @@
             <!-- Footer para Nuevo Registro -->
             <ng-template pTemplate="footer">
                 <tr *ngIf="isEditing">
-                    <td colspan="6">
+                    <td colspan="10">
                         <form [formGroup]="mediopagoForm" class="grid p-fluid">
                             <div class="col-2" style="width: 10%">
                                 <input pInputText formControlName="ban01IdTipoPago"
                                        placeholder="Código" class="p-inputtext-sm w-full"/>
                             </div>
-                            <div class="col-4" style="width: 25%">
+                            <div class="col-4" style="width: 10%">
                                 <input pInputText formControlName="ban01Descripcion"
                                        placeholder="Descripción" class="p-inputtext-sm w-full"/>
                             </div>
-                            <div class="col-2" style="width: 15%">
+                            <div class="col-2" style="width: 10%">
                                 <input pInputText formControlName="ban01AsiConPrefijo"
                                        placeholder="Prefijo" class="p-inputtext-sm w-full"/>
                             </div>
-                            <div class="col-2" style="width: 15%">
+                            <div class="col-2" style="width: 10%">
                                 <input pInputText formControlName="ban01AsiConCtaBanco"
                                        placeholder="CtaBanco" class="p-inputtext-sm w-full"/>
                             </div>
-                            <div class="col-2" style="width: 15%">
+                            <div class="col-2" style="width: 10%">
                                 <input pInputText formControlName="ban01AsiConCtaITF"
                                        placeholder="CtaITF" class="p-inputtext-sm w-full"/>
                             </div>
-                            <div class="col-2" style="width: 20%">
+                            <div class="col-1" style="width: 10%">
+                                <input pInputText formControlName="ban01AsiConDiario"
+                                       placeholder="Diario" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-1" style="width: 10%">
+                                <input pInputText formControlName="ban01Moneda"
+                                       placeholder="Moneda" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-1" style="width: 10%">
+                                <input pInputText formControlName="ban01AsiConCtaComiOtrosBancos"
+                                       placeholder="Otros Bancos" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-1" style="width: 10%">
+                                <input pInputText formControlName="ban01AsiConFlagITF"
+                                       placeholder="FlagITF" class="p-inputtext-sm w-full"/>
+                            </div>
+                            <div class="col-2" style="width: 10%">
                                 <div class="flex gap-2 justify-content-center">
 
                                     <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
