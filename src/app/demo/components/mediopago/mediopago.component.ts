@@ -39,6 +39,16 @@ export class MediopagoComponent implements OnInit {
   isNew: boolean = false;
   rowsPerPage: number = 10; // Numero de filas por página
 
+monedasOptions: any[] = [
+    { label: 'Soles', value: 'S' },
+    { label: 'Dólares', value: 'D' }
+  ];
+
+  flagITFOptions: any[] = [
+    { label: 'Si', value: 'S' },
+    { label: 'No', value: 'N' }
+  ];
+
   constructor(
     private mediopagoService: MediopagoService,
     private fb: FormBuilder,
@@ -68,14 +78,14 @@ export class MediopagoComponent implements OnInit {
             Validators.required,
         ],
         ban01IdTipoPago: ['', Validators.required],
-        ban01Descripcion: ['', Validators.required],
-        ban01AsiConPrefijo: ['', Validators.required],
-        ban01AsiConCtaBanco: ['', Validators.required],
-        ban01AsiConCtaITF: ['', Validators.required],
-        ban01AsiConDiario: ['', Validators.required],
-    ban01Moneda: ['', Validators.required],
-    ban01AsiConCtaComiOtrosBancos: ['', Validators.required],
-    ban01AsiConFlagITF: ['', Validators.required],
+        ban01Descripcion: ['', ],
+         ban01AsiConPrefijo: [''], // Elimina el validador required
+      ban01AsiConCtaBanco: [''], // Elimina el validador required
+      ban01AsiConCtaITF: [''], // Elimina el validador required
+      ban01AsiConDiario: [''], // Elimina el validador required
+      ban01Moneda: [''], // Valor por defecto sin validador required
+      ban01AsiConCtaComiOtrosBancos: [''], // Elimina el validador required
+      ban01AsiConFlagITF: [''], // Valor por defecto sin validador required
     });
   }
 
@@ -127,29 +137,49 @@ export class MediopagoComponent implements OnInit {
     });
   }
 
-  onSave() {
-    if (this.mediopagoForm.valid) {
-      const newMedioPago: MedioPago = this.mediopagoForm.value;
-      this.mediopagoService.CrearMedioPago(newMedioPago).subscribe({
-        next: (response) => {
-          if (response.messageException) {
-            verMensajeInformativo(this.messageService, 'error', 'Error', 'Código existente, verifica las filas');
-          } else {
-            this.isEditing = false;
-            this.isNew = false;
-            this.mediopagoForm.reset({
-                ban01Empresa: this.globalService.getCodigoEmpresa(),
-            });
-            verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro guardado');
-            this.cargarMediosPago();
-          }
-        },
-        error: () => {
-          verMensajeInformativo(this.messageService, 'error', 'Error', 'No se pudo guardar el registro');
-        }
-      });
-    }
+onSave() {
+  // Verificamos que solo el campo de código esté completo
+  const idTipoPago = this.mediopagoForm.get('ban01IdTipoPago')?.value;
+
+  if (!idTipoPago) {
+    verMensajeInformativo(this.messageService, 'error', 'Error', 'El Código es un campo obligatorio');
+    return;
   }
+
+  // Si el campo obligatorio está completo, procedemos a guardar
+  const newMedioPago: MedioPago = this.mediopagoForm.value;
+
+  // Aseguramos que los campos opcionales vacíos se envíen como cadenas vacías
+  newMedioPago.ban01Descripcion = newMedioPago.ban01Descripcion || ''; // Ahora descripción es opcional
+  newMedioPago.ban01AsiConPrefijo = newMedioPago.ban01AsiConPrefijo || '';
+  newMedioPago.ban01AsiConCtaBanco = newMedioPago.ban01AsiConCtaBanco || '';
+  newMedioPago.ban01AsiConCtaITF = newMedioPago.ban01AsiConCtaITF || '';
+  newMedioPago.ban01AsiConDiario = newMedioPago.ban01AsiConDiario || '';
+  newMedioPago.ban01AsiConCtaComiOtrosBancos = newMedioPago.ban01AsiConCtaComiOtrosBancos || '';
+
+  // Para los dropdowns aseguramos valores por defecto si están vacíos
+  newMedioPago.ban01Moneda = newMedioPago.ban01Moneda || 'S';
+  newMedioPago.ban01AsiConFlagITF = newMedioPago.ban01AsiConFlagITF || 'N';
+
+  this.mediopagoService.CrearMedioPago(newMedioPago).subscribe({
+    next: (response) => {
+      if (response.messageException) {
+        verMensajeInformativo(this.messageService, 'error', 'Error', 'Código existente, verifica las filas');
+      } else {
+        this.isEditing = false;
+        this.isNew = false;
+        this.mediopagoForm.reset({
+            ban01Empresa: this.globalService.getCodigoEmpresa(),
+        });
+        verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro guardado');
+        this.cargarMediosPago();
+      }
+    },
+    error: () => {
+      verMensajeInformativo(this.messageService, 'error', 'Error', 'No se pudo guardar el registro');
+    }
+  });
+}
 
   onCancel() {
     this.isEditing = false;

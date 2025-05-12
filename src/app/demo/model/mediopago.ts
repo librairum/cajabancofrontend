@@ -5,5 +5,8 @@ export interface MedioPago {
    ban01AsiConPrefijo:string;
    ban01AsiConCtaBanco:string;	
    ban01AsiConCtaITF:string;
-
+   ban01AsiConDiario:string;
+   ban01Moneda:string;
+   ban01AsiConCtaComiOtrosBancos:string;
+   ban01AsiConFlagITF:string;
    }

@@ -124,19 +124,18 @@
     </p-cellEditor>
 </td>
 
-<!-- Moneda -->
 <td style="text-align: left;">
     <p-cellEditor>
         <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="mediopago.ban01Moneda"
-                   class="p-inputtext-sm w-full" required>
+            <p-dropdown [options]="monedasOptions" [(ngModel)]="mediopago.ban01Moneda"
+                     appendTo="body" [style]="{'width':'100%'}"
+                     placeholder="Seleccionar" class="p-inputtext-sm"></p-dropdown>
         </ng-template>
         <ng-template pTemplate="output">
-            {{ mediopago.ban01Moneda }}
+            {{ mediopago.ban01Moneda === 'S' ? 'Soles' : mediopago.ban01Moneda === 'D' ? 'Dólares' : mediopago.ban01Moneda }}
         </ng-template>
     </p-cellEditor>
 </td>
-
 <!-- Otros Bancos -->
 <td style="text-align: left;">
     <p-cellEditor>
@@ -154,11 +153,12 @@
 <td style="text-align: left;">
     <p-cellEditor>
         <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConFlagITF"
-                   class="p-inputtext-sm w-full" required>
+            <p-dropdown [options]="flagITFOptions" [(ngModel)]="mediopago.ban01AsiConFlagITF"
+                     appendTo="body" [style]="{'width':'100%'}"
+                     placeholder="Seleccionar" class="p-inputtext-sm"></p-dropdown>
         </ng-template>
         <ng-template pTemplate="output">
-            {{ mediopago.ban01AsiConFlagITF }}
+            {{ mediopago.ban01AsiConFlagITF === 'S' ? 'Si' : mediopago.ban01AsiConFlagITF === 'N' ? 'No' : mediopago.ban01AsiConFlagITF }}
         </ng-template>
     </p-cellEditor>
 </td>
@@ -191,59 +191,65 @@
             </ng-template>
 
             <!-- Footer para Nuevo Registro -->
-            <ng-template pTemplate="footer">
-                <tr *ngIf="isEditing">
-                    <td colspan="10">
-                        <form [formGroup]="mediopagoForm" class="grid p-fluid">
-                            <div class="col-2" style="width: 10%">
-                                <input pInputText formControlName="ban01IdTipoPago"
-                                       placeholder="Código" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-4" style="width: 10%">
-                                <input pInputText formControlName="ban01Descripcion"
-                                       placeholder="Descripción" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-2" style="width: 10%">
-                                <input pInputText formControlName="ban01AsiConPrefijo"
-                                       placeholder="Prefijo" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-2" style="width: 10%">
-                                <input pInputText formControlName="ban01AsiConCtaBanco"
-                                       placeholder="CtaBanco" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-2" style="width: 10%">
-                                <input pInputText formControlName="ban01AsiConCtaITF"
-                                       placeholder="CtaITF" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-1" style="width: 10%">
-                                <input pInputText formControlName="ban01AsiConDiario"
-                                       placeholder="Diario" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-1" style="width: 10%">
-                                <input pInputText formControlName="ban01Moneda"
-                                       placeholder="Moneda" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-1" style="width: 10%">
-                                <input pInputText formControlName="ban01AsiConCtaComiOtrosBancos"
-                                       placeholder="Otros Bancos" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-1" style="width: 10%">
-                                <input pInputText formControlName="ban01AsiConFlagITF"
-                                       placeholder="FlagITF" class="p-inputtext-sm w-full"/>
-                            </div>
-                            <div class="col-2" style="width: 10%">
-                                <div class="flex gap-2 justify-content-center">
+            <!-- Modificar los campos en el formulario para eliminar el atributo "required" de los campos que no son obligatorios -->
 
-                                    <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
-                                            (onClick)="onSave()" pTooltip="Guardar"></p-button>
-                                    <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
-                                            (onClick)="onCancel()" pTooltip="Cancelar"></p-button>
-                                </div>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
-            </ng-template>
+<!-- Ejemplo de cómo quedaría para el footer del formulario de nuevo registro -->
+<ng-template pTemplate="footer">
+    <tr *ngIf="isEditing">
+        <td colspan="10">
+            <form [formGroup]="mediopagoForm" class="grid p-fluid">
+                <div class="col-2" style="width: 10%">
+                    <input pInputText formControlName="ban01IdTipoPago"
+                           placeholder="Código *" class="p-inputtext-sm w-full"/>
+                </div>
+                <div class="col-4" style="width: 10%">
+                    <input pInputText formControlName="ban01Descripcion"
+                           placeholder="Descripción *" class="p-inputtext-sm w-full"/>
+                </div>
+                <div class="col-2" style="width: 10%">
+                    <input pInputText formControlName="ban01AsiConPrefijo"
+                           placeholder="Prefijo" class="p-inputtext-sm w-full"/>
+                </div>
+                <div class="col-2" style="width: 10%">
+                    <input pInputText formControlName="ban01AsiConCtaBanco"
+                           placeholder="CtaBanco" class="p-inputtext-sm w-full"/>
+                </div>
+                <div class="col-2" style="width: 10%">
+                    <input pInputText formControlName="ban01AsiConCtaITF"
+                           placeholder="CtaITF" class="p-inputtext-sm w-full"/>
+                </div>
+                <div class="col-1" style="width: 10%">
+                    <input pInputText formControlName="ban01AsiConDiario"
+                           placeholder="Diario" class="p-inputtext-sm w-full"/>
+                </div>
+                <div class="col-1" style="width: 10%">
+                    <p-dropdown formControlName="ban01Moneda"
+                               [options]="monedasOptions"
+                               placeholder="Moneda" [style]="{'width':'100%'}"
+                               appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                </div>
+                <div class="col-1" style="width: 10%">
+                    <input pInputText formControlName="ban01AsiConCtaComiOtrosBancos"
+                           placeholder="Otros Bancos" class="p-inputtext-sm w-full"/>
+                </div>
+                <div class="col-1" style="width: 10%">
+                    <p-dropdown formControlName="ban01AsiConFlagITF"
+                               [options]="flagITFOptions"
+                               placeholder="FlagITF" [style]="{'width':'100%'}"
+                               appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                </div>
+                <div class="col-2" style="width: 10%">
+                    <div class="flex gap-2 justify-content-center">
+                        <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
+                                (onClick)="onSave()" pTooltip="Guardar"></p-button>
+                        <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
+                                (onClick)="onCancel()" pTooltip="Cancelar"></p-button>
+                    </div>
+                </div>
+            </form>
+        </td>
+    </tr>
+</ng-template>
         </p-table>
     </div>
 </div>
