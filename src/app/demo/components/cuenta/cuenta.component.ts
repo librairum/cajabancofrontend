@@ -189,10 +189,10 @@ export class CuentaComponent {
                   rowData.nombreBanco +
                   ' ' +
                   rowData.idCuenta,
-              ban01CuentaContable: rowData.ctaContable,
-              ban01Itf: rowData.ctaITF,
-              ban01Prefijo: rowData.pref,
-              ban01CtaDet: rowData.ctaGastos,
+            //   ban01CuentaContable: rowData.ctaContable,
+            //   ban01Itf: rowData.ctaITF,
+            //   ban01Prefijo: rowData.pref,
+            //   ban01CtaDet: rowData.ctaGastos,
           };
 
           this.cbS.UpdateCuentaBancaria(updCuentaBancaria).subscribe({
