@@ -20,6 +20,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { BancoService } from '../../service/banco.service';
 import { Banco } from '../../model/Banco';
 import { CuentaBancariaService } from '../../service/cuenta-bancaria.service';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-mediopago',
@@ -28,7 +29,7 @@ import { CuentaBancariaService } from '../../service/cuenta-bancaria.service';
   styleUrl: './mediopago.component.css',
   imports: [
     ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule,
-    InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule, DropdownModule
+    InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule, DropdownModule, CheckboxModule
   ],
   providers: [MessageService, ConfirmationService]
 })
@@ -45,7 +46,6 @@ export class MediopagoComponent implements OnInit {
   cuentasOptions: any[] = [];
   cuentasOptionsRow: { [key: string]: any[] } = {}; // Initialize as an empty object
   monedaOptions: any[] = []; // Opciones para el dropdown de moneda
-  flagITFOptions: any[] = []; // Opciones para el dropdown de FlagITF
 
   constructor(
     private mediopagoService: MediopagoService,
@@ -87,18 +87,23 @@ export class MediopagoComponent implements OnInit {
         ban01Moneda: ['', Validators.required],
         ban01AsiConCtaComiOtrosBancos: ['', Validators.required],
         ban01AsiConFlagITF: ['', Validators.required],
-        ban01CtaBanBancoCod: ['', Validators.required], // nombre correcto
-        ban01CtaBanCod: ['', Validators.required],      // nombre correcto
+        ban01CtaBanBancoCod: ['', Validators.required], 
+        ban01CtaBanCod: ['', Validators.required],      
     });
   }
 
   cargarMediosPago(): void {
-    const codigoEmpresa:string=this.globalService.getCodigoEmpresa()
+    const codigoEmpresa: string = this.globalService.getCodigoEmpresa();
     this.mediopagoService.GetMediosPago(codigoEmpresa).subscribe({
-      next: (data) => this.mediopagoList = data,
-      error: () => {
-            verMensajeInformativo(this.messageService,'error', 'Error', 'Error al cargar medios de pago');
-      }
+        next: (data) => {
+            this.mediopagoList = data.map(item => ({
+                ...item,
+                ban01AsiConFlagITF: item.ban01AsiConFlagITF || null // Handle null values
+            }));
+        },
+        error: () => {
+            verMensajeInformativo(this.messageService, 'error', 'Error', 'Error al cargar medios de pago');
+        }
     });
   }
 
@@ -125,7 +130,7 @@ export class MediopagoComponent implements OnInit {
                     label: cuenta.idCuenta,
                     value: cuenta.idCuenta
                 }));
-                // Reset ban01CtaBanCod if the current value is not in the updated options
+
                 if (!this.cuentasOptions.some(opt => opt.value === this.mediopagoForm.get('ban01CtaBanCod')?.value)) {
                     this.mediopagoForm.patchValue({ ban01CtaBanCod: '' });
                 }
@@ -150,7 +155,7 @@ export class MediopagoComponent implements OnInit {
                     label: cuenta.idCuenta,
                     value: cuenta.idCuenta
                 }));
-                // Reset ban01CtaBanCod if the current value is not in the updated options
+
                 if (!this.cuentasOptionsRow[mediopago.ban01IdTipoPago].some(opt => opt.value === mediopago.ban01CtaBanCod)) {
                     mediopago.ban01CtaBanCod = null;
                 }
@@ -165,13 +170,15 @@ export class MediopagoComponent implements OnInit {
         mediopago.ban01CtaBanCod = null;
     }
   }
-  //
-  
+    
   onRowEditInit(mediopago: MedioPago): void {
     this.editingMedioPago = { ...mediopago };
     this.isEditingAnyRow = true;
 
-    // Populate bancosOptions for CtaBan dropdown
+    if (!mediopago.ban01AsiConFlagITF) {
+        mediopago.ban01AsiConFlagITF = null;
+    }
+
     this.bancoService.GetBancos().subscribe({
         next: (data) => {
             this.bancosOptions = data.map(banco => ({
@@ -200,11 +207,6 @@ export class MediopagoComponent implements OnInit {
     this.monedaOptions = [
         { label: 'Soles', value: 'S' },
         { label: 'Dólares', value: 'D' }
-    ];
-
-    this.flagITFOptions = [
-        { label: 'SI', value: 'S' },
-        { label: 'NO', value: 'N' }
     ];
   }
 

@@ -19,7 +19,6 @@
         </div>
 
         <!-- Tabla Principal -->
-        <!---->
         <p-table [value]="mediopagoList" dataKey="ban01IdTipoPago" editMode="row" [paginator]="true"
             [rows]="rowsPerPage" responsiveLayout="scroll" styleClass="p-datatable-sm"
             style="table-layout: fixed; width: 100%;">
@@ -153,16 +152,20 @@
                     </td>
 
                     <!-- FlagITF -->
-                    <td style="text-align: left;">
+                    <td style="text-align: center;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
-                                <p-dropdown [options]="flagITFOptions" [(ngModel)]="mediopago.ban01AsiConFlagITF"
-                                    placeholder="Seleccionar FlagITF" optionLabel="label" optionValue="value"
-                                    appendTo="body" class="p-inputtext-sm w-full">
-                                </p-dropdown>
+                                <div class="flex justify-content-center">
+                                    <p-checkbox [(ngModel)]="mediopago.ban01AsiConFlagITF" binary="true"
+                                        class="p-inputtext-sm" [trueValue]="'S'" [falseValue]="'N'"
+                                        [ngModelOptions]="{standalone: true}"></p-checkbox>
+                                </div>
                             </ng-template>
                             <ng-template pTemplate="output">
-                                {{ mediopago.ban01AsiConFlagITF === 'S' ? 'SI' : (mediopago.ban01AsiConFlagITF === 'N' ? 'NO' : '') }}
+                                <div class="flex justify-content-center">
+                                    <p-checkbox [binary]="true" [ngModel]="mediopago.ban01AsiConFlagITF === 'S'"
+                                        disabled></p-checkbox>
+                                </div>
                             </ng-template>
                         </p-cellEditor>
                     </td>
@@ -173,7 +176,8 @@
                             <ng-template pTemplate="input">
                                 <p-dropdown [options]="bancosOptions" [(ngModel)]="mediopago.ban01CtaBanBancoCod"
                                     placeholder="Seleccionar banco" optionLabel="label" optionValue="value"
-                                    appendTo="body" class="p-inputtext-sm w-full" (onChange)="onBancoChangeRow($event, mediopago)">
+                                    appendTo="body" class="p-inputtext-sm w-full"
+                                    (onChange)="onBancoChangeRow($event, mediopago)">
                                 </p-dropdown>
                             </ng-template>
                             <ng-template pTemplate="output">
@@ -186,9 +190,10 @@
                     <td style="text-align: left;">
                         <p-cellEditor>
                             <ng-template pTemplate="input">
-                                <p-dropdown [options]="cuentasOptionsRow[mediopago.ban01IdTipoPago]" [(ngModel)]="mediopago.ban01CtaBanCod"
-                                    placeholder="Seleccionar cuenta bancaria" optionLabel="label" optionValue="value"
-                                    appendTo="body" class="p-inputtext-sm w-full">
+                                <p-dropdown [options]="cuentasOptionsRow[mediopago.ban01IdTipoPago]"
+                                    [(ngModel)]="mediopago.ban01CtaBanCod" placeholder="Seleccionar cuenta bancaria"
+                                    optionLabel="label" optionValue="value" appendTo="body"
+                                    class="p-inputtext-sm w-full">
                                 </p-dropdown>
                             </ng-template>
                             <ng-template pTemplate="output">
@@ -257,10 +262,8 @@
                             class="p-inputtext-sm w-full" />
                     </td>
                     <td style="width: 8%">
-                        <p-dropdown formControlName="ban01AsiConFlagITF"
-                            [options]="[{label: 'SI', value: 'S'}, {label: 'NO', value: 'N'}]"
-                            placeholder="Seleccionar FlagITF" class="p-inputtext-sm w-full" appendTo="body">
-                        </p-dropdown>
+                        <p-checkbox formControlName="ban01AsiConFlagITF" binary="true" class="p-inputtext-sm w-full"
+                            [trueValue]="'S'" [falseValue]="'N'" [ngModelOptions]="{standalone: true}"></p-checkbox>
                     </td>
                     <td style="width: 8%">
                         <p-dropdown [options]="bancosOptions" formControlName="ban01CtaBanBancoCod" optionLabel="label"

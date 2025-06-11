@@ -143,17 +143,17 @@
                 <tr *ngIf="isEditing">
                     <td colspan="9" class="p-0">
                         <form [formGroup]="CuentaBancariaForm" style="padding-bottom: 10px;">
-                            <td style="width: 184px;">
+                            <td style="width: 150px;">
                                 <div><input id="nombreBanco" pInputText class="p-inputtext-sm w-full" [value]="descripcion" readonly/></div>
                             </td>
 
-                            <td style="width: 185px; padding-left: 10px;">
+                            <td style="width: 150px; padding-left: 10px;">
                                 <div>
                                     <input id="idCuenta" pInputText formControlName="idCuenta" class="p-inputtext-sm w-full"
                                         placeholder="ID Cuenta" />
                                 </div>
                             </td>
-                            <td style="width: 148px;padding-left: 10px;">
+                            <td style="width: 120px;padding-left: 10px;">
                                 <div>
                                     <p-dropdown [options]="moneda"
                                     formControlName="moneda"
@@ -165,7 +165,7 @@
                                         appendTo="body"></p-dropdown>
                                 </div>
                             </td>
-                            <td style="width: 222px; padding-left: 10px;">
+                            <td style="width: 180px; padding-left: 10px;">
                                 <div>
                                     <input id="nombreCuentaBancaria" pInputText formControlName="nombreCuentaBancaria"
                                     class="p-inputtext-sm w-full" placeholder="Descripción cuenta bancaria" />
