@@ -104,7 +104,7 @@ export class CuentaComponent {
           this.loadMonedas();
           this.bSc.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/' },
-            { label: 'Banco', routerLink: '/Home/banco' },
+            { label: 'Cuenta Bancaria', routerLink: '/Home/cuentas_bancarias' },
             { label: 'Ver Cuentas' }
           ]);
           this.bSc.currentBreadcrumbs$.subscribe(bc => {
@@ -123,6 +123,7 @@ export class CuentaComponent {
           ctaITF: [''],
           pref: [''],
           ctaGastos: [''],
+          nombreCuentaBancaria: ['', Validators.required], // Nuevo campo editable
       });
 
   }
@@ -183,12 +184,7 @@ export class CuentaComponent {
               ban01IdCuenta: rowData.idCuenta,
               ban01IdNro: rowData.id,
               ban01Moneda: rowData.moneda,
-              ban01Descripcion:
-                  rowData.idBanco +
-                  ' ' +
-                  rowData.nombreBanco +
-                  ' ' +
-                  rowData.idCuenta,
+              ban01Descripcion: rowData.nombreCuentaBancaria, // Usar el campo editable
             //   ban01CuentaContable: rowData.ctaContable,
             //   ban01Itf: rowData.ctaITF,
             //   ban01Prefijo: rowData.pref,
@@ -250,12 +246,7 @@ export class CuentaComponent {
               ban01IdCuenta: formData.idCuenta,
               ban01IdNro: this.descripcion,
               ban01Moneda: formData.moneda,
-              ban01Descripcion:
-                  this.idBanco +
-                  ' ' +
-                  this.descripcion +
-                  ' ' +
-                  formData.idCuenta,
+              ban01Descripcion: formData.nombreCuentaBancaria,
               ban01CuentaContable: formData.ctaContable || '',
               ban01Itf: formData.ctaITF || '',
               ban01Prefijo: formData.pref || '',

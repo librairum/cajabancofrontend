@@ -12,7 +12,7 @@
         </div>
         <!-- Botón para agregar nueva rowData bancaria -->
         <div class="flex align-items-center mb-3">
-            <p-button (click)="showAddRow()" icon="pi pi-plus" label="Nueva" class="mr-3"
+            <p-button (click)="showAddRow()" icon="pi pi-plus" label="Nuevo" class="mr-3"
                 [disabled]="isEditingAnyRow"></p-button>
         </div>
 
@@ -138,6 +138,7 @@
             </ng-template>
 
             <!-- Footer para insertar un nuevo dato -->
+            <!---->
             <ng-template pTemplate="footer">
                 <tr *ngIf="isEditing">
                     <td colspan="9" class="p-0">
@@ -166,8 +167,8 @@
                             </td>
                             <td style="width: 222px; padding-left: 10px;">
                                 <div>
-                                    <input id="descripcionCtaBco" pInputText formControlName="descripcionCtaBco"
-                                    class="p-inputtext-sm w-full" placeholder="descripcion" />
+                                    <input id="nombreCuentaBancaria" pInputText formControlName="nombreCuentaBancaria"
+                                    class="p-inputtext-sm w-full" placeholder="Descripción cuenta bancaria" />
                                 </div>
                             </td>
 
