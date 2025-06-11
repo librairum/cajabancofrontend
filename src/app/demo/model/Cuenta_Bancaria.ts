@@ -30,10 +30,10 @@ export interface updCuenta_Bancaria{
         ban01IdNro: string,
         ban01Moneda: string,
         ban01Descripcion: string,
-        ban01CuentaContable: string,
-        ban01Itf: string,
-        ban01Prefijo: string,
-        ban01CtaDet: string
+        // ban01CuentaContable: string,
+        // ban01Itf: string,
+        // ban01Prefijo: string,
+        // ban01CtaDet: string
   
 }
 export interface delCuenta_Bancaria{

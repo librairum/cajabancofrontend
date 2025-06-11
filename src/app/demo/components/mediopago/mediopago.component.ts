@@ -17,6 +17,9 @@ import { MediopagoService } from '../../service/mediopago.service';
 import { GlobalService } from '../../service/global.service';
 import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
 import { DropdownModule } from 'primeng/dropdown';
+import { BancoService } from '../../service/banco.service';
+import { Banco } from '../../model/Banco';
+import { CuentaBancariaService } from '../../service/cuenta-bancaria.service';
 
 @Component({
   selector: 'app-mediopago',
@@ -38,16 +41,11 @@ export class MediopagoComponent implements OnInit {
   items: any[] = [];
   isNew: boolean = false;
   rowsPerPage: number = 10; // Numero de filas por página
-
-monedasOptions: any[] = [
-    { label: 'Soles', value: 'S' },
-    { label: 'Dólares', value: 'D' }
-  ];
-
-  flagITFOptions: any[] = [
-    { label: 'Si', value: 'S' },
-    { label: 'No', value: 'N' }
-  ];
+  bancosOptions: any[] = [];
+  cuentasOptions: any[] = [];
+  cuentasOptionsRow: { [key: string]: any[] } = {}; // Initialize as an empty object
+  monedaOptions: any[] = []; // Opciones para el dropdown de moneda
+  flagITFOptions: any[] = []; // Opciones para el dropdown de FlagITF
 
   constructor(
     private mediopagoService: MediopagoService,
@@ -57,6 +55,8 @@ monedasOptions: any[] = [
     private breadcrumbService: BreadcrumbService,
     private router: Router,
     private globalService: GlobalService,
+    private bancoService: BancoService,
+    private cuentaBancariaService: CuentaBancariaService
   ) {}
 
   ngOnInit(): void {
@@ -69,6 +69,7 @@ monedasOptions: any[] = [
     });
     this.initForm();
     this.cargarMediosPago();
+    this.cargarBancos(); // <-- Agregado
   }
 
   initForm(): void {
@@ -78,14 +79,16 @@ monedasOptions: any[] = [
             Validators.required,
         ],
         ban01IdTipoPago: ['', Validators.required],
-        ban01Descripcion: ['', ],
-         ban01AsiConPrefijo: [''], // Elimina el validador required
-      ban01AsiConCtaBanco: [''], // Elimina el validador required
-      ban01AsiConCtaITF: [''], // Elimina el validador required
-      ban01AsiConDiario: [''], // Elimina el validador required
-      ban01Moneda: [''], // Valor por defecto sin validador required
-      ban01AsiConCtaComiOtrosBancos: [''], // Elimina el validador required
-      ban01AsiConFlagITF: [''], // Valor por defecto sin validador required
+        ban01Descripcion: ['', Validators.required],
+        ban01AsiConPrefijo: ['', Validators.required],
+        ban01AsiConCtaBanco: ['', Validators.required],
+        ban01AsiConCtaITF: ['', Validators.required],
+        ban01AsiConDiario: ['', Validators.required],
+        ban01Moneda: ['', Validators.required],
+        ban01AsiConCtaComiOtrosBancos: ['', Validators.required],
+        ban01AsiConFlagITF: ['', Validators.required],
+        ban01CtaBanBancoCod: ['', Validators.required], // nombre correcto
+        ban01CtaBanCod: ['', Validators.required],      // nombre correcto
     });
   }
 
@@ -99,25 +102,138 @@ monedasOptions: any[] = [
     });
   }
 
+  cargarBancos(): void {
+    this.bancoService.GetBancos().subscribe({
+      next: (data: Banco[]) => {
+        this.bancosOptions = data.map(banco => ({
+          label: banco.ban01Descripcion,
+          value: banco.ban01IdBanco
+        }));
+      },
+      error: () => {
+        verMensajeInformativo(this.messageService, 'error', 'Error', 'Error al cargar bancos');
+      }
+    });
+  }
 
+  onBancoChange(event: any) {
+    const bancoId = event.value;
+    if (bancoId) {
+        this.cuentaBancariaService.GetCuentasBancarias(bancoId).subscribe({
+            next: (data) => {
+                this.cuentasOptions = data.map(cuenta => ({
+                    label: cuenta.idCuenta,
+                    value: cuenta.idCuenta
+                }));
+                // Reset ban01CtaBanCod if the current value is not in the updated options
+                if (!this.cuentasOptions.some(opt => opt.value === this.mediopagoForm.get('ban01CtaBanCod')?.value)) {
+                    this.mediopagoForm.patchValue({ ban01CtaBanCod: '' });
+                }
+            },
+            error: () => {
+                this.cuentasOptions = [];
+                this.mediopagoForm.patchValue({ ban01CtaBanCod: '' });
+            }
+        });
+    } else {
+        this.cuentasOptions = [];
+        this.mediopagoForm.patchValue({ ban01CtaBanCod: '' });
+    }
+  }
+
+  onBancoChangeRow(event: any, mediopago: MedioPago): void {
+    const bancoId = event.value;
+    if (bancoId) {
+        this.cuentaBancariaService.GetCuentasBancarias(bancoId).subscribe({
+            next: (data) => {
+                this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = data.map(cuenta => ({
+                    label: cuenta.idCuenta,
+                    value: cuenta.idCuenta
+                }));
+                // Reset ban01CtaBanCod if the current value is not in the updated options
+                if (!this.cuentasOptionsRow[mediopago.ban01IdTipoPago].some(opt => opt.value === mediopago.ban01CtaBanCod)) {
+                    mediopago.ban01CtaBanCod = null;
+                }
+            },
+            error: () => {
+                this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = [];
+                mediopago.ban01CtaBanCod = null;
+            }
+        });
+    } else {
+        this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = [];
+        mediopago.ban01CtaBanCod = null;
+    }
+  }
+  //
+  
   onRowEditInit(mediopago: MedioPago): void {
     this.editingMedioPago = { ...mediopago };
     this.isEditingAnyRow = true;
+
+    // Populate bancosOptions for CtaBan dropdown
+    this.bancoService.GetBancos().subscribe({
+        next: (data) => {
+            this.bancosOptions = data.map(banco => ({
+                label: banco.ban01Descripcion,
+                value: banco.ban01IdBanco
+            }));
+        },
+        error: () => {
+            this.bancosOptions = [];
+        }
+    });
+
+    const bancoId = mediopago.ban01CtaBanBancoCod || this.bancosOptions[0]?.value;
+    this.cuentaBancariaService.GetCuentasBancarias(bancoId).subscribe({
+        next: (data) => {
+            this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = data.map(cuenta => ({
+                label: cuenta.idCuenta,
+                value: cuenta.idCuenta
+            }));
+        },
+        error: () => {
+            this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = [];
+        }
+    });
+
+    this.monedaOptions = [
+        { label: 'Soles', value: 'S' },
+        { label: 'Dólares', value: 'D' }
+    ];
+
+    this.flagITFOptions = [
+        { label: 'SI', value: 'S' },
+        { label: 'NO', value: 'N' }
+    ];
   }
 
   onRowEditSave(mediopago: MedioPago): void {
-    if (this.editingMedioPago) {
-      this.mediopagoService.ActualizarMedioPago(mediopago).subscribe({
+    const updatedMedioPago: MedioPago = {
+        ban01Empresa: this.globalService.getCodigoEmpresa(),
+        ban01IdTipoPago: mediopago.ban01IdTipoPago,
+        ban01Descripcion: mediopago.ban01Descripcion || '',
+        ban01AsiConPrefijo: mediopago.ban01AsiConPrefijo || '',
+        ban01AsiConCtaBanco: mediopago.ban01AsiConCtaBanco || '',
+        ban01AsiConCtaITF: mediopago.ban01AsiConCtaITF || '',
+        ban01AsiConDiario: mediopago.ban01AsiConDiario || '',
+        ban01Moneda: mediopago.ban01Moneda || '',
+        ban01AsiConCtaComiOtrosBancos: mediopago.ban01AsiConCtaComiOtrosBancos || '',
+        ban01AsiConFlagITF: mediopago.ban01AsiConFlagITF || '',
+        ban01CtaBanBancoCod: mediopago.ban01CtaBanBancoCod || '',
+        ban01CtaBanCod: mediopago.ban01CtaBanCod || '',
+    };
+
+    this.mediopagoService.ActualizarMedioPago(updatedMedioPago).subscribe({
         next: () => {
-          this.editingMedioPago = null;
-          this.isEditingAnyRow = false;
-          verMensajeInformativo(this.messageService,'success', 'Éxito', 'Registro actualizado');
+            this.editingMedioPago = null;
+            this.isEditingAnyRow = false;
+            verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro actualizado');
         },
         error: () => {
-          verMensajeInformativo(this.messageService,'error', 'Error', 'Error al actualizar');
+            verMensajeInformativo(this.messageService, 'error', 'Error', 'Error al actualizar');
         }
-      });
-    }
+    });
   }
 
   onRowEditCancel(mediopago:MedioPago,index: number): void {
@@ -134,58 +250,59 @@ monedasOptions: any[] = [
     this.isNew = true;
     this.mediopagoForm.reset({
         ban01Empresa: this.globalService.getCodigoEmpresa(),
+        ban01CtaBanBancoCod: '',
+        ban01CtaBanCod: ''
     });
   }
 
-onSave() {
-  // Verificamos que solo el campo de código esté completo
-  const idTipoPago = this.mediopagoForm.get('ban01IdTipoPago')?.value;
+  onSave() {
+    const idTipoPago = this.mediopagoForm.get('ban01IdTipoPago')?.value;
 
-  if (!idTipoPago) {
-    verMensajeInformativo(this.messageService, 'error', 'Error', 'El Código es un campo obligatorio');
-    return;
-  }
+    if (idTipoPago) {
+        const formData = this.mediopagoForm.value;
 
-  // Si el campo obligatorio está completo, procedemos a guardar
-  const newMedioPago: MedioPago = this.mediopagoForm.value;
-
-  // Aseguramos que los campos opcionales vacíos se envíen como cadenas vacías
-  newMedioPago.ban01Descripcion = newMedioPago.ban01Descripcion || ''; // Ahora descripción es opcional
-  newMedioPago.ban01AsiConPrefijo = newMedioPago.ban01AsiConPrefijo || '';
-  newMedioPago.ban01AsiConCtaBanco = newMedioPago.ban01AsiConCtaBanco || '';
-  newMedioPago.ban01AsiConCtaITF = newMedioPago.ban01AsiConCtaITF || '';
-  newMedioPago.ban01AsiConDiario = newMedioPago.ban01AsiConDiario || '';
-  newMedioPago.ban01AsiConCtaComiOtrosBancos = newMedioPago.ban01AsiConCtaComiOtrosBancos || '';
-
-  // Para los dropdowns aseguramos valores por defecto si están vacíos
-  newMedioPago.ban01Moneda = newMedioPago.ban01Moneda || 'S';
-  newMedioPago.ban01AsiConFlagITF = newMedioPago.ban01AsiConFlagITF || 'N';
-
-  this.mediopagoService.CrearMedioPago(newMedioPago).subscribe({
-    next: (response) => {
-      if (response.messageException) {
-        verMensajeInformativo(this.messageService, 'error', 'Error', 'Código existente, verifica las filas');
-      } else {
-        this.isEditing = false;
-        this.isNew = false;
-        this.mediopagoForm.reset({
+        const newMedioPago: MedioPago = {
             ban01Empresa: this.globalService.getCodigoEmpresa(),
+            ban01IdTipoPago: idTipoPago,
+            ban01Descripcion: formData.ban01Descripcion || '',
+            ban01AsiConPrefijo: formData.ban01AsiConPrefijo || '',
+            ban01AsiConCtaBanco: formData.ban01AsiConCtaBanco || '',
+            ban01AsiConCtaITF: formData.ban01AsiConCtaITF || '',
+            ban01AsiConDiario: formData.ban01AsiConDiario || '',
+            ban01Moneda: formData.ban01Moneda || '',
+            ban01AsiConCtaComiOtrosBancos: formData.ban01AsiConCtaComiOtrosBancos || '',
+            ban01AsiConFlagITF: formData.ban01AsiConFlagITF || '',
+            ban01CtaBanBancoCod: formData.ban01CtaBanBancoCod || '',
+            ban01CtaBanCod: formData.ban01CtaBanCod || '',
+        };
+
+        this.mediopagoService.CrearMedioPago(newMedioPago).subscribe({
+            next: () => {
+                this.isEditing = false;
+                this.isNew = false;
+                this.mediopagoForm.reset({
+                    ban01Empresa: this.globalService.getCodigoEmpresa(),
+                });
+                verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro guardado');
+                this.cargarMediosPago();
+            },
+            error: (err) => {
+                console.error('Error al guardar:', err);
+                verMensajeInformativo(this.messageService, 'error', 'Error', 'No se pudo guardar el registro');
+            },
         });
-        verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro guardado');
-        this.cargarMediosPago();
-      }
-    },
-    error: () => {
-      verMensajeInformativo(this.messageService, 'error', 'Error', 'No se pudo guardar el registro');
+    } else {
+        verMensajeInformativo(this.messageService, 'error', 'Error', 'El campo Código es obligatorio');
     }
-  });
-}
+  }
 
   onCancel() {
     this.isEditing = false;
     this.isNew = false;
     this.mediopagoForm.reset({
         ban01Empresa: this.globalService.getCodigoEmpresa(),
+        ban01CtaBanBancoCod: '',
+        ban01CtaBanCod: ''
     });
   }
 
@@ -200,7 +317,7 @@ onDelete(mediopago: MedioPago, index: number): void {
       acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button',
       accept: () => {
-        // Verificamos que tengamos todos los datos necesarios para la eliminación
+        
         if (!mediopago.ban01Empresa || !mediopago.ban01IdTipoPago) {
           console.error('Error: Datos incompletos para eliminar', mediopago);
           verMensajeInformativo(this.messageService, 'error', 'Error',
@@ -210,7 +327,7 @@ onDelete(mediopago: MedioPago, index: number): void {
 
         this.mediopagoService.EliminarMedioPago(mediopago.ban01Empresa, mediopago.ban01IdTipoPago).subscribe({
           next: (response) => {
-            // Encontrar el índice exacto en el array por ID para asegurar que eliminamos el correcto
+
             const indexToRemove = this.mediopagoList.findIndex(item =>
               item.ban01IdTipoPago === mediopago.ban01IdTipoPago &&
               item.ban01Empresa === mediopago.ban01Empresa
@@ -222,7 +339,7 @@ onDelete(mediopago: MedioPago, index: number): void {
 
             verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro eliminado');
 
-            // Recargar la lista completa para asegurar sincronización con el servidor
+            
             this.cargarMediosPago();
           },
           error: (err) => {
@@ -233,6 +350,16 @@ onDelete(mediopago: MedioPago, index: number): void {
         });
       }
     });
+  }
+
+  getBancoLabel(bancoCod: string): string {
+    const banco = this.bancosOptions.find(option => option.value === bancoCod);
+    return banco ? banco.label : '';
+  }
+
+  getCuentaLabel(tipoPago: string, cuentaCod: string): string {
+    const cuenta = this.cuentasOptionsRow[tipoPago]?.find(option => option.value === cuentaCod);
+    return cuenta ? cuenta.label : ''; 
   }
 
 }

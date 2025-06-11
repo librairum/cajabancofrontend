@@ -14,18 +14,14 @@
                     class="p-button-sm"></button>-->
             <div class="flex align-items-center">
                 <label for="rowsPerPage" class="mr-2">Filas por página:</label>
-                <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]" [(ngModel)]="rowsPerPage" placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
+                <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]" [(ngModel)]="rowsPerPage"
+                    placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
             </div>
         </div>
 
         <!-- Tabla Principal -->
-        <p-table [value]="bancoList"
-                 dataKey="ban01IdBanco"
-                 editMode="row"
-                 [paginator]="true"
-                 [rows]="rowsPerPage"
-                 responsiveLayout="scroll"
-                 styleClass="p-datatable-sm">
+        <p-table [value]="bancoList" dataKey="ban01IdBanco" editMode="row" [paginator]="true" [rows]="rowsPerPage"
+            responsiveLayout="scroll" styleClass="p-datatable-sm">
             <!-- Cabecera de Tabla -->
             <ng-template pTemplate="header">
                 <tr>
@@ -44,7 +40,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="banco.ban01IdBanco"
-                                       class="p-inputtext-sm w-full" required>
+                                    class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{banco.ban01IdBanco}}
@@ -57,7 +53,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="banco.ban01Descripcion"
-                                       class="p-inputtext-sm w-full" required>
+                                    class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{banco.ban01Descripcion}}
@@ -70,7 +66,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="banco.ban01Prefijo"
-                                       class="p-inputtext-sm w-full" required>
+                                    class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{banco.ban01Prefijo}}
@@ -115,15 +111,11 @@
                                     pTooltip="Borrar Banco"
                                     [disabled]="isNew || isEditingAnyRow"
                                     class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>-->
-                            
+
                             <!-- Botón Ver Cuentas (Deshabilitado) -->
-                            <button *ngIf="!editing" pButton 
-                                    type="button" 
-                                    (click)="verCuentas(banco)"
-                                    icon="pi pi-cog" 
-                                    pTooltip="Ver Cuentas" 
-                                    [disabled]="isNew || isEditingAnyRow"
-                                    class="p-button-rounded p-button-text p-button-sm"></button>
+                            <button *ngIf="!editing" pButton type="button" (click)="verCuentas(banco)" icon="pi pi-cog"
+                                pTooltip="Ver Cuentas" [disabled]="isNew || isEditingAnyRow"
+                                class="p-button-rounded p-button-text p-button-sm"></button>
                         </div>
                     </td>
                 </tr>
@@ -137,30 +129,24 @@
                             <!-- Campo ID -->
                             <div class="col-2" style="width: 20%">
                                 <span class="p-input-icon-left w-full">
-                                    <input pInputText
-                                           formControlName="ban01IdBanco"
-                                           placeholder="Código Banco"
-                                           class="p-inputtext-sm w-full"/>
+                                    <input pInputText formControlName="ban01IdBanco" placeholder="Código Banco"
+                                        class="p-inputtext-sm w-full" />
                                 </span>
                             </div>
 
                             <!-- Campo Descripción -->
                             <div class="col-4" style="width: 40%">
                                 <span class="p-input-icon-left w-full">
-                                    <input pInputText
-                                           formControlName="ban01Descripcion"
-                                           placeholder="Descripción del Banco"
-                                           class="p-inputtext-sm w-full"/>
+                                    <input pInputText formControlName="ban01Descripcion"
+                                        placeholder="Descripción del Banco" class="p-inputtext-sm w-full" />
                                 </span>
                             </div>
 
                             <!-- Campo Prefijo -->
                             <div class="col-2" style="width: 20%">
                                 <span class="p-input-icon-left w-full">
-                                    <input pInputText
-                                           formControlName="ban01Prefijo"
-                                           placeholder="Prefijo"
-                                           class="p-inputtext-sm w-full"/>
+                                    <input pInputText formControlName="ban01Prefijo" placeholder="Prefijo"
+                                        class="p-inputtext-sm w-full" />
                                 </span>
                             </div>
 
@@ -169,9 +155,9 @@
                                 <div class="flex gap-2 justify-content-center">
 
                                     <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
-                                            (onClick)="onSave()" pTooltip="Guardar"></p-button>
+                                        (onClick)="onSave()" pTooltip="Guardar"></p-button>
                                     <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
-                                            (onClick)="onCancel()" pTooltip="Cancelar"></p-button>
+                                        (onClick)="onCancel()" pTooltip="Cancelar"></p-button>
                                 </div>
                             </div>
                         </form>

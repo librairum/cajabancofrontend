@@ -12,7 +12,7 @@
         </div>
         <!-- Botón para agregar nueva rowData bancaria -->
         <div class="flex align-items-center mb-3">
-            <p-button (click)="showAddRow()" icon="pi pi-plus" label="Nueva" class="mr-3"
+            <p-button (click)="showAddRow()" icon="pi pi-plus" label="Nuevo" class="mr-3"
                 [disabled]="isEditingAnyRow"></p-button>
         </div>
 
@@ -34,11 +34,11 @@
                     <th style="width: 150px;">Id Cuenta</th>
                     <th style="width: 120px;">Moneda</th>
                     <th style="width: 180px;">Cuenta Bancaria</th>
-                    <th style="width: 150px;">Cta Contable</th>
-                    <th style="width: 150px;">Cta ITF</th>
-                    <th style="width: 120px;">Pref</th>
-                    <th style="width: 150px;">Cta Gastos</th>
-                    <th style="width: 100px;">Acciones</th>
+                    <!-- <th style="width: 150px; visibility: collapse;">Cta Contable</th>
+                    <th style="width: 150px; visibility: collapse;">Cta ITF</th>
+                    <th style="width: 120px; visibility: collapse;">Pref</th>
+                    <th style="width: 150px; visibility: collapse;">Cta Gastos</th>
+                    <th style="width: 100px; visibility: collapse;">Acciones</th> -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-ri="rowIndex" let-editing="editing">
@@ -61,8 +61,17 @@
                             {{ rowData.moneda }}
                         </div>
                     </td>
-                    <td style="width: 180px;">{{ rowData.nombreCuentaBancaria }}</td>
-                    <td style="width: 150px;">
+                    <td style="width: 180px;">
+                        <div *ngIf="editingRowIndex!== ri">
+                            {{ rowData.nombreCuentaBancaria }}
+                        </div>
+                        <div *ngIf="editingRowIndex === ri">
+                            <input pInputText type="text" [(ngModel)]="rowData.nombreCuentaBancaria"
+                            class="p-inputtext-sm w-full" required>
+                        </div>
+                    </td>
+                    <!-- <td style="width: 180px;">{{ rowData.nombreCuentaBancaria }}</td> -->
+                    <!-- <td style="width: 150px;">
                         <div *ngIf="editingRowIndex !== ri">
                             {{ rowData.ctaContable }}
                         </div>
@@ -70,8 +79,8 @@
                             <input pInputText type="text" [(ngModel)]="rowData.ctaContable"
                                 class="p-inputtext-sm w-full" required>
                         </div>
-                    </td>
-                    <td style="width: 150px;">
+                    </td> -->
+                    <!-- <td style="width: 150px;">
                         <div *ngIf="editingRowIndex !== ri">
                             {{ rowData.ctaITF }}
                         </div>
@@ -79,8 +88,8 @@
                             <input pInputText type="text" [(ngModel)]="rowData.ctaITF" class="p-inputtext-sm w-full"
                                 required>
                         </div>
-                    </td>
-                    <td style="width: 120px;">
+                    </td> -->
+                    <!-- <td style="width: 120px;">
                         <div *ngIf="editingRowIndex !== ri">
                             {{ rowData.pref }}
                         </div>
@@ -88,8 +97,8 @@
                             <input pInputText type="text" [(ngModel)]="rowData.pref" class="p-inputtext-sm w-full"
                                 required>
                         </div>
-                    </td>
-                    <td style="width: 150px;">
+                    </td> -->
+                    <!-- <td style="width: 150px;">
                         <div *ngIf="editingRowIndex !== ri">
                             {{ rowData.ctaGastos }}
                         </div>
@@ -97,7 +106,7 @@
                             <input pInputText type="text" [(ngModel)]="rowData.ctaGastos" class="p-inputtext-sm w-full"
                                 required>
                         </div>
-                    </td>
+                    </td> -->
                     <td style="width: 100px;">
                         <div style="display: flex; gap: 5px; justify-content: flex-start;">
                             <!-- Editar -->
@@ -129,6 +138,7 @@
             </ng-template>
 
             <!-- Footer para insertar un nuevo dato -->
+            <!---->
             <ng-template pTemplate="footer">
                 <tr *ngIf="isEditing">
                     <td colspan="9" class="p-0">
@@ -157,11 +167,12 @@
                             </td>
                             <td style="width: 222px; padding-left: 10px;">
                                 <div>
-
+                                    <input id="nombreCuentaBancaria" pInputText formControlName="nombreCuentaBancaria"
+                                    class="p-inputtext-sm w-full" placeholder="Descripción cuenta bancaria" />
                                 </div>
                             </td>
 
-                            <td style="width: 185px; padding-left: 10px;">
+                            <!-- <td style="width: 185px; padding-left: 10px;">
                                 <div>
                                     <input id="ctaContable" pInputText formControlName="ctaContable"
                                         class="p-inputtext-sm w-full" placeholder="Cuenta Contable" />
@@ -188,7 +199,7 @@
                                         placeholder="Cuenta Gasto" />
                                 </div>
 
-                            </td>
+                            </td> -->
                             <td style="width: 122px;  padding-left: 10px;">
                                 <div class="flex gap-2 justify-start">
                                     <button pButton icon="pi pi-check" (click)="onSave()" pTooltip="Guardar"

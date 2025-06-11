@@ -9,38 +9,35 @@
     <div class="card">
         <!-- Botón Nuevo -->
         <div class="flex justify-content-between align-items-center mb-3">
-            <button type="button" pButton icon="pi pi-plus" label="Nuevo"
-                    (click)="showAddRow()" [disabled]="isEditingAnyRow"
-                    class="p-button-sm"></button>
+            <button type="button" pButton icon="pi pi-plus" label="Nuevo" (click)="showAddRow()"
+                [disabled]="isEditingAnyRow" class="p-button-sm"></button>
             <div class="flex align-items-center">
-                    <label for="rowsPerPage" class="mr-2">Filas por página:</label>
-                    <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]" [(ngModel)]="rowsPerPage" placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
+                <label for="rowsPerPage" class="mr-2">Filas por página:</label>
+                <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]" [(ngModel)]="rowsPerPage"
+                    placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
             </div>
         </div>
 
         <!-- Tabla Principal -->
-        <p-table [value]="mediopagoList"
-                 dataKey="ban01IdTipoPago"
-                 editMode="row"
-                 [paginator]="true"
-                 [rows]="rowsPerPage"
-                 responsiveLayout="scroll"
-                 styleClass="p-datatable-sm"
-                 style="table-layout: fixed; width: 100%;">
+        <!---->
+        <p-table [value]="mediopagoList" dataKey="ban01IdTipoPago" editMode="row" [paginator]="true"
+            [rows]="rowsPerPage" responsiveLayout="scroll" styleClass="p-datatable-sm"
+            style="table-layout: fixed; width: 100%;">
             <!-- Cabecera de Tabla -->
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 10%">Código</th>
-                    <th style="width: 10%">Descripción</th>
-                    <th style="width: 10%">Prefijo</th>
-                    <th style="width: 10%">CtaBanco</th>
-                    <th style="width: 10%">CtaITF</th>
-                    <th style="width: 10%">Diario</th>
-                    <th style="width: 10%">Moneda</th>
-                    <th style="width: 10%">Otros Bancos </th>
-                    <th style="width: 10%">FlagITF</th>
-                    <th style="width: 10%">Acciones</th>
-                    <
+                    <th style="width: 8%">Código</th>
+                    <th style="width: 8%">Descripción</th>
+                    <th style="width: 8%">Prefijo</th>
+                    <th style="width: 8%">CtaBanco</th>
+                    <th style="width: 8%">CtaITF</th>
+                    <th style="width: 8%">Diario</th>
+                    <th style="width: 8%">Moneda</th>
+                    <th style="width: 8%">Otros Bancos </th>
+                    <th style="width: 8%">FlagITF</th>
+                    <th style="width: 8%">CtaBan</th>
+                    <th style="width: 8%">CtaBanCod</th>
+                    <th style="width: 8%">Acciones</th>
                 </tr>
             </ng-template>
 
@@ -52,7 +49,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01IdTipoPago"
-                                       class="p-inputtext-sm w-full" required>
+                                    class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{ mediopago.ban01IdTipoPago }}
@@ -65,7 +62,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01Descripcion"
-                                       class="p-inputtext-sm w-full" required>
+                                    class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{ mediopago.ban01Descripcion }}
@@ -78,7 +75,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConPrefijo"
-                                       class="p-inputtext-sm w-full" required>
+                                    class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{ mediopago.ban01AsiConPrefijo }}
@@ -91,7 +88,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaBanco"
-                                       class="p-inputtext-sm w-full" required>
+                                    class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{ mediopago.ban01AsiConCtaBanco }}
@@ -104,152 +101,189 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaITF"
-                                       class="p-inputtext-sm w-full" required>
+                                    class="p-inputtext-sm w-full" required>
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{ mediopago.ban01AsiConCtaITF }}
                             </ng-template>
                         </p-cellEditor>
                     </td>
-<!-- Diario -->
-<td style="text-align: left;">
-    <p-cellEditor>
-        <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConDiario"
-                   class="p-inputtext-sm w-full" required>
-        </ng-template>
-        <ng-template pTemplate="output">
-            {{ mediopago.ban01AsiConDiario }}
-        </ng-template>
-    </p-cellEditor>
-</td>
+                    <!-- Diario -->
+                    <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConDiario"
+                                    class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01AsiConDiario }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
 
-<td style="text-align: left;">
-    <p-cellEditor>
-        <ng-template pTemplate="input">
-            <p-dropdown [options]="monedasOptions" [(ngModel)]="mediopago.ban01Moneda"
-                     appendTo="body" [style]="{'width':'100%'}"
-                     placeholder="Seleccionar" class="p-inputtext-sm"></p-dropdown>
-        </ng-template>
-        <ng-template pTemplate="output">
-            {{ mediopago.ban01Moneda === 'S' ? 'Soles' : mediopago.ban01Moneda === 'D' ? 'Dólares' : mediopago.ban01Moneda }}
-        </ng-template>
-    </p-cellEditor>
-</td>
-<!-- Otros Bancos -->
-<td style="text-align: left;">
-    <p-cellEditor>
-        <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaComiOtrosBancos"
-                   class="p-inputtext-sm w-full" required>
-        </ng-template>
-        <ng-template pTemplate="output">
-            {{ mediopago.ban01AsiConCtaComiOtrosBancos }}
-        </ng-template>
-    </p-cellEditor>
-</td>
+                    <!-- Moneda -->
+                    <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown [options]="monedaOptions" [(ngModel)]="mediopago.ban01Moneda"
+                                    placeholder="Seleccionar moneda" optionLabel="label" optionValue="value"
+                                    appendTo="body" class="p-inputtext-sm w-full">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{
+                                mediopago.ban01Moneda === 'S' ? 'Soles' :
+                                mediopago.ban01Moneda === 'D' ? 'Dólares' : ''
+                                }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
 
-<!-- FlagITF -->
-<td style="text-align: left;">
-    <p-cellEditor>
-        <ng-template pTemplate="input">
-            <p-dropdown [options]="flagITFOptions" [(ngModel)]="mediopago.ban01AsiConFlagITF"
-                     appendTo="body" [style]="{'width':'100%'}"
-                     placeholder="Seleccionar" class="p-inputtext-sm"></p-dropdown>
-        </ng-template>
-        <ng-template pTemplate="output">
-            {{ mediopago.ban01AsiConFlagITF === 'S' ? 'Si' : mediopago.ban01AsiConFlagITF === 'N' ? 'No' : mediopago.ban01AsiConFlagITF }}
-        </ng-template>
-    </p-cellEditor>
-</td>
+                    <!-- Otros Bancos -->
+                    <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="mediopago.ban01AsiConCtaComiOtrosBancos"
+                                    class="p-inputtext-sm w-full" required>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01AsiConCtaComiOtrosBancos }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <!-- FlagITF -->
+                    <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown [options]="flagITFOptions" [(ngModel)]="mediopago.ban01AsiConFlagITF"
+                                    placeholder="Seleccionar FlagITF" optionLabel="label" optionValue="value"
+                                    appendTo="body" class="p-inputtext-sm w-full">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01AsiConFlagITF === 'S' ? 'SI' : (mediopago.ban01AsiConFlagITF === 'N' ? 'NO' : '') }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <!-- CtaBan -->
+                    <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown [options]="bancosOptions" [(ngModel)]="mediopago.ban01CtaBanBancoCod"
+                                    placeholder="Seleccionar banco" optionLabel="label" optionValue="value"
+                                    appendTo="body" class="p-inputtext-sm w-full" (onChange)="onBancoChangeRow($event, mediopago)">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ getBancoLabel(mediopago.ban01CtaBanBancoCod) }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <!-- CtaBanCod -->
+                    <td style="text-align: left;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown [options]="cuentasOptionsRow[mediopago.ban01IdTipoPago]" [(ngModel)]="mediopago.ban01CtaBanCod"
+                                    placeholder="Seleccionar cuenta bancaria" optionLabel="label" optionValue="value"
+                                    appendTo="body" class="p-inputtext-sm w-full">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ mediopago.ban01CtaBanCod }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
 
                     <!-- Acciones -->
                     <td>
                         <div class="flex justify-content-center gap-2">
-                            <button *ngIf="!editing" pButton pInitEditableRow
-                                    (click)="onRowEditInit(mediopago)"
-                                    icon="pi pi-pencil"
-                                    class="p-button-rounded p-button-text p-button-sm"></button>
+                            <button *ngIf="!editing" pButton pInitEditableRow (click)="onRowEditInit(mediopago)"
+                                icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm"></button>
 
-                            <button *ngIf="editing" pButton pSaveEditableRow
-                                    (click)="onRowEditSave(mediopago)"
-                                    icon="pi pi-check"
-                                    class="p-button-rounded p-button-text p-button-sm p-button-success"></button>
+                            <button *ngIf="editing" pButton pSaveEditableRow (click)="onRowEditSave(mediopago)"
+                                icon="pi pi-check"
+                                class="p-button-rounded p-button-text p-button-sm p-button-success"></button>
 
-                            <button *ngIf="editing" pButton pCancelEditableRow
-                                    (click)="onRowEditCancel(mediopago, ri)"
-                                    icon="pi pi-times"
-                                    class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+                            <button *ngIf="editing" pButton pCancelEditableRow (click)="onRowEditCancel(mediopago, ri)"
+                                icon="pi pi-times"
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
 
-                            <button *ngIf="!editing" pButton type="button"
-                                    (click)="onDelete(mediopago, ri)"
-                                    icon="pi pi-trash"
-                                    class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+                            <button *ngIf="!editing" pButton type="button" (click)="onDelete(mediopago, ri)"
+                                icon="pi pi-trash"
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
                         </div>
                     </td>
                 </tr>
             </ng-template>
 
             <!-- Footer para Nuevo Registro -->
-            <!-- Modificar los campos en el formulario para eliminar el atributo "required" de los campos que no son obligatorios -->
-
-<!-- Ejemplo de cómo quedaría para el footer del formulario de nuevo registro -->
-<ng-template pTemplate="footer">
-    <tr *ngIf="isEditing">
-        <td colspan="10">
-            <form [formGroup]="mediopagoForm" class="grid p-fluid">
-                <div class="col-2" style="width: 10%">
-                    <input pInputText formControlName="ban01IdTipoPago"
-                           placeholder="Código *" class="p-inputtext-sm w-full"/>
-                </div>
-                <div class="col-4" style="width: 10%">
-                    <input pInputText formControlName="ban01Descripcion"
-                           placeholder="Descripción *" class="p-inputtext-sm w-full"/>
-                </div>
-                <div class="col-2" style="width: 10%">
-                    <input pInputText formControlName="ban01AsiConPrefijo"
-                           placeholder="Prefijo" class="p-inputtext-sm w-full"/>
-                </div>
-                <div class="col-2" style="width: 10%">
-                    <input pInputText formControlName="ban01AsiConCtaBanco"
-                           placeholder="CtaBanco" class="p-inputtext-sm w-full"/>
-                </div>
-                <div class="col-2" style="width: 10%">
-                    <input pInputText formControlName="ban01AsiConCtaITF"
-                           placeholder="CtaITF" class="p-inputtext-sm w-full"/>
-                </div>
-                <div class="col-1" style="width: 10%">
-                    <input pInputText formControlName="ban01AsiConDiario"
-                           placeholder="Diario" class="p-inputtext-sm w-full"/>
-                </div>
-                <div class="col-1" style="width: 10%">
-                    <p-dropdown formControlName="ban01Moneda"
-                               [options]="monedasOptions"
-                               placeholder="Moneda" [style]="{'width':'100%'}"
-                               appendTo="body" class="p-inputtext-sm"></p-dropdown>
-                </div>
-                <div class="col-1" style="width: 10%">
-                    <input pInputText formControlName="ban01AsiConCtaComiOtrosBancos"
-                           placeholder="Otros Bancos" class="p-inputtext-sm w-full"/>
-                </div>
-                <div class="col-1" style="width: 10%">
-                    <p-dropdown formControlName="ban01AsiConFlagITF"
-                               [options]="flagITFOptions"
-                               placeholder="FlagITF" [style]="{'width':'100%'}"
-                               appendTo="body" class="p-inputtext-sm"></p-dropdown>
-                </div>
-                <div class="col-2" style="width: 10%">
-                    <div class="flex gap-2 justify-content-center">
-                        <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
+            <ng-template pTemplate="footer">
+                <tr *ngIf="isEditing" [formGroup]="mediopagoForm">
+                    <td style="width: 8%">
+                        <input pInputText formControlName="ban01IdTipoPago" placeholder="Código"
+                            class="p-inputtext-sm w-full" />
+                    </td>
+                    <td style="width: 8%">
+                        <input pInputText formControlName="ban01Descripcion" placeholder="Descripción"
+                            class="p-inputtext-sm w-full" />
+                    </td>
+                    <td style="width: 8%">
+                        <input pInputText formControlName="ban01AsiConPrefijo" placeholder="Prefijo"
+                            class="p-inputtext-sm w-full" />
+                    </td>
+                    <td style="width: 8%">
+                        <input pInputText formControlName="ban01AsiConCtaBanco" placeholder="CtaBanco"
+                            class="p-inputtext-sm w-full" />
+                    </td>
+                    <td style="width: 8%">
+                        <input pInputText formControlName="ban01AsiConCtaITF" placeholder="CtaITF"
+                            class="p-inputtext-sm w-full" />
+                    </td>
+                    <td style="width: 8%">
+                        <input pInputText formControlName="ban01AsiConDiario" placeholder="Diario"
+                            class="p-inputtext-sm w-full" />
+                    </td>
+                    <td style="width: 8%">
+                        <p-dropdown formControlName="ban01Moneda"
+                            [options]="[{label: 'Soles', value: 'S'}, {label: 'Dólares', value: 'D'}]"
+                            placeholder="Seleccionar Moneda" class="p-inputtext-sm w-full" appendTo="body">
+                        </p-dropdown>
+                    </td>
+                    <td style="width: 8%">
+                        <input pInputText formControlName="ban01AsiConCtaComiOtrosBancos" placeholder="Otros Bancos"
+                            class="p-inputtext-sm w-full" />
+                    </td>
+                    <td style="width: 8%">
+                        <p-dropdown formControlName="ban01AsiConFlagITF"
+                            [options]="[{label: 'SI', value: 'S'}, {label: 'NO', value: 'N'}]"
+                            placeholder="Seleccionar FlagITF" class="p-inputtext-sm w-full" appendTo="body">
+                        </p-dropdown>
+                    </td>
+                    <td style="width: 8%">
+                        <p-dropdown [options]="bancosOptions" formControlName="ban01CtaBanBancoCod" optionLabel="label"
+                            optionValue="value" placeholder="Seleccionar Banco" appendTo="body"
+                            class="p-inputtext-sm w-full" (onChange)="onBancoChange($event)">
+                        </p-dropdown>
+                    </td>
+                    <td style="width: 8%">
+                        <p-dropdown [options]="cuentasOptions" formControlName="ban01CtaBanCod" optionLabel="label"
+                            optionValue="value" placeholder="Seleccionar Cuenta Bancaria" appendTo="body"
+                            class="p-inputtext-sm w-full">
+                        </p-dropdown>
+                    </td>
+                    <td style="width: 8%">
+                        <div class="flex gap-2 justify-content-center">
+                            <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
                                 (onClick)="onSave()" pTooltip="Guardar"></p-button>
-                        <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
+                            <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
                                 (onClick)="onCancel()" pTooltip="Cancelar"></p-button>
-                    </div>
-                </div>
-            </form>
-        </td>
-    </tr>
-</ng-template>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
         </p-table>
     </div>
 </div>
