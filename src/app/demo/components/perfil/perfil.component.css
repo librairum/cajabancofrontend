@@ -85,3 +85,11 @@
 .p-dialog {
     z-index: 1050 !important;
 }
+
+::ng-deep .p-datatable-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f9f9f9; /* Match header background */
+    border-bottom: 2px solid #ddd; /* Add border for separation */
+}

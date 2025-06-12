@@ -21,7 +21,7 @@
         <!-- Tabla Principal -->
         <p-table [value]="mediopagoList" dataKey="ban01IdTipoPago" editMode="row" [paginator]="true"
             [rows]="rowsPerPage" responsiveLayout="scroll" styleClass="p-datatable-sm"
-            style="table-layout: fixed; width: 100%;">
+            style="table-layout: fixed; width: 100%;" [scrollable]="true" scrollHeight="400px">
             <!-- Cabecera de Tabla -->
             <ng-template pTemplate="header">
                 <tr>
@@ -261,9 +261,11 @@
                         <input pInputText formControlName="ban01AsiConCtaComiOtrosBancos" placeholder="Otros Bancos"
                             class="p-inputtext-sm w-full" />
                     </td>
-                    <td style="width: 8%">
-                        <p-checkbox formControlName="ban01AsiConFlagITF" binary="true" class="p-inputtext-sm w-full"
-                            [trueValue]="'S'" [falseValue]="'N'" [ngModelOptions]="{standalone: true}"></p-checkbox>
+                    <td style="width: 8%; text-align: center;">
+                        <div class="flex justify-content-center">
+                            <p-checkbox formControlName="ban01AsiConFlagITF" binary="true" class="p-inputtext-sm"
+                                [trueValue]="'S'" [falseValue]="'N'" [ngModelOptions]="{standalone: true}"></p-checkbox>
+                        </div>
                     </td>
                     <td style="width: 8%">
                         <p-dropdown [options]="bancosOptions" formControlName="ban01CtaBanBancoCod" optionLabel="label"

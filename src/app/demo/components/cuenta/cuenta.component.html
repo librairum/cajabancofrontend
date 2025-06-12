@@ -71,7 +71,7 @@
                         </div>
                     </td>
                     <!-- <td style="width: 180px;">{{ rowData.nombreCuentaBancaria }}</td> -->
-                    <!-- <td style="width: 150px;">
+                    <!-- <td style="width: 150px;">                        
                         <div *ngIf="editingRowIndex !== ri">
                             {{ rowData.ctaContable }}
                         </div>
@@ -138,79 +138,37 @@
             </ng-template>
 
             <!-- Footer para insertar un nuevo dato -->
-            <!---->
             <ng-template pTemplate="footer">
-                <tr *ngIf="isEditing">
-                    <td colspan="9" class="p-0">
-                        <form [formGroup]="CuentaBancariaForm" style="padding-bottom: 10px;">
-                            <td style="width: 150px;">
-                                <div><input id="nombreBanco" pInputText class="p-inputtext-sm w-full" [value]="descripcion" readonly/></div>
-                            </td>
-
-                            <td style="width: 150px; padding-left: 10px;">
-                                <div>
-                                    <input id="idCuenta" pInputText formControlName="idCuenta" class="p-inputtext-sm w-full"
-                                        placeholder="ID Cuenta" />
-                                </div>
-                            </td>
-                            <td style="width: 120px;padding-left: 10px;">
-                                <div>
-                                    <p-dropdown [options]="moneda"
-                                    formControlName="moneda"
-                                    optionLabel="nombre"
-                                        optionValue="id"
-                                        class="p-inputtext-sm w-full"
-                                        [filter]="true" filterBy="label"
-                                        [(ngModel)]="selectMoneda" (onchange)="onMonedaChange($event)" placeholder="Moneda"
-                                        appendTo="body"></p-dropdown>
-                                </div>
-                            </td>
-                            <td style="width: 180px; padding-left: 10px;">
-                                <div>
-                                    <input id="nombreCuentaBancaria" pInputText formControlName="nombreCuentaBancaria"
-                                    class="p-inputtext-sm w-full" placeholder="Descripción cuenta bancaria" />
-                                </div>
-                            </td>
-
-                            <!-- <td style="width: 185px; padding-left: 10px;">
-                                <div>
-                                    <input id="ctaContable" pInputText formControlName="ctaContable"
-                                        class="p-inputtext-sm w-full" placeholder="Cuenta Contable" />
-                                </div>
-                            </td>
-
-                            <td style="width: 185px; padding-left: 10px;">
-                                <div>
-                                    <input id="ctaITF" pInputText formControlName="ctaITF" class="p-inputtext-sm w-full"
-                                        placeholder="Cuenta ITF" />
-                                </div>
-                            </td>
-
-                            <td style="width: 149px; padding-left: 10px; padding-right: 20px;">
-                                <div>
-                                    <input id="pref" pInputText formControlName="pref" class="p-inputtext-sm w-full"
-                                        placeholder="Pref" />
-                                </div>
-                            </td>
-
-                            <td style="width: 185px;">
-                                <div>
-                                    <input id="ctaGastos" pInputText formControlName="ctaGastos" class="p-inputtext-sm w-full"
-                                        placeholder="Cuenta Gasto" />
-                                </div>
-
-                            </td> -->
-                            <td style="width: 122px;  padding-left: 10px;">
-                                <div class="flex gap-2 justify-start">
-                                    <button pButton icon="pi pi-check" (click)="onSave()" pTooltip="Guardar"
-                                        tooltipPosition="top"
-                                        class="p-button-rounded p-button-text p-button-sm p-button-success"></button>
-                                    <button pButton icon="pi pi-times" (click)="onCancel()" pTooltip="Cancelar"
-                                        tooltipPosition="top"
-                                        class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
-                                </div>
-                            </td>
-                        </form>
+                <tr *ngIf="isEditing" [formGroup]="CuentaBancariaForm">
+                    <!-- Campo para mostrar el nombre del banco -->
+                    <td style="width: 150px;">
+                        <input id="nombreBanco" pInputText class="p-inputtext-sm w-full" [value]="descripcion" readonly />
+                    </td>
+                    <!-- Campo para ingresar el ID de la cuenta -->
+                    <td style="width: 150px;">
+                        <input id="idCuenta" pInputText formControlName="idCuenta" class="p-inputtext-sm w-full"
+                            placeholder="ID Cuenta" />
+                    </td>
+                    <!-- Dropdown para seleccionar la moneda -->
+                    <td style="width: 120px;">
+                        <p-dropdown [options]="moneda" formControlName="moneda" optionLabel="nombre" optionValue="id"
+                            class="p-inputtext-sm w-full" [filter]="true" filterBy="label" placeholder="Moneda"
+                            appendTo="body">
+                        </p-dropdown>
+                    </td>
+                    <!-- Campo para ingresar la descripción de la cuenta bancaria -->
+                    <td style="width: 180px;">
+                        <input id="nombreCuentaBancaria" pInputText formControlName="nombreCuentaBancaria"
+                            class="p-inputtext-sm w-full" placeholder="Descripción cuenta bancaria" />
+                    </td>
+                    <!-- Botones para guardar o cancelar la acción -->
+                    <td style="width: 122px;">
+                        <div class="flex gap-2 justify-content-center">
+                            <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true" (onClick)="onSave()"
+                                pTooltip="Guardar"></p-button>
+                            <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true" (onClick)="onCancel()"
+                                pTooltip="Cancelar"></p-button>
+                        </div>
                     </td>
                 </tr>
             </ng-template>

@@ -63,6 +63,10 @@
     white-space: nowrap;
     width: auto !important;
     min-width: fit-content;
+    text-align: center; /* Center content */
+    padding: 8px; /* Adjust padding for better alignment */
+    vertical-align: middle; /* Ensure vertical alignment */
+    border-top: 2px solid #ddd; /* Add a top border for separation */
 }
 
 /* Ajusta el tamaño del calendario en el footer */

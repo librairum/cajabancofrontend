@@ -26,8 +26,10 @@
             [paginator]="true"
             [rows]="10"
             responsiveLayout="scroll"
+            [scrollable]="true"
+            scrollHeight="400px"
         >
-            <ng-template pTemplate="header">
+            <ng-template pTemplate="header" class="p-datatable-header">
                 <tr>
                     <th>Código</th>
                     <th>Nombre</th>

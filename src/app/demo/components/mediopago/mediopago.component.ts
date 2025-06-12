@@ -127,8 +127,8 @@ export class MediopagoComponent implements OnInit {
         this.cuentaBancariaService.GetCuentasBancarias(bancoId).subscribe({
             next: (data) => {
                 this.cuentasOptions = data.map(cuenta => ({
-                    label: cuenta.idCuenta,
-                    value: cuenta.idCuenta
+                    label: cuenta.nombreCuentaBancaria,
+                    value: cuenta.nombreCuentaBancaria
                 }));
 
                 if (!this.cuentasOptions.some(opt => opt.value === this.mediopagoForm.get('ban01CtaBanCod')?.value)) {
@@ -152,8 +152,8 @@ export class MediopagoComponent implements OnInit {
         this.cuentaBancariaService.GetCuentasBancarias(bancoId).subscribe({
             next: (data) => {
                 this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = data.map(cuenta => ({
-                    label: cuenta.idCuenta,
-                    value: cuenta.idCuenta
+                    label: cuenta.nombreCuentaBancaria,
+                    value: cuenta.nombreCuentaBancaria
                 }));
 
                 if (!this.cuentasOptionsRow[mediopago.ban01IdTipoPago].some(opt => opt.value === mediopago.ban01CtaBanCod)) {
@@ -195,8 +195,8 @@ export class MediopagoComponent implements OnInit {
     this.cuentaBancariaService.GetCuentasBancarias(bancoId).subscribe({
         next: (data) => {
             this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = data.map(cuenta => ({
-                label: cuenta.idCuenta,
-                value: cuenta.idCuenta
+                label: cuenta.nombreCuentaBancaria,
+                value: cuenta.nombreCuentaBancaria
             }));
         },
         error: () => {
