@@ -427,74 +427,85 @@ export class CabecerapresupuestoComponent implements OnInit {
         });
     }
     eliminarPago(presupuesto: cabeceraPresupuesto) {
-        this.confirmationService.confirm({
-            message: `
-                <p style="text-align: center;">
-                    ¿Está seguro de eliminar el presupuesto?
-                </p>
-                <div style="text-align: center; margin-top: 10px;">
-                    <p>
-                        <strong>Número de pago: </strong>${
-                            presupuesto.pagoNumero
-                        }
-                    </p>
-                    <p>
-                        <strong>Fecha:</strong> ${this.datePipe.transform(
-                            presupuesto.fecha,
-                            'dd/MM/yyyy'
-                        )}
-                    </p>
-                </div>
-            `,
-            header: 'Confirmar Eliminación',
-            icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sí',
-            rejectLabel: 'No',
-            acceptButtonStyleClass: 'p-button-danger',
-            rejectButtonStyleClass: 'p-button',
-            accept: () => {
-                const empresa = this.globalService.getCodigoEmpresa();
-                const numero = presupuesto.pagoNumero;
-
-                this.presupuestoService
-                    .eliminarPresupuesto(empresa, numero)
-                    .subscribe({
-                        next: (response) => {
-                            if (response.isSuccess) {
-                                verMensajeInformativo(
-                                    this.messageService,
-                                    'success',
-                                    'Éxito',
-                                    'Presupuesto eliminado correctamente'
-                                );
-                                // Recargar la lista de presupuestos
-                                const fecha = new Date();
-                                this.cargarPresupuesto(
-                                    empresa,
-                                    fecha.getFullYear().toString(),
-                                    (fecha.getMonth() + 1)
-                                        .toString()
-                                        .padStart(2, '0')
-                                );
-                            } else {
-                                verMensajeInformativo(
-                                    this.messageService,
-                                    'error',
-                                    'Error',
-                                    response.message ||
-                                        `Error al eliminar el presupuesto`
-                                );
-                            }
-                        },
-                        error: (error) => {
-                            verMensajeInformativo(
-                                this.messageService,
-                                'error',
-                                'Error',
-                                `Error al eliminar el presupuesto ${error.message}`
-                            );
-                        },
+        this.presupuestoService.obtenerDetallePresupuesto(this.globalService.getCodigoEmpresa(), presupuesto.pagoNumero).subscribe({
+            next: (detalles) => {
+                if (detalles.length > 0) {
+                    this.messageService.add({
+                        severity: 'warn',
+                        summary: 'Advertencia',
+                        detail: `Debe eliminar los detalles de presupuesto antes de eliminar el número de pago: ${presupuesto.pagoNumero}`,
+                        life: 5000
                     });
+                    return;
+                }
+
+                this.confirmationService.confirm({
+                    message: `
+                        <p style=\"text-align: center;\">
+                            ¿Está seguro de eliminar el presupuesto?
+                        </p>
+                        <div style=\"text-align: center; margin-top: 10px;\">
+                            <p>
+                                Número de pago:${presupuesto.pagoNumero}
+                            </p>
+                            <p>
+                                <strong>Fecha:</strong> ${this.datePipe.transform(presupuesto.fecha, 'dd/MM/yyyy')}
+                            </p>
+                        </div>
+                    `,
+                    header: 'Confirmar Eliminación',
+                    icon: 'pi pi-exclamation-triangle',
+                    acceptLabel: 'Sí',
+                    rejectLabel: 'No',
+                    acceptButtonStyleClass: 'p-button-danger',
+                    rejectButtonStyleClass: 'p-button',
+                    accept: () => {
+                        const empresa = this.globalService.getCodigoEmpresa();
+                        const numero = presupuesto.pagoNumero;
+
+                        this.presupuestoService.eliminarPresupuesto(empresa, numero).subscribe({
+                            next: (response) => {
+                                if (response.isSuccess) {
+                                    this.messageService.add({
+                                        severity: 'success',
+                                        summary: 'Éxito',
+                                        detail: 'Presupuesto eliminado correctamente',
+                                        life: 5000
+                                    });
+                                    const fecha = new Date();
+                                    this.cargarPresupuesto(
+                                        empresa,
+                                        fecha.getFullYear().toString(),
+                                        (fecha.getMonth() + 1).toString().padStart(2, '0')
+                                    );
+                                } else {
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'Error',
+                                        detail: response.message || 'Error al eliminar el presupuesto',
+                                        life: 5000
+                                    });
+                                }
+                            },
+                            error: (error) => {
+                                this.messageService.add({
+                                    severity: 'error',
+                                    summary: 'Error',
+                                    detail: `Error al eliminar el presupuesto: ${error.message}`,
+                                    life: 5000
+                            });
+                            },
+                        });
+                    },
+                });
+            },
+            error: (error) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: `Error al verificar los detalles del presupuesto: ${error.message}`,
+                    life: 5000
+                });
             },
         });
     }

@@ -8,6 +8,7 @@
 
 <div class="container">
     <p-panel header="Lista de Pagos" class="mb-3">
+        <!---->
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
     </p-panel>
     <br />
@@ -86,7 +87,7 @@
                                 [style]="{'width': '150px'}"
                                 [panelStyle]="{'max-width': '300px', 'overflow-x': 'auto'}"></p-dropdown>
                         </ng-container>
-                        <!-- -->
+                        
                     </td>
                     <td style="text-align: right; white-space: nowrap;">{{ presupuesto.impBrutoSoles | number : "1.2-2" }}</td>
                     <td style="text-align: right; white-space: nowrap;">
