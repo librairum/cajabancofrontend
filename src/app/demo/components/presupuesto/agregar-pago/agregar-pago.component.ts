@@ -93,6 +93,7 @@ export class AgregarPagoComponent implements OnInit {
         // console.log('evento on init agregarpago');
         // console.log(this.numeropresupuesto);
         // console.log(this.fechapresupuesto);
+        // 
 
         this.numeropresupuestoMod = this.numeropresupuesto;
         this.fechapresupuestoMod = this.fechapresupuesto;
@@ -173,6 +174,24 @@ export class AgregarPagoComponent implements OnInit {
     }
 
     filtrar() {
+        const nroDoc = this.filtroFRM.get('nrodoc')?.value?.trim() ?? '';
+        const ruc = this.filtroFRM.get('ruc')?.value?.trim() ?? '';
+
+        console.log('Filtrar - nroDoc:', nroDoc, 'ruc:', ruc); // Debug
+
+        // Validar que al menos uno de los campos esté lleno
+        if (!ruc && !nroDoc) {
+            console.log('Mostrando mensaje de validación'); // Debug
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'Escribir un Proveedor o Número de Documento',
+                key: 'main',
+                life: 2000
+            });
+            return;
+        }
+
         this.cargarayudaparaagregarpago();
     }
 

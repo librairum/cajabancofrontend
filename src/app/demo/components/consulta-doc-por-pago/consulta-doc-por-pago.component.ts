@@ -70,10 +70,22 @@ export class ConsultaDocPorPagoComponent implements OnInit {
             this.items = bc;
         });
         this.initForm();
-        this.listarconsultadocporpago();
+        // No cargar datos automáticamente - solo cuando el usuario busque
     }
 
     buscar(): void {
+        const filtro = this.textoBuscar.trim();
+        
+        if (filtro === '') {
+            verMensajeInformativo(
+                this.messageService,
+                'warn',
+                'Advertencia',
+                'Debes escribir el ruc o el nro doc'
+            );
+            return;
+        }
+        
         this.listarconsultadocporpago();
     }
 
@@ -133,13 +145,16 @@ export class ConsultaDocPorPagoComponent implements OnInit {
             });
     }
     listarconsultadocporpago(): void {
-        let filtro = this.textoBuscar.trim(); // aquí ya tienes el texto de búsqueda limpio
+        let filtro = this.textoBuscar.trim();
 
         if(filtro === ''){
-            filtro = '1'
+            // No cargar nada si el filtro está vacío
+            this.consultaDocPorPagoList = [];
+            return;
         }
+        
         this.consultaDocPorPagoService
-            .GetConsultaDocPorPago(filtro) // <-- acá envías el texto al servicio
+            .GetConsultaDocPorPago(filtro)
             .subscribe({
                 next: (data) => {
                     this.consultaDocPorPagoList = data;
@@ -149,7 +164,7 @@ export class ConsultaDocPorPagoComponent implements OnInit {
                         this.messageService,
                         'error',
                         'Error',
-                        'Error al cargar medios de pago'
+                        'Error al cargar documentos por pago'
                     );
                 },
             });

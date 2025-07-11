@@ -13,6 +13,30 @@ export function verMensajeInformativo(messageService: MessageService , tipo: str
     });
 }
 
+export function formatDate(date: Date): string {
+    const day = (date.getDate() + 1).toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+export function formatDateForFilename(date: Date): string {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}${month}${year}`;
+}
+
+export function formatDateWithTime(date: Date): string {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${day}/${month}/${year}_${hours}:${minutes}:${seconds}`;
+}
+
 export interface RespuestaAPIBase<T, I = any> {
     message: string;
     messageException: string | null;

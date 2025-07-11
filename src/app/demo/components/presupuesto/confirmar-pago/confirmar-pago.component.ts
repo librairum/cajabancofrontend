@@ -16,7 +16,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { ConfigService } from 'src/app/demo/service/config.service';
-import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
+import { verMensajeInformativo, formatDate } from 'src/app/demo/components/utilities/funciones_utilitarias';
 @Component({
     selector: 'app-confirmar-pago',
     standalone: true,
@@ -28,7 +28,7 @@ import { verMensajeInformativo } from 'src/app/demo/components/utilities/funcion
 })
 export class ConfirmarPagoComponent implements OnInit {
 
-    //por si acaso el nro de pago de la fila
+    //por si acaso el nro de pago de la fila 
     @Input() pagoNumero: string = '';
     @ViewChild('fu') fileUpload!: FileUpload;
     @Output() onClose = new EventEmitter<void>();
@@ -39,7 +39,8 @@ export class ConfirmarPagoComponent implements OnInit {
     fechaEjecucionPago: Date | null = null;
     nroOperacion: string = '';
     rutaComprobante: string = '';
-    // despliegue
+
+    // despliegue 
     archivoSeleccionado: File | null = null;
     cargandoArchivo: boolean = false;
 
@@ -47,22 +48,21 @@ export class ConfirmarPagoComponent implements OnInit {
     mostrarDialogoExito: boolean = false;
     mensajeExito: string = '';
     rutaArchivoGuardado: string = '';
-    rutaDoc:string='';
+    rutaDoc: string = '';
 
     //combo general
-    anio_combo: string = "";apiUrl: any;
-;
+    anio_combo: string = ""; apiUrl: any;
     mes_combo: string = "";
-    urlApi : string = '';
+    urlApi: string = '';
     constructor(private fb: FormBuilder, private messageService: MessageService, private pS: PresupuestoService, private gS: GlobalService,
         private configService: ConfigService) {
         this.pagoForm = this.fb.group({
-            fechaejecucion: [null,Validators.required],
-            nroOperacion: ['',Validators.required],
-            rutaComprobante: ['',Validators.required]
+            fechaejecucion: [null, Validators.required],
+            nroOperacion: ['', Validators.required],
+            rutaComprobante: ['', Validators.required]
         });
 
-      this.apiUrl = configService.getApiUrl();
+        this.apiUrl = configService.getApiUrl();
         this.urlApi = this.apiUrl;
     }
 
@@ -91,10 +91,10 @@ export class ConfirmarPagoComponent implements OnInit {
         // Verificar que todos los campos esten llenos
         this.pagoForm.markAllAsTouched();
         if (this.pagoForm.invalid) {
-            verMensajeInformativo(this.messageService,'error', 'Error', 'Por favor complete los campos requeridos');
+            verMensajeInformativo(this.messageService, 'error', 'Error', 'Por favor complete los campos requeridos');
             return;
         }
-//
+
         this.cargandoArchivo = true;
         const originalFileName = this.archivoSeleccionado?.name || '';
         const fileName = originalFileName.split('.').length > 1
@@ -105,7 +105,7 @@ export class ConfirmarPagoComponent implements OnInit {
 
         const fechaPagoInput = this.pagoForm.get('fechaejecucion')?.value;
         const fechaPagoFormatted = fechaPagoInput
-            ? this.formatDate(new Date(fechaPagoInput))
+            ? formatDate(new Date(fechaPagoInput))
             : null;
 
         // Parametros
@@ -203,14 +203,5 @@ export class ConfirmarPagoComponent implements OnInit {
             this.fileUpload.clear();
         }
     }
-
-    private formatDate(date: Date): string {
-        const day = (date.getDate()+1).toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    }
-
-
 
 }

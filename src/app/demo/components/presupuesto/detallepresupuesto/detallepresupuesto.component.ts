@@ -14,7 +14,6 @@ import { ToastModule } from 'primeng/toast';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { Detallepresupuesto, mediopago_lista } from '../../../model/presupuesto';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
-
 import { InputNumberModule } from 'primeng/inputnumber';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { DialogModule } from 'primeng/dialog';
@@ -22,7 +21,7 @@ import { AgregarPagoComponent } from '../agregar-pago/agregar-pago.component';
 import { saveAs } from 'file-saver';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
+import { verMensajeInformativo, formatDate, formatDateForFilename, formatDateWithTime } from 'src/app/demo/components/utilities/funciones_utilitarias';
 
 @Component({
     selector: 'app-detallepresupuesto',
@@ -273,12 +272,12 @@ export class DetallepresupuestoComponent implements OnInit {
                         this.DetallePago[this.editingIndex] = {
                             ...this.editingRow,
                         };
-                        verMensajeInformativo(this.messageService,'success', 'Éxito', 'Detalle actualizado correctamente');
+                        verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Detalle actualizado correctamente');
                         this.cancelEditing();
                         this.cargarDetalles();
                     },
                     error: (error) => {
-                        verMensajeInformativo(this.messageService,'error', 'Error', `Error al actualizar: ${error.message}`);
+                        verMensajeInformativo(this.messageService, 'error', 'Error', `Error al actualizar: ${error.message}`);
                     },
                 });
         }
@@ -324,7 +323,7 @@ export class DetallepresupuestoComponent implements OnInit {
             //importeDetraccion: detalle.importeDetraccion,
             ban02ImporteDetraccionSoles: detalle.ban02ImporteDetraccionSoles,
             // ban02ImporteDetraccionSoles:196,
-            ban02ImporteDetraccionDolares:detalle.ban02ImporteDetraccionDolares,
+            ban02ImporteDetraccionDolares: detalle.ban02ImporteDetraccionDolares,
             ban02TasaRetencion: detalle.ban02TasaRetencion,
             ban02ImporteRetencionSoles: detalle.ban02ImporteRetencionSoles,
             ban02ImporteRetencionDolares: detalle.ban02ImporteRetencionDolares,
@@ -345,9 +344,8 @@ export class DetallepresupuestoComponent implements OnInit {
                 </p>
                 <div style="text-align: center; margin-top: 10px;">
                     <p>
-                        <strong>Número documento: </strong>${
-                            detalle.ban02NroDoc
-                        }
+                        <strong>Número documento: </strong>${detalle.ban02NroDoc
+                }
                     </p>
                 </div>
                 `,
@@ -372,14 +370,14 @@ export class DetallepresupuestoComponent implements OnInit {
                     .subscribe({
                         next: (response) => {
                             if (response.isSuccess) {
-                                verMensajeInformativo(this.messageService,'success', 'Éxito', 'Presupuesto detalle eliminado correctamente');
+                                verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Presupuesto detalle eliminado correctamente');
                                 this.cargarDetalles();
                             } else {
-                                verMensajeInformativo(this.messageService,'error', 'Error', response.message || 'Error al eliminar el presupuesto');
+                                verMensajeInformativo(this.messageService, 'error', 'Error', response.message || 'Error al eliminar el presupuesto');
                             }
                         },
                         error: (error) => {
-                            verMensajeInformativo(this.messageService,'error', 'Error', `Error al eliminar el presupuesto: ${error.message}`);
+                            verMensajeInformativo(this.messageService, 'error', 'Error', `Error al eliminar el presupuesto: ${error.message}`);
                         },
                     });
             },
@@ -458,7 +456,7 @@ export class DetallepresupuestoComponent implements OnInit {
             //Convertir segun el tiop de cambio mont de pago dolares a monto pago soles ;
             montoPagoSoles = montoPagoDolares * numeroTipoCambio;
             // console.log("moneda dolares y monto a pagar soles");
-                    // console.log(montoPagoSoles);
+            // console.log(montoPagoSoles);
             importeDetraccionSoles = (tasaDetraccion / 100) * montoPagoSoles;
             importeRetencionSoles = (tasaRetencion / 100) * montoPagoSoles;
             importePercepcionSoles = (tasaRetencion / 100) * montoPagoSoles;
@@ -472,9 +470,9 @@ export class DetallepresupuestoComponent implements OnInit {
         }
 
         //asignar valor de improte detraccion
-        if(monedaEdicion == 'S'){
+        if (monedaEdicion == 'S') {
             detalle.importeDetraccion = importeDetraccionSoles;
-        }else if(monedaEdicion == 'D'){
+        } else if (monedaEdicion == 'D') {
             detalle.importeDetraccion = importeDetraccionDolares;
         }
 
@@ -483,9 +481,9 @@ export class DetallepresupuestoComponent implements OnInit {
         this.editingRow.ban02PagoDolares = montoPagoDolares;
         this.editingRow.ban02PagoSoles = montoPagoSoles;
 
-        if(monedaEdicion == 'S'){
+        if (monedaEdicion == 'S') {
             this.editingRow.importeDetraccion = importeDetraccionSoles;
-        }else if(monedaEdicion == 'D'){
+        } else if (monedaEdicion == 'D') {
             this.editingRow.importeDetraccion = importeDetraccionDolares;
         }
 
@@ -722,8 +720,8 @@ export class DetallepresupuestoComponent implements OnInit {
             '',
             '',
             '',
-            { text: 'Sumas', style: 'total', colSpan: 1, alignment: 'left'} as any,
-            { text: formatNumber(totalSoles), style: 'total', colSpan: 1},
+            { text: 'Sumas', style: 'total', colSpan: 1, alignment: 'left' } as any,
+            { text: formatNumber(totalSoles), style: 'total', colSpan: 1 },
             { text: formatNumber(totalDolares), style: 'total', colSpan: 1 },
             { text: '', style: 'total', colSpan: 1 },
             { text: '', style: 'total', colSpan: 1 },
@@ -869,7 +867,7 @@ export class DetallepresupuestoComponent implements OnInit {
         const fileName = 'DetallePrespupuesto_' +
             this.pagnro +
             '_' +
-            this.formatFecha((this.fechahoy = new Date())) +
+            formatDateWithTime((this.fechahoy = new Date())) +
             '.pdf';
 
         pdfMake.createPdf(docDefinition).open({
@@ -883,17 +881,6 @@ export class DetallepresupuestoComponent implements OnInit {
                 URL.revokeObjectURL(blobUrl);
             }, 100);
         });*/
-    }
-
-    formatFecha(fecha: Date): string {
-        const dia = fecha.getDate().toString().padStart(2, '0');
-        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Mes empieza en 0
-        const año = fecha.getFullYear();
-        const horas = fecha.getHours().toString().padStart(2, '0');
-        const minutos = fecha.getMinutes().toString().padStart(2, '0');
-        const segundos = fecha.getSeconds().toString().padStart(2, '0');
-
-        return `${dia}/${mes}/${año}_${horas}:${minutos}:${segundos}`;
     }
 
     generarTXT() {
@@ -916,36 +903,26 @@ export class DetallepresupuestoComponent implements OnInit {
                     });
                     const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
                     const fechaActual = new Date();
-                    const nombreArchivo = `archivocarga_${this.formatearFechaArchivo(fechaActual)}.txt`;
+                    const nombreArchivo = `archivocarga_${formatDateForFilename(fechaActual)}.txt`;
                     //ejecuta los comandos en la terminal
                     //npm install file-saver --legacy-peer-deps
                     //npm install @types/file-saver --save-dev --legacy-peer-deps
                     saveAs(blob, nombreArchivo);
-                    verMensajeInformativo(this.messageService,'success', 'Éxito', 'Archivo TXT generado correctamente');
+                    verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Archivo TXT generado correctamente');
                 } catch (error) {
                     console.error('Error al generar el archivo TXT:', error);
-                    verMensajeInformativo(this.messageService,'error', 'Error', 'Ocurrió un error al generar el archivo TXT');
+                    verMensajeInformativo(this.messageService, 'error', 'Error', 'Ocurrió un error al generar el archivo TXT');
                 }
             })
     }
+
     //esto es para dar formato de fecha en el txt
     private formatearFecha(fecha: string | Date): string {
         if (!fecha) return '';
         const fechaObj = fecha instanceof Date ? fecha : new Date(fecha);
         if (isNaN(fechaObj.getTime())) return '';
-        const dia = fechaObj.getDate().toString().padStart(2, '0');
-        const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0');
-        const anio = fechaObj.getFullYear();
 
-        return `${dia}/${mes}/${anio}`;
-    }
-    //esto es para dar formato de fecha en el nombre del txt
-    private formatearFechaArchivo(fecha: Date): string {
-        const dia = fecha.getDate().toString().padStart(2, '0');
-        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-        const anio = fecha.getFullYear();
-
-        return `${dia}${mes}${anio}`;
+        return formatDate(fechaObj);
     }
     //esto para dar formato a los numeros decimales
     private formatearNumero(valor: number | string): string {
