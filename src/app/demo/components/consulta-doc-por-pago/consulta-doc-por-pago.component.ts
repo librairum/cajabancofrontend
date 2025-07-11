@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { ConsultaDocPorPagoService } from '../../service/consulta-doc-por-pagar.service';
@@ -47,6 +46,7 @@ export class ConsultaDocPorPagoComponent implements OnInit {
     items: any[] = [];
     isNew: boolean = false;
     textoBuscar: string = '';
+    searchPerformed: boolean = false;
 
     constructor(
         private consultaDocPorPagoService: ConsultaDocPorPagoService,
@@ -70,7 +70,6 @@ export class ConsultaDocPorPagoComponent implements OnInit {
             this.items = bc;
         });
         this.initForm();
-        // No cargar datos automáticamente - solo cuando el usuario busque
     }
 
     buscar(): void {
@@ -85,7 +84,7 @@ export class ConsultaDocPorPagoComponent implements OnInit {
             );
             return;
         }
-        
+        this.searchPerformed = true;
         this.listarconsultadocporpago();
     }
 
@@ -150,6 +149,7 @@ export class ConsultaDocPorPagoComponent implements OnInit {
         if(filtro === ''){
             // No cargar nada si el filtro está vacío
             this.consultaDocPorPagoList = [];
+            this.searchPerformed = false;
             return;
         }
         
@@ -158,6 +158,14 @@ export class ConsultaDocPorPagoComponent implements OnInit {
             .subscribe({
                 next: (data) => {
                     this.consultaDocPorPagoList = data;
+                    if (data.length === 0) {
+                        verMensajeInformativo(
+                            this.messageService,
+                            'info',
+                            'Información',
+                            'No se encontro el ruc o nro doc'
+                        );
+                    }
                 },
                 error: () => {
                     verMensajeInformativo(
