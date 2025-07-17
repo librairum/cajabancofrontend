@@ -49,6 +49,7 @@ export class AgregarPagoComponent implements OnInit {
     ayudapago: agregar_Pago[] = [];
     proveedores: proveedores_lista[] = [];
     selectedItems: agregar_Pago[] = [];
+    searchedByDocNumber: boolean = false; // Nueva propiedad
     //modal
     @Input() numeropresupuesto: string;
     @Input() fechapresupuesto: string;
@@ -133,15 +134,25 @@ export class AgregarPagoComponent implements OnInit {
             .subscribe({
                 next: (data) => {
                     this.ayudapago = data;
-
                     this.loading = false;
+                    
                     if (data.length === 0) {
-                        verMensajeInformativo(
-                            this.messageService,
-                            'warn',
-                            'Advertencia',
-                            'No se encontraron registros del proveedor'
-                        );
+                        if (this.searchedByDocNumber && nroDoc.trim() !== '') {
+                            this.messageService.add({
+                                severity: 'warn',
+                                summary: 'Advertencia',
+                                detail: 'No se encontró el Número de documento',
+                                key: 'main',
+                                life: 2000
+                            });
+                        } else {
+                            verMensajeInformativo(
+                                this.messageService,
+                                'warn',
+                                'Advertencia',
+                                'No se encontraron registros del proveedor'
+                            );
+                        }
                     }
                 },
                 error: (error) => {
@@ -191,6 +202,9 @@ export class AgregarPagoComponent implements OnInit {
             });
             return;
         }
+
+        // Determinar si la búsqueda es por número de documento (cuando hay documento pero no hay proveedor)
+        this.searchedByDocNumber = nroDoc !== '' && ruc === '';
 
         this.cargarayudaparaagregarpago();
     }

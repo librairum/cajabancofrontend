@@ -87,7 +87,7 @@
             <ng-template pTemplate="emptymessage">
                 <tr>
                     <td colspan="14" style="text-align: center; font-weight: bold; padding: 1rem;">
-                        No se encontraron registros
+                        {{ searchedByDocNumber ? 'No se encontró el Número de documento' : 'No se encontraron registros' }}
                     </td>
                 </tr>
             </ng-template>
