@@ -14,7 +14,7 @@ import { PerfilComponent } from './demo/components/perfil/perfil.component';
 import { PermisosxperfilxtodoComponent } from './demo/components/permisosxperfilxtodo/permisosxperfilxtodo.component';
 import { ConsultaDocPorPagoComponent } from './demo/components/consulta-doc-por-pago/consulta-doc-por-pago.component';
 import { CuentaComponent } from './demo/components/cuenta/cuenta.component';
-
+import { ConsultaDocPendienteReporteComponent } from './demo/components/consulta-doc-pendiente-reporte/consulta-doc-pendiente-reporte.component';
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -39,6 +39,7 @@ import { CuentaComponent } from './demo/components/cuenta/cuenta.component';
                     { path: 'asignarpermiso', component: PermisosxperfilxtodoComponent },
                     { path: 'ConsultaDocPorPago', component: ConsultaDocPorPagoComponent },
                     { path: 'cuenta', component: CuentaComponent },
+                    { path:'ConsultaDocPendienteReporte', component:ConsultaDocPendienteReporteComponent} ,
 
                 ]
             },

@@ -306,7 +306,8 @@ export class PresupuestoService {
         return this.http.delete(`${this.urlApi}/SpEliminaDet`, { params });
     }
 
-    public obtenerArchivo(empresa: string, anio: string, mes: string, numeroPresupuesto: string): Observable<HttpResponse<Blob>>{
+    public obtenerArchivo(empresa: string, anio: string, mes: string, 
+        numeroPresupuesto: string): Observable<HttpResponse<Blob>>{
         const params = new HttpParams()
         .set('empresa', empresa)
         .set('anio', anio)
@@ -319,4 +320,23 @@ export class PresupuestoService {
             responseType: 'blob',
         })
     }
+    
+//reporte documentos pediente de agregar pagos
+    public obtenerDocPendienteReporte(
+        empresa: string,
+        filtro:string
+    ): Observable<agregar_Pago[]> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('filtro', filtro);
+        return this.http
+            .get<RespuestaAPIBase<agregar_Pago[]>>(
+                `${this.urlApi}/SpListaDocPendientesReporte`,
+                {
+                    params,
+                }
+            )
+            .pipe(map((response) => response.data));
+    }
+
 }

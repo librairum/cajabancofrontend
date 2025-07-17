@@ -24,12 +24,9 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import {formatDateForFilename} from 'src/app/demo/components/utilities/funciones_utilitarias'; 
 @Component({
-    selector: 'app-consulta-doc-por-pago',
-    standalone: true,
-    templateUrl: './consulta-doc-por-pago.component.html',
-    styleUrl: './consulta-doc-por-pago.component.css',
-    imports: [
-        ToastModule,
+  selector: 'app-consulta-doc-pendiente-reporte',
+  standalone: true,
+  imports: [ToastModule,
         TableModule,
         ReactiveFormsModule,
         CommonModule,
@@ -39,38 +36,29 @@ import {formatDateForFilename} from 'src/app/demo/components/utilities/funciones
         PanelModule,
         BreadcrumbModule,
         ConfirmDialogModule,
-        FormsModule,
-    ],
-    providers: [MessageService, ConfirmationService],
+        FormsModule
+      ],
+  providers:[MessageService],
+  templateUrl: './consulta-doc-pendiente-reporte.component.html',
+  styleUrl: './consulta-doc-pendiente-reporte.component.css'
 })
-export class ConsultaDocPorPagoComponent implements OnInit {
-    consultaDocPorPagoForm: FormGroup;
-    consultaDocPorPagoList: ConsultaDocPorPago[] = [];
-    isEditing: boolean = false;
-    items: any[] = [];
-    isNew: boolean = false;
-    textoBuscar: string = '';
-    DetallePago :Detallepresupuesto[];
-    load:boolean = false;
-    groupTotals : any[] = [];
-    ayudapago: agregar_Pago[] = [];
-    datos
-    constructor(
-        private consultaDocPorPagoService: ConsultaDocPorPagoService,
-        private fb: FormBuilder,
-        private breadcrumbService: BreadcrumbService,
-        private router: Router,
-        private globalService: GlobalService,
-        private messageService: MessageService,
-        private presupuestoService: PresupuestoService
-    ) {}
+export class ConsultaDocPendienteReporteComponent implements OnInit {
 
-    ngOnInit(): void {
-        this.breadcrumbService.setBreadcrumbs([
+items: any[] = [];
+textoBuscar: string='';
+consultaDocPorPagoList: ConsultaDocPorPago[] = [];
+ayudapago: agregar_Pago[] = [];
+  constructor(private presupuestoService:PresupuestoService, 
+    private breadcrumbService:BreadcrumbService,
+   private globalService: GlobalService,
+  private messageService:MessageService ){}
+
+  ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
             {
-                label: 'Consulta doc. pendiente',
-                routerLink: '/Home/ConsultaDocPorPago',
+                label: 'Consulta doc. por pago',
+                routerLink: '/Home/ConsultaDocPendienteReporte',
             },
         ]);
         this.breadcrumbService.currentBreadcrumbs$.subscribe((bc) => {
@@ -78,81 +66,14 @@ export class ConsultaDocPorPagoComponent implements OnInit {
         });
         this.initForm();
         (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
-        // No cargar datos automáticamente - solo cuando el usuario busque
-    }
 
-    buscar(): void {
-        const filtro = this.textoBuscar.trim();
-        
-        if (filtro === '') {
-            verMensajeInformativo(
-                this.messageService,
-                'warn',
-                'Advertencia',
-                'Debes escribir el ruc o el nro doc'
-            );
-            return;
-        }
-        
-        this.listarconsultadocporpago();
-    }
+  }
+ initForm(): void {}
 
-    initForm(): void {
-        this.consultaDocPorPagoForm = this.fb.group({
-            ban01Empresa: [
-                this.globalService.getCodigoEmpresa(),
-                Validators.required,
-            ],
-            ruc: ['', Validators.required],
-            nombreEmpresa: ['', Validators.required],
-            tipoDocumento: ['', Validators.required],
-            nroDoc: ['', Validators.required],
-            fechaDocumento: ['', Validators.required],
-            moneda: ['', Validators.required],
-            importeDocumento: ['', Validators.required],
-            importePago: ['', Validators.required],
-            fechaPago: ['', Validators.required],
-        });
-    }
+buscar():void{}
 
-    abrirdocumento(fechaPago: string, numeroPresupuesto: string): void {
-        const fecha = fechaPago.split('/');
-        const mesFecha = fecha[1];
-        const anioFecha = fecha[2];
 
-        this.presupuestoService
-            .obtenerArchivo(
-                this.globalService.getCodigoEmpresa(),
-                anioFecha,
-                mesFecha,
-                numeroPresupuesto
-            )
-            .subscribe({
-                next: (response: HttpResponse<Blob>) => {
-                    const blob = response.body;
-                    if (blob && blob.size > 0) {
-                        const url = window.URL.createObjectURL(blob);
-                        window.open(url, '_blank');
-                    } else {
-                        verMensajeInformativo(
-                            this.messageService,
-                            'error',
-                            'Error',
-                            'No se encontró el documento'
-                        );
-                    }
-                },
-                error: (err) => {
-                    verMensajeInformativo(
-                        this.messageService,
-                        'error',
-                        'Error',
-                        'Error al cargar el documento'
-                    );
-                },
-            });
-    }
-    listarconsultadocporpago(): void {
+ listarconsultadocporpago(): void {
         let filtro = this.textoBuscar.trim();
 
         if(filtro === ''){
@@ -160,57 +81,39 @@ export class ConsultaDocPorPagoComponent implements OnInit {
             this.consultaDocPorPagoList = [];
             return;
         }
-        
-        this.consultaDocPorPagoService
-            .GetConsultaDocPorPago(filtro)
+        this.presupuestoService.obtenerDocPendienteReporte(this.globalService.getCodigoEmpresa(),
+        filtro )
             .subscribe({
-                next: (data) => {
-                    this.consultaDocPorPagoList = data;
-                },
-                error: () => {
-                    verMensajeInformativo(
-                        this.messageService,
-                        'error',
-                        'Error',
-                        'Error al cargar documentos por pago'
-                    );
-                },
-            });
+              next:(data) =>{
+                this.ayudapago = data;
+              }
+            ,
+            error:()=>{
+              verMensajeInformativo(this.messageService, 
+                'error',
+                'error', 'error al cargar documentos por pago');
+
+            }
+          });
+        
+        // this.presupuestoService.obtenerDocPendienteReporte(this.globalService.getCodigoEmpresa(), filtro,)                    
+        //     .subscribe({
+        //         next: (data) => {
+        //             this.ayudapago = data;
+        //         },
+        //         error: () => {
+        //             verMensajeInformativo(
+        //                 this.messageService,
+        //                 'error',
+        //                 'Error',
+        //                 'Error al cargar documentos por pago'
+        //             );
+        //         },
+        //     });
     }
 
 
-    obtenerFacturaPendiente():void{
-        //const nroDoc = this.filtroFRM.get('nrodoc').value ?? '';
-        //const ruc = this.filtroFRM.get('ruc').value ?? '';
-        console.log("metodo obtenr factura pendiente");
-        const nroDoc = '';
-        const ruc  =  this.textoBuscar.trim();
-        this.presupuestoService.obtenerDocPendiente(
-            this.globalService.getCodigoEmpresa(),ruc,nroDoc )
-            .subscribe({
-                next:(data)=>{
-
-                     this.ayudapago = data;
-                     console.log("data de tra er documento pendiente");
-                        console.log(this.ayudapago);
-                       this.generarPDFPendiente(this.ayudapago);
-                    //this.loading = false;
-                    if (data.length === 0) {
-                        verMensajeInformativo(
-                            this.messageService,
-                            'warn',
-                            'Advertencia',
-                            'No se encontraron registros del proveedor'
-                        );
-                    }
-                },error: (error) => {
-                    //this.loading = false;
-                    verMensajeInformativo(this.messageService, 'error', 'Error', `Error al cargar los registros ${error.message}`);
-                },
-            });
-
-    } 
-    generarPDFPendiente(dataReporte: agregar_Pago[]):void{
+ generarPDFPendiente(dataReporte: agregar_Pago[]):void{
 
         //this.obtenerFacturaPendiente();
 
@@ -470,5 +373,9 @@ AfectaRetencion
 
     }  
 
-    
 }
+
+
+
+
+

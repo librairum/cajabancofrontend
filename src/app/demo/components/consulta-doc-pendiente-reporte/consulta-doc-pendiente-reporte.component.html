@@ -1,21 +1,20 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
-
 <div class="container">
-    <p-panel header="Documentos Por Pagar" class="mb-3">
+     <p-panel header="Documentos Por Pagar" class="mb-3">
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
         <br/>
         <div class="search-bar">
             <input type="text" pInputText placeholder="" [(ngModel)]="textoBuscar" (keyup.enter)="buscar()" class="mr-3 w-5"/>
             <p-button pButton type="button" label="Buscar" class="p-ml-2" style="height: 35px;" (click)="buscar()"></p-button>
-            <p-button pButton type="button" label="Reporte PDF" class="p-ml-2" style="height: 35px;" (click)="obtenerFacturaPendiente()"></p-button>
             
         </div>
         <b class="">* digitar ruc , razon social, nro doc</b>
     </p-panel>
     <br />
     <div class="card p-2">
-        <p-table [value]="consultaDocPorPagoList" 
+        <!-- <p-table 
+        [value]="consultaDocPorPagoList" 
         [scrollable]="true" [tableStyle]="{width: '100%', border: '0px solid black'}">
         <ng-template pTemplate="header">
             <tr>
@@ -53,7 +52,7 @@
             </td>
             </tr>
         </ng-template>
-        </p-table>
+        </p-table> -->
     </div>
 
 

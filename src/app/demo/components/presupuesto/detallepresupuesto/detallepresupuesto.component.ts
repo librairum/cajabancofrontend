@@ -514,7 +514,10 @@ export class DetallepresupuestoComponent implements OnInit {
         // console.log(netoSoles);
         detalle.ban02NetoSoles = netoSoles;
     }
+    exportarPDFPendiente(){
 
+        
+    }
     exportarPDF() {
         if (!this.DetallePago || this.DetallePago.length === 0) {
             // verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
@@ -737,6 +740,10 @@ export class DetallepresupuestoComponent implements OnInit {
                 colSpan: 1,
             },
         ]);
+
+
+
+
         // Estructura y estilos del pdf, medio complicado es
         const docDefinition = {
             pageOrientation: 'landscape',
@@ -864,6 +871,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
         // Generamos el pdf
         //pdfMake.createPdf(docDefinition).download('DetallePrespupuesto_' + this.pagnro + '.pdf');
+        
         const fileName = 'DetallePrespupuesto_' +
             this.pagnro +
             '_' +
