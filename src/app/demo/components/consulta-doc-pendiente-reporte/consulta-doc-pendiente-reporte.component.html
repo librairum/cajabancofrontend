@@ -5,54 +5,120 @@
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
         <br/>
         <div class="search-bar">
-            <input type="text" pInputText placeholder="" [(ngModel)]="textoBuscar" (keyup.enter)="buscar()" class="mr-3 w-5"/>
-            <p-button pButton type="button" label="Buscar" class="p-ml-2" style="height: 35px;" (click)="buscar()"></p-button>
+            <input type="text" pInputText placeholder="" [(ngModel)]="textoBuscar" 
+            class="mr-3 w-5"/>
+            <!-- <p-button pButton type="button" label="Buscar" 
+            class="p-ml-2" style="height: 35px;" 
+            (click)="buscar()"></p-button> -->
+
+            <p-button label="Buscar" icon="pi pi-plus" styleClass="p-button-sm mr-2"
+                (onClick)="buscar()"></p-button>
             
+            <p-button label="Imprimir PDF" icon="pi pi-file-pdf" styleClass="p-button-sm p-button-success mr-2"
+                (onClick)="obtenerFacturaPendiente()"></p-button>
+
         </div>
         <b class="">* digitar ruc , razon social, nro doc</b>
     </p-panel>
     <br />
     <div class="card p-2">
-        <!-- <p-table 
-        [value]="consultaDocPorPagoList" 
-        [scrollable]="true" [tableStyle]="{width: '100%', border: '0px solid black'}">
+        <p-table 
+        [value]="ayudapago" 
+        [scrollable]="true" [tableStyle]="{width: '100%', border: '0px solid black'}"
+        groupRowsBy="ruc" sortField="razonSocial" sortMode="single" rowGroupMode="subheader"
+        >
         <ng-template pTemplate="header">
             <tr>
             <th>RUC</th>
             <th>Nombre</th>
             <th>Tipo Doc</th>
             <th>Numero</th>
-            <th>Fecha</th>
-            <th>Importe</th>
-            <th>Fecha Pago</th>
-            <th>Importe Pagado</th>
-            <th>Ver Comprobante de pago</th>
+            <th>Fecha emision</th>
+            <th>Fecha vencimiento</th>
+            <th>moneda</th>
+            <th>soles</th>
+            <th>dolares</th>
+            <th>detraccion</th>
+            <th>retencion</th>
             </tr>
+        </ng-template>
+
+          <ng-template pTemplate="groupheader" let-groupData>
+                <tr pRowGroupHeader>
+                    <!--
+                    <td colspan="8">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold">{{ groupData.ban02Proveedor }}</span>
+                        </div>
+                    </td>-->
+                </tr>
+            </ng-template>
+        <ng-template pTemplate="groupfooter" let-groupData>
+            <tr>
+                <td colspan="7">                    
+                </td>
+                <td class="font-bold pr-12" style="text-align: right;">
+                    {{calculateGroupTotal(groupData.ruc, 'soles') | number:'1.2-2' }}
+                </td>
+                <td class="font-bold pr-12" style="text-align: right;">
+                    {{calculateGroupTotal(groupData.ruc, 'dolares') | number:'1.2-2' }}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+        </ng-template>
+        
+        <ng-template pTemplate="footer">
+        <tr>
+            <td colspan="7" class="font-bold" style="text-align: right;">TOTAL GENERAL:</td>
+            <td class="font-bold" style="text-align: right;">
+            {{ getTotalTabla('soles') | number: '1.2-2' }}
+            </td>
+            <td class="font-bold" style="text-align: right;">
+            {{ getTotalTabla('dolares') | number: '1.2-2' }}
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-doc>
             <tr>
             <td style="text-align: left; white-space: nowrap;">{{ doc.ruc }}</td>
-            <td style="text-align: left; white-space: nowrap;">{{ doc.nombreEmpresa }}</td>
-            <td style="text-align: left; white-space: nowrap;">{{ doc.nombreTipoDocumento }}</td>
-            <td style="text-align: left; white-space: nowrap;">{{ doc.nroDoc }}</td>
-            <td style="text-align: left; white-space: nowrap;">{{ doc.fechaDocumento }}</td>
-            <td style="text-align: right; white-space: nowrap;">{{ doc.importeDocumento | number : "1.2-2" }}</td>
-            <td style="text-align: left; white-space: nowrap;">{{ doc.fechaPago}}</td>
-            <td style="text-align: right; white-space: nowrap;">{{ doc.importePago | number : "1.2-2" }}</td>
-            <td style="text-align: center; white-space: nowrap;">
-                <p-button *ngIf="doc.fechaPago !== '' "label="" icon="pi pi-file"
+            <td style="text-align: left; white-space: nowrap;">{{ doc.razonSocial }}</td>
+            <td style="text-align: left; white-space: nowrap;">{{ doc.nombreTipoDOc }}</td>
+            <td style="text-align: left; white-space: nowrap;">{{ doc.numeroDOcumento }}</td>
+            <td style="text-align: left; white-space: nowrap;">{{ doc.fechaEmision }}</td>
+            <td style="text-align: left; white-space: nowrap;">{{ doc.fechaVencimiento }}</td>
+            <td style="text-align: right; white-space: nowrap;">{{ doc.monedaOriginal  }}</td>
+            <td style="text-align: right; white-space: nowrap;">{{ doc.soles | number : "1.2-2"}}</td>
+            <td style="text-align: right; white-space: nowrap;">{{ doc.dolares | number : "1.2-2" }}</td>
+            <td style="text-align: right; white-space: nowrap;">{{doc.afectoDetraccion}}</td>
+            <td style="text-align: right; white-space: nowrap;">{{doc.afectoRetencion}}</td>
+            <!-- <td style="text-align: center; white-space: nowrap;"> -->
+                <!-- <p-button *ngIf="doc.fechaPago !== '' "label="" icon="pi pi-file"
                             styleClass="p-button-sm p-button-info"
                             (onClick)="abrirdocumento(doc.fechaPago, doc.numeroPresupuesto)
                             " [text]="false">
                 </p-button>
                 <p-button *ngIf="doc.fechaPago === '' " label="" icon="pi pi-file-excel"
                             styleClass="p-button-sm p-button-danger" [disabled]="true" [text]="false">
-                </p-button>
-            </td>
+                </p-button> -->
+            <!-- </td> -->
             </tr>
         </ng-template>
-        </p-table> -->
+
+
+         <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="11" style="text-align: center; font-weight: bold; padding: 1rem;">
+                        no hay resultado
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
     </div>
 
 

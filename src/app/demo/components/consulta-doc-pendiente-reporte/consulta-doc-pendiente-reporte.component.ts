@@ -1,16 +1,21 @@
 
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { TableModule } from 'primeng/table';
-import { ConsultaDocPorPagoService } from '../../service/consulta-doc-por-pagar.service';
-import { ConsultaDocPorPago } from '../../model/ConsultaDocPorPago';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {  FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { BreadcrumbService } from '../../service/breadcrumb.service';
-import { Router } from '@angular/router';
+
+import { TableModule } from 'primeng/table';
+
+import { ConsultaDocPorPago } from '../../model/ConsultaDocPorPago';
+
+
+
 import { GlobalService } from '../../service/global.service';
 import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
-import { ConfirmationService, MessageService } from 'primeng/api';
+
 import { ToastModule } from 'primeng/toast';
-import { CommonModule } from '@angular/common';
+
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -18,11 +23,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { PresupuestoService } from '../../service/presupuesto.service';
-import { HttpResponse } from '@angular/common/http';
-import { Detallepresupuesto,agregar_Pago } from '../../model/presupuesto';
+
+import { agregar_Pago } from '../../model/presupuesto';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import {formatDateForFilename} from 'src/app/demo/components/utilities/funciones_utilitarias'; 
+import { InputNumberModule } from 'primeng/inputnumber';
 @Component({
   selector: 'app-consulta-doc-pendiente-reporte',
   standalone: true,
@@ -36,9 +42,10 @@ import {formatDateForFilename} from 'src/app/demo/components/utilities/funciones
         PanelModule,
         BreadcrumbModule,
         ConfirmDialogModule,
-        FormsModule
+        FormsModule,
+        InputNumberModule
       ],
-  providers:[MessageService],
+  providers:[MessageService,DatePipe],
   templateUrl: './consulta-doc-pendiente-reporte.component.html',
   styleUrl: './consulta-doc-pendiente-reporte.component.css'
 })
@@ -70,17 +77,20 @@ ayudapago: agregar_Pago[] = [];
   }
  initForm(): void {}
 
-buscar():void{}
+buscar():void{
+
+    this.listarconsultadocporpago();
+}
 
 
  listarconsultadocporpago(): void {
         let filtro = this.textoBuscar.trim();
 
-        if(filtro === ''){
-            // No cargar nada si el filtro está vacío
-            this.consultaDocPorPagoList = [];
-            return;
-        }
+        // if(filtro === ''){
+        //     // No cargar nada si el filtro está vacío
+        //     this.consultaDocPorPagoList = [];
+        //     return;
+        // }
         this.presupuestoService.obtenerDocPendienteReporte(this.globalService.getCodigoEmpresa(),
         filtro )
             .subscribe({
@@ -112,7 +122,45 @@ buscar():void{}
         //     });
     }
 
+obtenerFacturaPendiente():void{
+        //const nroDoc = this.filtroFRM.get('nrodoc').value ?? '';
+        //const ruc = this.filtroFRM.get('ruc').value ?? '';
+        console.log("metodo obtenr factura pendiente");
+        const nroDoc = '';
+        const filtro  =  this.textoBuscar.trim();
+        this.presupuestoService.obtenerDocPendienteReporte(this.globalService.getCodigoEmpresa(),filtro)
+        //this.presupuestoService.obtenerDocPendiente(filtro
+          //  this.globalService.getCodigoEmpresa(),ruc,nroDoc )
+            .subscribe({
+                next:(data)=>{
 
+                     this.ayudapago = data;
+                     console.log("data de tra er documento pendiente");
+                        console.log(this.ayudapago);
+                       this.generarPDFPendiente(this.ayudapago);
+                    //this.loading = false;
+                    if (data.length === 0) {
+                        verMensajeInformativo(
+                            this.messageService,
+                            'warn',
+                            'Advertencia',
+                            'No se encontraron registros del proveedor'
+                        );
+                    }
+                },error: (error) => {
+                    //this.loading = false;
+                    verMensajeInformativo(this.messageService, 'error', 'Error', `Error al cargar los registros ${error.message}`);
+                },
+            });
+
+    } 
+
+    calculateGroupTotal(ruc: string, field: string): number {
+        return this.ayudapago.filter((item) => item.ruc === ruc).reduce(
+            (sum, item) => sum + (item[field] || 0),
+            0
+        );
+    }
  generarPDFPendiente(dataReporte: agregar_Pago[]):void{
 
         //this.obtenerFacturaPendiente();
@@ -124,48 +172,30 @@ buscar():void{}
             console.log("No retoarn datoa de ayuda pago");
             return;
         }
-        console.log("metodo generar pdf pendiente:");
-        
-        console.log("metod generar pdf");
+
         var resultados  =dataReporte;
-        console.log("datos generaro en generar pdf:"+resultados);
-         //this.presupuestoService.console.lo
-        /*
-        
-        Ruc
-razonSocial
-CodigoTipoDoc
-NombreTipoDoc
-NumeroDocumento
-FechaEmision
-FechaVencimiento
-MonedaOriginal
-Soles
-Dolares
-AfectaDetraccion
-AfectaRetencion
-        */
+    
         // Definimos las cabeceras
         const headers = [
             [
                 
-                { text: 'RUC', rowSpan: 2, style: 'tableHeader' },//1
-                { text: 'Razon Social', rowSpan: 2, style: 'tableHeader' },//2
-                { text: 'Tipo Doc', rowSpan: 2, style: 'tableHeader' }, //3
-                { text: 'Numero', rowSpan: 2, style: 'tableHeader' },       //4          
-                { text: 'Fecha emision', rowSpan: 2, style: 'tableHeader' }, //5
-                { text: 'Fecha vencimiento', rowSpan: 2, style: 'tableHeader' }, //6
-                { text: 'Moneda Original', rowSpan: 2, style: 'tableHeader' }, //7
-                { text: 'Importe Total S/.', rowSpan: 2, style: 'tableHeader' },//8
-                { text: 'Importe Total US$', rowSpan: 2, style: 'tableHeader' },//9
+                { text: 'RUC',  style: 'tableHeader' },//1
+                { text: 'Razon Social',  style: 'tableHeader' },//2
+                { text: 'Tipo Doc',  style: 'tableHeader' }, //3
+                { text: 'Numero',  style: 'tableHeader' },       //4          
+                { text: 'Fecha emision',  style: 'tableHeader' }, //5
+                { text: 'Fecha vencimiento',  style: 'tableHeader' }, //6
+                { text: 'Moneda Original',  style: 'tableHeader' }, //7
+                { text: 'Importe Total S/.',  style: 'tableHeader' },//8
+                { text: 'Importe Total US$',  style: 'tableHeader' },//9
                 
-                { text: 'Detraccion', rowSpan:2, style: 'tableHeader' }, //10     
-                { text: 'Retencion', rowSpan: 2, style: 'tableHeader' },//11
+                { text: 'Detraccion',  style: 'tableHeader' }, //10     
+                { text: 'Retencion',  style: 'tableHeader' },//11
                 
             ],
                       
         ];
-         console.log("metod generar cabececera");
+       
         // Agrupamos por RUC
         const groupedData = {};
         this.ayudapago.forEach((item) => {
@@ -175,20 +205,11 @@ AfectaRetencion
             groupedData[item.ruc].push(item);
         });
 
-        console.log("metod agrupar datos ");
-        // Formato para los numeros
-        const formatNumber = (num) => {
-            const numero = Number(num);
-            if (isNaN(numero)) return '0.00';
-
-            return numero.toLocaleString('es-PE', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            });
-        };
+      
+        
 
         const formatCell = (value: any) => ({
-            text: formatNumber(value),
+            text: this.formatNumber(value),
             alignment: 'right'
         });
 
@@ -217,65 +238,93 @@ AfectaRetencion
                     
                 ]);
             });
+            
+             const solesSubtotal = this.calculateGroupTotal(ruc, 'soles');
+            const dolaresSubtotal = this.calculateGroupTotal(ruc, 'dolares');
 
-        });
-        console.log("se crero el reporte, falta mostrar");
-        const docDefinition = {
+            body.push(this.getSubtotalRow(ruc, solesSubtotal, dolaresSubtotal));
+       
+
+            // body.push([
+            // { text: 'Subtotal RUC ' + ruc, colSpan: 8, style: 'subtotal' }, // columnas 1–8
+            // {}, {}, {}, {}, {}, {}, {},                                     // vacíos para completar el colSpan
+            // { text: formatNumber(solesSubtotal), alignment: 'right' },      // columna 9
+            // { text: formatNumber(dolaresSubtotal), alignment: 'right' },    // columna 10
+            // { text: '', alignment: 'right' }                                // columna 11
+            // ]);
+    
+           
+        } ); 
+
+        //suma totales
+        // Calcular total general y añadir fila al final
+        const totalGeneral = this.getTotalGeneral(this.ayudapago);
+        body.push(this.getTotalRow(totalGeneral.solesTotal, totalGeneral.dolaresTotal));
+            // body.push([
+            // { text: 'TOTAL GENERAL', colSpan: 7, style: 'total' },
+            // { text: '' }, { text: '' }, { text: '' }, { text: '' },
+            // { text: '' }, { text: '' },
+            // { text: this.formatNumber(totalGeneral.solesTotal), alignment: 'right' },
+            // { text: this.formatNumber(totalGeneral.dolaresTotal), alignment: 'right' },
+            // { text: '', alignment: 'right' },
+            // { text: '', alignment: 'right' }
+            // ]);
+         const docDefinition = {
                     pageOrientation: 'landscape',
                     pageMargins: [20, 20, 20, 20],
                     content: [
                         //title
-                        { text: 'Detalle de Presupuesto', style: 'header' },
+                        { text: 'Lista de Comprobantes Pendiente', style: 'header' },
                         //description
-                        {
-                            columns: [
-                                {
-                                    width: 'auto',
-                                    text: [
-                                        { text: 'Numero de Pago: ', style: 'label' },
-                                        //{ text: this.pagnro, style: 'value' },
-                                        { text:'001', style: 'value' },
-                                    ],
-                                },
-                                {
-                                    width: 'auto',
-                                    text: [
-                                        { text: 'Fecha: ', style: 'label' },
-                                        // { text: this.fechaString, style: 'value' },
-                                        { text:'15/07/2025', style: 'value' },
-                                    ],
-                                    margin: [20, 0, 0, 0],
-                                },
-                                {
-                                    width: 'auto',
-                                    text: [
-                                        { text: 'Motivo: ', style: 'label' },
-                                        //{ text: this.motivo, style: 'value' },
-                                        { text: 'motivo', style: 'value' },
-                                    ],
-                                    margin: [20, 0, 0, 0],
-                                },
-                                {
-                                    width: 'auto',
-                                    text: [
-                                        { text: 'Medio Pago: ', style: 'label' },
-                                        //{ text: this.medio, style: 'value' },
-                                        { text: 'medio pago', style: 'value' },
-                                    ],
-                                    margin: [20, 0, 0, 0],
-                                },
-                            ],
-                            margin: [0, 0, 0, 10],
-                        },
+                        // {
+                        //     columns: [
+                        //         {
+                        //             width: 'auto',
+                        //             text: [
+                        //                 { text: 'Numero de Pago: ', style: 'label' },
+                        //                 //{ text: this.pagnro, style: 'value' },
+                        //                 { text:'001', style: 'value' },
+                        //             ],
+                        //         },
+                        //         {
+                        //             width: 'auto',
+                        //             text: [
+                        //                 { text: 'Fecha: ', style: 'label' },
+                        //                 // { text: this.fechaString, style: 'value' },
+                        //                 { text:'15/07/2025', style: 'value' },
+                        //             ],
+                        //             margin: [20, 0, 0, 0],
+                        //         },
+                        //         {
+                        //             width: 'auto',
+                        //             text: [
+                        //                 { text: 'Motivo: ', style: 'label' },
+                        //                 //{ text: this.motivo, style: 'value' },
+                        //                 { text: 'motivo', style: 'value' },
+                        //             ],
+                        //             margin: [20, 0, 0, 0],
+                        //         },
+                        //         {
+                        //             width: 'auto',
+                        //             text: [
+                        //                 { text: 'Medio Pago: ', style: 'label' },
+                        //                 //{ text: this.medio, style: 'value' },
+                        //                 { text: 'medio pago', style: 'value' },
+                        //             ],
+                        //             margin: [20, 0, 0, 0],
+                        //         },
+                        //     ],
+                        //     margin: [0, 0, 0, 10],
+                        // },
                         //table
                         {
                             table: {
-                                headerRows: 2,
+                                headerRows: 1,
                                 widths: [
                                     40, //1 // ruc
-                                    150,  //2  razon social
+                                    270,  //2  razon social
                                     30,  //3 tipo documento
-                                    28,  //4 numero del documento  factura
+                                    50,  //4 numero del documento  factura
                                     40, //5 fecha emision 
                                     40,  //6 fecha vencimiento 
                                     33, //7 moneda original
@@ -358,24 +407,65 @@ AfectaRetencion
                     },
                 };
         
-                // Generamos el pdf
-                //pdfMake.createPdf(docDefinition).download('DetallePrespupuesto_' + this.pagnro + '.pdf');
+                // Generamos el pdf                
                 const fileName = 'DetallePrespuesto_' + '00001' +formatDateForFilename(new Date())+  '.pdf';
-                // const fileName = 'DetallePrespupuesto_' +
-                //     this.pagnro +
-                //     '_' +
-                //     formatDateWithTime((this.fechahoy = new Date())) +
-                //     '.pdf';
+                
         
                 pdfMake.createPdf(docDefinition).open({
                     filename: fileName
                 });
 
-    }  
+    }
+    //metodos de la clase
+   formatNumber = (num) => {
+            const numero = Number(num);
+            if (isNaN(numero)) return '0.00';
 
+            return numero.toLocaleString('es-PE', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
+        };
+     getSubtotalRow(ruc: string, soles: number, 
+        dolares: number): any[] 
+        {
+            return [
+                { text: 'Subtotal ', colSpan: 7, style: 'subtotal' },
+                { text: '' }, { text: '' }, { text: '' }, { text: '' },
+                { text: '' }, { text: '' },  // 7 celdas vacías para completar el colSpan
+                { text: this.formatNumber(soles), alignment: 'right' },
+                { text: this.formatNumber(dolares), alignment: 'right' },
+                { text: '', alignment: 'right' }, { text: '', alignment: 'right' }
+            ];
+        }
+        getTotalRow(soles:number, dolares:number): any[] {
+            return [
+                { text: 'total ', colSpan: 7, style: 'subtotal' },
+                { text: '' }, { text: '' }, { text: '' }, { text: '' },
+                { text: '' }, { text: '' },  // 7 celdas vacías para completar el colSpan
+                { text: this.formatNumber(soles), alignment: 'right' },
+                { text: this.formatNumber(dolares), alignment: 'right' },
+                { text: '', alignment: 'right' }, { text: '', alignment: 'right' }
+            ];
+        }
+        getTotalGeneral(data: agregar_Pago[]): { solesTotal: number, dolaresTotal: number } {
+            let solesTotal = data.reduce((sum, item) => sum + (item.soles || 0), 0);
+            let dolaresTotal = data.reduce((sum, item) => sum + (item.dolares || 0), 0);
+            return { 
+                solesTotal, 
+                dolaresTotal 
+            };
+
+         
 }
 
+         getTotalTabla(field: 'soles' | 'dolares'): number {
+            return this.ayudapago.reduce((sum, item) => sum + (item[field] || 0), 0);
+            };
+            
 
+      
+ 
 
-
+}
 
