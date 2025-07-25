@@ -55,6 +55,7 @@ items: any[] = [];
 textoBuscar: string='';
 consultaDocPorPagoList: ConsultaDocPorPago[] = [];
 ayudapago: agregar_Pago[] = [];
+load: boolean = false;
   constructor(private presupuestoService:PresupuestoService, 
     private breadcrumbService:BreadcrumbService,
    private globalService: GlobalService,
@@ -64,7 +65,7 @@ ayudapago: agregar_Pago[] = [];
     this.breadcrumbService.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
             {
-                label: 'Consulta doc. por pago',
+                label: 'Consulta doc.pendiente de pago',
                 routerLink: '/Home/ConsultaDocPendienteReporte',
             },
         ]);
@@ -84,6 +85,7 @@ buscar():void{
 
 
  listarconsultadocporpago(): void {
+        this.load = true;
         let filtro = this.textoBuscar.trim();
 
         // if(filtro === ''){
@@ -96,6 +98,11 @@ buscar():void{
             .subscribe({
               next:(data) =>{
                 this.ayudapago = data;
+                if(this.ayudapago.length == 0){
+                    this.load = false;
+                }else{
+                    this.load = false;
+                }
               }
             ,
             error:()=>{
@@ -172,7 +179,14 @@ obtenerFacturaPendiente():void{
             console.log("No retoarn datoa de ayuda pago");
             return;
         }
-
+        dataReporte.sort((a, b) => {
+                if (a.ruc < b.ruc) return -1;
+                if (a.ruc > b.ruc) return 1;
+                // Si el RUC es igual, ordenar por fechaEmision DESC
+                const fechaA = new Date(a.fechaEmision);
+                const fechaB = new Date(b.fechaEmision);
+                return fechaB.getTime() - fechaA.getTime();
+        });
         var resultados  =dataReporte;
     
         // Definimos las cabeceras
@@ -274,7 +288,7 @@ obtenerFacturaPendiente():void{
                     pageMargins: [20, 20, 20, 20],
                     content: [
                         //title
-                        { text: 'Lista de Comprobantes Pendiente', style: 'header' },
+                        { text: 'Lista de Documentos Pendiente de pago', style: 'header' },
                         //description
                         // {
                         //     columns: [

@@ -54,7 +54,8 @@ export class ConsultaDocPorPagoComponent implements OnInit {
     load:boolean = false;
     groupTotals : any[] = [];
     ayudapago: agregar_Pago[] = [];
-    datos
+    
+    //datos
 
     searchPerformed: boolean = false;
 
@@ -73,7 +74,7 @@ export class ConsultaDocPorPagoComponent implements OnInit {
         this.breadcrumbService.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
             {
-                label: 'Consulta doc. pendiente',
+                label: 'Consulta doc. historico',
                 routerLink: '/Home/ConsultaDocPorPago',
             },
         ]);
@@ -168,19 +169,23 @@ export class ConsultaDocPorPagoComponent implements OnInit {
             this.searchPerformed = false;
             return;
         }
-        
+        this.load = true;
         this.consultaDocPorPagoService
             .GetConsultaDocPorPago(filtro)
             .subscribe({
                 next: (data) => {
                     this.consultaDocPorPagoList = data;
                     if (data.length === 0) {
+                        this.load = false;
                         verMensajeInformativo(
                             this.messageService,
                             'info',
                             'Información',
                             'No se encontro el ruc o nro doc'
                         );
+                    }else{
+
+                        this.load = false;
                     }
                 },
                 error: () => {
