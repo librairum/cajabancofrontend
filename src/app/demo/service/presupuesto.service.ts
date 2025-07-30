@@ -5,6 +5,7 @@ import { delay, map, Observable, of } from 'rxjs';
 import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 import { MedioPago } from '../model/presupuesto';
+import { InterbankArchivoCab } from '../model/InterbankArchivo';
 @Injectable({
     providedIn: 'root',
 })
@@ -338,5 +339,24 @@ export class PresupuestoService {
             )
             .pipe(map((response) => response.data));
     }
+ public SpListaInterbankArchivoCab(
+    empresa:string, nombreLote:string , numeroPresupuesto:string
+ ): Observable<InterbankArchivoCab[]>
+ {
+    const params = new HttpParams()
+        .set('empresa', empresa )
+        .set('nombreLote', nombreLote)
+        .set('numeroPresupuesto', numeroPresupuesto);
+    return this.http
+    .get<RespuestaAPIBase<InterbankArchivoCab[]>>(
+        `${this.urlApi}/SpListaInterbankArchivoCab`,
+        {
+            params,
+        }
+    )
+    .pipe(map((response) => response.data));
+    
+ }
+
 
 }

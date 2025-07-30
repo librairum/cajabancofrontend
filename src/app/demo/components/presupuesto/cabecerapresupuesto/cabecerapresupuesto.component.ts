@@ -657,4 +657,9 @@ export class CabecerapresupuestoComponent implements OnInit {
             },
         });
     }
+    generarArchivoInterbank():void{
+        
+
+    }
+
 }
