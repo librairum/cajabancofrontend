@@ -15,10 +15,11 @@
     <div class="card">
         <div class="flex justify-content-between align-items-center mb-3">
             <p-button label="Nuevo" icon="pi pi-plus" (onClick)="iniciarNuevoPresupuesto()" [disabled]="mostrarNuevaFila" />
-            <p-button label="Generar archivo interbank" (onClick)="generarArchivoInterbank" />
+            
             <div class="flex align-items-center">
                 <label for="rowsPerPage" class="mr-2">Filas por página:</label>
-                <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]" [(ngModel)]="rowsPerPage" placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
+                <p-dropdown id="rowsPerPage" 
+                [options]="[10, 20, 40]" [(ngModel)]="rowsPerPage" placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
 
             </div>
         </div>
@@ -235,7 +236,7 @@
         </p-table>
     </div>
     <!-- confirmar pago -->
-    <div class="card p-2" *ngIf="verConfirmarPago">
+    <!-- <div class="card p-2" *ngIf="verConfirmarPago">
         <ng-template #title> Confirmar pago </ng-template>
         <ng-template #body>
             <p>
@@ -249,5 +250,5 @@
                 <input pInputText id="rutacomprobante" aria-describedby="motivo-help" [value]="rutacomprobante" />
             </p>
         </ng-template>
-    </div>
+    </div> -->
 </div>

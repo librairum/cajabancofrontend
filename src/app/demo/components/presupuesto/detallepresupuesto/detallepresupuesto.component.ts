@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, getLocaleCurrencyName } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -21,6 +21,7 @@ import { AgregarPagoComponent } from '../agregar-pago/agregar-pago.component';
 import { saveAs } from 'file-saver';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { InterbankArchivoCab, InterbankArchivoDet } from 'src/app/demo/model/InterbankArchivo';
 import { verMensajeInformativo, formatDate, formatDateForFilename, formatDateWithTime } from 'src/app/demo/components/utilities/funciones_utilitarias';
 
 @Component({
@@ -56,6 +57,7 @@ export class DetallepresupuestoComponent implements OnInit {
     fecha: Date;
     motivo: string;
     medio: string;
+    bancoCodMedioPago:string;
     groupTotals: any[] = [];
     load: boolean = false;
     displayAgregarModal: boolean = false;
@@ -159,6 +161,8 @@ export class DetallepresupuestoComponent implements OnInit {
         this.motivo = this.navigationData?.motivo || '';
 
         this.medio = this.navigationData?.nombreMedioPago || '';
+        console.log("valor de medio pago desde navigationData. "+ this.navigationData?.BancoCodMedioPago); 
+        this.bancoCodMedioPago = this.navigationData?.bancoCodMedioPago;
     }
 
     calculateGroupTotals() {
@@ -890,7 +894,128 @@ export class DetallepresupuestoComponent implements OnInit {
             }, 100);
         });*/
     }
+    
+    generarArchivoPago(){
+        
+        if(this.bancoCodMedioPago == '01'){
+            this.generaArchivoInterbankCab();
+            this.generaArchivoInterbankDet();
+        }else if(this.bancoCodMedioPago == '02'){
+            this.generaArchivoBIFCab();
+            this.generaArchivoBIFDet();
+        }else if(this.bancoCodMedioPago == '02'){
 
+            this.generaArchivoBCPCab();
+            this.generaArchivoBCPDet();
+        }
+    }
+        generaArchivoBIFCab(){
+
+        }
+        generaArchivoBIFDet(){
+
+        }
+    generaArchivoBCPCab(){
+
+    }
+    generaArchivoBCPDet(){
+
+    }
+    //generar archivo segun el banco
+    generaArchivoInterbankCab(){
+        var listaCab : InterbankArchivoCab[] = [];
+        var registroCab : InterbankArchivoCab;
+        if (!this.DetallePago || this.DetallePago.length === 0) {
+            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
+             return;
+        }
+        const codigoEmpresa = this.globalService.getCodigoEmpresa();
+        const numeroPresupesto = this.pagnro;
+        const nombreLotePresupuesto = 'Prov3007';
+         this.presupuestoservice.SpListaInterbankArchivoCab(codigoEmpresa, 
+            nombreLotePresupuesto, numeroPresupesto ).subscribe({
+                next: (data) => {
+
+                    try{
+
+                         listaCab = data;
+                    if(data.length > 0)
+                    {
+                        let contenido = '';
+                        listaCab.forEach((registro : InterbankArchivoCab) =>{
+                                const linea = `${registro.codigoRegistro}${registro.rubro}${registro.codigoEmpresa}`
+                                +`${registro.codigoServicio}${registro.cuentaCargo}${registro.tipoCuentaCargo}${registro.monedaCuentaCargo}`
+                                +`${registro.nombreSolicitudLote}${registro.fechahoraCreacion}${registro.tipoProceso}`
+                                +`${registro.fechaProceso}${registro.nroRegistro}${registro.totalSoles}${registro.totalDolares}`
+                                +`${registro.versionMacro}\n`;
+                                contenido += linea;
+                        });
+                        const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+                        const fechaActual = new Date();
+                        const nombreArchivo = `archivocarga_${formatDateForFilename(fechaActual)}.txt`;
+                        saveAs(blob, nombreArchivo);
+                        verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Archivo TXT generado correctamente');
+                
+                    }
+                    }catch(error){
+                        console.error('Error al generar archivo txt:', error);
+                            verMensajeInformativo(this.messageService, 'error', 'Error', 'Ocurrió un error al generar el archivo TXT');
+                
+                    }
+                   
+
+                  
+                },
+                error:(error) =>{
+                     verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        `Error al cargar archivo banco: ${error.message}`
+                    );
+                }
+            });
+
+            //archivo detalle
+    }
+    generaArchivoInterbankDet(){
+        let listaDet: InterbankArchivoDet[] = [];
+        //banco codigo 
+
+        const codigoEmpresa = this.globalService.getCodigoEmpresa();
+        const numeroPresupuesto = this.pagnro;
+        this.presupuestoservice.SpListaInterbankArchivoDet(codigoEmpresa, numeroPresupuesto)
+                .subscribe({
+                    next:(data) =>{
+                        try{
+                            listaDet = data;
+                            if(data.length> 0){
+                                let contenido = '';
+                                listaDet.forEach((registro: InterbankArchivoDet)=> {
+                                    const linea = `${registro.codigoRegistro}${registro.codigoBeneficiario}${registro.tipoDocumentoPago}`
+                                          +`${registro.numeroDocumentoPago}${registro.fechaVencimientoDocumento}${registro.monedaAbono}`
+                                          +`${registro.montoAbono}${registro.indicadorBanco}${registro.tipoAbono}${registro.tipoCuenta}`
+                                          +`${registro.monedaCuenta}${registro.oficinaCuenta}${registro.numeroCuenta}${registro.tipoPersona}`
+                                          +`${registro.tipoDocumentoIdentidad}${registro.numeroDocumentoIdentidad}`
+                                          +`${registro.nombreBeneficiario}${registro.monedaMontoIntagibleCTS}${registro.montoIntangibleCTS}`
+                                          +`${registro.filler}${registro.numeroCelular}${registro.correoElectronico}\n`;
+                                    contenido += linea;
+                                });
+                            const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+                        const fechaActual = new Date();
+                        const nombreArchivo = `archivocargadet_${formatDateForFilename(fechaActual)}.txt`;
+                        saveAs(blob, nombreArchivo);
+                        verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Archivo TXT generado correctamente');
+                            }
+                           
+                        }catch(error){
+                            verMensajeInformativo(this.messageService, 
+                                'error', 'Error', 'Ocurrió un error al generar el archivo TXT');
+                
+                        }
+                    }
+                });
+    }
     generarTXT() {
         if (!this.DetallePago || this.DetallePago.length === 0) {
             // verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
@@ -900,6 +1025,7 @@ export class DetallepresupuestoComponent implements OnInit {
         this.presupuestoservice.obtenerMedioPago(codempresa).subscribe(
             (mediosPago: mediopago_lista[]) => {
                 try {
+
                     const medioPagoEncontrado = mediosPago.find(m => m.ban01Descripcion === this.medio);
                     const idTipoPago = medioPagoEncontrado ? medioPagoEncontrado.ban01IdTipoPago : '00';
                     let contenido = '';

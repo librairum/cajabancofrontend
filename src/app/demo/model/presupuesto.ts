@@ -15,6 +15,7 @@ export interface cabeceraPresupuesto {
     ban01FechaEjecucionPago: string;
     ban01NroOperacion: string;
     ban01EnlacePago: string;
+    bancoCodMedioPago : string;
 
 }
 
