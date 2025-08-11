@@ -13,10 +13,20 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { BreadcrumbService } from '../../service/breadcrumb.service';
 import { GlobalService } from '../../service/global.service';
 import {Router} from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CheckboxModule } from 'primeng/checkbox';
+
+
 @Component({
   selector: 'app-detraccion-masiva',
   standalone: true,
-  imports: [ToastModule,TableModule,ReactiveFormsModule, CommonModule, ButtonModule,  ],
+  imports: [ToastModule,TableModule,
+    ReactiveFormsModule, CommonModule, CardModule,
+    InputTextModule,PanelModule,BreadcrumbModule 
+    ,ConfirmDialogModule,FormsModule,DropdownModule
+    ,ButtonModule,CheckboxModule ],
   templateUrl: './detraccion-masiva.component.html',
   styleUrl: './detraccion-masiva.component.css',
   providers:[MessageService, ConfirmationService]
@@ -44,6 +54,22 @@ items: any[] = [];
     this.bs.currentBreadcrumbs$.subscribe(bs=>{
       this.items = bs;
     })
+
+
+
+  }
+
+  cargar():void{
+    const codigoEmpresa: string = this.globalService.getCodigoEmpresa();
+    this.detraccionMasivaService.GetAllDetraccion(codigoEmpresa,'2025', '06')
+    .subscribe({
+      next:(data) =>{
+        this.detraccionMasivaList = data;
+      },
+      error:(e) => {
+      
+      }
+    });
 
   }
 

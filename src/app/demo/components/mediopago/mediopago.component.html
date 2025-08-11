@@ -13,7 +13,8 @@
                 [disabled]="isEditingAnyRow" class="p-button-sm"></button>
             <div class="flex align-items-center">
                 <label for="rowsPerPage" class="mr-2">Filas por página:</label>
-                <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]" [(ngModel)]="rowsPerPage"
+                <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]" 
+                [(ngModel)]="rowsPerPage"
                     placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
             </div>
         </div>

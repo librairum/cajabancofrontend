@@ -28,8 +28,10 @@ import { CheckboxModule } from 'primeng/checkbox';
   templateUrl: './mediopago.component.html',
   styleUrl: './mediopago.component.css',
   imports: [
-    ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule,
-    InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule, DropdownModule, CheckboxModule
+    ToastModule, TableModule, ReactiveFormsModule, CommonModule, 
+    ButtonModule, CardModule,
+    InputTextModule, PanelModule, BreadcrumbModule,
+     ConfirmDialogModule, FormsModule, DropdownModule, CheckboxModule
   ],
   providers: [MessageService, ConfirmationService]
 })

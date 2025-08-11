@@ -1,1 +1,20 @@
-<p>detraccion-masiva works!</p>
+
+<div class="container">
+    <p-panel>
+        <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
+    </p-panel>
+    <br/>
+    <div class="card">
+        <div class="flex justify-content-between align-items-center mb-3">
+            <div class="flex alighn-items-center">
+                <label for="rowsPerPage" class="mb-2">Filas por pagina:</label>
+                <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]"
+                [(ngModel)]="rowsPerPage" 
+                placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
+            </div>
+
+        </div>
+    </div>
+    <!-- tabla de datos-->
+    
+</div>
