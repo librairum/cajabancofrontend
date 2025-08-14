@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
     catchError,
@@ -10,6 +10,7 @@ import { ConfigService } from './config.service';
 import { DetraccionMasiva } from '../model/DetraccionMasiva';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 import { DetraccionMasivaDetalle } from '../model/DetraccionMasivaDetalle';
+import { DetraccioMasivaDetalleRequest } from '../model/DetraccionMasiva';
 @Injectable({
     providedIn: 'root',
 })
@@ -36,8 +37,8 @@ export class DetraccionService{
         return throwError(() => new Error(errorMessage));
     }
     
-    public GetAllDetraccion(empresa:string, anio:string, mes:string): Observable<DetraccionMasiva[]>{
-        let urlSolicitud =`${this.urlAPI}/SpListMasivo?empresa=${empresa}&anio=${anio}&mes=${mes}`;
+    public GetAllDetraccion(empresa:string, anio:string, mes:string, motivoPago:string): Observable<DetraccionMasiva[]>{
+        let urlSolicitud =`${this.urlAPI}/SpListMasivo?empresa=${empresa}&anio=${anio}&mes=${mes}&motivoPago=${motivoPago}`;
         return this.http
             .get<RespuestaAPIBase<DetraccionMasiva[]>>(urlSolicitud)
             .pipe(
@@ -77,4 +78,9 @@ export class DetraccionService{
                 catchError(this.handleError)
             );
     }
+
+    public InsertarDetraccionMasiva(detramasiva:DetraccioMasivaDetalleRequest): Observable<any>{
+        return this.http.post(`${this.urlAPI}/SpInsertaPresupuestoDetraMasiva`, detramasiva);
+    }
+    
 }

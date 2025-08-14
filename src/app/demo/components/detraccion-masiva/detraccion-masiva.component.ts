@@ -20,6 +20,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
 import { ConfirmarPagoComponent } from '../presupuesto/confirmar-pago/confirmar-pago.component';
 import { DialogModule } from 'primeng/dialog';
+import { insert_presupuesto } from '../../model/presupuesto';
 @Component({
   selector: 'app-detraccion-masiva',
   standalone: true,
@@ -38,6 +39,8 @@ rowsPerPage : number = 10;
  confirmarpagocomponente: ConfirmarPagoComponent;
  verConfirmarPago: boolean = false;
  selectedPagoNumero: string = '';
+ presupuestoCabDetraccion: insert_presupuesto;
+ selectedNumeroLote: string  = '';
 //item para breadcrumb
 items: any[] = [];
 
@@ -65,7 +68,7 @@ items: any[] = [];
 
   cargar():void{
     const codigoEmpresa: string = this.globalService.getCodigoEmpresa();
-    this.detraccionMasivaService.GetAllDetraccion(codigoEmpresa,'2025', '06')
+    this.detraccionMasivaService.GetAllDetraccion(codigoEmpresa,'2025', '06','02')
     .subscribe({
       next:(data) =>{
         this.detraccionMasivaList = data;
@@ -92,9 +95,11 @@ items: any[] = [];
 
   }
 
-  confirmarPagoPresupuesto():void{
+  confirmarPagoPresupuesto(numeroLoteSeleccionado:string):void{
     this.selectedPagoNumero = '0001';
+
     this.verConfirmarPago=true;
+    this.selectedNumeroLote = numeroLoteSeleccionado;
   }
 onCloseModal() {
         if (this.confirmarpagocomponente) {

@@ -2,24 +2,29 @@ export interface DetraccionMasiva{
   empresaCod :string;
   anio:string;
   mes:string;
- lLoteDetraccionNro:string;
+ loteDetraccionNro:string;
  presupuestoCod:string;
  facturaImporteSol:string;
  detraccionImporteSol:string;
-        /*co26numlote:string;
-        co26fecha:string;
-        co26ranfecini:string;
-        co26ranfecfin:string;
-        co26const_numoperacion:string;
-        co26const_fecha:string;
-        co26const_numconst:string;
-        co26periodotributario:string;
-        importetotdoc:number;
-        importetotdet:number;
-*/
-      }
 
-      /*
-      EmpresaCod	Anio	Mes	LoteDetraccionNro	PresupuestoCod	FacturaImporteSol	DetraccionImporteSol
-              01	2025	07	251955		                        70466.76	                    4986.00
-      */
+      }
+export interface DetraccioMasivaDetalleRequest{
+        ban01Empresa:string;
+        ban01Anio: string;
+        ban01mes: string;
+        ban01Descripcion: string;
+        ban01Fecha: string;
+        ban01Estado: string;
+        ban01Usuario: string;
+        ban01Pc: string;
+        ban01FechaRegistro: string;
+        ban01MedioPago: string;
+        detraccionLote: string;
+        ban01motivopagoCod: string;
+        numerooperacion: string;
+        enlacePago: string;
+        nombreArchivo: string;
+        
+        flagOperacion: string;
+}
+    

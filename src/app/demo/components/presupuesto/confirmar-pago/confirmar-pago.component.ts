@@ -19,11 +19,14 @@ import { ConfigService } from 'src/app/demo/service/config.service';
 import { verMensajeInformativo, formatDate } from 'src/app/demo/components/utilities/funciones_utilitarias';
 import { DropdownModule } from "primeng/dropdown";
 import { insert_presupuesto, mediopago_lista } from 'src/app/demo/model/presupuesto';
-
+import { DetraccioMasivaDetalleRequest } from 'src/app/demo/model/DetraccionMasiva';
+import { DetraccionService } from 'src/app/demo/service/detraccion.service';
 @Component({
     selector: 'app-confirmar-pago',
     standalone: true,
-    imports: [PanelModule, ToastModule, ButtonModule, InputTextModule, CalendarModule, FileUploadModule, CommonModule, FormsModule, TagModule, TooltipModule, HttpClientModule, DialogModule,
+    imports: [PanelModule, ToastModule, ButtonModule, InputTextModule, CalendarModule, 
+        FileUploadModule, CommonModule, FormsModule, TagModule, 
+        TooltipModule, HttpClientModule, DialogModule,
     ConfirmDialogModule, ReactiveFormsModule, DropdownModule],
     templateUrl: './confirmar-pago.component.html',
     styleUrl: './confirmar-pago.component.css',
@@ -36,8 +39,9 @@ export class ConfirmarPagoComponent implements OnInit {
     @Input() modoDetraccion:boolean = false;
     @ViewChild('fu') fileUpload!: FileUpload;
     @Output() onClose = new EventEmitter<void>();
+    @Input() presupuestoCab:insert_presupuesto;
+    @Input() numeroLote:string;
     
-
     pagoForm: FormGroup;
     destinationPath: string = '';
 
@@ -72,12 +76,30 @@ export class ConfirmarPagoComponent implements OnInit {
         ban01FechaRegistro: '',
         ban01mediopago: '',
     };
+    nuevoDetraccion: DetraccioMasivaDetalleRequest ={
+        ban01Empresa: '',
+        ban01Anio: '',
+        ban01mes: '',
+        ban01Descripcion: '',
+        ban01Fecha: '',
+        ban01Estado:'',
+        ban01Usuario:'',
+        ban01Pc:'',
+        ban01FechaRegistro:'',
+        ban01MedioPago:'',
+        detraccionLote:'',
+        ban01motivopagoCod:'',
+        numerooperacion:'',
+        enlacePago:'',
+        nombreArchivo:'',
+        flagOperacion:''
+    }
     medioPagoLista: mediopago_lista[] = [];
     constructor(private fb: FormBuilder, 
         private messageService: MessageService, 
         private pS: PresupuestoService, 
         private gS: GlobalService,
-        private configService: ConfigService) {
+        private configService: ConfigService, private detraccionService:DetraccionService) {
         this.pagoForm = this.fb.group({
             fechaejecucion: [null, Validators.required],
             nroOperacion: ['', Validators.required],
@@ -116,6 +138,27 @@ export class ConfirmarPagoComponent implements OnInit {
       }*/
 
     guardarPresupuestoDetraccionPago():void{
+        
+        this.nuevoDetraccion.ban01Empresa = this.gS.getCodigoEmpresa();
+        
+          this.gS.selectedDate$.subscribe(date => {
+            if (date) {
+                this.anio_combo = date.getFullYear().toString();
+                this.mes_combo = (date.getMonth() + 1).toString().padStart(2, '0');
+            }
+        });
+
+        this.nuevoDetraccion.detraccionLote = this.numeroLote;
+        this.nuevoDetraccion.ban01Anio = this.anio_combo;
+        this.nuevoDetraccion.ban01mes = this.mes_combo;
+        this.detraccionService.InsertarDetraccionMasiva(this.nuevoDetraccion).subscribe({
+            next:(response) =>{
+                
+            },
+            error:(error)=>{
+
+            }
+        })
         //crear el presupuesto
           this.pS.insertarPresupuesto(this.nuevoPresupuesto).subscribe({
             next:(response) =>{
@@ -127,7 +170,7 @@ export class ConfirmarPagoComponent implements OnInit {
                     );
 
 
-            },
+            }   ,
             error:(error) =>{
                 verMensajeInformativo(
                         this.messageService,
