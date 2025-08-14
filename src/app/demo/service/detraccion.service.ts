@@ -9,6 +9,7 @@ import {
 import { ConfigService } from './config.service';
 import { DetraccionMasiva } from '../model/DetraccionMasiva';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
+import { DetraccionMasivaDetalle } from '../model/DetraccionMasivaDetalle';
 @Injectable({
     providedIn: 'root',
 })
@@ -55,6 +56,25 @@ export class DetraccionService{
                 catchError(this.handleError)
             );
     }
-
-
+    public GetallDetraccionDet(empresa:string, numeroLote:string):Observable<DetraccionMasivaDetalle[]>
+    {
+        let urlSolicitud =`${this.urlAPI}/SpListMasivoDet?empresa=${empresa}&numeroLote=${numeroLote}`;
+         return this.http
+            .get<RespuestaAPIBase<DetraccionMasivaDetalle[]>>(urlSolicitud)
+            .pipe(
+                map((response:RespuestaAPIBase<DetraccionMasivaDetalle[]>)=>
+                {
+                    if(response.isSuccess && response.data){
+                        return response.data;
+                    }else{
+                        console.error('Error en la API:',
+                            response.message,
+                            response.messageException
+                        );
+                        return[];
+                    }
+                }),
+                catchError(this.handleError)
+            );
+    }
 }

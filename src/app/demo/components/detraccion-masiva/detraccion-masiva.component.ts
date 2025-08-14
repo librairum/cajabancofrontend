@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, Message, MessageService } from 'primeng/api';
 import { BreadcrumbService } from '../../service/breadcrumb.service';
 import { GlobalService } from '../../service/global.service';
 import {Router} from '@angular/router';
@@ -17,8 +17,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CheckboxModule } from 'primeng/checkbox';
-
-
+import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
+import { ConfirmarPagoComponent } from '../presupuesto/confirmar-pago/confirmar-pago.component';
+import { DialogModule } from 'primeng/dialog';
 @Component({
   selector: 'app-detraccion-masiva',
   standalone: true,
@@ -26,7 +27,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     ReactiveFormsModule, CommonModule, CardModule,
     InputTextModule,PanelModule,BreadcrumbModule 
     ,ConfirmDialogModule,FormsModule,DropdownModule
-    ,ButtonModule,CheckboxModule ],
+    ,ButtonModule,CheckboxModule, ConfirmarPagoComponent,DialogModule ],
   templateUrl: './detraccion-masiva.component.html',
   styleUrl: './detraccion-masiva.component.css',
   providers:[MessageService, ConfirmationService]
@@ -34,13 +35,16 @@ import { CheckboxModule } from 'primeng/checkbox';
 export class DetraccionMasivaComponent implements OnInit {
 detraccionMasivaList: DetraccionMasiva[] = [];
 rowsPerPage : number = 10;
-
+ confirmarpagocomponente: ConfirmarPagoComponent;
+ verConfirmarPago: boolean = false;
+ selectedPagoNumero: string = '';
 //item para breadcrumb
 items: any[] = [];
 
   constructor(private detraccionMasivaService: DetraccionService,
-    private bs:BreadcrumbService, private globalService:GlobalService,
-    private router:Router
+    private bs:BreadcrumbService, 
+    private globalService:GlobalService,
+    private router:Router, private messageService:MessageService
   )
   {
     
@@ -55,7 +59,7 @@ items: any[] = [];
       this.items = bs;
     })
 
-
+    this.cargar();
 
   }
 
@@ -65,12 +69,46 @@ items: any[] = [];
     .subscribe({
       next:(data) =>{
         this.detraccionMasivaList = data;
+        console.log("informacion de data:",data);
+        console.log("DetraccionMasviLIst:", this.detraccionMasivaList);
       },
       error:(e) => {
-      
+       verMensajeInformativo(
+                              this.messageService,
+                              'error',
+                              'Error',
+                              'Error al cargar documentos por pago'
+                          );
       }
     });
 
   }
+
+  verDetalle():void{
+    
+  }
+
+  eliminarPagoPresupuesto():void{
+
+  }
+
+  confirmarPagoPresupuesto():void{
+    this.selectedPagoNumero = '0001';
+    this.verConfirmarPago=true;
+  }
+onCloseModal() {
+        if (this.confirmarpagocomponente) {
+            this.confirmarpagocomponente.limpiar();
+        }
+        this.verConfirmarPago = false;
+        //this.cargarMedioPago();
+        this.globalService.selectedDate$.subscribe((date) => {
+            if (date) {
+                const year = date.getFullYear().toString();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                this.cargar();
+            }
+        });
+    }
 
 }

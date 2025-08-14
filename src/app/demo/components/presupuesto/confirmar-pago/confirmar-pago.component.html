@@ -35,6 +35,28 @@
 
                 </div>
             </div>
+            
+            <div class="p-field p-col-12 mb-3" *ngIf="modoDetraccion">
+                <label for="medio" class="block mb-1">Medio<span class="text-danger">*</span></label>
+                <p-dropdown [options]="medioPagoLista" 
+                    formControlName="cboMedioPago"
+                    optionLabel="ban01Descripcion"
+                    optionValue="ban01IdTipoPago"
+                    class="p-inputtext-sm w-full" 
+                                [filter]="true" filterMatchMode="contains"
+                                filterBy="ban01Descripcion" 
+                                placeholder="medio" 
+                                appendTo="body"
+                                [style]="{'width': '150px'}"
+                                [panelStyle]="{'max-width': '300px', 'overflow-x': 'auto'}"
+                >
+
+                </p-dropdown>
+            </div>
+            <div class="p-field p-col-12 mb-3" *ngIf="modoDetraccion">
+                <label for="motivo" class="block mb-1" > motivo:<span class="text-danger"></span> </label>
+                <input pInputText id="txtmotivo" formControlName="motivoPago" >
+            </div>
         </div>
         <p-footer>
             <div class="flex justify-content-center gap-8">

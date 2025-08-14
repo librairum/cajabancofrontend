@@ -17,11 +17,14 @@ import { DialogModule } from 'primeng/dialog';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { ConfigService } from 'src/app/demo/service/config.service';
 import { verMensajeInformativo, formatDate } from 'src/app/demo/components/utilities/funciones_utilitarias';
+import { DropdownModule } from "primeng/dropdown";
+import { insert_presupuesto, mediopago_lista } from 'src/app/demo/model/presupuesto';
+
 @Component({
     selector: 'app-confirmar-pago',
     standalone: true,
     imports: [PanelModule, ToastModule, ButtonModule, InputTextModule, CalendarModule, FileUploadModule, CommonModule, FormsModule, TagModule, TooltipModule, HttpClientModule, DialogModule,
-        ConfirmDialogModule, ReactiveFormsModule],
+    ConfirmDialogModule, ReactiveFormsModule, DropdownModule],
     templateUrl: './confirmar-pago.component.html',
     styleUrl: './confirmar-pago.component.css',
     providers: [MessageService, FileUploadModule, ConfirmationService]
@@ -30,8 +33,10 @@ export class ConfirmarPagoComponent implements OnInit {
 
     //por si acaso el nro de pago de la fila 
     @Input() pagoNumero: string = '';
+    @Input() modoDetraccion:boolean = false;
     @ViewChild('fu') fileUpload!: FileUpload;
     @Output() onClose = new EventEmitter<void>();
+    
 
     pagoForm: FormGroup;
     destinationPath: string = '';
@@ -54,12 +59,31 @@ export class ConfirmarPagoComponent implements OnInit {
     anio_combo: string = ""; apiUrl: any;
     mes_combo: string = "";
     urlApi: string = '';
-    constructor(private fb: FormBuilder, private messageService: MessageService, private pS: PresupuestoService, private gS: GlobalService,
+    nuevoPresupuesto: insert_presupuesto={
+        ban01Empresa: '',
+        ban01Numero: '',
+        ban01Anio: '',
+        ban01Mes: '',
+        ban01Descripcion: '',
+        ban01Fecha: '',
+        ban01Estado: this.configService.getEstado(),
+        ban01Usuario: '',
+        ban01Pc: '',
+        ban01FechaRegistro: '',
+        ban01mediopago: '',
+    };
+    medioPagoLista: mediopago_lista[] = [];
+    constructor(private fb: FormBuilder, 
+        private messageService: MessageService, 
+        private pS: PresupuestoService, 
+        private gS: GlobalService,
         private configService: ConfigService) {
         this.pagoForm = this.fb.group({
             fechaejecucion: [null, Validators.required],
             nroOperacion: ['', Validators.required],
-            rutaComprobante: ['', Validators.required]
+            rutaComprobante: ['', Validators.required],
+            medioPago:[''],
+            motivoPago:['']
         });
 
         this.apiUrl = configService.getApiUrl();
@@ -78,6 +102,10 @@ export class ConfirmarPagoComponent implements OnInit {
             }
         })
         this.destinationPath = this.configService.getRutaDoc();
+        if(this.modoDetraccion == true){
+            this.cargarMedioPago();
+        }
+        
     }
 
     /*ngOnChanges(changes: SimpleChanges) {
@@ -87,7 +115,41 @@ export class ConfirmarPagoComponent implements OnInit {
         } por si se desea pasar el nro de pago
       }*/
 
-    guardarConfirmacion() {
+    guardarPresupuestoDetraccionPago():void{
+        //crear el presupuesto
+          this.pS.insertarPresupuesto(this.nuevoPresupuesto).subscribe({
+            next:(response) =>{
+               verMensajeInformativo(
+                        this.messageService,
+                        'success',
+                        'Éxito',
+                        'Presupuesto guardado correctamente'
+                    );
+
+
+            },
+            error:(error) =>{
+                verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        `Error al guardar el presupuesto: ${error.message}`
+                    );
+            }
+        })
+
+        //actualizacion del pago del presupuesto detraccion
+
+    }
+
+    actualizarPresupuestoPago(){
+//guardar confirmacion Pago desde origen Prespuesto  u origen Detraccion
+
+        const codMedioPago = this.pagoForm.get('cboMedioPago').value;
+        //insertar presupuesto
+        
+      
+
         // Verificar que todos los campos esten llenos
         this.pagoForm.markAllAsTouched();
         if (this.pagoForm.invalid) {
@@ -119,6 +181,7 @@ export class ConfirmarPagoComponent implements OnInit {
             numerooperacion: this.pagoForm.get('nroOperacion')?.value,
             enlacepago: fileUrl,
         };
+        
 
         // Actualizamos el comprobante con archivo
         this.pS
@@ -144,6 +207,14 @@ export class ConfirmarPagoComponent implements OnInit {
                     this.cargandoArchivo = false;
                 },
             });
+    }
+    guardarConfirmacion() {
+        if(this.modoDetraccion == false){
+            this.actualizarPresupuestoPago();
+        }else{
+            //modo crear  presupuesto de detraccion y actualizar el pago de la detraccion recien creada
+            this.guardarPresupuestoDetraccionPago();
+        }
 
     }
 
@@ -202,6 +273,36 @@ export class ConfirmarPagoComponent implements OnInit {
         if (this.fileUpload) {
             this.fileUpload.clear();
         }
+    }
+
+    cargarMedioPago():void{
+        const codempresa: string = this.gS.getCodigoEmpresa();
+        //this.loading = true;
+        this.pS.obtenerMedioPago(codempresa).subscribe({
+            next: (data) => {
+                // console.log(data);
+                this.medioPagoLista = data;
+                // console.log(this.medioPagoLista);
+                //this.loading = false;
+                //if (data.length === 0) {
+                //    verMensajeInformativo(
+                //        this.messageService,
+                //        'warn',
+                //        'Advertencia',
+                //        'No se encontraron registros de presupuesto'
+                //    );
+                //}
+            },
+            error: (error) => {
+                //this.loading = false;
+                verMensajeInformativo(
+                    this.messageService,
+                    'error',
+                    'Error',
+                    `Error al cargar presupuesto: ${error.message}`
+                );
+            },
+        });
     }
 
 }

@@ -1,4 +1,14 @@
 
+<p-dialog  [(visible)]="verConfirmarPago" [modal]="true"
+header="COnfirmar pago"
+[style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false" [maximizable]="true"
+    [baseZIndex]="10000" (onHide)="selectedPagoNumero = ''; onCloseModal()" 
+>
+<app-confirmar-pago 
+[pagoNumero]="selectedPagoNumero" [modoDetraccion]="true"
+(onClose)="onCloseModal()"
+ ></app-confirmar-pago>
+</p-dialog>
 <div class="container">
     <p-panel>
         <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
@@ -16,5 +26,78 @@
         </div>
     </div>
     <!-- tabla de datos-->
-    
+    <p-table [value]="detraccionMasivaList"
+    [paginator]="true"
+    [rows]="rowsPerPage"
+    responsiveLayout="scrol"
+    styleClass="p-datatable-sm"
+    >
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 5%">NumLote</th>
+            <th style="width: 8%">Fecha</th>
+            <th style="width: 8%">FecIni</th>
+            <th style="width: 8%">Const.Op</th>
+            <th style="width: 8%">Const.Fec</th>
+            <th style="width: 10%">Const.NumCost</th>            
+            <th style="width: 8%">Perido.Trbutario</th>
+            <th style="width: 8%">importetotdoc</th>
+            <th style="width: 8%">importetotdet</th>
+            <th style="width:10%; text-align: center;">Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" 
+        let-detmasiva>
+        <tr>
+            <td style="text-align:left; white-space:nowrap;">
+               {{ detmasiva.co26numlote}}
+            </td>
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.co26fecha | date:"dd/MM/yyyy"}}
+            </td>
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.co26ranfecini | date:"dd/MM/yyyy"}}
+            </td>
+
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.co26const_numoperacion}}
+            </td>
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.co26const_fecha | date:"dd/MM/yyyy"}}
+            </td>
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.co26const_numconst}}
+            </td>
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.co26periodotributario }}
+            </td>
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.importetotdoc | number:"1.2-2"}}
+            </td>
+              <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.importetotdet | number:"1.2-2"}}
+            </td>
+            <td>
+                <div class="flex justify-content-center gap-2">
+                    <button pButton icon="pi pi-search" pVerDetalle
+                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
+                    (click)="verDetalle"
+                    ></button>
+
+                    <button pButton icon="pi pi-trash" pEliminarPago
+                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-danger"
+                    (click)="eliminarPagoPresupuesto()"
+                    >
+                    </button>
+                    <button pButton icon="pi pi-money-bill" pConfirmarPago
+                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-success"
+                    (click)="confirmarPagoPresupuesto()"
+                    ></button>
+                    
+
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    </p-table>
 </div>

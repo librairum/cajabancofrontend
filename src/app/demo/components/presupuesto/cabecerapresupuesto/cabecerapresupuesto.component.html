@@ -84,9 +84,13 @@
                         </ng-container>
                         <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
                             <p-dropdown [options]="medioPagoLista" optionLabel="ban01Descripcion"
-                                optionValue="ban01IdTipoPago" [(ngModel)]="editForm.ban01mediopago"
-                                class="p-inputtext-sm w-full" [filter]="true" filterMatchMode="contains"
-                                filterBy="ban01Descripcion" placeholder="medio" appendTo="body"
+                                optionValue="ban01IdTipoPago" 
+                                [(ngModel)]="editForm.ban01mediopago"
+                                class="p-inputtext-sm w-full" 
+                                [filter]="true" filterMatchMode="contains"
+                                filterBy="ban01Descripcion" 
+                                placeholder="medio" 
+                                appendTo="body"
                                 [style]="{'width': '150px'}"
                                 [panelStyle]="{'max-width': '300px', 'overflow-x': 'auto'}"></p-dropdown>
                         </ng-container>
