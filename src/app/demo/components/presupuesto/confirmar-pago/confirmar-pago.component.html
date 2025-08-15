@@ -12,6 +12,7 @@
                 <label for="nropago" class="block mb-1">Nro operación <span class="text-danger">*</span></label>
                 <input pInputText id="nropago" formControlName="nroOperacion" class="w-full">
             </div>
+
             <div class="p-field p-col-12 mb-3">
                 <label for="fileupload" class="block mb-1">Adjuntar comprobante <span
                         class="text-danger">*</span></label>
@@ -43,12 +44,11 @@
                     optionLabel="ban01Descripcion"
                     optionValue="ban01IdTipoPago"
                     class="p-inputtext-sm w-full" 
-                                [filter]="true" filterMatchMode="contains"
-                                filterBy="ban01Descripcion" 
-                                placeholder="medio" 
-                                appendTo="body"
-                                [style]="{'width': '150px'}"
-                                [panelStyle]="{'max-width': '300px', 'overflow-x': 'auto'}"
+                    [filter]="true" filterMatchMode="contains"
+                    filterBy="ban01Descripcion"  placeholder="medio"  appendTo="body"
+                    [style]="{'width': '150px'}"
+                    [panelStyle]="{'max-width': '300px', 'overflow-x': 'auto'}"
+                    id="medioPago" formControlName="medioPago"
                 >
 
                 </p-dropdown>

@@ -151,37 +151,45 @@ export class ConfirmarPagoComponent implements OnInit {
         this.nuevoDetraccion.detraccionLote = this.numeroLote;
         this.nuevoDetraccion.ban01Anio = this.anio_combo;
         this.nuevoDetraccion.ban01mes = this.mes_combo;
-        this.detraccionService.InsertarDetraccionMasiva(this.nuevoDetraccion).subscribe({
-            next:(response) =>{
+        this.nuevoDetraccion.ban01Descripcion = this.pagoForm.get('motivoPago')?.value;
+        this.nuevoDetraccion.ban01Fecha= this.pagoForm.get('fechaejecucion')?.value;
+        this.nuevoDetraccion.ban01MedioPago = this.pagoForm.get('medioPago')?.value;
+        this.nuevoDetraccion.ban01motivopagoCod = '02';
+        this.nuevoDetraccion.ban01FechaRegistro = this.pagoForm.get('fechaejecucion')?.value;
+        this.nuevoDetraccion.flagOperacion='I';
+        
+        console.log(this.nuevoDetraccion);
+        // this.detraccionService.InsertarDetraccionMasiva(this.nuevoDetraccion).subscribe({
+        //     next:(response) =>{
                 
-            },
-            error:(error)=>{
+        //     },
+        //     error:(error)=>{
 
-            }
-        })
-        //crear el presupuesto
-          this.pS.insertarPresupuesto(this.nuevoPresupuesto).subscribe({
-            next:(response) =>{
-               verMensajeInformativo(
-                        this.messageService,
-                        'success',
-                        'Éxito',
-                        'Presupuesto guardado correctamente'
-                    );
+        //     }
+        // });
+        // //crear el presupuesto
+        //   this.pS.insertarPresupuesto(this.nuevoPresupuesto).subscribe({
+        //     next:(response) =>{
+        //        verMensajeInformativo(
+        //                 this.messageService,
+        //                 'success',
+        //                 'Éxito',
+        //                 'Presupuesto guardado correctamente'
+        //             );
 
 
-            }   ,
-            error:(error) =>{
-                verMensajeInformativo(
-                        this.messageService,
-                        'error',
-                        'Error',
-                        `Error al guardar el presupuesto: ${error.message}`
-                    );
-            }
-        })
+        //     }   ,
+        //     error:(error) =>{
+        //         verMensajeInformativo(
+        //                 this.messageService,
+        //                 'error',
+        //                 'Error',
+        //                 `Error al guardar el presupuesto: ${error.message}`
+        //             );
+        //     }
+        // })
 
-        //actualizacion del pago del presupuesto detraccion
+        // //actualizacion del pago del presupuesto detraccion
 
     }
 
