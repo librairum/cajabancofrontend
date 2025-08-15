@@ -126,7 +126,11 @@ export class ConfirmarPagoComponent implements OnInit {
         this.destinationPath = this.configService.getRutaDoc();
         if(this.modoDetraccion == true){
             this.cargarMedioPago();
+
         }
+                     console.log("on inic confirmaa pago valor nunemro lote:");
+             console.log(this.numeroLote);
+        // console.log(this.numeroLote);    
         
     }
 
@@ -147,26 +151,49 @@ export class ConfirmarPagoComponent implements OnInit {
                 this.mes_combo = (date.getMonth() + 1).toString().padStart(2, '0');
             }
         });
-
-        this.nuevoDetraccion.detraccionLote = this.numeroLote;
+        this.cargandoArchivo = true;
         this.nuevoDetraccion.ban01Anio = this.anio_combo;
         this.nuevoDetraccion.ban01mes = this.mes_combo;
-        this.nuevoDetraccion.ban01Descripcion = this.pagoForm.get('motivoPago')?.value;
-        this.nuevoDetraccion.ban01Fecha= this.pagoForm.get('fechaejecucion')?.value;
-        this.nuevoDetraccion.ban01MedioPago = this.pagoForm.get('medioPago')?.value;
-        this.nuevoDetraccion.ban01motivopagoCod = '02';
-        this.nuevoDetraccion.ban01FechaRegistro = this.pagoForm.get('fechaejecucion')?.value;
-        this.nuevoDetraccion.flagOperacion='I';
-        
-        console.log(this.nuevoDetraccion);
-        // this.detraccionService.InsertarDetraccionMasiva(this.nuevoDetraccion).subscribe({
-        //     next:(response) =>{
-                
-        //     },
-        //     error:(error)=>{
+        //npmbre del presupesto
+        this.nuevoDetraccion.ban01Descripcion = this.pagoForm.get('motivoPago')?.value; 
+        //fecha del prespuesto generado 
+        //formatear la fecha seleccionada
+        let fechaPagoInput = this.pagoForm.get('fechaejecucion')?.value;
+        let fechaPagoFormated = fechaPagoInput ? formatDate(new Date(fechaPagoInput)): null;
+        let fileUrl = this.rutaComprobante;
 
-        //     }
-        // });
+        this.nuevoDetraccion.ban01Fecha= fechaPagoFormated;
+        this.nuevoDetraccion.ban01Estado = '02'; //presupuesto pagado
+        this.nuevoDetraccion.ban01Usuario = 'melissa';
+        this.nuevoDetraccion.ban01Pc = 'PC';
+        this.nuevoDetraccion.ban01FechaRegistro = fechaPagoFormated;
+        this.nuevoDetraccion.ban01MedioPago = this.pagoForm.get('medioPago')?.value; 
+        this.nuevoDetraccion.detraccionLote = this.numeroLote;
+        this.nuevoDetraccion.ban01motivopagoCod = '03'; //03 pago detraccion masiva , 02 pago detraccion individual, 02 pago
+        this.nuevoDetraccion.numerooperacion = this.pagoForm.get('nroOperacion')?.value;
+        this.nuevoDetraccion.enlacePago = fileUrl;
+        this.nuevoDetraccion.nombreArchivo =  this.archivoSeleccionado?.name;
+        this.nuevoDetraccion.flagOperacion='I';
+        console.log("valores de nuevo detraccion");
+        console.log(this.nuevoDetraccion);
+        this.detraccionService.InsertarDetraccionMasiva(this.nuevoDetraccion, this.archivoSeleccionado).subscribe({
+            next:(response) =>{
+                setTimeout(() => {
+                    this.cargandoArchivo = false;
+                    this.finalizarGuardado();
+                }, 500);
+            },
+            error:(error)=>{
+                 this.cargandoArchivo = false;
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        'No se pudo actualizar el comprobante:' + error
+                    );
+                    this.cargandoArchivo = false;
+            }
+        });
         // //crear el presupuesto
         //   this.pS.insertarPresupuesto(this.nuevoPresupuesto).subscribe({
         //     next:(response) =>{

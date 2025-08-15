@@ -1,11 +1,15 @@
 
 <p-dialog  [(visible)]="verConfirmarPago" [modal]="true"
 header="COnfirmar pago"
-[style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false" [maximizable]="true"
+[style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false" 
+    [maximizable]="true"
     [baseZIndex]="10000" (onHide)="selectedPagoNumero = ''; onCloseModal()" 
+    
 >
 <app-confirmar-pago 
-[pagoNumero]="selectedPagoNumero" [modoDetraccion]="true"
+[pagoNumero]="selectedPagoNumero"
+ [modoDetraccion]="true"
+ [numeroLote]="selectedNumeroLote"
 (onClose)="onCloseModal()"
  ></app-confirmar-pago>
 </p-dialog>
@@ -19,7 +23,7 @@ header="COnfirmar pago"
             <div class="flex alighn-items-center">
                 <label for="rowsPerPage" class="mb-2">Filas por pagina:</label>
                 <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]"
-                [(ngModel)]="rowsPerPage" 
+                [(ngModel)]="rowsPerPage"  
                 placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
             </div>
 
@@ -85,7 +89,7 @@ header="COnfirmar pago"
                     </button>
                     <button pButton icon="pi pi-money-bill" pConfirmarPago
                     class="p-button.p-button-rounded p-button-text p-button-sm p-button-success"
-                    (click)="confirmarPagoPresupuesto(detmasiva.presupuestoCod)"
+                    (click)="confirmarPagoPresupuesto(detmasiva)"
                     ></button>
                     
 

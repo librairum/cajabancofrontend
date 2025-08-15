@@ -95,11 +95,14 @@ items: any[] = [];
 
   }
 
-  confirmarPagoPresupuesto(numeroLoteSeleccionado:string):void{
+  confirmarPagoPresupuesto(registro:DetraccionMasiva):void{
     this.selectedPagoNumero = '0001';
 
     this.verConfirmarPago=true;
-    this.selectedNumeroLote = numeroLoteSeleccionado;
+    
+    this.selectedNumeroLote = registro.loteDetraccionNro;
+    console.log("numero detraccion seleccioando");
+    console.log(this.selectedNumeroLote)
   }
 onCloseModal() {
         if (this.confirmarpagocomponente) {

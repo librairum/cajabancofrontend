@@ -88,14 +88,7 @@ export class PresupuestoService {
     public insertarDetallePresupuesto(
         detalle: insert_detalle
     ): Observable<any> {
-        // console.log("parametros insertar detalle presupuesto");
-        // console.log(detalle.empresa);
-        // console.log(detalle.numeropresupuesto);
-        // console.log(detalle.tipoaplicacion);
-        // console.log(detalle.fechapresupuesto);
-        // console.log(detalle.bcoliquidacion);
-        // console.log(detalle.xmlDetalle);
-        // console.log("-------------------------");
+       
         const params = new HttpParams()
             .set('Empresa', detalle.empresa)
             .set('numeropresupuesto', detalle.numeropresupuesto)
@@ -159,47 +152,11 @@ export class PresupuestoService {
             )
             .pipe(map((response) => response.data));
     }
-    // subida de archivos , metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
-    //metodo para subir al servidor
-    public subirservidor(file: File): Observable<any> {
-        const formData: FormData = new FormData();
-        formData.append('file', file);
-        const req = new HttpRequest('POST', `${this.urlApi}`, formData, {
-            reportProgress: true,
-            responseType: 'json',
-        });
-        return this.http.request(req);
-    }
-
-    //metodo para guardar en la carpeta de assest, solo simulación porque esto no funcionaria sin servidor
-    // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
-    simularSubidaArchivo(file: File): Observable<string> {
-        // console.log(`Simulando guardado de archivo en: cajabancofrontend/src/assets/${file.name}`);
-        const objectUrl = URL.createObjectURL(file);
-        return of(`assets/${file.name}`).pipe(
-            delay(800) // Tiempo de carga
-        );
-    }
+   
+ 
 
     // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
-    public actualizarComprobante(
-        params: ComprobanteUpdateParams
-    ): Observable<RespuestaAPIBase<any>> {
-        const httpParams = new HttpParams()
-            .set('empresa', params.empresa)
-            .set('anio', params.anio)
-            .set('mes', params.mes)
-            .set('numeropresupuesto', params.numeropresupuesto)
-            .set('flagOperacion', params.flagOperacion)
-            .set('fechapago', params.fechapago)
-            .set('numerooperacion', params.numerooperacion)
-            .set('enlacepago', params.enlacepago);
-        return this.http.put<RespuestaAPIBase<any>>(
-            `${this.urlApi}/SpActualizaComprobante`,
-            null,
-            { params: httpParams }
-        );
-    }
+   
 
     public anulaComprobante(
         params: AnularComprobante
@@ -240,18 +197,7 @@ export class PresupuestoService {
         );
     }
 
-    // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
-    public subirArchivo(file: File, destinationPath: string): Observable<any> {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('destinationPath', destinationPath);
-
-        return this.http.post(`${this.urlApi}/SubirArchivo`, formData, {
-            reportProgress: true,
-            observe: 'events',
-        });
-    }
-
+  
     // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
     public EliminarArchivo(rutaArchivo: string): Observable<any> {
         const params = new HttpParams().set('rutaArchivo', rutaArchivo);

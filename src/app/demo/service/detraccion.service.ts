@@ -8,7 +8,7 @@ import {
 } from 'rxjs';
 import { ConfigService } from './config.service';
 import { DetraccionMasiva } from '../model/DetraccionMasiva';
-import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
+import { formatDateForFilename, RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 import { DetraccionMasivaDetalle } from '../model/DetraccionMasivaDetalle';
 import { DetraccioMasivaDetalleRequest } from '../model/DetraccionMasiva';
 @Injectable({
@@ -79,8 +79,11 @@ export class DetraccionService{
             );
     }
 
-    public InsertarDetraccionMasiva(detramasiva:DetraccioMasivaDetalleRequest): Observable<any>{
-        return this.http.post(`${this.urlAPI}/SpInsertaPresupuestoDetraMasiva`, detramasiva);
+    public InsertarDetraccionMasiva(detramasiva:DetraccioMasivaDetalleRequest, file : File): Observable<any>{
+        const formData = new FormData();
+        formData.append('archivoOriginal',file);
+        formData.append('request', JSON.stringify(detramasiva));
+        return this.http.post<RespuestaAPIBase<any>>(`${this.urlAPI}/SpInsertaPresupuestoDetraMasiva`,formData );
     }
     
 }
