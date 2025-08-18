@@ -35,6 +35,7 @@ header="COnfirmar pago"
     [rows]="rowsPerPage"
     responsiveLayout="scrol"
     styleClass="p-datatable-sm"
+     [loading]="loading"
     >
     <ng-template pTemplate="header">
         <tr>
@@ -77,20 +78,45 @@ header="COnfirmar pago"
             </td>
             <td>
                 <div class="flex justify-content-center gap-2">
+                    
+                    
                     <button pButton icon="pi pi-eye" pVerDetalle
                     class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
                     (click)="verDetalle"
                     ></button>
 
-                    <button pButton icon="pi pi-trash" pEliminarPago
-                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-danger"
-                    (click)="eliminarPagoPresupuesto()"
-                    >
-                    </button>
-                    <button pButton icon="pi pi-money-bill" pConfirmarPago
-                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-success"
-                    (click)="confirmarPagoPresupuesto(detmasiva)"
-                    ></button>
+                    <ng-container *ngIf="detmasiva.presupuestoCod.length == 0">
+                        <button pButton icon="pi pi-trash" pEliminarPago
+                            class="p-button p-button-rounded p-button-text p-button-sm p-disabled"
+                            [disabled] = "true"
+                            (click)="eliminarPagoPresupuesto()">
+                        </button>
+                    </ng-container>
+                      <ng-container *ngIf="detmasiva.presupuestoCod.length > 0">
+                        <button pButton icon="pi pi-trash" pEliminarPago
+                            class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                            [disabled] = "true"
+                            (click)="eliminarPagoPresupuesto()">
+                        </button>
+                    </ng-container>
+                    <ng-container>
+
+                    </ng-container>
+
+
+                    <ng-container *ngIf="detmasiva.presupuestoCod.length== 0">
+                        <button pButton icon="pi pi-money-bill" pConfirmarPago
+                            class="p-button.p-button-rounded p-button-text p-button-sm p-button-success"
+                            (click)="confirmarPagoPresupuesto(detmasiva)"></button>
+                    </ng-container>
+                    <ng-container *ngIf="detmasiva.presupuestoCod.length>0">
+                        <button pButton icon="pi pi-money-bill" pConfirmarPago
+                            class="p-button.p-button-rounded p-button-text p-button-sm p-disabled"
+                            (click)="confirmarPagoPresupuesto(detmasiva)" [disabled]="true" ></button>
+                    </ng-container>
+
+                    
+                    
                     
 
                 </div>

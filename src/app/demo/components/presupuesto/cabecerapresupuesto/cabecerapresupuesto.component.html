@@ -23,7 +23,10 @@
 
             </div>
         </div>
-        <p-table [value]="presupuesto" [scrollable]="true" [loading]="loading" [globalFilterFields]="['pagoNumero']" [rows]="rowsPerPage" [paginator]="true" [tableStyle]="{ width: '100%', border: '0px solid black' }">
+        <p-table [value]="presupuesto" [scrollable]="true" 
+        [loading]="loading" [globalFilterFields]="['pagoNumero']" 
+        [rows]="rowsPerPage" [paginator]="true" 
+        [tableStyle]="{ width: '100%', border: '0px solid black' }">
             <ng-template pTemplate="header">
                 <tr>
                     <th rowspan="2">

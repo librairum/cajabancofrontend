@@ -41,6 +41,9 @@ rowsPerPage : number = 10;
  selectedPagoNumero: string = '';
  presupuestoCabDetraccion: insert_presupuesto;
  selectedNumeroLote: string  = '';
+ anioPeriodo: string = '';
+ mesPeriodo:string = '';
+loading: boolean = false;
 //item para breadcrumb
 items: any[] = [];
 
@@ -62,20 +65,39 @@ items: any[] = [];
       this.items = bs;
     })
 
-    this.cargar();
+    this.globalService.selectedDate$.subscribe((date) =>{
+        if(date){
+          this.anioPeriodo = date.getFullYear().toString();
+          this.mesPeriodo = (date.getMonth()+1).toString().padStart(2,'0');
+
+        }
+    })
+    
+    this.cargar(this.anioPeriodo, this.mesPeriodo);
 
   }
 
-  cargar():void{
+  cargar(anio, mes):void{
+    this.loading = true;
     const codigoEmpresa: string = this.globalService.getCodigoEmpresa();
-    this.detraccionMasivaService.GetAllDetraccion(codigoEmpresa,'2025', '06','02')
+    //let anio :string= '';
+    //let mes :string = '';
+    let motivoPagoCod = '03'
+    // this.globalService.selectedDate$.subscribe((date)=>{
+    //   anio = date.getFullYear().toString();
+    //   mes = (date.getMonth()+1).toString().padStart(2,'0');
+      
+    // });
+    this.detraccionMasivaService.GetAllDetraccion(codigoEmpresa,anio, mes,motivoPagoCod)
     .subscribe({
       next:(data) =>{
         this.detraccionMasivaList = data;
-        console.log("informacion de data:",data);
-        console.log("DetraccionMasviLIst:", this.detraccionMasivaList);
+      this.loading = false;
+        //console.log("informacion de data:",data);
+        //console.log("DetraccionMasviLIst:", this.detraccionMasivaList);
       },
       error:(e) => {
+         this.loading = false;
        verMensajeInformativo(
                               this.messageService,
                               'error',
@@ -92,7 +114,7 @@ items: any[] = [];
   }
 
   eliminarPagoPresupuesto():void{
-
+    
   }
 
   confirmarPagoPresupuesto(registro:DetraccionMasiva):void{
@@ -114,7 +136,7 @@ onCloseModal() {
             if (date) {
                 const year = date.getFullYear().toString();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                this.cargar();
+                this.cargar(this.anioPeriodo, this.mesPeriodo);
             }
         });
     }

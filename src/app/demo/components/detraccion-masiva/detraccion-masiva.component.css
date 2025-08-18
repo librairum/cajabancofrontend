@@ -1,0 +1,7 @@
+.p-button.p-disabled {
+    /* Fondo gris para el botón deshabilitado */
+    /*background: #e0e0e0 !important;*/
+    /*border-color: #e0e0e0 !important;*/
+    color: #9e9e9e !important; /* Color de texto gris */
+    cursor: not-allowed;
+}
