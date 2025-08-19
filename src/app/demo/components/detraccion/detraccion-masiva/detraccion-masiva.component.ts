@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { DetraccionMasiva} from '../../model/DetraccionMasiva';
-import { DetraccionService } from '../../service/detraccion.service';
+import { DetraccionMasiva} from '../../../model/DetraccionMasiva';
+import { DetraccionService } from '../../../service/detraccion.service';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule,Validators } from '@angular/forms';
@@ -10,17 +10,17 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { ConfirmationService, Message, MessageService } from 'primeng/api';
-import { BreadcrumbService } from '../../service/breadcrumb.service';
-import { GlobalService } from '../../service/global.service';
+import { BreadcrumbService } from '../../../service/breadcrumb.service';
+import { GlobalService } from '../../../service/global.service';
 import {Router} from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CheckboxModule } from 'primeng/checkbox';
-import { verMensajeInformativo } from '../utilities/funciones_utilitarias';
-import { ConfirmarPagoComponent } from '../presupuesto/confirmar-pago/confirmar-pago.component';
+import { verMensajeInformativo } from '../../utilities/funciones_utilitarias';
+import { ConfirmarPagoComponent } from '../../presupuesto/confirmar-pago/confirmar-pago.component';
 import { DialogModule } from 'primeng/dialog';
-import { insert_presupuesto } from '../../model/presupuesto';
+import { insert_presupuesto } from '../../../model/presupuesto';
 @Component({
   selector: 'app-detraccion-masiva',
   standalone: true,
@@ -109,8 +109,37 @@ items: any[] = [];
 
   }
 
-  verDetalle():void{
+  verDetalle(detra: DetraccionMasiva ):void{
+
     
+
+    if(detra.presupuestoCod.length > 0 ){
+
+      console.log("abrir pagina detraccion masiva presupuesto det");
+      let navigationExtras = {
+        state:{
+          nroLote: detra.loteDetraccionNro,
+          presupuestoCod: detra.presupuestoCod,
+          anio:detra.anio,
+          mes:detra.mes,
+          empresa:detra.empresaCod
+        }
+      }
+    
+      this.router.navigate(['Home/detraccion_masiva_presupuesto_det'],navigationExtras );
+    
+    } else{
+      console.log("abrir pagina detraccion masiva  det");
+      //abrir detracccion
+      let navigationExtras={
+        state:{
+          nroLote:detra.loteDetraccionNro,
+          empresa:detra.empresaCod
+        }
+        
+      }
+      this.router.navigate(['Home/detraccion_masiva_det'],navigationExtras);
+    }
   }
 
   eliminarPagoPresupuesto():void{

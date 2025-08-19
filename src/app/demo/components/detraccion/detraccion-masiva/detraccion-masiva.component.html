@@ -82,7 +82,7 @@ header="COnfirmar pago"
                     
                     <button pButton icon="pi pi-eye" pVerDetalle
                     class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
-                    (click)="verDetalle"
+                    (click)="verDetalle(detmasiva)"
                     ></button>
 
                     <ng-container *ngIf="detmasiva.presupuestoCod.length == 0">

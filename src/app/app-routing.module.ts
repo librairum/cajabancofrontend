@@ -15,7 +15,10 @@ import { PermisosxperfilxtodoComponent } from './demo/components/permisosxperfil
 import { ConsultaDocPorPagoComponent } from './demo/components/consulta-doc-por-pago/consulta-doc-por-pago.component';
 import { CuentaComponent } from './demo/components/cuenta/cuenta.component';
 import { ConsultaDocPendienteReporteComponent } from './demo/components/consulta-doc-pendiente-reporte/consulta-doc-pendiente-reporte.component';
-import { DetraccionMasivaComponent } from './demo/components/detraccion-masiva/detraccion-masiva.component';
+import { DetraccionMasivaComponent } from './demo/components/detraccion/detraccion-masiva/detraccion-masiva.component';
+import { DetraccionIndividualComponent } from './demo/components/detraccion/detraccion-individual/detraccion-individual.component';
+import { DetraccionMasivaPresupuestoDetComponent } from './demo/components/detraccion/detraccion-masiva-presupuesto-det/detraccion-masiva-presupuesto-det.component';
+import { DetraccionMasivaDetComponent } from './demo/components/detraccion/detraccion-masiva-det/detraccion-masiva-det.component';
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -41,7 +44,10 @@ import { DetraccionMasivaComponent } from './demo/components/detraccion-masiva/d
                     { path: 'ConsultaDocPorPago', component: ConsultaDocPorPagoComponent },
                     { path: 'cuenta', component: CuentaComponent },
                     { path:'ConsultaDocPendienteReporte', component:ConsultaDocPendienteReporteComponent} ,
-                    {path:'detraccion_masiva', component:DetraccionMasivaComponent}
+                    {path:'detraccion_masiva', component:DetraccionMasivaComponent},
+                    {path:'detraccion_individual', component:DetraccionIndividualComponent},
+                    {path:'detraccion_masiva_presupuesto_det' , component:DetraccionMasivaPresupuestoDetComponent},
+                    {path:'detraccion_masiva_det', component:DetraccionMasivaDetComponent}
                 ]
             },
             { path: 'notfound', component: NotfoundComponent },
