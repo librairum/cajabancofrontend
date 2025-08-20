@@ -41,11 +41,17 @@ header="COnfirmar pago"
         <tr>
             <th style="width: 5%">EmpresaCod</th>
             <th style="width: 8%">Anio</th>
+
             <th style="width: 8%">Mes</th>
             <th style="width: 8%">LoteDetraccion</th>
+            
+            <th style="width: 8%">fecha</th>
+            <th style="width: 8%">motivo</th>
+            <th style="width: 8%">nombreMedioPago</th>
+            <th style="width:8%">bancoMedioPago</th>
             <th style="width: 8%">Presupuesto.cod</th>                        
-            <th style="width: 8%">importetotdoc</th>
-            <th style="width: 8%">importetotdet</th>
+            <th style="width: 8%">importe Total Doc.</th>
+            <th style="width: 8%">Importe Detra.</th>
             <th style="width:10%; text-align: center;">Acciones</th>
         </tr>
     </ng-template>
@@ -67,9 +73,22 @@ header="COnfirmar pago"
             </td>
           
             <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.presupuestoCod}}
+                {{detmasiva.fecha}}
             </td>
 
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.motivo}}
+            </td>
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.nombreMedioPago}}
+            </td>
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.bancoMedioPago}}
+            </td>
+            
+            <td style="text-align:left; white-space:nowrap;">
+                {{detmasiva.presupuestoCod}}
+            </td>
             <td style="text-align:left; white-space:nowrap;">
                 {{detmasiva.facturaImporteSol}}
             </td>

@@ -114,31 +114,45 @@ items: any[] = [];
     
 
     if(detra.presupuestoCod.length > 0 ){
-
-      console.log("abrir pagina detraccion masiva presupuesto det");
-      let navigationExtras = {
+      console.log("abrir pagina detraccion masiva  det");
+      
+      console.log(detra);
+      const navigationExtras = {
         state:{
+                         
           nroLote: detra.loteDetraccionNro,
           presupuestoCod: detra.presupuestoCod,
           anio:detra.anio,
           mes:detra.mes,
-          empresa:detra.empresaCod
+          empresa:detra.empresaCod,
+          pagnro:detra.presupuestoCod,
+          fecha:detra.fecha,
+          nombreMedioPago:  detra.nombreMedioPago,
+          motivo:detra.motivo
+          
         }
       }
-    
-      this.router.navigate(['Home/detraccion_masiva_presupuesto_det'],navigationExtras );
-    
+      console.log("Datos de navigation desde detraccion masiva", navigationExtras);
+      
+    this.router.navigate(['Home/detraccion_masiva_presupuesto_det'],navigationExtras );
     } else{
-      console.log("abrir pagina detraccion masiva  det");
+      
+      console.log("abrir pagina detraccion masiva presupuesto det");
       //abrir detracccion
       let navigationExtras={
         state:{
           nroLote:detra.loteDetraccionNro,
-          empresa:detra.empresaCod
+          empresa:detra.empresaCod,
+          pagnro:detra.presupuestoCod,
+          fecha:detra.fecha,
+          nombreMedioPago:  detra.nombreMedioPago,
+          motivo:detra.motivo
+          
         }
         
       }
-      this.router.navigate(['Home/detraccion_masiva_det'],navigationExtras);
+      this.router.navigate(['Home/detraccion_masiva_det'],navigationExtras);  
+      
     }
   }
 

@@ -21,7 +21,8 @@ import { DropdownModule } from 'primeng/dropdown';
 @Component({
     selector: 'app-banco',
     standalone: true,
-    imports: [ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, CardModule, InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule, DropdownModule],
+    imports: [ToastModule, TableModule, ReactiveFormsModule, CommonModule, ButtonModule, 
+        CardModule, InputTextModule, PanelModule, BreadcrumbModule, ConfirmDialogModule, FormsModule, DropdownModule],
     templateUrl: './banco.component.html',
     styleUrl: './banco.component.css',
     providers: [MessageService, ConfirmationService]

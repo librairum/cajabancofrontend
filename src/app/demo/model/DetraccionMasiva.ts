@@ -1,12 +1,17 @@
 export interface DetraccionMasiva{
-  empresaCod :string;
-  anio:string;
-  mes:string;
+  empresaCod :string; /*presupuesto */
+  anio:string; /*presupuesto */
+  mes:string; /*presupuesto */
  loteDetraccionNro:string;
- presupuestoCod:string;
+ presupuestoCod:string; /*presupuesto */
  facturaImporteSol:string;
  detraccionImporteSol:string;
-
+fecha:string;  /*presupuesto*/
+motivo:string;  /*presupuesto, nombre del presupeusto*/
+medio:string; /*presupuesto id*/
+nombreMedioPago: string;
+bancoCodMedioPago:string; /* id  banco por el cual se realizar medio pago*/
+bancoMedioPago: string; //* nombre del banco  */
       }
 export interface DetraccioMasivaDetalleRequest{
         ban01Empresa:string;

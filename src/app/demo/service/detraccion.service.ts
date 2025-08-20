@@ -25,7 +25,7 @@ export class DetraccionService{
         this.apiUrl = configService.getApiUrl();
         this.urlAPI = `${this.apiUrl}/Detraccion`;
     }
-
+    
     private handleError(error: HttpErrorResponse) {
         let errorMessage = 'Error desconocido';
         if (error.error instanceof ErrorEvent) {
