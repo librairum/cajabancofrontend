@@ -51,6 +51,7 @@ export class AppMenuComponent implements OnInit {
 
     onDateSelect(date: Date) {
         this.gS.updateSelectedDate(date);
+        console.log("se actualizo el periodo seleccionado");
     }
 
     loadMenu(menuAsignados: PermisosxPerfil[]) {
