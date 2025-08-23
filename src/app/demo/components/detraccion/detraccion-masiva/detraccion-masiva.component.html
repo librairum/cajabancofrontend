@@ -29,119 +29,120 @@ header="COnfirmar pago"
             </div>
 
         </div>
+            
+            <!-- tabla de datos-->
+            <p-table [value]="detraccionMasivaList"
+            [paginator]="true"
+            [rows]="rowsPerPage"
+            responsiveLayout="scrol"
+            styleClass="p-datatable-sm"
+            [loading]="loading"
+            >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 5%">EmpresaCod</th>
+                            <th style="width: 8%">Anio</th>
+
+                            <th style="width: 8%">Mes</th>
+                            <th style="width: 8%">LoteDetraccion</th>
+                            
+                            <th style="width: 8%">fecha</th>
+                            <th style="width: 8%">motivo</th>
+                            <th style="width: 8%">nombreMedioPago</th>
+                            <th style="width:8%">bancoMedioPago</th>
+                            <th style="width: 8%">Presupuesto.cod</th>                        
+                            <th style="width: 8%">importe Total Doc.</th>
+                            <th style="width: 8%">Importe Detra.</th>
+                            <th style="width:10%; text-align: center;">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" 
+                        let-detmasiva>
+                        <tr>
+                            <td style="text-align:left; white-space:nowrap;">
+                            {{ detmasiva.empresaCod}}
+                            </td>
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.anio}}
+                            </td>
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.mes}}
+                            </td>
+
+                            <td style="text-align:left; white-space:nowrap;" >
+                                {{detmasiva.loteDetraccionNro}}
+                            </td>
+                        
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.fecha}}
+                            </td>
+
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.motivo}}
+                            </td>
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.nombreMedioPago}}
+                            </td>
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.bancoMedioPago}}
+                            </td>
+                            
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.presupuestoCod}}
+                            </td>
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.facturaImporteSol}}
+                            </td>
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.detraccionImporteSol}}
+                            </td>
+                            <td>
+                                <div class="flex justify-content-center gap-2">
+                                    
+                                    
+                                    <button pButton icon="pi pi-eye" pVerDetalle
+                                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
+                                    (click)="verDetalle(detmasiva)"
+                                    ></button>
+
+                                    <ng-container *ngIf="detmasiva.presupuestoCod.length == 0">
+                                        <button pButton icon="pi pi-trash" pEliminarPago
+                                            class="p-button p-button-rounded p-button-text p-button-sm p-disabled"
+                                            [disabled] = "true"
+                                            (click)="eliminarPagoPresupuesto()">
+                                        </button>
+                                    </ng-container>
+                                    <ng-container *ngIf="detmasiva.presupuestoCod.length > 0">
+                                        <button pButton icon="pi pi-trash" pEliminarPago
+                                            class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                                            [disabled] = "true"
+                                            (click)="eliminarPagoPresupuesto()">
+                                        </button>
+                                    </ng-container>
+                                    <ng-container>
+
+                                    </ng-container>
+
+
+                                    <ng-container *ngIf="detmasiva.presupuestoCod.length== 0">
+                                        <button pButton icon="pi pi-money-bill" pConfirmarPago
+                                            class="p-button.p-button-rounded p-button-text p-button-sm p-button-success"
+                                            (click)="confirmarPagoPresupuesto(detmasiva)"></button>
+                                    </ng-container>
+                                    <ng-container *ngIf="detmasiva.presupuestoCod.length>0">
+                                        <button pButton icon="pi pi-money-bill" pConfirmarPago
+                                            class="p-button.p-button-rounded p-button-text p-button-sm p-disabled"
+                                            (click)="confirmarPagoPresupuesto(detmasiva)" [disabled]="true" ></button>
+                                    </ng-container>
+
+                                    
+                                    
+                                    
+
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+            </p-table>
     </div>
-    <!-- tabla de datos-->
-    <p-table [value]="detraccionMasivaList"
-    [paginator]="true"
-    [rows]="rowsPerPage"
-    responsiveLayout="scrol"
-    styleClass="p-datatable-sm"
-     [loading]="loading"
-    >
-    <ng-template pTemplate="header">
-        <tr>
-            <th style="width: 5%">EmpresaCod</th>
-            <th style="width: 8%">Anio</th>
-
-            <th style="width: 8%">Mes</th>
-            <th style="width: 8%">LoteDetraccion</th>
-            
-            <th style="width: 8%">fecha</th>
-            <th style="width: 8%">motivo</th>
-            <th style="width: 8%">nombreMedioPago</th>
-            <th style="width:8%">bancoMedioPago</th>
-            <th style="width: 8%">Presupuesto.cod</th>                        
-            <th style="width: 8%">importe Total Doc.</th>
-            <th style="width: 8%">Importe Detra.</th>
-            <th style="width:10%; text-align: center;">Acciones</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" 
-        let-detmasiva>
-        <tr>
-            <td style="text-align:left; white-space:nowrap;">
-               {{ detmasiva.empresaCod}}
-            </td>
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.anio}}
-            </td>
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.mes}}
-            </td>
-
-            <td style="text-align:left; white-space:nowrap;" >
-                {{detmasiva.loteDetraccionNro}}
-            </td>
-          
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.fecha}}
-            </td>
-
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.motivo}}
-            </td>
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.nombreMedioPago}}
-            </td>
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.bancoMedioPago}}
-            </td>
-            
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.presupuestoCod}}
-            </td>
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.facturaImporteSol}}
-            </td>
-            <td style="text-align:left; white-space:nowrap;">
-                {{detmasiva.detraccionImporteSol}}
-            </td>
-            <td>
-                <div class="flex justify-content-center gap-2">
-                    
-                    
-                    <button pButton icon="pi pi-eye" pVerDetalle
-                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
-                    (click)="verDetalle(detmasiva)"
-                    ></button>
-
-                    <ng-container *ngIf="detmasiva.presupuestoCod.length == 0">
-                        <button pButton icon="pi pi-trash" pEliminarPago
-                            class="p-button p-button-rounded p-button-text p-button-sm p-disabled"
-                            [disabled] = "true"
-                            (click)="eliminarPagoPresupuesto()">
-                        </button>
-                    </ng-container>
-                      <ng-container *ngIf="detmasiva.presupuestoCod.length > 0">
-                        <button pButton icon="pi pi-trash" pEliminarPago
-                            class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
-                            [disabled] = "true"
-                            (click)="eliminarPagoPresupuesto()">
-                        </button>
-                    </ng-container>
-                    <ng-container>
-
-                    </ng-container>
-
-
-                    <ng-container *ngIf="detmasiva.presupuestoCod.length== 0">
-                        <button pButton icon="pi pi-money-bill" pConfirmarPago
-                            class="p-button.p-button-rounded p-button-text p-button-sm p-button-success"
-                            (click)="confirmarPagoPresupuesto(detmasiva)"></button>
-                    </ng-container>
-                    <ng-container *ngIf="detmasiva.presupuestoCod.length>0">
-                        <button pButton icon="pi pi-money-bill" pConfirmarPago
-                            class="p-button.p-button-rounded p-button-text p-button-sm p-disabled"
-                            (click)="confirmarPagoPresupuesto(detmasiva)" [disabled]="true" ></button>
-                    </ng-container>
-
-                    
-                    
-                    
-
-                </div>
-            </td>
-        </tr>
-    </ng-template>
-    </p-table>
 </div>

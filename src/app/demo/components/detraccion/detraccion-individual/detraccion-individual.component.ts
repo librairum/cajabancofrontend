@@ -75,6 +75,7 @@ items: any[] = [];
         if(date){
           this.anioPeriodo = date.getFullYear().toString();
           this.mesPeriodo = (date.getMonth()+1).toString().padStart(2,'0');
+          console.log("periodo: " +  this.anioPeriodo +"  " + this.mesPeriodo);
           this.cargar(this.anioPeriodo, this.mesPeriodo);
         }
     });
@@ -92,6 +93,7 @@ items: any[] = [];
           next:(data) =>{
             this.detraccionIndividualList = data;
             this.loading = false;
+            console.log("datos individuaL:" +  this.detraccionIndividualList);
           }, 
           error:(e) =>{
             this.loading = false;
@@ -103,7 +105,8 @@ items: any[] = [];
         if (this.confirmarpagocomponente) {
             this.confirmarpagocomponente.limpiar();
         }
-        this.verConfirmarPago = false;
+        // this.verConfirmarPago = false;
+        this.displayAgregarModal = false;
         //this.cargarMedioPago();
         this.globalService.selectedDate$.subscribe((date) => {
             if (date) {
@@ -113,9 +116,11 @@ items: any[] = [];
             }
         });
     }
+    
      confirmaPagoPresupuesto() : void{
       
-      this.verConfirmarPago = true;
+      // this.verConfirmarPago = true;
+      this.displayAgregarModal = true;
 
      }
 

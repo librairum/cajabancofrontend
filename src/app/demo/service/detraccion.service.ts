@@ -90,7 +90,7 @@ export class DetraccionService{
     public GetallDetraccionIndividual(empresa:string, anio:string, 
         mes:string, motivoPagoCod:string):Observable<DetraccionIndividual[]>
     {
-        let urlsolicitud = `${this.urlAPI}/SpTraeIndividual?empresa=${empresa}&anio=${anio}&mes=${mes}&motivoPago=${motivoPagoCod}`;
+        let urlsolicitud = `${this.urlAPI}/SpTraeIndividual?empresa=${empresa}&anio=${anio}&mes=${mes}&motivoPagoCod=${motivoPagoCod}`;
         return this.http
             .get<RespuestaAPIBase<DetraccionIndividual[]>>(urlsolicitud)
             .pipe(

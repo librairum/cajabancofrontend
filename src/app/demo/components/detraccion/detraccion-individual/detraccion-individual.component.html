@@ -7,7 +7,7 @@
 </p-dialog>
 
 <p-dialog  [(visible)]="verConfirmarPago" [modal]="true"
-header="COnfirmar pago"
+header="Confirmar pago individual"
 [style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false" 
     [maximizable]="true"
     [baseZIndex]="10000" 
@@ -41,24 +41,25 @@ header="COnfirmar pago"
             </div>
 
         </div>
-    </div>
+    
 
     <p-table [value]="detraccionIndividualList"
         [paginator]="true"
         [rows]="rowsPerPage"
         [rowsPerPageOptions]="[10, 20, 40]"
         responsiveLayout="scrol"
-        styleClass="p-datatable-sm"
+        styleClass="{ width: '100%', border: '0px solid black' }"
         [loading]="loading"
     >
         <ng-template pTemplate="header">
             <tr>
-                 <th style="width: 5%">EmpresaCod</th>
-                 <th style="width: 8%">Anio</th>
-                 <th style="width: 8%">mes</th>
+                 <th style="width: 5%;  display: none;">EmpresaCod</th>
+                 <th style="width: 8%;  display: none;">Anio</th>
+                 <th style="width: 8%;  display: none;">mes</th>
                 <th style="width: 8%">descripcion</th>
                 <th style="width: 8%">fechaPresupuesto</th>
                 <th style="width: 8%">Ruc</th>
+                <th style="width: 8%">Nombre</th>
                 <th style="width: 8%">tipDoc</th>
                 <th style="width: 8%">NroDoc</th>
                 <th style="width: 8%">Moneda</th>
@@ -70,74 +71,85 @@ header="COnfirmar pago"
                 <th style="width: 8%">TasaDetraccion</th>
                 <th style="width: 8%">PagoDetracionSoles</th>
                 <th style="width: 8%">PagoDetracionDolares</th>
-
+                <th style="width:8%">Acciones</th>
 
 
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-detindividual>
             <tr>
-                <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban01empresa}}
+                <td style="text-align:left; white-space:nowrap; display: none;">
+                    {{ detindividual.ban01empresa}}
+                </td>
+                <td style="text-align:left; white-space:nowrap;  display: none;">
+                    {{ detindividual.ban01anio}}
+                </td>
+                <td style="text-align:left; white-space:nowrap;  display: none;">
+                    {{ detindividual.ban01mes}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban01anio}}
+                    {{ detindividual.ban01descripcion}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban01mes}}
+                    {{ detindividual.ban01fecha | date:'dd/MM/yyyy'}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban01descripcion}}
+                    {{ detindividual.ban02ruc}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban01fecha}}
+                    {{ detindividual.nombreproveedor}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban02ruc}}
+                    {{ detindividual.ban02tipodoc}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban02tipodoc}}
+                    {{ detindividual.ban02nrodoc}}
+                </td>
+        
+                <td style="text-align:left; white-space:nowrap;">
+                    {{ detindividual.co05moneda}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban02nrodoc}}
+                    {{ detindividual.co05fecha | date:'dd/MM/yyyy'}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban02tipodoc}}
+                    {{ detindividual.co05fecven | date:'dd/MM/yyyy'}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.co05moneda}}
+                    {{ detindividual.importebrutosoles}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.co05fecha}}
+                    {{ detindividual.importebrutodolares}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.co05fecven}}
+                    {{ detindividual.ban02tipodetraccion}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.importebrutosoles}}
+                    {{ detindividual.ban02tasadetraccion}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.importebrutodolares}}
+                    {{ detindividual.pagodetracionsoles}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban02tipodetraccion}}
+                    {{ detindividual.pagodetraciondolares}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.ban02tasadetraccion}}
-                </td>
-                <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.pagodetracionsoles}}
-                </td>
-                <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.pagodetraciondolares}}
-                </td>
-                <td style="text-align:left; white-space:nowrap;">
-                    {{ detmasiva.nombreproveedor}}
+                <td>
+                    <div class="flex justify-content-center gap-2">
+                        <button pButton icon="pi pi-eye" pVerDetalle
+                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
+                    (click)="verDetalle(detmasiva)"
+                    ></button>
+                    <button pButton icon="pi pi-trash" pEliminarPago
+                            class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                            [disabled] = "true"
+                            (click)="eliminarPagoPresupuesto()">
+                        </button>
+                    </div>
                 </td>
 
             </tr>
         </ng-template>
         
     </p-table>
-
+</div>
 </div>

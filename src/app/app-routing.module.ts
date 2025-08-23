@@ -19,6 +19,9 @@ import { DetraccionMasivaComponent } from './demo/components/detraccion/detracci
 import { DetraccionIndividualComponent } from './demo/components/detraccion/detraccion-individual/detraccion-individual.component';
 import { DetraccionMasivaPresupuestoDetComponent } from './demo/components/detraccion/detraccion-masiva-presupuesto-det/detraccion-masiva-presupuesto-det.component';
 import { DetraccionMasivaDetComponent } from './demo/components/detraccion/detraccion-masiva-det/detraccion-masiva-det.component';
+import { PagoRetencionComponent } from './demo/components/pago-retencion/pago-retencion.component';
+import { ConsultadocpendienteCtaxcobrarComponent } from './demo/components/consultadocpendiente-ctaxcobrar/consultadocpendiente-ctaxcobrar.component';
+import { ConsultahistoricaCtaxcobrarComponent } from './demo/components/consultahistorica-ctaxcobrar/consultahistorica-ctaxcobrar.component';
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -47,7 +50,10 @@ import { DetraccionMasivaDetComponent } from './demo/components/detraccion/detra
                     {path:'detraccion_masiva', component:DetraccionMasivaComponent},
                     {path:'detraccion_individual', component:DetraccionIndividualComponent},
                     {path:'detraccion_masiva_presupuesto_det' , component:DetraccionMasivaPresupuestoDetComponent},
-                    {path:'detraccion_masiva_det', component:DetraccionMasivaDetComponent}
+                    {path:'detraccion_masiva_det', component:DetraccionMasivaDetComponent},
+                    {path:'pago_retencion', component:PagoRetencionComponent},
+                    {path:'consultadocpendiente_ctaxcobrar', component:ConsultadocpendienteCtaxcobrarComponent},
+                    {path:'consultahistorica_ctaxcobrar', component:ConsultahistoricaCtaxcobrarComponent}
                 ]
             },
             { path: 'notfound', component: NotfoundComponent },

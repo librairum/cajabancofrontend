@@ -69,6 +69,7 @@ items: any[] = [];
         if(date){
           this.anioPeriodo = date.getFullYear().toString();
           this.mesPeriodo = (date.getMonth()+1).toString().padStart(2,'0');
+          
           this.cargar(this.anioPeriodo, this.mesPeriodo);
         }
     });
@@ -77,7 +78,7 @@ items: any[] = [];
 
   }
 
-  cargar(anio, mes):void{
+  cargar(anio:string, mes:string):void{
     this.loading = true;
     const codigoEmpresa: string = this.globalService.getCodigoEmpresa();
     //let anio :string= '';

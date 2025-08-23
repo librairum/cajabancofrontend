@@ -19,7 +19,8 @@ import { calendario_traduccion } from 'src/app/shared/Calendarios';
 import { InputTextModule } from 'primeng/inputtext';
 import { verMensajeInformativo } from 'src/app/demo/components/utilities/funciones_utilitarias';
 import { ConfigService } from 'src/app/demo/service/config.service';
-
+import { ConfirmarPagoComponent } from '../../presupuesto/confirmar-pago/confirmar-pago.component';
+import { DialogModule } from 'primeng/dialog';
 @Component({
   selector: 'app-detraccion-individual-ayuda',
   standalone: true,
@@ -35,7 +36,7 @@ import { ConfigService } from 'src/app/demo/service/config.service';
         RouterModule,
         CalendarModule,
         DropdownModule,
-        InputTextModule,],
+        InputTextModule,ConfirmarPagoComponent , DialogModule],
   templateUrl: './detraccion-individual-ayuda.component.html',
   styleUrl: './detraccion-individual-ayuda.component.css',
   providers: [ConfirmationService, MessageService, DatePipe],
@@ -43,7 +44,69 @@ import { ConfigService } from 'src/app/demo/service/config.service';
 export class DetraccionIndividualAyudaComponent implements OnInit {
 
   loading: boolean = false;
-  ngOnInit(): void {
+  proveedores: proveedores_lista[] =[];
+selectedItems:agregar_Pago[] = [];
+ayudapago: agregar_Pago[] = [];
+selectedPagoNumero: string = '';
+selectedNumeroLote:string = '';
+verConfirmarPago: boolean = false;
+
+//cargar datos en dura:
+  cargarDatosTablas(){
+    let registro1  : agregar_Pago ={
+      clave:'xxx',
+      ruc:'20555841095',
+      razonSocial:'gm ingenieros y consultores',
+      coditoTipoDoc:'',
+      nombreTipoDOc:'',
+      numeroDOcumento:'',
+      monedaOriginal:'',
+      soles:0,
+      dolares:0,
+      fechaEmision:'',
+      fechaVencimiento:'',
+      diasAtrazo:0,
+      afectoDetraccion:'S',
+      afectoRetencion:'N'
+
+    }
+    this.ayudapago.push(registro1);
+  }
+  onProveedorChallenge(event:any){
 
   }
+  filtrar(){
+
+  }
+  onAddSelected(){
+
+  }
+  onCancelSelection():void{
+
+  }
+
+  ngOnInit(): void {
+      this.cargarDatosTablas();
+  }
+  confirmarPagoPresupuesto(registro: agregar_Pago):void{
+
+  }
+
+onCloseModal() {
+        // if (this.confirmarpagocomponente) {
+        //     this.confirmarpagocomponente.limpiar();
+        // }
+        this.verConfirmarPago = false;
+        // this.displayAgregarModal = false;
+        //this.cargarMedioPago();
+        // this.globalService.selectedDate$.subscribe((date) => {
+        //     if (date) {
+        //         const year = date.getFullYear().toString();
+        //         const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        //         this.cargar(this.anioPeriodo, this.mesPeriodo);
+        //     }
+        // });
+    }
+
+  
 }
