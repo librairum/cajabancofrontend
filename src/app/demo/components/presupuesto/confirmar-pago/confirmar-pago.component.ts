@@ -21,6 +21,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { insert_presupuesto, mediopago_lista } from 'src/app/demo/model/presupuesto';
 import { DetraccioMasivaDetalleRequest } from 'src/app/demo/model/DetraccionMasiva';
 import { DetraccionService } from 'src/app/demo/service/detraccion.service';
+import { DetraccionIndividualDocPen, DetraccionIndividualRequest } from 'src/app/demo/model/DetraccionIndividual';
 @Component({
     selector: 'app-confirmar-pago',
     standalone: true,
@@ -41,7 +42,7 @@ export class ConfirmarPagoComponent implements OnInit {
     @Output() onClose = new EventEmitter<void>();
     @Input() presupuestoCab:insert_presupuesto;
     @Input() numeroLote:string;
-    
+    @Input() seleccionadoDocPen:DetraccionIndividualDocPen;
     pagoForm: FormGroup;
     destinationPath: string = '';
 
@@ -63,6 +64,7 @@ export class ConfirmarPagoComponent implements OnInit {
     anio_combo: string = ""; apiUrl: any;
     mes_combo: string = "";
     urlApi: string = '';
+    modoDetraccionIndividual :boolean = false;
     nuevoPresupuesto: insert_presupuesto={
         ban01Empresa: '',
         ban01Numero: '',
@@ -93,6 +95,33 @@ export class ConfirmarPagoComponent implements OnInit {
         enlacePago:'',
         nombreArchivo:'',
         flagOperacion:''
+    };
+    nuevaDetraccionIndividual: DetraccionIndividualRequest ={
+        ban01empresa: '',
+        ban01anio: '',
+        ban01mes: '',
+        ban01descripcion: '',
+        ban01fecha:  '',
+        ban01estado:'',
+        ban01usuario:'',
+        ban01pc:'',
+        ban01fecharegistro:'',
+        ban01mediopago:'',
+        ban01motivopagocod:'',
+        ban02ruc:'',
+        ban02tipodoc:'',
+        ban02nrodoc:'',
+        ban02tipodetraccion:'',
+        ban02tasadetraccion:'',
+        ban02importedetraccionsoles:0,
+        ban02importedetracciondolares:0,
+        numerooperacion:'',
+        enlacepago:'',
+        nombrearchivo:'',
+        contenidoarchivo:'',
+        flagoperacion:''
+        
+        
     }
     medioPagoLista: mediopago_lista[] = [];
     constructor(private fb: FormBuilder, 
@@ -114,7 +143,14 @@ export class ConfirmarPagoComponent implements OnInit {
 
     ngOnInit(): void {
 
+        
+        if(this.seleccionadoDocPen){
+            this.modoDetraccionIndividual = true;
+            
+        }
         if (this.pagoNumero) {
+            console.log("se ejecuta el modal desde el formulario padre detraccion masiva");
+            
             this.nroOperacion = this.pagoNumero;
         }
         this.gS.selectedDate$.subscribe(date => {
@@ -126,11 +162,10 @@ export class ConfirmarPagoComponent implements OnInit {
         this.destinationPath = this.configService.getRutaDoc();
         if(this.modoDetraccion == true){
             this.cargarMedioPago();
+            
 
         }
-                     console.log("on inic confirmaa pago valor nunemro lote:");
-             console.log(this.numeroLote);
-        // console.log(this.numeroLote);    
+                       
         
     }
 
@@ -140,9 +175,7 @@ export class ConfirmarPagoComponent implements OnInit {
           this.nroOperacion = changes['pagoNumero'].currentValue;
         } por si se desea pasar el nro de pago
       }*/
-
-    guardarPresupuestoDetraccionPago():void{
-        
+    guardarDetraccioMasivo():void{
         this.nuevoDetraccion.ban01Empresa = this.gS.getCodigoEmpresa();
         
           this.gS.selectedDate$.subscribe(date => {
@@ -178,6 +211,7 @@ export class ConfirmarPagoComponent implements OnInit {
         console.log(this.nuevoDetraccion);
         this.detraccionService.InsertarDetraccionMasiva(this.nuevoDetraccion, this.archivoSeleccionado).subscribe({
             next:(response) =>{
+                
                 setTimeout(() => {
                     this.cargandoArchivo = false;
                     this.finalizarGuardado();
@@ -194,29 +228,69 @@ export class ConfirmarPagoComponent implements OnInit {
                     this.cargandoArchivo = false;
             }
         });
-        // //crear el presupuesto
-        //   this.pS.insertarPresupuesto(this.nuevoPresupuesto).subscribe({
-        //     next:(response) =>{
-        //        verMensajeInformativo(
-        //                 this.messageService,
-        //                 'success',
-        //                 'Éxito',
-        //                 'Presupuesto guardado correctamente'
-        //             );
+    }
+    guardarDetraccionIndividual():void{
+        this.nuevaDetraccionIndividual.ban01empresa = this.gS.getCodigoEmpresa();
+        this.nuevaDetraccionIndividual.ban01anio = this.anio_combo;
+        this.nuevaDetraccionIndividual.ban01mes = this.mes_combo;
+        this.nuevaDetraccionIndividual.ban01descripcion = this.pagoForm.get('motivoPago')?.value;
+        let fechaPagoInput = this.pagoForm.get('fechaejecucion')?.value;
+        let fechaPagoFormated = fechaPagoInput ? formatDate(new Date(fechaPagoInput)): null;
+        this.nuevaDetraccionIndividual.ban01fecha = fechaPagoFormated;
+        this.nuevaDetraccionIndividual.ban01estado = '02'; //estado dpresupuesto pago
+        this.nuevaDetraccionIndividual.ban01usuario = 'melissa';
+        this.nuevaDetraccionIndividual.ban01pc = 'PC';
+        this.nuevaDetraccionIndividual.ban01fecharegistro = fechaPagoFormated;
+        this.nuevaDetraccionIndividual.ban01mediopago = this.pagoForm.get('medioPago')?.value;
+        this.nuevaDetraccionIndividual.ban01motivopagocod = '02';
+        this.nuevaDetraccionIndividual.ban02ruc = this.seleccionadoDocPen.ruc;
+        this.nuevaDetraccionIndividual.ban02tipodoc = this.seleccionadoDocPen.codigotipodoc;
+        this.nuevaDetraccionIndividual.ban02nrodoc = this.seleccionadoDocPen.numerodocumento;
+        this.nuevaDetraccionIndividual.ban02tipodetraccion = this.seleccionadoDocPen.detratiposervicio;
+        this.nuevaDetraccionIndividual.ban02tasadetraccion = this.seleccionadoDocPen.detraporcentaje;
+        this.nuevaDetraccionIndividual.ban02importedetraccionsoles = this.seleccionadoDocPen.origsoles;
+        this.nuevaDetraccionIndividual.ban02importedetracciondolares = this.seleccionadoDocPen.origdolares;
+        this.nuevaDetraccionIndividual.numerooperacion = this.pagoForm.get('nroOperacion')?.value;
+
+        let fileUrl = this.rutaComprobante;
+        this.nuevaDetraccionIndividual.enlacepago = fileUrl;;
+        this.nuevaDetraccionIndividual.nombrearchivo = this.archivoSeleccionado?.name;
+        this.nuevaDetraccionIndividual.flagoperacion = 'I';
+        console.log("guardar detraccion individual");
+        console.log(this.nuevaDetraccionIndividual);
+        this.detraccionService.SpInsertaDetraIndividual(this.nuevaDetraccionIndividual, this.archivoSeleccionado)
+        .subscribe({
+            next:(response)=>{
+                 setTimeout(() => {
+                    this.cargandoArchivo = false;
+                    this.finalizarGuardado();
+                }, 500);
+            },
+             error:(error)=>{
+                 this.cargandoArchivo = false;
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        'No se pudo actualizar el comprobante desde detraccion individual:' + error
+                    );
+                    this.cargandoArchivo = false;
+            }
+        });
 
 
-        //     }   ,
-        //     error:(error) =>{
-        //         verMensajeInformativo(
-        //                 this.messageService,
-        //                 'error',
-        //                 'Error',
-        //                 `Error al guardar el presupuesto: ${error.message}`
-        //             );
-        //     }
-        // })
 
-        // //actualizacion del pago del presupuesto detraccion
+        
+
+    }
+    guardarPresupuestoDetraccionPago():void{
+        if(this.modoDetraccionIndividual == true){
+            this.guardarDetraccionIndividual();
+        }else{
+            this.guardarDetraccioMasivo();
+        }
+        
+      
 
     }
 

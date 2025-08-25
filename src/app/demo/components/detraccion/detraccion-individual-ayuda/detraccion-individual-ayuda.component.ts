@@ -21,6 +21,9 @@ import { verMensajeInformativo } from 'src/app/demo/components/utilities/funcion
 import { ConfigService } from 'src/app/demo/service/config.service';
 import { ConfirmarPagoComponent } from '../../presupuesto/confirmar-pago/confirmar-pago.component';
 import { DialogModule } from 'primeng/dialog';
+import { DetraccionService } from 'src/app/demo/service/detraccion.service';
+import { DetraccionIndividualDocPen } from 'src/app/demo/model/DetraccionIndividual';
+import { DocPendienteDetra } from 'src/app/demo/model/DetraccionIndividual';
 @Component({
   selector: 'app-detraccion-individual-ayuda',
   standalone: true,
@@ -36,7 +39,9 @@ import { DialogModule } from 'primeng/dialog';
         RouterModule,
         CalendarModule,
         DropdownModule,
-        InputTextModule,ConfirmarPagoComponent , DialogModule],
+        InputTextModule,ConfirmarPagoComponent ,
+      
+         DialogModule],
   templateUrl: './detraccion-individual-ayuda.component.html',
   styleUrl: './detraccion-individual-ayuda.component.css',
   providers: [ConfirmationService, MessageService, DatePipe],
@@ -50,7 +55,21 @@ ayudapago: agregar_Pago[] = [];
 selectedPagoNumero: string = '';
 selectedNumeroLote:string = '';
 verConfirmarPago: boolean = false;
-
+listaDocumentoPendiente : DetraccionIndividualDocPen[] = [];
+listaDocendientedtra: DocPendienteDetra[] =[];
+seleccionDetraIndividual:DetraccionIndividualDocPen = null;
+filtroFRM: FormGroup;
+constructor(private detraccionService: DetraccionService, 
+  private config:ConfigService, 
+  private globalService:GlobalService,
+private mesageService: MessageService,
+private presupuestoService: PresupuestoService,
+private fb:FormBuilder){
+  this.filtroFRM = fb.group ({
+      ruc: [''],
+      nrodoc: ['']
+    });
+  }
 //cargar datos en dura:
   cargarDatosTablas(){
     let registro1  : agregar_Pago ={
@@ -75,8 +94,40 @@ verConfirmarPago: boolean = false;
   onProveedorChallenge(event:any){
 
   }
+  cargarProvedores(){
+     const cod_empresa = this.globalService.getCodigoEmpresa();
+        this.presupuestoService
+            .obtenerProveedores(cod_empresa)
+            .subscribe((data: proveedores_lista[]) => {
+                this.proveedores = data;
+                if (data.length > 0) {
+                    // this.filtroFRM.patchValue({
+                    //     ruc: data[0].ruc
+                    // });
+                    // Cargamos los datos iniciales
+                    //this.cargarayudaparaagregarpago();
+                }
+            });
+  }
   filtrar(){
-
+  let ruc: string = '';
+    let nroDoc:string = '';
+    
+    nroDoc = this.filtroFRM.get('nrodoc').value?? '';
+    ruc = this.filtroFRM.get('ruc').value?? '';
+    
+    this.loading = true;
+     this.detraccionService.GetAyudaDetraccionIndividual(this.globalService.getCodigoEmpresa(),
+      ruc, nroDoc).subscribe({
+        next:(data) => this.listaDocendientedtra = data,
+        error:(error) => 
+        {
+          
+           verMensajeInformativo(this.mesageService,'error', 'Error', 'Error al cargar bancos' + error);
+        }
+         
+      });
+      this.loading = false;
   }
   onAddSelected(){
 
@@ -86,12 +137,36 @@ verConfirmarPago: boolean = false;
   }
 
   ngOnInit(): void {
-      this.cargarDatosTablas();
+    this.filtroFRM.reset();
+      //this.cargarDatosTablas();
+      this.cargarProvedores();
+      this.cargarDocPendiente();
   }
-  confirmarPagoPresupuesto(registro: agregar_Pago):void{
-
+  confirmarPagoPresupuesto(registro: DetraccionIndividualDocPen):void{
+    this.seleccionDetraIndividual = registro;
+    this.verConfirmarPago = true;
+    
+    console.log("CofirmarPago valor DetraccionIndividualDocPen ", this.seleccionDetraIndividual);
   }
 
+  cargarDocPendiente() :void{
+    let ruc: string = '';
+    let nroDoc:string = '';
+    
+    
+    this.loading = true;
+     this.detraccionService.GetAyudaDetraccionIndividual(this.globalService.getCodigoEmpresa(),
+      ruc, nroDoc).subscribe({
+        next:(data) => this.listaDocendientedtra = data,
+        error:(error) => 
+        {
+          
+           verMensajeInformativo(this.mesageService,'error', 'Error', 'Error al cargar bancos' + error);
+        }
+         
+      });
+      this.loading = false;
+  }
 onCloseModal() {
         // if (this.confirmarpagocomponente) {
         //     this.confirmarpagocomponente.limpiar();

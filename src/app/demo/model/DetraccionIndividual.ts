@@ -38,16 +38,34 @@ export interface DetraccionIndividualDocPen{
     detraimpdol:number;
 }
 
+export interface DocPendienteDetra{
+        clave: string;
+        ruc:string;
+        razonsocial:string;
+        codigotipodoc:string;
+        nombretipodoc:string;
+        numerodocumento:string;
+        monedaoriginal:string;
+        origsoles:number;
+        origdolares:number;
+        fechaemision:string;
+        afectodetraccion:string;
+        detratiposervicion:string;
+        detraporcentaje:number;
+        detraimpsol:number;
+        detraimpdol:number;
+}
+
 export interface DetraccionIndividualRequest{
-    ban01empres:string;
+    ban01empresa:string;
     ban01anio:string;
     ban01mes:string;
     ban01descripcion:string;
-    ban01fecha:Date;
+    ban01fecha:string;
     ban01estado:string;
     ban01usuario:string;
     ban01pc:string;
-    ban01fecharegistro:Date;
+    ban01fecharegistro:string;
     ban01mediopago:string;
     ban01motivopagocod:string;
     ban02ruc:string;
@@ -59,9 +77,9 @@ export interface DetraccionIndividualRequest{
     ban02importedetracciondolares:number;
     numerooperacion:string;
     enlacepago:string;
-    nombreArchivo:string;
-    contenidoArchivo:string;
-        flagOperacion:string;
+    nombrearchivo:string;
+    contenidoarchivo:string;
+        flagoperacion:string;
 }
 /*
 

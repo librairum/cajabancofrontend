@@ -168,8 +168,7 @@ items: any[] = [];
     this.verConfirmarPago=true;
     
     this.selectedNumeroLote = registro.loteDetraccionNro;
-    console.log("numero detraccion seleccioando");
-    console.log(this.selectedNumeroLote)
+    
   }
 onCloseModal() {
         if (this.confirmarpagocomponente) {

@@ -7,19 +7,22 @@ header="Confirmar pago individual"
     
 >
 
-<app-confirmar-pago 
-[pagoNumero]="selectedPagoNumero"
- [modoDetraccion]="true"
- [numeroLote]="selectedNumeroLote"
-(onClose)="onCloseModal()"
- ></app-confirmar-pago>
+<div *ngIf="verConfirmarPago">
+        <app-confirmar-pago 
+        [pagoNumero]="selectedPagoNumero"
+        [modoDetraccion]="true"
+        [numeroLote]="selectedNumeroLote"
+        [seleccionadoDocPen] = "seleccionDetraIndividual"
+        (onClose)="onCloseModal()"
+        ></app-confirmar-pago>
+ </div>
 </p-dialog>
 
 <p-toast key="main" [life]="2000"></p-toast>
 <p-confirmDialog></p-confirmDialog>
 <div class="container">
     <p-panel header ="seleccione los documentos">
-        <form>
+        <form [formGroup]="filtroFRM">
             <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                     <label>Proveedor: </label>
@@ -30,7 +33,8 @@ header="Confirmar pago individual"
                         (onChange)="onProveedorChallenge($event)" 
                         [filter]="true" filterBy="razonsocial" [showClear]="true"
                         placeholder="Seleccione un proveedor" styleClass="w-15rem" [virtualScroll]="true"
-                        [virtualScrollItemSize]="38" [panelStyle]="{width:'350px', overflow: 'hidden', 'max-height': '300px' }">
+                        [virtualScrollItemSize]="38" 
+                        [panelStyle]="{width:'350px', overflow: 'hidden', 'max-height': '300px' }">
                     </p-dropdown>
                 </div>
 
@@ -54,7 +58,7 @@ header="Confirmar pago individual"
             </div>
         </form>
         <br>
- <p-table [value]="ayudapago" [scrollable]="true" scrollHeight="400px"
+ <p-table [value]="listaDocendientedtra" [scrollable]="true" scrollHeight="400px"
             [scrollDirection]="'both'" [loading]="loading"
             showGridlines [(selection)]="selectedItems"
             dataKey="clave">
@@ -69,11 +73,9 @@ header="Confirmar pago individual"
                     <th>Moneda Original</th>
                     <th>S/. </th>
                     <th>US$</th>
-                    <th>Fecha Emision</th>
-                    <th>Fecha Vencimiento</th>
-                    <th>Dias Atrazo</th>
-                    <th>AfectaDetraccion</th>
-                    <th>AfectaRetencion</th>
+                    <th>Fecha Emision</th>                                        
+                    <th>Detra.Imp.Soles</th>
+                    <th>Detra.Imp.Dolares</th>
                     <!-- <th style="width: 4rem">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th> -->
@@ -83,24 +85,22 @@ header="Confirmar pago individual"
             <ng-template pTemplate="body" let-ayudapago>
                 <tr>
                     <td style="text-align: left;">{{ayudapago.ruc}}</td>
-                    <td style="text-align: left;">{{ayudapago.razonSocial}}</td>
-                    <td style="text-align: left;">{{ayudapago.nombreTipoDOc}}</td>
-                    <td style="text-align: left;">{{ayudapago.numeroDOcumento}}</td>
-                    <td style="text-align: left;">{{ayudapago.monedaOriginal}}</td>
-                    <td style="text-align: right;">{{ayudapago.soles | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{ayudapago.dolares | number:'1.2-2'}}</td>
-                    <td style="text-align: left;">{{ayudapago.fechaEmision}}</td>
-                    <td style="text-align: left;">{{ayudapago.fechaVencimiento}}</td>
-                    <td style="text-align: left;">{{ayudapago.diasAtrazo}}</td>
-                    <td style="text-align: left;">{{ayudapago.afectoDetraccion}}</td>
-                    <td style="text-align: left;">{{ayudapago.afectoRetencion}}</td>
+                    <td style="text-align: left;">{{ayudapago.razonsocial}}</td>
+                    <td style="text-align: left;">{{ayudapago.nombretipodoc}}</td>
+                    <td style="text-align: left;">{{ayudapago.numerodocumento}}</td>
+                    <td style="text-align: left;">{{ayudapago.monedaoriginal}}</td>
+                    <td style="text-align: right;">{{ayudapago.origsoles | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{ayudapago.origdolares | number:'1.2-2'}}</td>
+                    <td style="text-align: left;">{{ayudapago.fechaemision}}</td>                                        
+                    <td style="text-align: right;">{{ayudapago.detraimpsol | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{ayudapago.detraimpdol | number:'1.2-2'}}</td>
                     <!-- <td>
                         <p-tableCheckbox [value]="ayudapago"></p-tableCheckbox>
                     </td> -->
                     <td >
                         <button pButton icon="pi pi-money-bill" pConfirmarPago
-                                            class="p-button.p-button-rounded p-button-text p-button-sm p-disabled"
-                                            (click)="confirmarPagoPresupuesto(ayudapago)" [disabled]="true" ></button>
+                                class="p-button.p-button-rounded p-button-text p-button-sm "
+                                (click)="confirmarPagoPresupuesto(ayudapago)" [disabled]="false" ></button>
                     </td>
                 </tr>
             </ng-template>

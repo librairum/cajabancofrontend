@@ -12,6 +12,7 @@ import { formatDateForFilename, RespuestaAPIBase } from '../components/utilities
 import { DetraccionMasivaDetalle } from '../model/DetraccionMasivaDetalle';
 import { DetraccioMasivaDetalleRequest } from '../model/DetraccionMasiva';
 import { DetraccionIndividual, DetraccionIndividualDocPen, DetraccionIndividualRequest } from '../model/DetraccionIndividual';
+import { DocPendienteDetra } from '../model/DetraccionIndividual';
 @Injectable({
     providedIn: 'root',
 })
@@ -112,13 +113,13 @@ export class DetraccionService{
 
     }
     public GetAyudaDetraccionIndividual(empresa:string, 
-        ruc:string, numeroDocumento:string ):Observable<DetraccionIndividualDocPen[]>
+        ruc:string, numeroDocumento:string ):Observable<DocPendienteDetra[]>
     {
         let urlSolicitud = `${this.urlAPI}/SpTraeDocPendiente?empresa=${empresa}&ruc=${ruc}&numeroDocumento=${numeroDocumento}`;
         return this.http
-            .get<RespuestaAPIBase<DetraccionIndividualDocPen[]>>(urlSolicitud)
+            .get<RespuestaAPIBase<DocPendienteDetra[]>>(urlSolicitud)
             .pipe(
-                map((response:RespuestaAPIBase<DetraccionIndividualDocPen[]>) =>{
+                map((response:RespuestaAPIBase<DocPendienteDetra[]>) =>{
                     if(response.isSuccess && response.data){
                         return response.data;
                         }else{
@@ -137,7 +138,7 @@ export class DetraccionService{
         const formData = new FormData();
         formData.append('archivoOriginal',file);
         formData.append('request', JSON.stringify(detraccionindividual));
-        return this.http.post<RespuestaAPIBase<any>>(`${this.urlAPI}/SpInsertaPresupuestoDetraMasiva`,formData );
+        return this.http.post<RespuestaAPIBase<any>>(`${this.urlAPI}/SpInsertaDetraIndividual`,formData );
     }
 
      
