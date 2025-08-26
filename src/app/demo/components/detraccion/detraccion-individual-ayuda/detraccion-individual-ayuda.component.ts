@@ -172,6 +172,7 @@ onCloseModal() {
         //     this.confirmarpagocomponente.limpiar();
         // }
         this.verConfirmarPago = false;
+        this.filtrar();
         // this.displayAgregarModal = false;
         //this.cargarMedioPago();
         // this.globalService.selectedDate$.subscribe((date) => {

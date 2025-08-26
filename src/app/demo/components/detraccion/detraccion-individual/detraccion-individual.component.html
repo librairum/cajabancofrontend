@@ -56,6 +56,7 @@ header="Confirmar pago individual"
                  <th style="width: 5%;  display: none;">EmpresaCod</th>
                  <th style="width: 8%;  display: none;">Anio</th>
                  <th style="width: 8%;  display: none;">mes</th>
+                <th style="width: 8%">NroPresupuesto</th> 
                 <th style="width: 8%">descripcion</th>
                 <th style="width: 8%">fechaPresupuesto</th>
                 <th style="width: 8%">Ruc</th>
@@ -86,6 +87,9 @@ header="Confirmar pago individual"
                 </td>
                 <td style="text-align:left; white-space:nowrap;  display: none;">
                     {{ detindividual.ban01mes}}
+                </td>
+                <td style="text-align:left; white-space:nowrap;">
+                    {{detindividual.ban01numero}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.ban01descripcion}}
@@ -137,7 +141,7 @@ header="Confirmar pago individual"
                     <div class="flex justify-content-center gap-2">
                         <button pButton icon="pi pi-eye" pVerDetalle
                     class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
-                    (click)="verDetalle(detmasiva)"
+                    (click)="verDetalle(detindividual)"
                     ></button>
                     <button pButton icon="pi pi-trash" pEliminarPago
                             class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"

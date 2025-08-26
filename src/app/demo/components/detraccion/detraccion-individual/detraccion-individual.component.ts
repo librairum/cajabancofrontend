@@ -64,7 +64,7 @@ items: any[] = [];
     ngOnInit(): void {
       this.bs.setBreadcrumbs([
           {icon:'pi pi-home', routerLink:'/Home'},
-          {label:'Detraccion individual', routerLink:'/Home/detraccion_individual'}
+          {label:'Detraccion individual', routerLink:'/Home/detraccionindividual'}
         ]);
 
         this.bs.currentBreadcrumbs$.subscribe(bs=>{
@@ -97,6 +97,12 @@ items: any[] = [];
           }, 
           error:(e) =>{
             this.loading = false;
+             verMensajeInformativo(
+                              this.messageService,
+                              'error',
+                              'Error',
+                              'Error al cargar documentos por pago'
+                          );
           }
           
         })
@@ -123,6 +129,22 @@ items: any[] = [];
       this.displayAgregarModal = true;
 
      }
+     verDetalle(registro: DetraccionIndividual): void{
+        const navigationExtras ={
+          state:{
+            presupuestoCod:registro.ban01numero,
+            anio:registro.ban01anio,
+            mes:registro.ban01mes,
+            empresa:registro.ban01empresa,
+            fecha:registro.ban01fecha,
+            nombreMedioPago: '',
+            motivo:''
+          }
+        }
+        console.log("datos detraccioon individaul seleccionado:" , navigationExtras);
 
+        this.router.navigate(['Home/detraccion_individual_det'], navigationExtras);
+
+     }
 
 }
