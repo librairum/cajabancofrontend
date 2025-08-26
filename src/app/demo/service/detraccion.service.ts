@@ -141,7 +141,9 @@ export class DetraccionService{
         return this.http.post<RespuestaAPIBase<any>>(`${this.urlAPI}/SpInsertaDetraIndividual`,formData );
     }
 
-     
+    // public SpEliminaPresuDetraIndividual(empresa:string, nropresupuesto:string){
+    //     let urlSolicitud = `${this.urlAPI}/SpEliminaPresuDetraIndividual
+    // }
 
 
 }

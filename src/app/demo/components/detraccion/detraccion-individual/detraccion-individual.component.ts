@@ -24,7 +24,8 @@ import { ConfirmarPagoComponent } from '../../presupuesto/confirmar-pago/confirm
 import { DialogModule } from 'primeng/dialog';
 import { insert_presupuesto } from '../../../model/presupuesto';
 import { DetraccionIndividualAyudaComponent } from "../detraccion-individual-ayuda/detraccion-individual-ayuda.component";
-
+import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
+import { HttpResponse } from '@angular/common/http';
 @Component({
   selector: 'app-detraccion-individual',
   standalone: true,
@@ -32,7 +33,8 @@ import { DetraccionIndividualAyudaComponent } from "../detraccion-individual-ayu
     ReactiveFormsModule, CommonModule, CardModule,
     InputTextModule, PanelModule, BreadcrumbModule,
     ConfirmDialogModule, FormsModule, DropdownModule,
-    ButtonModule, CheckboxModule, ConfirmarPagoComponent, DialogModule, DetraccionIndividualAyudaComponent],
+    ButtonModule, CheckboxModule, ConfirmarPagoComponent, DialogModule, 
+    DetraccionIndividualAyudaComponent],
   templateUrl: './detraccion-individual.component.html',
   styleUrl: './detraccion-individual.component.css',
   providers:[MessageService,ConfirmationService ]
@@ -56,7 +58,8 @@ items: any[] = [];
  constructor(private detraccionMasivaService: DetraccionService,
     private bs:BreadcrumbService, 
     private globalService:GlobalService,
-    private router:Router, private messageService:MessageService
+    private router:Router, private messageService:MessageService,
+    private presupuestoService:PresupuestoService
   )
   {
     
@@ -137,14 +140,43 @@ items: any[] = [];
             mes:registro.ban01mes,
             empresa:registro.ban01empresa,
             fecha:registro.ban01fecha,
-            nombreMedioPago: '',
-            motivo:''
+            nombreMedioPago: registro.nombreMedioPago,
+            motivo:registro.ban01descripcion
           }
         }
         console.log("datos detraccioon individaul seleccionado:" , navigationExtras);
 
         this.router.navigate(['Home/detraccion_individual_det'], navigationExtras);
 
+     }
+     //abrir el documento pdf
+     abrirdocumento(registro:DetraccionIndividual): void{
+       this.presupuestoService
+                  .obtenerArchivo(
+                      this.globalService.getCodigoEmpresa(),
+                      this.anioPeriodo,
+                      this.mesPeriodo,
+                      registro.ban01numero
+                  )
+                  .subscribe({
+                      next: (response: HttpResponse<Blob>) => {
+                          const blob = response.body;
+                          if (blob) {
+                              const url = window.URL.createObjectURL(blob);
+                              window.open(url, '_blank');
+                          } else {
+                              verMensajeInformativo(
+                                  this.messageService,
+                                  'error',
+                                  'Error',
+                                  'No se encontró el documento'
+                              );
+                          }
+                      },
+                      error: (err) => {
+                          console.error('Error al obtener el documento: ', err);
+                      },
+                  });
      }
 
 }

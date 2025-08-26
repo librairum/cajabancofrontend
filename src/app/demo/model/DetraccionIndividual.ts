@@ -4,13 +4,13 @@ export interface DetraccionIndividual{
     ban01anio: string;
     ban01mes: string;
     ban01descripcion: string;
-    ban01fecha: Date;
+    ban01fecha: string;
     ban02ruc: string;
     ban02tipodoc: string;
     ban02nrodoc: string;
     co05moneda: string;
-    co05fecha: Date;
-    co05fecven: Date;
+    co05fecha: string;
+    co05fecven: string;
     importebrutosoles: number;
     importebrutodolares: number;
     ban02tipodetraccion: string;
@@ -19,6 +19,10 @@ export interface DetraccionIndividual{
     pagodetracionsoles: number;
     pagodetraciondolares: number;
     nombreproveedor:string;
+    nombreMedioPago:string;
+    estadopresupuesto:string;
+    fechaejecucionpago:string;
+    nrooperacion:string;
 }
 export interface DetraccionIndividualDocPen{
     clave:string;

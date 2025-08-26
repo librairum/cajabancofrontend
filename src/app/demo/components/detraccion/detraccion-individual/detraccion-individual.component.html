@@ -56,22 +56,25 @@ header="Confirmar pago individual"
                  <th style="width: 5%;  display: none;">EmpresaCod</th>
                  <th style="width: 8%;  display: none;">Anio</th>
                  <th style="width: 8%;  display: none;">mes</th>
-                <th style="width: 8%">NroPresupuesto</th> 
+                <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th> 
                 <th style="width: 8%">descripcion</th>
-                <th style="width: 8%">fechaPresupuesto</th>
-                <th style="width: 8%">Ruc</th>
-                <th style="width: 8%">Nombre</th>
-                <th style="width: 8%">tipDoc</th>
-                <th style="width: 8%">NroDoc</th>
-                <th style="width: 8%">Moneda</th>
-                <th style="width: 8%">FechaDoc</th>
-                <th style="width: 8%">FechaVen</th>
-                <th style="width: 8%">ImporteBrutoSoles</th>
-                <th style="width: 8%">ImporteBrutoDolares</th>
-                <th style="width: 8%">TipoDetraccion</th>
-                <th style="width: 8%">TasaDetraccion</th>
-                <th style="width: 8%">PagoDetracionSoles</th>
-                <th style="width: 8%">PagoDetracionDolares</th>
+                <th style="width: 5%;white-space: pre-wrap;">Fecha</th>
+                <th style="width: 8%;white-space: pre-wrap;">Ruc</th>
+                <th style="width: 5%">Nombre</th>
+                <th style="width: 8%;display: none;">tipDoc</th>
+                <th style="width: 8%;">NroDoc</th>
+                <th style="width: 5%">Moneda</th>
+                <th style="width: 8%;display: none;">FechaDoc</th>
+                <th style="width: 8%;display: none;">FechaVen</th>
+                <th style="width: 8%; display: none;">Imp.BrutoSoles</th>
+                <th style="width: 8%;display: none;">ImporteBrutoDolares</th>
+                <th style="width: 8%;white-space: pre-wrap;display: none;">Tipo<br>Detra</th>
+                <th style="width: 8%;white-space: pre-wrap;display: none;">Tasa<br>Detra</th>
+                <th style="width: 8%;white-space: pre-wrap;">Detra<br>Soles</th>
+                <th style="width: 8%;white-space: pre-wrap;">Detra<br>Dolares</th>
+                <th style="width: 5%">Estado</th>
+                <th style="width: 5%;white-space: pre-wrap;">Fec.<br>Pago</th>
+                <th style="width: 5%;white-space: pre-wrap;">Nro<br>Operacion</th>
                 <th style="width:8%">Acciones</th>
 
 
@@ -95,7 +98,7 @@ header="Confirmar pago individual"
                     {{ detindividual.ban01descripcion}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detindividual.ban01fecha | date:'dd/MM/yyyy'}}
+                    {{ detindividual.ban01fecha }}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.ban02ruc}}
@@ -103,7 +106,7 @@ header="Confirmar pago individual"
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.nombreproveedor}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                <td style="text-align:left; white-space:nowrap; display: none;">
                     {{ detindividual.ban02tipodoc}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
@@ -113,22 +116,22 @@ header="Confirmar pago individual"
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.co05moneda}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                <td style="text-align:left; white-space:nowrap; display: none;">
                     {{ detindividual.co05fecha | date:'dd/MM/yyyy'}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                <td style="text-align:left; white-space:nowrap; display: none;">
                     {{ detindividual.co05fecven | date:'dd/MM/yyyy'}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                <td style="text-align:left; white-space:nowrap;display: none;">
                     {{ detindividual.importebrutosoles}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                <td style="text-align:left; white-space:nowrap;display: none;">
                     {{ detindividual.importebrutodolares}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                <td style="text-align:left; white-space:nowrap; display: none;">
                     {{ detindividual.ban02tipodetraccion}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                <td style="text-align:left; white-space:nowrap; display: none;">
                     {{ detindividual.ban02tasadetraccion}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
@@ -137,16 +140,29 @@ header="Confirmar pago individual"
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.pagodetraciondolares}}
                 </td>
+                <td style="text-align:left; white-space:nowrap;">
+                    {{detindividual.estadopresupuesto}}
+                </td>
+                <td style="text-align:left; white-space:nowrap;">
+                    {{detindividual.fechaejecucionpago}}
+                </td>
+                <td style="text-align:left; white-space:nowrap;">
+                    {{detindividual.nrooperacion}}
+                </td>
                 <td>
                     <div class="flex justify-content-center gap-2">
                         <button pButton icon="pi pi-eye" pVerDetalle
-                    class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
-                    (click)="verDetalle(detindividual)"
-                    ></button>
-                    <button pButton icon="pi pi-trash" pEliminarPago
-                            class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
-                            [disabled] = "true"
-                            (click)="eliminarPagoPresupuesto()">
+                                class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
+                                (click)="verDetalle(detindividual)"></button>
+                        <button pButton icon="pi pi-trash" pEliminarPago
+                                class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                                [disabled] = "false"
+                                (click)="eliminarPagoPresupuesto()">
+                        </button>
+                        <button pButton icon="pi pi-file-pdf" pVerDocumento
+                                class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                                [disabled] = "false"
+                                (click)="abrirdocumento(detindividual)">
                         </button>
                     </div>
                 </td>
