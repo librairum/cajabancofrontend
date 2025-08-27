@@ -1,1 +1,67 @@
-<h1>hola CONSUTAL HISTORIA CTAXCOBRAR</h1>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="container">
+    <p-panel header="Consulta Doc.Histórico - Ctaxcobrar" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
+        <br />
+        <div class="search-bar">
+            <input type="text" pInputText placeholder="" [(ngModel)]="textoBuscar" (keyup.enter)="buscar()"
+                class="mr-3 w-5" />
+            <p-button pButton type="button" label="Buscar" icon="pi pi-search" class="p-ml-2" style="height: 35px;"
+                (click)="buscar()"></p-button>
+
+
+        </div>
+        <b class="">* digitar ruc , razon social, nro doc</b>
+    </p-panel>
+    <br />
+    <div class="card p-2">
+        <p-table [value]="consultaDocPorPagoList" [scrollable]="true"
+            [tableStyle]="{width: '100%', border: '0px solid black'}" [loading]="load">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="text-align: center;">RUC</th>
+                    <th style="text-align: center;">Nombre</th>
+                    <th style="text-align: center;">Tipo Documento</th>
+                    <th style="text-align: center;">Numero</th>
+                    <th style="text-align: center;">Fecha</th>
+                    <th style="text-align: center;">Importe</th>
+                    <th style="text-align: center;">Fecha Pago</th>
+                    <th style="text-align: center;">Importe Pagado</th>
+                    <th style="text-align: center;">Ver Comprobante de pago</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-doc>
+                <tr>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.ruc }}</td>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.nombreEmpresa }}</td>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.nombreTipoDocumento }}</td>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.nroDoc }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.fechaDocumento }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.importeDocumento | number : "1.2-2" }}
+                    </td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.fechaPago}}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.importePago | number : "1.1-2" }}</td>
+                    <td style="text-align: center; white-space: nowrap;">
+                        <p-button *ngIf="doc.fechaPago !== '' " label="" icon="pi pi-file"
+                            styleClass="p-button-sm p-button-info" (onClick)="abrirdocumento(doc.fechaPago, doc.numeroPresupuesto)
+                            " [text]="false">
+                        </p-button>
+                        <p-button *ngIf="doc.fechaPago === '' " label="" icon="pi pi-file-excel"
+                            styleClass="p-button-sm p-button-danger" [disabled]="true" [text]="false">
+                        </p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog [(visible)]="load" [modal]="true" [closable]="false" [showHeader]="false" [draggable]="false" [resizable] = "false">
+    <div class="flex flex-column justify-content-center align-items-center" style="min-width: 200px; min-height: 100px;">
+        <p-progressBar mode="indeterminate" style="width: 100%; height: 0px;"></p-progressBar>
+        <p class="mt-5">Procesando...</p>
+    </div>
+</p-dialog>
