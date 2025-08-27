@@ -80,8 +80,8 @@
                     <th colspan="4" style="display: none;"></th>
                 </tr>
                 <tr>
-                    <th colspan="1" >Monto a Pagar S/.</th>
-                    <th colspan="1" >Monto a Pagar $</th>
+                    <th colspan="1" style="white-space: pre-wrap;" >Comprobante<br>ImpDoc.S/.</th>
+                    <th colspan="1" style="white-space: pre-wrap;">comprobante<br>ImpDoc$</th>
 
                     <th colspan="1">Tipo</th>
                     <th colspan="1">Tasa</th>
@@ -151,6 +151,7 @@
                     <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
                     style="text-align: right; display: none;">{{ detalle.ban02Soles |
                         number:'1.2-2' }}</td>
+
                     <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" 
                     style="text-align: right; display: none;">{{ detalle.ban02Dolares |
                         number:'1.2-2' }}</td>

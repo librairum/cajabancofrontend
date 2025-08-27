@@ -1,1 +1,99 @@
-<p>consultadocpendiente-ctaxcobrar works!</p>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<div class="container">
+    <p-panel header="Consulta Doc.Histórico - Ctaxcobrar" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
+        <br />
+        <div class="search-bar">
+            <input type="text" pInputText placeholder="" [(ngModel)]="textoBuscar" class="mr-3 w-5" />
+
+            <p-button label="Buscar" styleClass="p-button-sm mr-2" icon="pi pi-search" (onClick)="buscar()"></p-button>
+
+            <p-button label="Imprimir PDF" icon="pi pi-file" styleClass="p-button-sm p-button-success mr-2"
+                (onClick)="obtenerFacturaPendiente()"></p-button>
+
+        </div>
+        <b class="">* digitar ruc , razon social, nro doc</b>
+    </p-panel>
+    <br />
+    <div class="card p-2">
+        <p-table [value]="ayudapago" [scrollable]="true" [tableStyle]="{width: '100%', border: '0px solid black'}"
+            groupRowsBy="ruc" rowGroupMode="subheader" [loading]="load">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>RUC</th>
+                    <th>Nombre</th>
+                    <th>Tipo Documento</th>
+                    <th>Numero</th>
+                    <th>Fecha emision</th>
+                    <th>Fecha vencimiento</th>
+                    <th>Moneda</th>
+                    <th>Soles</th>
+                    <th>Dolares</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="groupheader" let-groupData>
+                <tr pRowGroupHeader>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="groupfooter" let-groupData>
+                <tr>
+                    <td colspan="7">
+                    </td>
+                    <td class="font-bold pr-12" style="text-align: right;">
+                        {{calculateGroupTotal(groupData.ruc, 'soles') | number:'1.2-2' }}
+                    </td>
+                    <td class="font-bold pr-12" style="text-align: right;">
+                        {{calculateGroupTotal(groupData.ruc, 'dolares') | number:'1.2-2' }}
+                    </td>
+                </tr>
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="7" class="font-bold" style="text-align: right;">TOTAL GENERAL:</td>
+                    <td class="font-bold" style="text-align: right;">
+                        {{ getTotalTabla('soles') | number: '1.2-2' }}
+                    </td>
+                    <td class="font-bold" style="text-align: right;">
+                        {{ getTotalTabla('dolares') | number: '1.2-2' }}
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-doc>
+                <tr>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.ruc }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.razonSocial }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.nombreTipoDOc }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.numeroDOcumento }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.fechaEmision }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.fechaVencimiento }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.monedaOriginal }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.soles | number : "1.2-2"}}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.dolares | number : "1.2-2" }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="11" style="text-align: center; font-weight: bold; padding: 1rem;">
+                        no hay resultado
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+    </div>
+
+
+</div>
+
+<p-dialog [(visible)]="load" [modal]="true" [closable]="false" [showHeader]="false" [draggable]="false" [resizable] = "false">
+    <div class="flex flex-column justify-content-center align-items-center" style="min-width: 200px; min-height: 100px;">
+        <p-progressBar mode="indeterminate" style="width: 100%; height: 0px;"></p-progressBar>
+        <p class="mt-5">Procesando...</p>
+    </div>
+</p-dialog>

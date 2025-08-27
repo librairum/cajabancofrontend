@@ -39,7 +39,8 @@ export class DetraccionService{
         return throwError(() => new Error(errorMessage));
     }
     
-    public GetAllDetraccion(empresa:string, anio:string, mes:string, motivoPago:string): Observable<DetraccionMasiva[]>{
+    public GetAllDetraccion(empresa:string, anio:string, mes:string,
+         motivoPago:string): Observable<DetraccionMasiva[]>{
         let urlSolicitud =`${this.urlAPI}/SpListMasivo?empresa=${empresa}&anio=${anio}&mes=${mes}&motivoPago=${motivoPago}`;
         return this.http
             .get<RespuestaAPIBase<DetraccionMasiva[]>>(urlSolicitud)
