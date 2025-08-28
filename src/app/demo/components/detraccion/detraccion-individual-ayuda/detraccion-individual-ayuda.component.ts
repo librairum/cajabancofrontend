@@ -74,8 +74,8 @@ private fb:FormBuilder){
   cargarDatosTablas(){
     let registro1  : agregar_Pago ={
       clave:'xxx',
-      ruc:'20555841095',
-      razonSocial:'gm ingenieros y consultores',
+      ruc:'',
+      razonSocial:'',
       coditoTipoDoc:'',
       nombreTipoDOc:'',
       numeroDOcumento:'',

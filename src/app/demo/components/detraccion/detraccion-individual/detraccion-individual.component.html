@@ -59,8 +59,11 @@ header="Confirmar pago individual"
                  <th style="width: 8%;  display: none;">Anio</th>
                  <th style="width: 8%;  display: none;">mes</th>
                 <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th>
-                <th style="width: 8%">descripcion</th>
+                
                 <th style="width: 5%;white-space: pre-wrap;">Fecha</th>
+                <th style="width: 8%">motivo</th>
+                <th style="width: 8%; white-space: pre-wrap;">medio pago</th>
+    
                 <th style="width: 8%;white-space: pre-wrap;">Ruc</th>
                 <th style="width: 5%">Nombre</th>
                 <th style="width: 8%;display: none;">tipDoc</th>
@@ -97,11 +100,15 @@ header="Confirmar pago individual"
                     {{detindividual.ban01numero}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
+                    {{ detindividual.ban01fecha }}
+                </td>
+                <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.ban01descripcion}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detindividual.ban01fecha }}
+                    {{ detindividual.nombreMedioPago}}
                 </td>
+                
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.ban02ruc}}
                 </td>
@@ -159,7 +166,7 @@ header="Confirmar pago individual"
                         <button pButton icon="pi pi-trash" pEliminarPago
                                 class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
                                 [disabled] = "false"
-                                (click)="eliminarPagoPresupuesto()">
+                                (click)="eliminarPagoPresupuesto(detindividual)">
                         </button>
                         <button pButton icon="pi pi-file-pdf" pVerDocumento
                                 class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"

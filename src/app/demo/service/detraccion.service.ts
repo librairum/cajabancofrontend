@@ -142,9 +142,14 @@ export class DetraccionService{
         return this.http.post<RespuestaAPIBase<any>>(`${this.urlAPI}/SpInsertaDetraIndividual`,formData );
     }
 
-    // public SpEliminaPresuDetraIndividual(empresa:string, nropresupuesto:string){
-    //     let urlSolicitud = `${this.urlAPI}/SpEliminaPresuDetraIndividual
-    // }
+    public SpEliminaPresuDetraIndividual(empresa:string, 
+        numeropresupuesto:string):Observable<any>
+    {
+        const params = new HttpParams()
+        .set('empresa',empresa)
+        .set('nropresupuesto',numeropresupuesto)
+        return this.http.delete( `${this.urlAPI}/SpEliminaPresuDetraIndividual`,{params});
+    }
 
 
 }

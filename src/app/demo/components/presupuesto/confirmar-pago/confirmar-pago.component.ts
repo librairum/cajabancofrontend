@@ -248,8 +248,8 @@ export class ConfirmarPagoComponent implements OnInit {
         this.nuevaDetraccionIndividual.ban02nrodoc = this.seleccionadoDocPen.numerodocumento;
         this.nuevaDetraccionIndividual.ban02tipodetraccion = this.seleccionadoDocPen.detratiposervicio;
         this.nuevaDetraccionIndividual.ban02tasadetraccion = this.seleccionadoDocPen.detraporcentaje;
-        this.nuevaDetraccionIndividual.ban02importedetraccionsoles = this.seleccionadoDocPen.origsoles;
-        this.nuevaDetraccionIndividual.ban02importedetracciondolares = this.seleccionadoDocPen.origdolares;
+        this.nuevaDetraccionIndividual.ban02importedetraccionsoles = this.seleccionadoDocPen.detraimpsol;
+        this.nuevaDetraccionIndividual.ban02importedetracciondolares = this.seleccionadoDocPen.detraimpdol;
         this.nuevaDetraccionIndividual.numerooperacion = this.pagoForm.get('nroOperacion')?.value;
 
         let fileUrl = this.rutaComprobante;

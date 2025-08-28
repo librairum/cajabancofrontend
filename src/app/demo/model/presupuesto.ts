@@ -64,6 +64,9 @@ export interface Detallepresupuesto {
     ban02FechaVencimiento: string;
 
     importeDetraccion: number;
+
+    importecomprobantedolares:number;
+    importecomprobantesoles:number;
 }
 
 export interface agregar_Pago {

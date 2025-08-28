@@ -26,6 +26,7 @@ import { insert_presupuesto } from '../../../model/presupuesto';
 import { DetraccionIndividualAyudaComponent } from "../detraccion-individual-ayuda/detraccion-individual-ayuda.component";
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { HttpResponse } from '@angular/common/http';
+
 @Component({
   selector: 'app-detraccion-individual',
   standalone: true,
@@ -55,11 +56,12 @@ displayAgregarModal:boolean = false;
 items: any[] = [];
 
 
- constructor(private detraccionMasivaService: DetraccionService,
+ constructor(private detraccionService: DetraccionService,
     private bs:BreadcrumbService,
     private globalService:GlobalService,
     private router:Router, private messageService:MessageService,
-    private presupuestoService:PresupuestoService
+    private presupuestoService:PresupuestoService, 
+    private confirmationService:ConfirmationService
   )
   {
 
@@ -90,7 +92,7 @@ items: any[] = [];
     //let anio :string= '';
     //let mes :string = '';
       let motivoPagoCod = '02'
-      this.detraccionMasivaService.GetallDetraccionIndividual(codigoEmpresa,
+      this.detraccionService.GetallDetraccionIndividual(codigoEmpresa,
         anio, mes,motivoPagoCod)
         .subscribe({
           next:(data) =>{
@@ -193,5 +195,26 @@ items: any[] = [];
 
         return null;
         }
-
+  eliminarPagoPresupuesto(registro:DetraccionIndividual):void{
+    console.log("evneto eleminar presupesto");
+    this.confirmationService.confirm({
+            message: `¿Está seguro que desea eliminar el registro <b>${registro.ban01numero}</b>?`,
+            header: 'Confirmar Eliminación',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button',
+            accept: () => {
+                this.detraccionService.SpEliminaPresuDetraIndividual(registro.ban01empresa, registro.ban01numero).subscribe({
+                    next: () => {
+                        
+                        verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro Eliminado');
+                        this.cargar(this.anioPeriodo, this.mesPeriodo);
+                    }
+                })
+            }
+        })
+  
+  }
 }
