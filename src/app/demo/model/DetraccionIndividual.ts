@@ -23,6 +23,7 @@ export interface DetraccionIndividual{
     estadopresupuesto:string;
     fechaejecucionpago:string;
     nrooperacion:string;
+    
 }
 export interface DetraccionIndividualDocPen{
     clave:string;

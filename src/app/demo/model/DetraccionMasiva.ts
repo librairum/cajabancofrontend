@@ -12,6 +12,11 @@ medio:string; /*presupuesto id*/
 nombreMedioPago: string;
 bancoCodMedioPago:string; /* id  banco por el cual se realizar medio pago*/
 bancoMedioPago: string; //* nombre del banco  */
+moneda:string;
+estadopresupuesto:string;	
+fechaejecucionpago:string;	
+nrooperacion:string;
+
       }
 export interface DetraccioMasivaDetalleRequest{
         ban01Empresa:string;

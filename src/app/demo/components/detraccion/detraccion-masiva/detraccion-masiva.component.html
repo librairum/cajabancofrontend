@@ -41,35 +41,36 @@ header="COnfirmar pago"
             >
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width: 5%">EmpresaCod</th>
-                            <th style="width: 8%">Anio</th>
+                            <th style="width: 5%;display: none;">EmpresaCod</th>
+                            <th style="width: 8%;display: none;">Anio</th>
 
-                            <th style="width: 8%">Mes</th>
-                            <th style="width: 8%">LoteDetraccion</th>
-                            
-                            <th style="width: 8%">fecha</th>
-                            <th style="width: 8%">motivo</th>
-                            <th style="width: 8%">nombreMedioPago</th>
-                            <th style="width:8%">bancoMedioPago</th>
-                            <th style="width: 8%">Presupuesto.cod</th>                        
-                            <th style="width: 8%">importe Total Doc.</th>
-                            <th style="width: 8%">Importe Detra.</th>
+                            <th style="width: 8%;display: none;">Mes</th>
+                             <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th> 
+                             <th style="width: 8%;white-space: pre-wrap;">Lote<br>Detraccion</th>
+                              <th style="width: 8%">fecha</th>
+                             <th style="width: 8%">motivo</th>
+                            <th style="width: 8%;white-space: pre-wrap;">nombre<br>MedioPago</th>
+                            <th style="width: 8%">Moneda</th>
+                            <th style="width: 8%;white-space: pre-wrap;">ImpTota<br>Doc.</th>
+                            <th style="width: 8%;white-space: pre-wrap;">Importe<br>Detra.</th>
                             <th style="width:10%; text-align: center;">Acciones</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" 
                         let-detmasiva>
                         <tr>
-                            <td style="text-align:left; white-space:nowrap;">
+                            <td style="text-align:left; white-space:nowrap;display: none;">
                             {{ detmasiva.empresaCod}}
                             </td>
-                            <td style="text-align:left; white-space:nowrap;">
+                            <td style="text-align:left; white-space:nowrap;display: none;">
                                 {{detmasiva.anio}}
                             </td>
-                            <td style="text-align:left; white-space:nowrap;">
+                            <td style="text-align:left; white-space:nowrap;;display: none;">
                                 {{detmasiva.mes}}
                             </td>
-
+                            <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.presupuestoCod}}
+                            </td>
                             <td style="text-align:left; white-space:nowrap;" >
                                 {{detmasiva.loteDetraccionNro}}
                             </td>
@@ -84,13 +85,10 @@ header="COnfirmar pago"
                             <td style="text-align:left; white-space:nowrap;">
                                 {{detmasiva.nombreMedioPago}}
                             </td>
-                            <td style="text-align:left; white-space:nowrap;">
-                                {{detmasiva.bancoMedioPago}}
+                        <td style="text-align:left; white-space:nowrap;">
+                                {{detmasiva.moneda}}
                             </td>
                             
-                            <td style="text-align:left; white-space:nowrap;">
-                                {{detmasiva.presupuestoCod}}
-                            </td>
                             <td style="text-align:left; white-space:nowrap;">
                                 {{detmasiva.facturaImporteSol}}
                             </td>
