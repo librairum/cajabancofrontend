@@ -1,27 +1,29 @@
 
+
 <p-dialog [(visible)]="displayAgregarModal" [modal]="true" [style]="{width: '90vw', height: '90vh'}" [draggable]="false"
     [resizable]="false" [maximizable]="true" header="Agregar Documento por Pagar" (onHide)="onCloseModal()">
     <app-detraccion-individual-ayuda>
-        
+
     </app-detraccion-individual-ayuda>
 </p-dialog>
 
 <p-dialog  [(visible)]="verConfirmarPago" [modal]="true"
 header="Confirmar pago individual"
-[style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false" 
+[style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false"
     [maximizable]="true"
-    [baseZIndex]="10000" 
-    (onHide)="selectedPagoNumero = ''; onCloseModal()" 
-    
->
+    [baseZIndex]="10000"
+    (onHide)="selectedPagoNumero = ''; onCloseModal()"
 
-<app-confirmar-pago 
+>
+<app-confirmar-pago
 [pagoNumero]="selectedPagoNumero"
- [modoDetraccion]="true"
- [numeroLote]="selectedNumeroLote"
+[modoDetraccion]="true"
+[numeroLote]="selectedNumeroLote"
 (onClose)="onCloseModal()"
- ></app-confirmar-pago>
+></app-confirmar-pago>
 </p-dialog>
+
+
 <div class="container">
       <p-panel>
         <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
@@ -31,17 +33,17 @@ header="Confirmar pago individual"
 
         <div class="flex justify-content-between align-items-center mb-3">
             <button type="button" pButton icon="pi pi-plus" label="Agregar pago"
-                    (click)="confirmaPagoPresupuesto()" 
+                    (click)="confirmaPagoPresupuesto()"
                     class="p-button-sm"></button>
             <div class="flex alighn-items-center">
                 <label for="rowsPerPage" class="mb-2">Filas por pagina:</label>
                 <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]"
-                [(ngModel)]="rowsPerPage"  
+                [(ngModel)]="rowsPerPage"
                 placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
             </div>
 
         </div>
-    
+
 
     <p-table [value]="detraccionIndividualList"
         [paginator]="true"
@@ -56,7 +58,7 @@ header="Confirmar pago individual"
                  <th style="width: 5%;  display: none;">EmpresaCod</th>
                  <th style="width: 8%;  display: none;">Anio</th>
                  <th style="width: 8%;  display: none;">mes</th>
-                <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th> 
+                <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th>
                 <th style="width: 8%">descripcion</th>
                 <th style="width: 5%;white-space: pre-wrap;">Fecha</th>
                 <th style="width: 8%;white-space: pre-wrap;">Ruc</th>
@@ -112,15 +114,14 @@ header="Confirmar pago individual"
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.ban02nrodoc}}
                 </td>
-        
+
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.co05moneda}}
                 </td>
                 <td style="text-align:left; white-space:nowrap; display: none;">
-                    {{ detindividual.co05fecha | date:'dd/MM/yyyy'}}
-                </td>
+                    {{ convertToDate(detindividual.co05fecha) | date:'dd/MM/yyyy'}} </td>
                 <td style="text-align:left; white-space:nowrap; display: none;">
-                    {{ detindividual.co05fecven | date:'dd/MM/yyyy'}}
+                    {{ convertToDate(detindividual.co05fecven) | date:'dd/MM/yyyy'}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;display: none;">
                     {{ detindividual.importebrutosoles}}
@@ -151,6 +152,7 @@ header="Confirmar pago individual"
                 </td>
                 <td>
                     <div class="flex justify-content-center gap-2">
+
                         <button pButton icon="pi pi-eye" pVerDetalle
                                 class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
                                 (click)="verDetalle(detindividual)"></button>
@@ -164,12 +166,13 @@ header="Confirmar pago individual"
                                 [disabled] = "false"
                                 (click)="abrirdocumento(detindividual)">
                         </button>
+
                     </div>
                 </td>
 
             </tr>
         </ng-template>
-        
+
     </p-table>
 </div>
 </div>

@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
     imports: [PanelModule,BreadcrumbModule,
       TableModule,ButtonModule,InputTextModule, CommonModule],
-  
+
   templateUrl: './detraccion-individual-det.component.html',
   styleUrl: './detraccion-individual-det.component.css',
   providers:[MessageService, ConfirmationService]
@@ -29,7 +29,7 @@ export class DetraccionIndividualDetComponent implements OnInit {
   load:boolean = false;
   navigationData: any;
   DetallePago: Detallepresupuesto[] = [];
-  
+
   pagnro: string;
   fechaString: string;
   fecha: Date;
@@ -37,9 +37,9 @@ export class DetraccionIndividualDetComponent implements OnInit {
   medio: string;
   bancoCodMedioPago:string;
 
-constructor(private globalService:GlobalService, 
+constructor(private globalService:GlobalService,
   private messageService:MessageService,
-private breadCrumbService:BreadcrumbService, 
+private breadCrumbService:BreadcrumbService,
 private router:Router, private presupuestoservice:PresupuestoService)
 {
   const navigation = router.getCurrentNavigation();
@@ -49,9 +49,9 @@ private router:Router, private presupuestoservice:PresupuestoService)
   ngOnInit(): void {
     this.breadCrumbService.setBreadcrumbs([
 
-      {icon:'pi pi-home', 
-       routerLink:'/Home/Detraccion'},
-      {label:'Detraccion individual  detalle', 
+      {icon:'pi pi-home',
+       routerLink:'/Home/detraccion_individual'},
+      {label:'Detraccion individual  detalle',
         routerLink:'/Home/detraccion_individual_det'}
     ]);
     this.breadCrumbService.currentBreadcrumbs$.subscribe(bc =>{
@@ -76,7 +76,7 @@ private router:Router, private presupuestoservice:PresupuestoService)
       }, error:(error) =>{
         verMensajeInformativo(this.messageService, 'error',
                         'Error',
-                        `Error al cargar presupuesto: 
+                        `Error al cargar presupuesto:
                         ${error.message}`);
       }
     });
