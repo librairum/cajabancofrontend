@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 
 import { DetraccionService } from '../../../service/detraccion.service';
-import { DetraccionIndividual, 
+import { DetraccionIndividual,
   DetraccionIndividualDocPen, DetraccionIndividualRequest } from 'src/app/demo/model/DetraccionIndividual';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
@@ -33,7 +33,7 @@ import { HttpResponse } from '@angular/common/http';
     ReactiveFormsModule, CommonModule, CardModule,
     InputTextModule, PanelModule, BreadcrumbModule,
     ConfirmDialogModule, FormsModule, DropdownModule,
-    ButtonModule, CheckboxModule, ConfirmarPagoComponent, DialogModule, 
+    ButtonModule, CheckboxModule, ConfirmarPagoComponent, DialogModule,
     DetraccionIndividualAyudaComponent],
   templateUrl: './detraccion-individual.component.html',
   styleUrl: './detraccion-individual.component.css',
@@ -56,18 +56,18 @@ items: any[] = [];
 
 
  constructor(private detraccionMasivaService: DetraccionService,
-    private bs:BreadcrumbService, 
+    private bs:BreadcrumbService,
     private globalService:GlobalService,
     private router:Router, private messageService:MessageService,
     private presupuestoService:PresupuestoService
   )
   {
-    
+
   }
     ngOnInit(): void {
       this.bs.setBreadcrumbs([
           {icon:'pi pi-home', routerLink:'/Home'},
-          {label:'Detraccion individual', routerLink:'/Home/detraccionindividual'}
+          {label:'Detraccion individual', routerLink:'/Home/detraccion_individual'}
         ]);
 
         this.bs.currentBreadcrumbs$.subscribe(bs=>{
@@ -78,7 +78,7 @@ items: any[] = [];
         if(date){
           this.anioPeriodo = date.getFullYear().toString();
           this.mesPeriodo = (date.getMonth()+1).toString().padStart(2,'0');
-          
+
           this.cargar(this.anioPeriodo, this.mesPeriodo);
         }
     });
@@ -90,14 +90,14 @@ items: any[] = [];
     //let anio :string= '';
     //let mes :string = '';
       let motivoPagoCod = '02'
-      this.detraccionMasivaService.GetallDetraccionIndividual(codigoEmpresa, 
+      this.detraccionMasivaService.GetallDetraccionIndividual(codigoEmpresa,
         anio, mes,motivoPagoCod)
         .subscribe({
           next:(data) =>{
             this.detraccionIndividualList = data;
             this.loading = false;
-            
-          }, 
+
+          },
           error:(e) =>{
             this.loading = false;
              verMensajeInformativo(
@@ -107,7 +107,7 @@ items: any[] = [];
                               'Error al cargar documentos por pago'
                           );
           }
-          
+
         })
     }
     onCloseModal() {
@@ -125,9 +125,9 @@ items: any[] = [];
             }
         });
     }
-    
+
      confirmaPagoPresupuesto() : void{
-      
+
       // this.verConfirmarPago = true;
       this.displayAgregarModal = true;
 
@@ -178,5 +178,20 @@ items: any[] = [];
                       },
                   });
      }
+
+     convertToDate(dateString: string): Date | null {
+        if (!dateString) return null;
+
+        // Si la fecha está en formato dd/MM/yyyy
+        const parts = dateString.split('/');
+        if (parts.length === 3) {
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1; // Los meses en JS van de 0-11
+            const year = parseInt(parts[2], 10);
+            return new Date(year, month, day);
+        }
+
+        return null;
+        }
 
 }
