@@ -104,34 +104,22 @@
                 </tr>
             </ng-template>
 
-            <!-- <ng-template pTemplate="groupfooter" let-groupData>
-                <tr>
-                    <td colspan="8">
-                    </td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Dolares') |
-                        number:'1.2-2' }}</td>
-
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'importeDetraccion') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImporteRetencionSoles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImportePercepcionSoles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoSoles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoDolares') |
-                        number:'1.2-2' }}</td>
-                </tr>
-            </ng-template> -->
+             <ng-template pTemplate="groupfooter" let-groupData>
+    <tr style="background-color: #f8f9fa; font-style: italic;">
+        <td colspan="8" style="text-align: right; padding: 6px; font-weight: 500;">TOTAL {{ groupData.razonsocial }}:</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Dolares') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02PagoSoles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02PagoDolares') | number:'1.2-2' }}</td>
+        <td style="text-align: center; padding: 6px;">-</td>
+        <td style="text-align: center; padding: 6px;">-</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'importeDetraccion') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02ImporteRetencionSoles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02ImportePercepcionSoles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoSoles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoDolares') | number:'1.2-2' }}</td>
+    </tr>
+</ng-template>
 
             <ng-template pTemplate="body" let-detalle>
                 <tr>
@@ -259,6 +247,24 @@
 
         </p-table>
     </div>
+
+<ng-template pTemplate="footer">
+    <tr style="background-color: #e9ecef; font-weight: bold; border-top: 2px solid #6c757d;">
+        <td colspan="8" class="text-left font-bold" style="text-align: left; padding: 8px; color: #495057;">Sumas</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('ban02Soles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('ban02Dolares') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('ban02PagoSoles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('ban02PagoDolares') | number:'1.2-2' }}</td>
+        <td style="text-align: center; padding: 8px;">-</td>
+        <td style="text-align: center; padding: 8px;">-</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('importeDetraccion') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('ban02ImporteRetencionSoles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('ban02ImportePercepcionSoles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('ban02NetoSoles') | number:'1.2-2' }}</td>
+        <td class="font-bold" style="text-align: right; padding: 8px; color: #495057;">{{ getTotalColumn('ban02NetoDolares') | number:'1.2-2' }}</td>
+    </tr>
+</ng-template>
+
 
 
   </div>

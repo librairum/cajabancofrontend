@@ -1,0 +1,317 @@
+/* Estilos base para tabla de detracción masiva detalle */
+::ng-deep .detraccion-detalle .p-datatable table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: auto; /* Ajuste automático al contenido */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Encabezados ultra compactos */
+::ng-deep .detraccion-detalle .p-datatable th {
+    padding: 3px 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    white-space: nowrap;
+    vertical-align: middle;
+    line-height: 1.1;
+    color: #495057;
+}
+
+/* Celdas del cuerpo ultra compactas */
+::ng-deep .detraccion-detalle .p-datatable td {
+    padding: 2px 3px;
+    font-size: 10px;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+    white-space: nowrap;
+    line-height: 1.2;
+    color: #212529;
+}
+
+/* Columna fecha - muy compacta */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(1),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(1) {
+    width: 65px;
+    min-width: 60px;
+    max-width: 70px;
+    text-align: center;
+    font-size: 9px;
+}
+
+/* Columna doctipo - compacta */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(2),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(2) {
+    width: 45px;
+    min-width: 40px;
+    max-width: 50px;
+    text-align: center;
+}
+
+/* Columna docruc - RUC */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(3),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(3) {
+    width: 80px;
+    min-width: 75px;
+    max-width: 85px;
+    text-align: center;
+    font-family: monospace;
+}
+
+/* Columna nrodoc - número documento */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(4),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(4) {
+    width: 85px;
+    min-width: 80px;
+    max-width: 90px;
+    text-align: center;
+    font-family: monospace;
+}
+
+/* Columna importfact - importe factura */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(5),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(5) {
+    width: 70px;
+    min-width: 65px;
+    max-width: 75px;
+    text-align: right;
+    padding-right: 5px;
+    font-family: monospace;
+}
+
+/* Columna tipooperacion - compacta */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(6),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(6) {
+    width: 70px;
+    min-width: 65px;
+    max-width: 75px;
+    text-align: center;
+}
+
+/* Columna tiposervicio - compacta */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(7),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(7) {
+    width: 70px;
+    min-width: 65px;
+    max-width: 75px;
+    text-align: center;
+}
+
+/* Columna porcentaje - muy compacta */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(8),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(8) {
+    width: 50px;
+    min-width: 45px;
+    max-width: 55px;
+    text-align: center;
+}
+
+/* Columna importedetracta - importe detracción */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(9),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(9) {
+    width: 70px;
+    min-width: 65px;
+    max-width: 75px;
+    text-align: right;
+    padding-right: 5px;
+    font-family: monospace;
+}
+
+/* Columna proveedor - código proveedor */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(10),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(10) {
+    width: 80px;
+    min-width: 75px;
+    max-width: 85px;
+    text-align: center;
+    font-family: monospace;
+}
+
+/* Columna nomproveedor - nombre proveedor (más ancha pero limitada) */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(11),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(11) {
+    width: 180px;
+    min-width: 150px;
+    max-width: 200px;
+    text-align: left;
+    padding-left: 4px;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Columna Acciones - botones */
+::ng-deep .detraccion-detalle .p-datatable th:nth-child(12),
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(12) {
+    width: 65px;
+    min-width: 60px;
+    max-width: 70px;
+    text-align: center;
+}
+
+/* Estilos para botones de acciones */
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(12) .p-button {
+    padding: 1px 4px;
+    font-size: 9px;
+    margin: 0;
+    min-width: 20px;
+    height: 18px;
+}
+
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(12) .p-button .p-button-icon {
+    font-size: 9px;
+}
+
+/* Hover effect suave */
+::ng-deep .detraccion-detalle .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+/* Filas alternadas (zebra) */
+::ng-deep .detraccion-detalle .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+    background-color: #fdfdfd;
+}
+
+::ng-deep .detraccion-detalle .p-datatable .p-datatable-tbody > tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* Paginador ultra compacto */
+::ng-deep .detraccion-detalle .p-paginator {
+    padding: 4px 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    font-size: 10px;
+}
+
+::ng-deep .detraccion-detalle .p-paginator .p-paginator-pages .p-paginator-page,
+::ng-deep .detraccion-detalle .p-paginator .p-paginator-first,
+::ng-deep .detraccion-detalle .p-paginator .p-paginator-prev,
+::ng-deep .detraccion-detalle .p-paginator .p-paginator-next,
+::ng-deep .detraccion-detalle .p-paginator .p-paginator-last {
+    min-width: 20px;
+    height: 20px;
+    line-height: 18px;
+    font-size: 9px;
+    margin: 0 1px;
+    padding: 0 2px;
+}
+
+::ng-deep .detraccion-detalle .p-paginator .p-dropdown {
+    font-size: 10px;
+    height: 20px;
+}
+
+::ng-deep .detraccion-detalle .p-paginator .p-dropdown .p-dropdown-label {
+    padding: 1px 3px;
+    font-size: 9px;
+}
+
+/* Wrapper optimizado */
+::ng-deep .detraccion-detalle .p-datatable-wrapper {
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+    max-height: 450px;
+    overflow: auto;
+}
+
+/* Scrollbar ultra delgada */
+::ng-deep .detraccion-detalle .p-datatable-wrapper::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::ng-deep .detraccion-detalle .p-datatable-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+::ng-deep .detraccion-detalle .p-datatable-wrapper::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+}
+
+::ng-deep .detraccion-detalle .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Mensaje vacío */
+::ng-deep .detraccion-detalle .p-datatable .p-datatable-emptymessage > td {
+    padding: 1rem;
+    text-align: center;
+    font-style: italic;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    font-size: 11px;
+}
+
+/* Tooltip para nombres largos */
+::ng-deep .detraccion-detalle .p-datatable td:nth-child(11) {
+    position: relative;
+    cursor: help;
+}
+
+/* Container */
+.detraccion-detalle {
+    margin: 0;
+    padding: 0.25rem;
+}
+
+/* Breadcrumb compacto si existe */
+::ng-deep .detraccion-detalle .p-breadcrumb {
+    padding: 0.5rem;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+}
+
+::ng-deep .detraccion-detalle .p-breadcrumb .p-menuitem-text {
+    font-size: 11px;
+}
+
+/* Panel header compacto */
+::ng-deep .detraccion-detalle .p-panel .p-panel-header {
+    padding: 0.5rem 0.75rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+::ng-deep .detraccion-detalle .p-panel .p-panel-title {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    ::ng-deep .detraccion-detalle .p-datatable th,
+    ::ng-deep .detraccion-detalle .p-datatable td {
+        font-size: 8px;
+        padding: 1px 2px;
+    }
+    
+    ::ng-deep .detraccion-detalle .p-datatable th:nth-child(11),
+    ::ng-deep .detraccion-detalle .p-datatable td:nth-child(11) {
+        max-width: 120px;
+    }
+    
+    ::ng-deep .detraccion-detalle .p-datatable th:nth-child(1),
+    ::ng-deep .detraccion-detalle .p-datatable td:nth-child(1) {
+        width: 50px;
+    }
+}
+
+/* Animación suave para carga */
+::ng-deep .detraccion-detalle .p-datatable .p-datatable-loading-overlay {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+::ng-deep .detraccion-detalle .p-datatable .p-progress-spinner {
+    width: 30px;
+    height: 30px;
+}

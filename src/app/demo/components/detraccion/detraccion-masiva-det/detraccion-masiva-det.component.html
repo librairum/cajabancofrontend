@@ -38,10 +38,11 @@
             <th style="width: 8%">LoteDetraccion</th>
             <th style="width: 8%">fecha</th>                         
             -->
-            <th style="width: 8%">fechadoc</th>
+            <th style="width: 8%">ruc</th>
+            <th style="width: 8%">nomproveedor</th>
             <th style="width: 8%">tipodoc</th> 
-            <th style="width: 8%">ruc</th>            
             <th style="width: 8%">nrodoc</th>
+            <th style="width: 8%">fechadoc</th>        
             
             <th style="width: 8%">importfact</th>
             <th style="width: 8%">tipooperacion</th>
@@ -49,7 +50,6 @@
             <th style="width: 8%">porcentaje</th>
             <th style="width: 8%">importedetra</th>
             <th style="width: 8%">ctaproveedor</th>
-            <th style="width: 8%">nomproveedor</th>
             <th style="width:10%; text-align: center;">Acciones</th>
         </tr>
     </ng-template>
@@ -71,11 +71,12 @@
           {{detalleDetraccion.co26fecha}}
         </td>
         -->
-        <td style="text-align:left; white-space:nowrap;">
-          {{formatearFecha(detalleDetraccion.co26fechadoc)}}
-        </td>
+        
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.co26ruc}}
+        </td>
+        <td style="text-align:left; white-space:nowrap;">
+          {{detalleDetraccion.ccm02nom}}
         </td>
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.co26tipdoc}}
@@ -83,7 +84,9 @@
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.co26nrodoc}}
         </td>
-        
+        <td style="text-align:left; white-space:nowrap;">
+          {{formatearFecha(detalleDetraccion.co26fechadoc)}}
+        </td>
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.co26importfact}}
         </td>
@@ -102,10 +105,7 @@
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.co26ctaproveedor}}
         </td>
-        <td style="text-align:left; white-space:nowrap;">
-          {{detalleDetraccion.ccm02nom}}
-        </td>
-
+        
         
         
       </tr>
