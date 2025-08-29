@@ -27,6 +27,7 @@ import { DetraccionIndividualAyudaComponent } from "../detraccion-individual-ayu
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { HttpResponse } from '@angular/common/http';
 
+
 @Component({
   selector: 'app-detraccion-individual',
   standalone: true,
@@ -197,6 +198,8 @@ items: any[] = [];
         }
   eliminarPagoPresupuesto(registro:DetraccionIndividual):void{
     console.log("evneto eleminar presupesto");
+    console.log("empresa, numero :",registro.ban01empresa, "|",registro.ban01numero);
+    
     this.confirmationService.confirm({
             message: `¿Está seguro que desea eliminar el registro <b>${registro.ban01numero}</b>?`,
             header: 'Confirmar Eliminación',
@@ -211,10 +214,13 @@ items: any[] = [];
                         
                         verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro Eliminado');
                         this.cargar(this.anioPeriodo, this.mesPeriodo);
+                    }, 
+                    error:(error) =>{
+                       verMensajeInformativo(this.messageService, 'error', 'Error', `Error al eliminar el presupuesto: ${error.message}`);
                     }
                 })
             }
-        })
+        });
   
   }
 }
