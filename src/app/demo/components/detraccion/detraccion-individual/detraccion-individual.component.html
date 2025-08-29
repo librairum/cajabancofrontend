@@ -131,12 +131,14 @@ header="Confirmar pago individual"
                 <td style="text-align:left; white-space:nowrap; display: none;">
                     {{ convertToDate(detindividual.co05fecven) | date:'dd/MM/yyyy'}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;display: none;">
-                    {{ detindividual.importebrutosoles}}
-                </td>
-                <td style="text-align:left; white-space:nowrap;display: none;">
-                    {{ detindividual.importebrutodolares}}
-                </td>
+
+                <td style="text-align:right; white-space:nowrap;display: none;">
+          {{formatearNumero(detindividual.importebrutosoles)}}
+        </td>    
+        <td style="text-align:right; white-space:nowrap;">
+          {{formatearNumero(detindividual.importebrutodolares)}}
+        </td>      
+                
                 <td style="text-align:left; white-space:nowrap; display: none;">
                     {{ detindividual.ban02tipodetraccion}}
                 </td>

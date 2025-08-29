@@ -89,5 +89,11 @@ private router:Router, private presupuestoservice:PresupuestoService)
     this.medio = this.navigationData?.nombreMedioPago || '';
     this.bancoCodMedioPago = '';
   }
+  calculateTotal(field: string): number {
+  return this.DetallePago.reduce((total, item) => {
+    const value = item[field] || 0;
+    return total + (typeof value === 'number' ? value : parseFloat(value) || 0);
+  }, 0);
+}
 
 }

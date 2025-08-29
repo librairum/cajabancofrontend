@@ -39,18 +39,9 @@
     text-align: center;
 }
 
-/* Columna Lote Detraccion - compacta */
+/* Columna Fecha - compacta para fechas */
 ::ng-deep .p-datatable th:nth-child(2),
 ::ng-deep .p-datatable td:nth-child(2) {
-    width: 90px;
-    min-width: 80px;
-    max-width: 100px;
-    text-align: center;
-}
-
-/* Columna fecha - compacta para fechas */
-::ng-deep .p-datatable th:nth-child(3),
-::ng-deep .p-datatable td:nth-child(3) {
     width: 80px;
     min-width: 75px;
     max-width: 90px;
@@ -58,8 +49,8 @@
 }
 
 /* Columna motivo - ajustable pero limitada */
-::ng-deep .p-datatable th:nth-child(4),
-::ng-deep .p-datatable td:nth-child(4) {
+::ng-deep .p-datatable th:nth-child(3),
+::ng-deep .p-datatable td:nth-child(3) {
     width: 120px;
     min-width: 100px;
     max-width: 150px;
@@ -69,9 +60,9 @@
     word-wrap: break-word;
 }
 
-/* Columna nombre MedioPago - ajustable */
-::ng-deep .p-datatable th:nth-child(5),
-::ng-deep .p-datatable td:nth-child(5) {
+/* Columna medio pago - ajustable */
+::ng-deep .p-datatable th:nth-child(4),
+::ng-deep .p-datatable td:nth-child(4) {
     width: 100px;
     min-width: 90px;
     max-width: 120px;
@@ -79,18 +70,50 @@
     padding-left: 6px;
 }
 
-/* Columna Moneda - muy compacta */
+/* Columna RUC - compacta */
+::ng-deep .p-datatable th:nth-child(5),
+::ng-deep .p-datatable td:nth-child(5) {
+    width: 90px;
+    min-width: 85px;
+    max-width: 95px;
+    text-align: center;
+}
+
+/* Columna Nombre - expandible */
 ::ng-deep .p-datatable th:nth-child(6),
 ::ng-deep .p-datatable td:nth-child(6) {
+    width: 200px;
+    min-width: 150px;
+    max-width: 250px;
+    text-align: left;
+    padding-left: 6px;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Columna Nro Doc - compacta */
+::ng-deep .p-datatable th:nth-child(7),
+::ng-deep .p-datatable td:nth-child(7) {
+    width: 90px;
+    min-width: 80px;
+    max-width: 100px;
+    text-align: center;
+}
+
+/* Columna Moneda - muy compacta */
+::ng-deep .p-datatable th:nth-child(8),
+::ng-deep .p-datatable td:nth-child(8) {
     width: 55px;
     min-width: 50px;
     max-width: 60px;
     text-align: center;
 }
 
-/* Columna ImpTota Doc - numérica */
-::ng-deep .p-datatable th:nth-child(7),
-::ng-deep .p-datatable td:nth-child(7) {
+/* Columna Detra Soles - numérica */
+::ng-deep .p-datatable th:nth-child(9),
+::ng-deep .p-datatable td:nth-child(9) {
     width: 80px;
     min-width: 75px;
     max-width: 90px;
@@ -98,19 +121,46 @@
     padding-right: 8px;
 }
 
-/* Columna Importe Detra - numérica */
-::ng-deep .p-datatable th:nth-child(8),
-::ng-deep .p-datatable td:nth-child(8) {
+/* Columna Detra Dolares - numérica */
+::ng-deep .p-datatable th:nth-child(10),
+::ng-deep .p-datatable td:nth-child(10) {
     width: 80px;
     min-width: 75px;
     max-width: 90px;
     text-align: right;
     padding-right: 8px;
+}
+
+/* Columna Estado - compacta */
+::ng-deep .p-datatable th:nth-child(11),
+::ng-deep .p-datatable td:nth-child(11) {
+    width: 80px;
+    min-width: 70px;
+    max-width: 90px;
+    text-align: center;
+}
+
+/* Columna Fec. Pago - compacta para fechas */
+::ng-deep .p-datatable th:nth-child(12),
+::ng-deep .p-datatable td:nth-child(12) {
+    width: 80px;
+    min-width: 75px;
+    max-width: 90px;
+    text-align: center;
+}
+
+/* Columna Nro Operacion - compacta */
+::ng-deep .p-datatable th:nth-child(13),
+::ng-deep .p-datatable td:nth-child(13) {
+    width: 90px;
+    min-width: 80px;
+    max-width: 100px;
+    text-align: center;
 }
 
 /* Columna Acciones - compacta para botones */
-::ng-deep .p-datatable th:nth-child(9),
-::ng-deep .p-datatable td:nth-child(9) {
+::ng-deep .p-datatable th:nth-child(14),
+::ng-deep .p-datatable td:nth-child(14) {
     width: 80px;
     min-width: 75px;
     max-width: 90px;
@@ -118,7 +168,7 @@
 }
 
 /* Estilos para botones en acciones */
-::ng-deep .p-datatable td:nth-child(9) .p-button {
+::ng-deep .p-datatable td:nth-child(14) .p-button {
     padding: 2px 6px;
     font-size: 10px;
     margin: 0 1px;
@@ -225,23 +275,23 @@
     }
     
     /* Ajustar columnas en móvil */
-    ::ng-deep .p-datatable th:nth-child(4),
-    ::ng-deep .p-datatable td:nth-child(4) {
+    ::ng-deep .p-datatable th:nth-child(3),
+    ::ng-deep .p-datatable td:nth-child(3) {
         max-width: 100px;
     }
     
-    ::ng-deep .p-datatable th:nth-child(5),
-    ::ng-deep .p-datatable td:nth-child(5) {
+    ::ng-deep .p-datatable th:nth-child(4),
+    ::ng-deep .p-datatable td:nth-child(4) {
         max-width: 80px;
     }
 }
 
 /* Clase específica para esta tabla si necesitas diferencia de la otra */
-.tabla-detracciones ::ng-deep .p-datatable table {
+.tabla-pagos ::ng-deep .p-datatable table {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.tabla-detracciones ::ng-deep .p-datatable th {
+.tabla-pagos ::ng-deep .p-datatable th {
     background: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 100%);
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
 }

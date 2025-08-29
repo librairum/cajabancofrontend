@@ -1,0 +1,89 @@
+::ng-deep .p-datatable table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: auto; /* Permite ajustar columnas al contenido */
+}
+
+::ng-deep .p-datatable th {
+    padding: 6px; /* Espacio interno compacto */
+    font-size: 13px; /* Tamaño compacto */
+    text-align: center;
+    background-color: #f9f9f9; /* Fondo suave para diferenciar la cabecera */
+    border-bottom: 1px solid #ccc; /* Linea Horizontal */
+    border-right: 1px solid #ccc; /* Nuevo: Linea Vertical */
+}
+
+::ng-deep .p-datatable td {
+    padding: 4px; /* Reduce el espacio interno de las celdas */
+    font-size: 12px; /* Tamaño compacto */
+    text-align: center; /* Centra el contenido */
+    word-wrap: break-word; /* Permite ajustar texto largo */
+    border: 1px solid #ddd; /* Líneas horizontales y verticales */
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    text-align: center;
+    padding: 4px; /* Compacto */
+    font-size: 12px;
+    border: 1px solid #ddd; /* Líneas visibles para celdas */
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #f5f5f5; /* Resalta la fila al pasar el cursor */
+}
+
+::ng-deep .p-datatable .p-column-filter {
+    width: 100px; /* Reduce el ancho del filtro */
+    margin: auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px; /* Tamaño de letra más pequeño */
+    padding: 2px; /* Ajusta el padding */
+    line-height: 1; /* Más compacto */
+}
+
+/* Ajustes generales del scroll */
+::ng-deep .p-datatable-wrapper {
+    max-height: 400px;
+    overflow: auto; /* Habilita scroll */
+}
+
+/* Opcional: Añade un margen para separarlo de otros elementos */
+.container {
+    padding: 1rem;
+}
+
+::ng-deep .p-datepicker {
+    z-index: 1000 !important; /* Asegura que esté por encima de otros elementos */
+}
+
+/* Ajusta las columnas del footer para que se adapten al contenido */
+::ng-deep .p-datatable .p-datatable-tfoot > tr > td {
+    white-space: nowrap;
+    width: auto !important;
+    min-width: fit-content;
+}
+
+/* Ajusta el tamaño del calendario en el footer */
+::ng-deep .p-datatable .p-datatable-tfoot .p-calendar {
+    min-width: 130px; /* Ajusta este valor según necesites */
+}
+
+/* Ajusta los inputs en el footer */
+::ng-deep .p-datatable .p-datatable-tfoot input {
+    min-width: 100px; /* Ajusta este valor según necesites */
+    width: auto;
+}
+
+/* Asegura que los elementos del footer no se deformen */
+::ng-deep .p-datatable .p-datatable-tfoot > tr > td {
+    padding: 4px;
+    vertical-align: middle;
+}
+
+.p-dialog {
+    z-index: 1050 !important;
+}
+

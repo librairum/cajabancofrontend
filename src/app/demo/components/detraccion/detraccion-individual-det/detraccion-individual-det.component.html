@@ -220,6 +220,39 @@
                    
                 </tr>
             </ng-template>
+
+            <ng-template pTemplate="footer">
+    <tr style="background-color: #e9ecef; font-weight: bold; border-top: 2px solid #000;">
+        <td colspan="6" style="text-align: right; padding: 8px;">SUMAS:</td>
+        <td style="display: none;"></td>
+        <td style="display: none;"></td>
+        <td style="display: none;"></td>
+        <td style="display: none;"></td>
+        <td class="font-bold" style="text-align: right; padding: 8px;">
+            {{ calculateTotal('importecomprobantesoles') | number:'1.2-2' }}
+        </td>
+        <td class="font-bold" style="text-align: right; padding: 8px;">
+            {{ calculateTotal('importecomprobantedolares') | number:'1.2-2' }}
+        </td>
+        <td style="text-align: center; padding: 8px;"></td>
+        <td style="text-align: center; padding: 8px;"></td>
+        <td class="font-bold" style="text-align: right; padding: 8px;">
+            {{ calculateTotal('importeDetraccion') | number:'1.2-2' }}
+        </td>
+        <td style="text-align: right; display: none;">
+            {{ calculateTotal('ban02ImporteRetencionSoles') | number:'1.2-2' }}
+        </td>
+        <td style="text-align: right; display: none;">
+            {{ calculateTotal('ban02ImportePercepcionSoles') | number:'1.2-2' }}
+        </td>
+        <td style="text-align: right; display: none;">
+            {{ calculateTotal('ban02NetoSoles') | number:'1.2-2' }}
+        </td>
+        <td style="text-align: right; display: none;">
+            {{ calculateTotal('ban02NetoDolares') | number:'1.2-2' }}
+        </td>
+    </tr>
+</ng-template>
            
             <ng-template pTemplate="emptymessage">
                 <tr>

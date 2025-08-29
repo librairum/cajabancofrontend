@@ -182,4 +182,5 @@ calculateGroupTotal(ruc: string, field: string): number {
         }, 0);
 }
 
+
 }

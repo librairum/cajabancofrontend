@@ -44,11 +44,11 @@
             <th style="width: 8%">nrodoc</th>
             <th style="width: 8%">fechadoc</th>        
             
-            <th style="width: 8%">importfact</th>
+            <th style="width: 8%; text-align: right;">importfact</th>
             <th style="width: 8%">tipooperacion</th>
             <th style="width: 8%">tiposervicio</th>
             <th style="width: 8%">porcentaje</th>
-            <th style="width: 8%">importedetra</th>
+            <th style="width: 8%; text-align: right;">importedetra</th>
             <th style="width: 8%">ctaproveedor</th>
             <th style="width:10%; text-align: center;">Acciones</th>
         </tr>
@@ -78,7 +78,7 @@
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.ccm02nom}}
         </td>
-        <td style="text-align:left; white-space:nowrap;">
+        <td style="text-align:center; white-space:nowrap;">
           {{detalleDetraccion.co26tipdoc}}
         </td>
         <td style="text-align:left; white-space:nowrap;">
@@ -87,20 +87,20 @@
         <td style="text-align:left; white-space:nowrap;">
           {{formatearFecha(detalleDetraccion.co26fechadoc)}}
         </td>
-        <td style="text-align:left; white-space:nowrap;">
-          {{detalleDetraccion.co26importfact}}
+        <td style="text-align:right; white-space:nowrap;">
+          {{formatearNumero(detalleDetraccion.co26importfact)}}
         </td>
-        <td style="text-align:left; white-space:nowrap;">
+        <td style="text-align:center; white-space:nowrap;">
           {{detalleDetraccion.co26tipoperacion}}
         </td>
-        <td style="text-align:left; white-space:nowrap;">
+        <td style="text-align:center; white-space:nowrap;">
           {{detalleDetraccion.co26tiposervicio}}
         </td>
-        <td style="text-align:left; white-space:nowrap;">
+        <td style="text-align:center; white-space:nowrap;">
           {{detalleDetraccion.co26porcentaje}}
         </td>
-        <td style="text-align:left; white-space:nowrap;">
-          {{detalleDetraccion.co26importedetra}}
+        <td style="text-align:right; white-space:nowrap;">
+          {{formatearNumero(detalleDetraccion.co26importedetra)}}
         </td>
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.co26ctaproveedor}}

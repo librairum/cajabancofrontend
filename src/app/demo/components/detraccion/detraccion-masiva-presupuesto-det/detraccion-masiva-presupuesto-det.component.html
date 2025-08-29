@@ -106,7 +106,7 @@
 
              <ng-template pTemplate="groupfooter" let-groupData>
     <tr style="background-color: #f8f9fa; font-style: italic;">
-        <td colspan="8" style="text-align: right; padding: 6px; font-weight: 500;">TOTAL {{ groupData.razonsocial }}:</td>
+        <td colspan="8" style="text-align: right; padding: 6px; font-weight: 500;"></td>
         <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') | number:'1.2-2' }}</td>
         <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Dolares') | number:'1.2-2' }}</td>
         <td class="font-bold" style="text-align: right; padding: 6px;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02PagoSoles') | number:'1.2-2' }}</td>
@@ -218,7 +218,7 @@
                     </td> -->
                 </tr>
             </ng-template>
-            <!-- <ng-template pTemplate="footer">
+             <ng-template pTemplate="footer">
                 <tr>
                     <td colspan="7" class="text-right font-bold"></td>
                     <td class="font-bold" style="text-align: left;">Sumas</td>
@@ -235,7 +235,7 @@
                     <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02NetoDolares') | number:'1.2-2' }}</td>
                     <td></td>
                 </tr>
-            </ng-template> -->
+            </ng-template> 
             <ng-template pTemplate="emptymessage">
                 <tr>
                     <td colspan="19" style="text-align: center; font-weight: bold; padding: 1rem;">
