@@ -17,7 +17,7 @@ co26porcentaje:number;
 co26importedetra:number;
 co26ctaproveedor:string;
 ccm02nom:string;
-item:string;
+item:number;
 descTipoDocumento:string;
 }
 /*

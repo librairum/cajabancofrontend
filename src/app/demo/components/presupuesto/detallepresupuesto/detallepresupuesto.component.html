@@ -221,21 +221,31 @@
                         <ng-template #viewModeTasaDetraccion>{{ detalle.ban02Tasadetraccion }}</ng-template>
                     </td>
                     <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccionSoles">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionSoles"
-                                (change)="calcularNetoPago(editingRow)" />
-                        </ng-container>
-                        <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionSoles     | number:'1.2-2'
+                              (change)="calcularNetoPago(editingRow)"   />
+                        </ng-container> 
+                         <ng-template #viewModeImporteDetraccionSoles>{{ detalle.ban02ImporteDetraccionSoles     | number:'1.2-2'
                             }}</ng-template>
+                            
+                             <!-- {{detalle.ban02ImporteDetraccionSoles }} -->
                     </td>
                     <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
+                        
+                        <!-- <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccion">
                             <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionDolares"
                                 (change)="calcularNetoPago(editingRow)" />
+                        </ng-container> -->
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteDetraccionDolares">
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteDetraccionDolares"
+                                (change)="calcularNetoPago(editingRow)"  />
                         </ng-container>
-                        <ng-template #viewModeImporteDetraccion>{{ detalle.ban02ImporteDetraccionDolares     | number:'1.2-2'
+                        
+                        <ng-template #viewModeImporteDetraccionDolares>{{ detalle.ban02ImporteDetraccionDolares     | number:'1.2-2'
                             }}</ng-template>
-                    </td>
+
+                     <!-- {{detalle.ban02ImporteDetraccionDolares }}  -->
+                        </td>
                     <!-- retencion -->
                     <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteRetencion">

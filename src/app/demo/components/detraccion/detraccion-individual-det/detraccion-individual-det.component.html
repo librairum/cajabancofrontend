@@ -156,11 +156,11 @@
                     <td style="text-align: left;">{{detalle.ban02FechaEmision}}</td>
                     <td style="text-align: left;">{{detalle.ban02FechaVencimiento}}</td>
                     <!--importe total Soles -->
-                    <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
+                    <td  
                     style="text-align: right;">{{ detalle.ban02Soles |
                         number:'1.2-2' }}</td>
                         <!--importe total dolares -->
-                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" 
+                    <td  
                     style="text-align: right;">{{ detalle.ban02Dolares |
                         number:'1.2-2' }}</td>
                     <!-- Monto pagar soles -->
@@ -199,12 +199,12 @@
                         </ng-container>
                         <ng-template #viewModeTasaDetraccion>{{ detalle.ban02Tasadetraccion }}</ng-template>
                     </td>
-                    <td style="text-align: right;">
+                    <td style="text-align: right;" [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}">
                         
                         {{ detalle.ban02PagoSoles     | number:'1.2-2'
                             }}
                     </td>
-                    <td style="text-align: right;">
+                    <td style="text-align: right;" [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}">
                         
                         {{ detalle.ban02PagoDolares     | number:'1.2-2' }}
                     </td>
@@ -247,10 +247,10 @@
 
             <ng-template pTemplate="footer">
                <tr>
-                     <td colspan="7" class="text-right font-bold"></td>
+                     <td colspan="11" class="text-right font-bold"></td>
                     <td class="font-bold" style="text-align: left;">Sumas</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02Soles') | number:'1.2-2' }}</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02Dolares') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoDolares') | number:'1.2-2' }}</td>
                     <!-- <td></td>
                     <td></td>
                     <td></td>

@@ -45,18 +45,18 @@ header="COnfirmar pago"
                             <th style="width: 8%;white-space: pre-wrap;">Lote<br>Detraccion</th>
                             <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th> 
                             
-                            <th style="width: 8%">fecha</th>
-                            <th style="width: 8%">motivo</th>
+                            <th style="width: 8%">Fecha</th>
+                            <th style="width: 8%">Motivo</th>
                             <th style="width: 8%;">Medio Pago</th>
                             <!-- <th style="width: 8%">ruc</th>
                             <th style="width: 8%">proveedor</th>
                             <th style="width: 8%">nrodoc</th>
                             <th style="width: 8%">moneda</th> -->
-                            <th style="width: 8%">detra<br>soles</th>
-                            <th style="width: 8%">detra<br>dolares</th>
-                            <th style="width: 8%">estado</th>
-                            <th style="width: 8%">fec<br>ejecucion</th>
-                            <th style="width: 8%">nro<br>operacion</th>
+                            <th style="width: 8%; text-align: right;">Detra<br>soles</th>
+                            <!-- <th style="width: 8%">detra<br>dolares</th> -->
+                            <th style="width: 8%">Estado</th>
+                            <th style="width: 8%">Fec<br>ejecucion</th>
+                            <th style="width: 8%">Nro<br>operacion</th>
                             <th style="width:10%; text-align: center;">Acciones</th>
                         </tr>
                     </ng-template>
@@ -91,12 +91,12 @@ header="COnfirmar pago"
                                 {{detmasiva.moneda}}
                             </td> -->
                             
-                            <td style="text-align:right; white-space:nowrap;">
+                            <td style="text-align:right; ">
                                 {{formatearNumero(detmasiva.detraccionImporteSoles)}}
                             </td>
-                            <td style="text-align:right; white-space:nowrap;">
+                            <!-- <td style="text-align:right; white-space:nowrap;">
                                 {{formatearNumero(detmasiva.detraccionImporteDolares)}}
-                            </td>
+                            </td> -->
                             <td style="text-align:right;">
                                 {{detmasiva.estadopresupuesto}}
                             </td>

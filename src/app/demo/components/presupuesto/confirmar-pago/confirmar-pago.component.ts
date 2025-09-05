@@ -295,7 +295,7 @@ export class ConfirmarPagoComponent implements OnInit {
     actualizarPresupuestoPago(){
 //guardar confirmacion Pago desde origen Prespuesto  u origen Detraccion
 
-        const codMedioPago = this.pagoForm.get('cboMedioPago').value;
+        // const codMedioPago = this.pagoForm.get('cboMedioPago').value;
         //insertar presupuesto
         
       

@@ -168,15 +168,16 @@
                     <td style="text-align: left;">{{ detalle.nombreTipoDocumento }}</td>
                     <td style="text-align: left;">{{ detalle.ban02NroDoc }}</td>
                     <td
-                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 'dolares-class': detalle.nombremoneda === 'DOLARES'}" style="text-align: left;">
+                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 
+                        'dolares-class': detalle.nombremoneda === 'DOLARES'}" style="text-align: left;">
                         {{ detalle.nombremoneda }}</td>
                     <td style="text-align: left;">{{detalle.ban02FechaEmision}}</td>
                     <td style="text-align: left;">{{detalle.ban02FechaVencimiento}}</td>
                     <!--importe total Soles -->
-                    <td [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" style="text-align: right;">{{ detalle.ban02Soles |
+                    <td style="text-align: right;">{{ detalle.ban02Soles |
                         number:'1.2-2' }}</td>
                         <!--importe total dolares -->
-                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" style="text-align: right;">{{ detalle.ban02Dolares |
+                    <td  style="text-align: right;">{{ detalle.ban02Dolares |
                         number:'1.2-2' }}</td>
                     <!-- Monto pagar soles -->
                     <!-- <td style="text-align: right;">
@@ -214,12 +215,14 @@
                         </ng-container>
                         <ng-template #viewModeTasaDetraccion>{{ detalle.ban02Tasadetraccion }}</ng-template>
                     </td>
-                    <td style="text-align: right;">
+                    <td  [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
+                    style="text-align: right;" >
                         
                         {{ detalle.ban02PagoSoles     | number:'1.2-2'
                             }}
                     </td>
-                    <td style="text-align: right;">
+                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" 
+                    style="text-align: right;">
                         
                         {{ detalle.ban02PagoDolares     | number:'1.2-2'
                             }}
@@ -262,10 +265,10 @@
             </ng-template>
              <ng-template pTemplate="footer">
                 <tr>
-                     <td colspan="7" class="text-right font-bold"></td>
+                     <td colspan="11" class="text-right font-bold"></td>
                     <td class="font-bold" style="text-align: left;">Sumas</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02Soles') | number:'1.2-2' }}</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02Dolares') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoDolares') | number:'1.2-2' }}</td>
                     <!-- <td></td>
                     <td></td>
                     <td></td>
