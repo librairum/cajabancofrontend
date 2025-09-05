@@ -124,14 +124,18 @@ export class DetallepresupuestoComponent implements OnInit {
             )
             .subscribe({
                 next: (data) => {
+                    console.log("datos de prespuesto detalle");
                     this.DetallePago = data;
+                    //);
+                        console.log("datos de prespuesto detalle");
+                        console.log(this.DetallePago);
                     if (data.length === 0) {
                         //verMensajeInformativo(
                         //    this.messageService,
                         //    'warn',
                         //    'Advertencia',
                         //    'No se encontraron detalles del presupuesto'
-                        //);
+                        
                         this.load = false;
                     } else {
                         this.load = false;
@@ -161,7 +165,7 @@ export class DetallepresupuestoComponent implements OnInit {
         this.motivo = this.navigationData?.motivo || '';
 
         this.medio = this.navigationData?.nombreMedioPago || '';
-        console.log("valor de medio pago desde navigationData. "+ this.navigationData?.BancoCodMedioPago); 
+        
         this.bancoCodMedioPago = this.navigationData?.bancoCodMedioPago;
     }
 

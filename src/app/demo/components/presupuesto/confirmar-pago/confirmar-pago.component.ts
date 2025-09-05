@@ -149,7 +149,7 @@ export class ConfirmarPagoComponent implements OnInit {
             
         }
         if (this.pagoNumero) {
-            console.log("se ejecuta el modal desde el formulario padre detraccion masiva");
+            
             
             this.nroOperacion = this.pagoNumero;
         }
@@ -207,8 +207,7 @@ export class ConfirmarPagoComponent implements OnInit {
         this.nuevoDetraccion.enlacePago = fileUrl;
         this.nuevoDetraccion.nombreArchivo =  this.archivoSeleccionado?.name;
         this.nuevoDetraccion.flagOperacion='I';
-        console.log("valores de nuevo detraccion");
-        console.log(this.nuevoDetraccion);
+        
         this.detraccionService.InsertarDetraccionMasiva(this.nuevoDetraccion, this.archivoSeleccionado).subscribe({
             next:(response) =>{
                 
@@ -256,8 +255,7 @@ export class ConfirmarPagoComponent implements OnInit {
         this.nuevaDetraccionIndividual.enlacepago = fileUrl;;
         this.nuevaDetraccionIndividual.nombrearchivo = this.archivoSeleccionado?.name;
         this.nuevaDetraccionIndividual.flagoperacion = 'I';
-        console.log("guardar detraccion individual");
-        console.log(this.nuevaDetraccionIndividual);
+        
         this.detraccionService.SpInsertaDetraIndividual(this.nuevaDetraccionIndividual, this.archivoSeleccionado)
         .subscribe({
             next:(response)=>{
@@ -432,9 +430,9 @@ export class ConfirmarPagoComponent implements OnInit {
         //this.loading = true;
         this.pS.obtenerMedioPago(codempresa).subscribe({
             next: (data) => {
-                // console.log(data);
+                
                 this.medioPagoLista = data;
-                // console.log(this.medioPagoLista);
+                
                 //this.loading = false;
                 //if (data.length === 0) {
                 //    verMensajeInformativo(

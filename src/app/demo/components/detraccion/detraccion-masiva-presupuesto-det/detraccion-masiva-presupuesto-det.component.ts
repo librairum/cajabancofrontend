@@ -166,11 +166,11 @@ private router:Router, private presupuestoservice:PresupuestoService)
 
 
     getTotalColumn(field: string): number {
-    return this.DetallePago.reduce((total, item) => {
-        const value = item[field as keyof Detallepresupuesto];
-        return total + (typeof value === 'number' ? value : 0);
-    }, 0);
-}
+        return this.DetallePago.reduce((total, item) => {
+            const value = item[field as keyof Detallepresupuesto];
+            return total + (typeof value === 'number' ? value : 0);
+        }, 0);
+    }
 
 // También puedes agregar este método para obtener totales por grupos si lo necesitas
 calculateGroupTotal(ruc: string, field: string): number {

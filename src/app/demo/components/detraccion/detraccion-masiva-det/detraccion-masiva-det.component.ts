@@ -97,7 +97,7 @@ formatearNumero(numero: number): string {
 
   cargar():void{
     
-    console.log("metodo cargar");
+    
     this.loading = true;
     let codEmpresa = this.globalService.getCodigoEmpresa();
     let nroLote : string =this.navigationData.nroLote;

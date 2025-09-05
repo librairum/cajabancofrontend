@@ -5,7 +5,8 @@ export interface DetraccionMasiva{
  loteDetraccionNro:string;
  presupuestoCod:string; /*presupuesto */
  facturaImporteSol:string;
- detraccionImporteSol:string;
+ detraccionImporteSoles:string;
+ detraccionImporteDolares:string;
 fecha:string;  /*presupuesto*/
 motivo:string;  /*presupuesto, nombre del presupeusto*/
 medio:string; /*presupuesto id*/

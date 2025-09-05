@@ -49,15 +49,19 @@ export interface Detallepresupuesto {
     nombreTipoDocumento: string | null;
     nombremoneda: string | null;
     ban02TipoDetraccion: string | null;
+
     ban02Tasadetraccion: number;
     ban02ImporteDetraccionSoles: number;
     ban02ImporteDetraccionDolares: number;
+
     ban02TasaRetencion: number;
     ban02ImporteRetencionSoles: number;
     ban02ImporteRetencionDolares: number;
+
     ban02TasaPercepcion: number;
     ban02ImportePercepcionSoles: number;
     ban02ImportePercepcionDolares: number;
+    
     ban02NetoSoles: number;
     ban02NetoDolares: number;
     ban02FechaEmision: string;

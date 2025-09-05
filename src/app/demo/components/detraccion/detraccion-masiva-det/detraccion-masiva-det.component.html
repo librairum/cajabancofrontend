@@ -38,39 +38,50 @@
             <th style="width: 8%">LoteDetraccion</th>
             <th style="width: 8%">fecha</th>                         
             -->
-            <th style="width: 8%">ruc</th>
-            <th style="width: 8%">nomproveedor</th>
-            <th style="width: 8%">tipodoc</th> 
-            <th style="width: 8%">nrodoc</th>
-            <th style="width: 8%">fechadoc</th>        
+            <th rowspan="2">Item</th>
+            <th rowspan="2">ruc
+              <p-columnFilter type="text" 
+                    field="ban02Ruc" 
+                    placeholder="Buscar" 
+                    ariaLabel="RUC"
+                    [showMenu]="false" 
+                    matchMode="contains">
+                </p-columnFilter>
+            </th>
+            <th rowspan="2">razon social
+                <p-columnFilter type="text" 
+                                field="ccm02nom" 
+                                placeholder="Buscar" 
+                                ariaLabel="Razon Social"
+                                [showMenu]="false" 
+                                matchMode="contains"></p-columnFilter>
+            </th>
+            <th rowspan="2">Tip.Doc</th> 
+
+            <th rowspan="2">Numero
+              <p-columnFilter type="text" 
+                field="ban02NroDoc" 
+                placeholder="Buscar" 
+                ariaLabel="Nro Documento"
+                [showMenu]="false" 
+                matchMode="contains"></p-columnFilter>
+            </th>
+            <th rowspan="2">importe</th>
+            <th rowspan="2" >Tipo <br>operacion</th>
+            <th rowspan="2">Tipo <br>Servicio</th>
+            <th rowspan="2" >Porcentaje</th>
+            <th rowspan="2">Importe  <br>Deraccion</th>
+            <th rowspan="2">Cta.Proveedor</th>
             
-            <th style="width: 8%; text-align: right;">importfact</th>
-            <th style="width: 8%">tipooperacion</th>
-            <th style="width: 8%">tiposervicio</th>
-            <th style="width: 8%">porcentaje</th>
-            <th style="width: 8%; text-align: right;">importedetra</th>
-            <th style="width: 8%">ctaproveedor</th>
-            <th style="width:10%; text-align: center;">Acciones</th>
+            
         </tr>
+    
     </ng-template>
     <ng-template pTemplate="body" let-detalleDetraccion>
       <tr>
-        <!-- <td style="text-align:left; white-space:nowrap;">
-          {{detalleDetraccion.co26codemp}}
-        </td>
         <td style="text-align:left; white-space:nowrap;">
-          {{detalleDetraccion.co26aa}}
-        </td>
-        <td style="text-align:left; white-space:nowrap;">
-          {{detalleDetraccion.co26mes}}
-        </td> -->
-        <!-- <td style="text-align:left; white-space:nowrap;">
-          {{detalleDetraccion.co26numlote}}
-        </td> 
-        <td style="text-align:left; white-space:nowrap;">
-          {{detalleDetraccion.co26fecha}}
-        </td>
-        -->
+          {{detalleDetraccion.item}}
+        </td>      
         
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.co26ruc}}
@@ -79,7 +90,7 @@
           {{detalleDetraccion.ccm02nom}}
         </td>
         <td style="text-align:center; white-space:nowrap;">
-          {{detalleDetraccion.co26tipdoc}}
+          {{detalleDetraccion.descTipoDocumento}}
         </td>
         <td style="text-align:left; white-space:nowrap;">
           {{detalleDetraccion.co26nrodoc}}

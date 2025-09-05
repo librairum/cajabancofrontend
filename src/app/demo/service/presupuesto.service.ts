@@ -51,7 +51,7 @@ export class PresupuestoService {
             .set('numerodocumento', numerodocumento);
         return this.http
             .get<RespuestaAPIBase<Detallepresupuesto[]>>(
-                `${this.urlApi}/SpListaDetPresupuestoDetraIndividual`,
+                `${this.urlApi}/SpListaDet`,
                 { params }
             )
             .pipe(map((response) => response.data));

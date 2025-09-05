@@ -54,41 +54,33 @@ header="Confirmar pago individual"
         styleClass="{ width: '100%', border: '0px solid black' }"
         [loading]="loading"
     >
-        <ng-template pTemplate="header">
-            <tr>
-                 <th style="width: 5%;  display: none;">EmpresaCod</th>
-                 <th style="width: 8%;  display: none;">Anio</th>
-                 <th style="width: 8%;  display: none;">mes</th>
-                <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th>
-                
-                <th style="width: 5%;white-space: pre-wrap;">Fecha</th>
-                <th style="width: 8%">motivo</th>
-                <th style="width: 8%; white-space: pre-wrap;">medio pago</th>
-    
-                <th style="width: 8%;white-space: pre-wrap;">Ruc</th>
-                <th style="width: 5%">Nombre</th>
-                <th style="width: 8%;display: none;">tipDoc</th>
-                <th style="width: 8%;">NroDoc</th>
-                <th style="width: 5%">Moneda</th>
-                <th style="width: 8%;display: none;">FechaDoc</th>
-                <th style="width: 8%;display: none;">FechaVen</th>
-                <th style="width: 8%; display: none;">Imp.BrutoSoles</th>
-                <th style="width: 8%;display: none;">ImporteBrutoDolares</th>
-                <th style="width: 8%;white-space: pre-wrap;display: none;">Tipo<br>Detra</th>
-                <th style="width: 8%;white-space: pre-wrap;display: none;">Tasa<br>Detra</th>
-                <th style="width: 8%;white-space: pre-wrap;">Detra<br>Soles</th>
-                <th style="width: 8%;white-space: pre-wrap;">Detra<br>Dolares</th>
-                <th style="width: 5%">Estado</th>
-                <th style="width: 5%;white-space: pre-wrap;">Fec.<br>Pago</th>
-                <th style="width: 5%;white-space: pre-wrap;">Nro<br>Operacion</th>
-                <th style="width:8%">Acciones</th>
-
-
-            </tr>
-        </ng-template>
+       <ng-template pTemplate="header">
+        <tr>
+            <!-- <th style="width: 5%;display: none;">EmpresaCod</th>
+            <th style="width: 8%;display: none;">Anio</th>
+            <th style="width: 8%;display: none;">Mes</th> -->
+            <th style="width:8%;">Pago<br>Nro</th>
+            <th style="width: 8%;">Lote<br>Detraccion</th>
+            <th style="width: 8%">fecha</th>        
+            <th style="width: 8%">motivo</th>
+            <th style="width: 8%">medio pago</th>
+            <th style="width: 8%">ruc</th>
+            <th style="width: 8%">proveedor</th>
+            <th style="width: 8%">nrodoc</th>
+            <th style="width: 8%">moneda</th>
+            <th style="width: 8%">Detra<br>Soles</th>
+            <th style="width: 8%">Detra<br>Dolares</th>
+            <th style="width: 8%">estado</th>
+            <th style="width: 8%">fec.<br>ejecucion</th>
+            <th style="width: 8%">nro<br>operacion</th>
+            
+            <th style="width:10%; text-align: center;">Acciones</th>
+            
+        </tr>
+    </ng-template>
         <ng-template pTemplate="body" let-detindividual>
             <tr>
-                <td style="text-align:left; white-space:nowrap; display: none;">
+                <!-- <td style="text-align:left; white-space:nowrap; display: none;">
                     {{ detindividual.ban01empresa}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;  display: none;">
@@ -96,56 +88,37 @@ header="Confirmar pago individual"
                 </td>
                 <td style="text-align:left; white-space:nowrap;  display: none;">
                     {{ detindividual.ban01mes}}
-                </td>
+                </td> -->
                 <td style="text-align:left; white-space:nowrap;">
                     {{detindividual.ban01numero}}
+                </td >
+                <td style="text-align:left; white-space:nowrap;">
+                        000000
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.ban01fecha }}
-                </td>
-                <td style="text-align:left; white-space:nowrap;">
+                </td> 
+               <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.ban01descripcion}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                   <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.nombreMedioPago}}
-                </td>
-                
+                </td>  
                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detindividual.ban02ruc}}
+                    {{detindividual.ban02ruc}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
+                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.nombreproveedor}}
                 </td>
-                <td style="text-align:left; white-space:nowrap; display: none;">
-                    {{ detindividual.ban02tipodoc}}
-                </td>
-                <td style="text-align:left; white-space:nowrap;">
+                  <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.ban02nrodoc}}
                 </td>
 
+                           
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.co05moneda}}
                 </td>
-                <td style="text-align:left; white-space:nowrap; display: none;">
-                    {{ convertToDate(detindividual.co05fecha) | date:'dd/MM/yyyy'}} </td>
-                <td style="text-align:left; white-space:nowrap; display: none;">
-                    {{ convertToDate(detindividual.co05fecven) | date:'dd/MM/yyyy'}}
-                </td>
-
-                <td style="text-align:right; white-space:nowrap;display: none;">
-          {{formatearNumero(detindividual.importebrutosoles)}}
-        </td>    
-        <td style="text-align:right; white-space:nowrap;">
-          {{formatearNumero(detindividual.importebrutodolares)}}
-        </td>      
-                
-                <td style="text-align:left; white-space:nowrap; display: none;">
-                    {{ detindividual.ban02tipodetraccion}}
-                </td>
-                <td style="text-align:left; white-space:nowrap; display: none;">
-                    {{ detindividual.ban02tasadetraccion}}
-                </td>
-                <td style="text-align:left; white-space:nowrap;">
+                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.pagodetracionsoles}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
@@ -160,6 +133,33 @@ header="Confirmar pago individual"
                 <td style="text-align:left; white-space:nowrap;">
                     {{detindividual.nrooperacion}}
                 </td>
+
+                 <!-- <td style="text-align:left; white-space:nowrap; display: none;">
+                    {{ detindividual.ban02tipodoc}}
+                </td>
+               
+                
+                <td style="text-align:left; white-space:nowrap; display: none;">
+                    {{ convertToDate(detindividual.co05fecha) | date:'dd/MM/yyyy'}} </td>
+                <td style="text-align:left; white-space:nowrap; display: none;">
+                    {{ convertToDate(detindividual.co05fecven) | date:'dd/MM/yyyy'}}
+                </td>
+
+                <td style="text-align:right; white-space:nowrap;display: none;">
+                    {{formatearNumero(detindividual.importebrutosoles)}}
+                </td>    
+                <td style="text-align:right; white-space:nowrap;">
+                {{formatearNumero(detindividual.importebrutodolares)}}
+                </td>      
+                
+                <td style="text-align:left; white-space:nowrap; display: none;">
+                    {{ detindividual.ban02tipodetraccion}}
+                </td>
+                <td style="text-align:left; white-space:nowrap; display: none;">
+                    {{ detindividual.ban02tasadetraccion}}
+                </td>
+                -->
+                
                 <td>
                     <div class="flex justify-content-center gap-2">
 

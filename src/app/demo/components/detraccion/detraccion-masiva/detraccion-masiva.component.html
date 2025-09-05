@@ -1,4 +1,5 @@
-
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
 <p-dialog  [(visible)]="verConfirmarPago" [modal]="true"
 header="COnfirmar pago"
 [style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false" 
@@ -41,39 +42,34 @@ header="COnfirmar pago"
             >
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width: 5%;display: none;">EmpresaCod</th>
-                            <th style="width: 8%;display: none;">Anio</th>
-
-                            <th style="width: 8%;display: none;">Mes</th>
-                             <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th> 
-                             <th style="width: 8%;white-space: pre-wrap;">Lote<br>Detraccion</th>
-                              <th style="width: 8%">fecha</th>
-                             <th style="width: 8%">motivo</th>
-                            <th style="width: 8%;white-space: pre-wrap;">nombre<br>MedioPago</th>
-                            <th style="width: 8%">Moneda</th>
-                            <th style="width: 8%;white-space: pre-wrap;">ImpTota<br>Doc.</th>
-                            <th style="width: 8%;white-space: pre-wrap;">Importe<br>Detra.</th>
+                            <th style="width: 8%;white-space: pre-wrap;">Lote<br>Detraccion</th>
+                            <th style="width: 8%;white-space: pre-wrap;">Pago<br>Nro</th> 
+                            
+                            <th style="width: 8%">fecha</th>
+                            <th style="width: 8%">motivo</th>
+                            <th style="width: 8%;">Medio Pago</th>
+                            <!-- <th style="width: 8%">ruc</th>
+                            <th style="width: 8%">proveedor</th>
+                            <th style="width: 8%">nrodoc</th>
+                            <th style="width: 8%">moneda</th> -->
+                            <th style="width: 8%">detra<br>soles</th>
+                            <th style="width: 8%">detra<br>dolares</th>
+                            <th style="width: 8%">estado</th>
+                            <th style="width: 8%">fec<br>ejecucion</th>
+                            <th style="width: 8%">nro<br>operacion</th>
                             <th style="width:10%; text-align: center;">Acciones</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" 
                         let-detmasiva>
                         <tr>
-                            <td style="text-align:left; white-space:nowrap;display: none;">
-                            {{ detmasiva.empresaCod}}
-                            </td>
-                            <td style="text-align:left; white-space:nowrap;display: none;">
-                                {{detmasiva.anio}}
-                            </td>
-                            <td style="text-align:left; white-space:nowrap;;display: none;">
-                                {{detmasiva.mes}}
+                            <td style="text-align:left; white-space:nowrap;" >
+                                {{detmasiva.loteDetraccionNro}}
                             </td>
                             <td style="text-align:left; white-space:nowrap;">
                                 {{detmasiva.presupuestoCod}}
                             </td>
-                            <td style="text-align:left; white-space:nowrap;" >
-                                {{detmasiva.loteDetraccionNro}}
-                            </td>
+                            
                         
                             <td style="text-align:left; white-space:nowrap;">
                                 {{detmasiva.fecha}}
@@ -85,15 +81,30 @@ header="COnfirmar pago"
                             <td style="text-align:left; white-space:nowrap;">
                                 {{detmasiva.nombreMedioPago}}
                             </td>
-                        <td style="text-align:left; white-space:nowrap;">
+                            <!-- ruc -->
+                            <!-- <td></td> -->
+                            <!--nombre proveedor -->
+                            <!-- <td></td> -->
+                            <!--nro doc-->
+                            <!-- <td></td> -->
+                        <!-- <td style="text-align:left; white-space:nowrap;">
                                 {{detmasiva.moneda}}
-                            </td>
+                            </td> -->
                             
-                            <td style="text-align:left; white-space:nowrap;">
-                                {{detmasiva.facturaImporteSol}}
+                            <td style="text-align:right; white-space:nowrap;">
+                                {{formatearNumero(detmasiva.detraccionImporteSoles)}}
                             </td>
-                            <td style="text-align:left; white-space:nowrap;">
-                                {{detmasiva.detraccionImporteSol}}
+                            <td style="text-align:right; white-space:nowrap;">
+                                {{formatearNumero(detmasiva.detraccionImporteDolares)}}
+                            </td>
+                            <td style="text-align:right;">
+                                {{detmasiva.estadopresupuesto}}
+                            </td>
+                             <td>
+                                {{detmasiva.fechaejecucionpago}}
+                            </td>
+                             <td>
+                                {{detmasiva.nrooperacion}}
                             </td>
                             <td>
                                 <div class="flex justify-content-center gap-2">
@@ -104,18 +115,18 @@ header="COnfirmar pago"
                                     (click)="verDetalle(detmasiva)"
                                     ></button>
 
-                                    <ng-container *ngIf="detmasiva.presupuestoCod.length == 0">
+                                    <ng-container *ngIf="detmasiva.presupuestoCod == '00000'">
                                         <button pButton icon="pi pi-trash" pEliminarPago
                                             class="p-button p-button-rounded p-button-text p-button-sm p-disabled"
                                             [disabled] = "true"
-                                            (click)="eliminarPagoPresupuesto()">
+                                            (click)="eliminarPagoPresupuesto(detmasiva)">
                                         </button>
                                     </ng-container>
-                                    <ng-container *ngIf="detmasiva.presupuestoCod.length > 0">
+                                    <ng-container *ngIf="detmasiva.presupuestoCod !='00000'">
                                         <button pButton icon="pi pi-trash" pEliminarPago
                                             class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
-                                            [disabled] = "true"
-                                            (click)="eliminarPagoPresupuesto()">
+                                            [disabled] = "false"
+                                            (click)="eliminarPagoPresupuesto(detmasiva)">
                                         </button>
                                     </ng-container>
                                     <ng-container>
@@ -123,17 +134,30 @@ header="COnfirmar pago"
                                     </ng-container>
 
 
-                                    <ng-container *ngIf="detmasiva.presupuestoCod.length== 0">
+                                    <ng-container *ngIf="detmasiva.presupuestoCod == '00000'">
                                         <button pButton icon="pi pi-money-bill" pConfirmarPago
                                             class="p-button.p-button-rounded p-button-text p-button-sm p-button-success"
-                                            (click)="confirmarPagoPresupuesto(detmasiva)"></button>
+                                            (click)="confirmarPagoPresupuesto(detmasiva)" [disabled]="false"></button>
                                     </ng-container>
-                                    <ng-container *ngIf="detmasiva.presupuestoCod.length>0">
+                                    <ng-container *ngIf="detmasiva.presupuestoCod !='00000'">
                                         <button pButton icon="pi pi-money-bill" pConfirmarPago
                                             class="p-button.p-button-rounded p-button-text p-button-sm p-disabled"
                                             (click)="confirmarPagoPresupuesto(detmasiva)" [disabled]="true" ></button>
                                     </ng-container>
-
+                                    <ng-container *ngIf="detmasiva.presupuestoCod =='00000'">
+                                         <button pButton icon="pi pi-file-pdf" pVerDocumento
+                                                class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                                                [disabled] = "true"
+                                                (click)="abrirdocumento(detmasiva)">
+                                            </button>
+                                    </ng-container>
+                                    <ng-container *ngIf="detmasiva.presupuestoCod !='00000'">
+                                         <button pButton icon="pi pi-file-pdf" pVerDocumento
+                                                class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                                                [disabled] = "false"
+                                                (click)="abrirdocumento(detmasiva)">
+                                            </button>
+                                    </ng-container>
                                     
                                     
                                     

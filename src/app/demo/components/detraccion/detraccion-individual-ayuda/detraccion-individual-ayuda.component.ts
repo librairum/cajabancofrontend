@@ -146,7 +146,7 @@ private fb:FormBuilder){
     this.seleccionDetraIndividual = registro;
     this.verConfirmarPago = true;
     
-    console.log("CofirmarPago valor DetraccionIndividualDocPen ", this.seleccionDetraIndividual);
+    
   }
 
   cargarDocPendiente() :void{

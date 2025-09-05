@@ -62,9 +62,15 @@ private router:Router, private presupuestoservice:PresupuestoService)
     this.cargar();
   }
 
-
+getTotalColumn(field: string): number {
+        return this.DetallePago.reduce((total, item) => {
+            const value = item[field as keyof Detallepresupuesto];
+            return total + (typeof value === 'number' ? value : 0);
+        }, 0);
+    }
   cargar():void{
     this.load = true;
+    
     this.presupuestoservice.obtenerDetallePresupuesto(
       this.globalService.getCodigoEmpresa(),
       this.navigationData.presupuestoCod

@@ -5,7 +5,7 @@ import { DetraccionService } from '../../../service/detraccion.service';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule,Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule,DatePipe } from '@angular/common';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
@@ -21,6 +21,9 @@ import { verMensajeInformativo } from '../../utilities/funciones_utilitarias';
 import { ConfirmarPagoComponent } from '../../presupuesto/confirmar-pago/confirmar-pago.component';
 import { DialogModule } from 'primeng/dialog';
 import { insert_presupuesto } from '../../../model/presupuesto';
+import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
+import { ConfigService } from 'src/app/demo/service/config.service';
+import { HttpResponse } from '@angular/common/http';
 @Component({
   selector: 'app-detraccion-masiva',
   standalone: true,
@@ -31,7 +34,7 @@ import { insert_presupuesto } from '../../../model/presupuesto';
     ,ButtonModule,CheckboxModule, ConfirmarPagoComponent,DialogModule ],
   templateUrl: './detraccion-masiva.component.html',
   styleUrl: './detraccion-masiva.component.css',
-  providers:[MessageService, ConfirmationService]
+  providers:[MessageService, ConfirmationService,DatePipe]
 })
 export class DetraccionMasivaComponent implements OnInit {
 detraccionMasivaList: DetraccionMasiva[] = [];
@@ -50,7 +53,10 @@ items: any[] = [];
   constructor(private detraccionMasivaService: DetraccionService,
     private bs:BreadcrumbService, 
     private globalService:GlobalService,
-    private router:Router, private messageService:MessageService
+    private router:Router, private messageService:MessageService, 
+    private presupuestoService: PresupuestoService,
+    private datePipe:DatePipe,
+    private confirmationService:ConfirmationService
   )
   {
     
@@ -94,8 +100,7 @@ items: any[] = [];
       next:(data) =>{
         this.detraccionMasivaList = data;
       this.loading = false;
-        //console.log("informacion de data:",data);
-        //console.log("DetraccionMasviLIst:", this.detraccionMasivaList);
+        
       },
       error:(e) => {
          this.loading = false;
@@ -115,10 +120,8 @@ items: any[] = [];
 
     
 
-    if(detra.presupuestoCod.length > 0 ){
-      console.log("abrir pagina detraccion masiva  det");
+    if(detra.presupuestoCod != '00000' ){
       
-      console.log(detra);
       const navigationExtras = {
         state:{
                          
@@ -134,12 +137,12 @@ items: any[] = [];
           
         }
       }
-      console.log("Datos de navigation desde detraccion masiva", navigationExtras);
       
+      //abrir detraccion con formato de presupuesto 
     this.router.navigate(['Home/detraccion_masiva_presupuesto_det'],navigationExtras );
     } else{
       
-      console.log("abrir pagina detraccion masiva presupuesto det");
+      
       //abrir detracccion
       let navigationExtras={
         state:{
@@ -158,8 +161,29 @@ items: any[] = [];
     }
   }
 
-  eliminarPagoPresupuesto():void{
-    
+  eliminarPagoPresupuesto(presupuesto:DetraccionMasiva):void{
+    this.confirmationService.confirm({
+            message: `¿Está seguro que desea eliminar el registro <b>${presupuesto.presupuestoCod}</b>?`,
+            header: 'Confirmar Eliminación',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button',
+            accept: () => {
+                this.detraccionMasivaService.SpEliminaPresuDetraIndividual(this.globalService.getCodigoEmpresa(),
+                   presupuesto.presupuestoCod).subscribe({
+                    next: () => {
+                        
+                        verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Registro Eliminado');
+                        this.cargar(this.anioPeriodo, this.mesPeriodo);
+                    }, 
+                    error:(error) =>{
+                       verMensajeInformativo(this.messageService, 'error', 'Error', `Error al eliminar el presupuesto: ${error.message}`);
+                    }
+                })
+            }
+        });
   }
 
   confirmarPagoPresupuesto(registro:DetraccionMasiva):void{
@@ -184,5 +208,58 @@ onCloseModal() {
             }
         });
     }
+
+    formatearNumero(numero: number): string {
+          if (numero === null || numero === undefined) {
+            return '0.00';
+          }
+          
+          // Convertir a número si es string
+          const num = typeof numero === 'string' ? parseFloat(numero) : numero;
+          
+          // Formatear con 2 decimales y usar punto como separador decimal
+          const numeroFormateado = num.toFixed(2);
+          
+          // Separar la parte entera y decimal
+          const partes = numeroFormateado.split('.');
+          const parteEntera = partes[0];
+          const parteDecimal = partes[1];
+          
+          // Agregar comas para separar miles en la parte entera
+          const parteEnteraConComas = parteEntera.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          
+          // Retornar el número formateado
+          return `${parteEnteraConComas}.${parteDecimal}`;
+    }
+
+    abrirdocumento(registro:DetraccionMasiva): void{
+           this.presupuestoService
+                      .obtenerArchivo(
+                          this.globalService.getCodigoEmpresa(),
+                          this.anioPeriodo,
+                          this.mesPeriodo,
+                          registro.presupuestoCod
+                      )
+                      .subscribe({
+                          next: (response: HttpResponse<Blob>) => {
+                              const blob = response.body;
+                              if (blob) {
+                                  const url = window.URL.createObjectURL(blob);
+                                  window.open(url, '_blank');
+                              } else {
+                                  verMensajeInformativo(
+                                      this.messageService,
+                                      'error',
+                                      'Error',
+                                      'No se encontró el documento'
+                                  );
+                              }
+                          },
+                          error: (err) => {
+                              console.error('Error al obtener el documento: ', err);
+                          },
+                      });
+         }
+
 
 }
