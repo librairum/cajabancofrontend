@@ -546,11 +546,14 @@ export class DetallepresupuestoComponent implements OnInit {
                 { text: 'Importe Total US$', rowSpan: 2, style: 'tableHeader' },
                 { text: '', colSpan: 2, style: 'tableHeader' },
                 '',
-                { text: 'Detraccion', colSpan: 3, style: 'tableHeader' },
+                { text: 'Detraccion', colSpan: 4, style: 'tableHeader' }, // 3 a 4
                 '',
                 '',
-                { text: 'Retencion', colSpan: 1, style: 'tableHeader' },
-                { text: 'Percepcion', colSpan: 1, style: 'tableHeader' },
+                '',
+                { text: 'Retencion', colSpan: 2, style: 'tableHeader' },
+                '',
+                { text: 'Percepcion', colSpan: 2, style: 'tableHeader' },
+                '',
                 { text: 'Neto a Pagar', colSpan: 2, style: 'tableHeader' },
                 '',
             ],
@@ -569,9 +572,12 @@ export class DetallepresupuestoComponent implements OnInit {
                 { text: 'Monto a Pagar $', style: 'tableHeader' },
                 { text: 'Tipo', style: 'tableHeader' },
                 { text: 'Tasa', style: 'tableHeader' },
-                { text: 'Importe', style: 'tableHeader' },
-                { text: 'Importe', style: 'tableHeader' },
-                { text: 'Importe', style: 'tableHeader' },
+                { text: 'Importe Soles', style: 'tableHeader' },
+                { text: 'Importe Dolares', style: 'tableHeader' }, // NUEVA COLUMNA Importe Dolares
+                { text: 'Importe Soles', style: 'tableHeader' },
+                { text: 'Importe Dolares', style: 'tableHeader' }, // NUEVA COLUMNA Retencion Dolares
+                { text: 'Importe Soles', style: 'tableHeader' },
+                { text: 'Importe Dolares', style: 'tableHeader' }, // NUEVA COLUMNA Percepcion Dolares
                 { text: 'S/.', style: 'tableHeader' },
                 { text: 'US$', style: 'tableHeader' },
             ],
@@ -624,30 +630,50 @@ export class DetallepresupuestoComponent implements OnInit {
                     formatCell(item.ban02PagoDolares),
                     item.ban02TipoDetraccion || '',
                     item.ban02Tasadetraccion || '',
-                    formatCell(item.importeDetraccion),
+                    formatCell(item.ban02ImporteDetraccionSoles),
+                    formatCell(item.ban02ImporteDetraccionDolares), // Nuevo campo Importe Dolares
                     formatCell(item.ban02ImporteRetencionSoles),
+                    formatCell(item.ban02ImporteRetencionDolares), // NUEVA COLUMNA RETENCION DÓLARES
                     formatCell(item.ban02ImportePercepcionSoles),
+                    formatCell(item.ban02ImportePercepcionDolares), // NUEVA COLUMNA PERCEPCIÓN DÓLARES
                     formatCell(item.ban02NetoSoles),
                     formatCell(item.ban02NetoDolares),
                 ]);
             });
+
+            // NUEVO SUBTOTAL Importe Dolares
+            const detraccionDolaresSubtotal = this.calculateGroupTotal(
+                ruc, 'ban02ImporteDetraccionDolares'
+            );
 
             const solesSubtotal = this.calculateGroupTotal(ruc, 'ban02Soles');
             const dolaresSubtotal = this.calculateGroupTotal(
                 ruc,
                 'ban02Dolares'
             );
+
             const detraccionSubtotal = this.calculateGroupTotal(
                 ruc,
-                'importeDetraccion'
+                'ban02ImporteDetraccionSoles'
             );
             const retencionSubtotal = this.calculateGroupTotal(
                 ruc,
                 'ban02ImporteRetencionSoles'
             );
+            // NUEVO SUBTOTAL RETENCION DÓLARES
+            const retencionDolaresSubtotal = this.calculateGroupTotal(
+                ruc,
+                'ban02ImporteRetencionDolares'
+            );
+
             const percepcionSubtotal = this.calculateGroupTotal(
                 ruc,
                 'ban02ImportePercepcionSoles'
+            );
+            // NUEVO SUBTOTAL PERCEPCIÓN DÓLARES
+            const percepcionDolaresSubtotal = this.calculateGroupTotal(
+                ruc,
+                'ban02ImportePercepcionDolares'
             );
             const netoSolesSubtotal = this.calculateGroupTotal(
                 ruc,
@@ -687,12 +713,27 @@ export class DetallepresupuestoComponent implements OnInit {
                     colSpan: 1,
                 },
                 {
+                    text: formatNumber(detraccionDolaresSubtotal), // Nuevo subtotal Detraccion Dolares
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
+                {
                     text: formatNumber(retencionSubtotal),
                     style: 'subtotal',
                     colSpan: 1,
                 },
                 {
+                    text: formatNumber(retencionDolaresSubtotal), // NUEVO SUBTOTAL RETENCION DÓLARES
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
+                {
                     text: formatNumber(percepcionSubtotal),
+                    style: 'subtotal',
+                    colSpan: 1,
+                },
+                {
+                    text: formatNumber(percepcionDolaresSubtotal), // NUEVO SUBTOTAL PERCEPCIÓN DÓLARES
                     style: 'subtotal',
                     colSpan: 1,
                 },
@@ -709,16 +750,29 @@ export class DetallepresupuestoComponent implements OnInit {
             ]);
         });
 
+
         const totalSoles = this.getTotalColumn('ban02Soles');
         const totalDolares = this.getTotalColumn('ban02Dolares');
         const totalDetraccion = this.getTotalColumn(
-            'importeDetraccion'
+            'ban02ImporteDetraccionSoles'
+        );
+        // Nuevo total Detraccion Dolares
+        const totalDetraccionDolares = this.getTotalColumn(
+            'ban02ImporteDetraccionDolares'
         );
         const totalRetencion = this.getTotalColumn(
             'ban02ImporteRetencionSoles'
         );
+        // NUEVO TOTAL RETENCIÓN DÓLARES
+        const totalRetencionDolares = this.getTotalColumn(
+            'ban02ImporteRetencionDolares'
+        );
         const totalPercepcion = this.getTotalColumn(
             'ban02ImportePercepcionSoles'
+        );
+        // NUEVO TOTAL PERCEPCIÓN DÓLARES
+        const totalPercepcionDolares = this.getTotalColumn(
+            'ban02ImportePercepcionDolares'
         );
         const totalNetoSoles = this.getTotalColumn('ban02NetoSoles');
         const totalNetoDolares = this.getTotalColumn('ban02NetoDolares');
@@ -739,8 +793,11 @@ export class DetallepresupuestoComponent implements OnInit {
             { text: '', style: 'total', colSpan: 1 },
             { text: '', style: 'total', colSpan: 1 },
             { text: formatNumber(totalDetraccion), style: 'total', colSpan: 1 },
+            { text: formatNumber(totalDetraccionDolares), style: 'total', colSpan: 1 }, // Importe Dolares
             { text: formatNumber(totalRetencion), style: 'total', colSpan: 1 },
+            { text: formatNumber(totalRetencionDolares), style: 'total', colSpan: 1 }, // NUEVO TOTAL RETENCION DOLARES
             { text: formatNumber(totalPercepcion), style: 'total', colSpan: 1 },
+            { text: formatNumber(totalPercepcionDolares), style: 'total', colSpan: 1 }, // NUEVO TOTAL PERCEPCIÓN DÓLARES
             { text: formatNumber(totalNetoSoles), style: 'total', colSpan: 1 },
             {
                 text: formatNumber(totalNetoDolares),
@@ -755,7 +812,7 @@ export class DetallepresupuestoComponent implements OnInit {
         // Estructura y estilos del pdf, medio complicado es
         const docDefinition = {
             pageOrientation: 'landscape',
-            pageMargins: [20, 20, 20, 20],
+            pageMargins: [15, 15, 15, 15],
             content: [
                 //title
                 { text: 'Detalle de Presupuesto', style: 'header' },
@@ -801,8 +858,8 @@ export class DetallepresupuestoComponent implements OnInit {
                     table: {
                         headerRows: 2,
                         widths: [
-                            15, 38, 60, 28, 40, 28, 33, 39, 35, 35, 30, 30, 15,
-                            15, 25, 35, 40, 40, 40,
+                            15, 38, 58, 26, 40, 26, 32, 39, 30, 31, 30, 30, 15,
+                            15, 24, 25 , 24 , 25 , 25 , 25 ,  31 , 31,
                         ],
                         body: body,
                         alignment: 'center',
@@ -814,10 +871,10 @@ export class DetallepresupuestoComponent implements OnInit {
                                 i === 2 ||
                                 i === node.table.body.length
                                 ? 1
-                                : 0.5;
+                                : 0.3;
                         },
                         vLineWidth: function (i, node) {
-                            return 0.5;
+                            return 0.3;
                         },
                         hLineColor: function (i, node) {
                             return i === 0 ||
@@ -879,7 +936,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
         // Generamos el pdf
         //pdfMake.createPdf(docDefinition).download('DetallePrespupuesto_' + this.pagnro + '.pdf');
-        
+
         const fileName = 'DetallePrespupuesto_' +
             this.pagnro +
             '_' +
