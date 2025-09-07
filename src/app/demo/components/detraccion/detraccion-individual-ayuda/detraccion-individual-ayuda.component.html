@@ -9,11 +9,14 @@ header="Confirmar pago individual"
 
 <div *ngIf="verConfirmarPago">
         <app-confirmar-pago 
-        [pagoNumero]="selectedPagoNumero"
-        [modoDetraccion]="true"
-        [numeroLote]="selectedNumeroLote"
-        [seleccionadoDocPen] = "seleccionDetraIndividual"
-        (onClose)="onCloseModal()"
+            [pagoNumero]="selectedPagoNumero"
+            [modoDetraccion]="true"
+            
+            [numeroLote]="selectedNumeroLote"
+            
+            [seleccionadoDocPen] = "seleccionDetraIndividual"
+            
+            (onClose)="onCloseModal()"
         ></app-confirmar-pago>
  </div>
 </p-dialog>

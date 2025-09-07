@@ -19,10 +19,12 @@ import { DetraccionMasivaComponent } from './demo/components/detraccion/detracci
 import { DetraccionIndividualComponent } from './demo/components/detraccion/detraccion-individual/detraccion-individual.component';
 import { DetraccionMasivaPresupuestoDetComponent } from './demo/components/detraccion/detraccion-masiva-presupuesto-det/detraccion-masiva-presupuesto-det.component';
 import { DetraccionMasivaDetComponent } from './demo/components/detraccion/detraccion-masiva-det/detraccion-masiva-det.component';
-import { PagoRetencionComponent } from './demo/components/pago-retencion/pago-retencion.component';
+import { PagoRetencionComponent } from './demo/components/retencion/pago-retencion/pago-retencion.component';
 import { ConsultadocpendienteCtaxcobrarComponent } from './demo/components/consultadocpendiente-ctaxcobrar/consultadocpendiente-ctaxcobrar.component';
 import { ConsultahistoricaCtaxcobrarComponent } from './demo/components/consultahistorica-ctaxcobrar/consultahistorica-ctaxcobrar.component';
 import { DetraccionIndividualDetComponent } from './demo/components/detraccion/detraccion-individual-det/detraccion-individual-det.component';
+import { RetencionDetalleComponent } from './demo/components/retencion/retencion-detalle/retencion-detalle.component';
+import { RetencionDetallePresupuestoComponent } from './demo/components/retencion/retencion-detalle-presupuesto/retencion-detalle-presupuesto.component';
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -56,6 +58,8 @@ import { DetraccionIndividualDetComponent } from './demo/components/detraccion/d
                     {path:'consultadocpendiente_ctaxcobrar', component:ConsultadocpendienteCtaxcobrarComponent},
                     {path:'consultahistorica_ctaxcobrar', component:ConsultahistoricaCtaxcobrarComponent}
                     ,{path:'detraccion_individual_det', component:DetraccionIndividualDetComponent}
+                    ,{path:'retencion-detalle',component:RetencionDetalleComponent}
+                    ,{path:'retencion-presupuesto-detalle', component:RetencionDetallePresupuestoComponent}
                 ]
             },
             { path: 'notfound', component: NotfoundComponent },

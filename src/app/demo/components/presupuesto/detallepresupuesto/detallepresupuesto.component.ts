@@ -124,11 +124,10 @@ export class DetallepresupuestoComponent implements OnInit {
             )
             .subscribe({
                 next: (data) => {
-                    console.log("datos de prespuesto detalle");
+                    
                     this.DetallePago = data;
                     //);
-                        console.log("datos de prespuesto detalle");
-                        console.log(this.DetallePago);
+                        
                     if (data.length === 0) {
                         //verMensajeInformativo(
                         //    this.messageService,
@@ -271,7 +270,6 @@ export class DetallepresupuestoComponent implements OnInit {
         if (this.editingRow && this.editingIndex !== null) {
             const payload = this.buildBackendPayload(this.editingRow);
 
-            // console.log(payload);
             this.presupuestoservice
                 .actualizarDetallePresupuesto(payload)
                 .subscribe({
@@ -293,8 +291,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
     buildBackendPayload(detalle: Detallepresupuesto): any {
 
-        // console.log("meto buildbackednpayload");
-        // console.log(detalle);
+
         return {
             ban02Empresa: this.globalService.getCodigoEmpresa(),
             ban02Ruc: detalle.ban02Ruc,
@@ -398,13 +395,12 @@ export class DetallepresupuestoComponent implements OnInit {
         let importeNetoSoles: number = 0;
         let montoPagoSoles: number = this.editingRow.ban02PagoSoles;
         let montoPagoDolares: number = this.editingRow.ban02PagoDolares;
-        // console.log("calcular neto pago");
+      
         const tasaRetencion = this.editingRow.ban02TasaRetencion;
         const tasaDetraccion = this.editingRow.ban02Tasadetraccion;
         const tasaPercepcion = this.editingRow.ban02TasaPercepcion;
 
-        // console.log(montoPagoSoles);
-        // console.log(montoPagoDolares);
+  
 
         let importeDetraccionSoles: number = 0,
             importeRetencionSoles: number = 0,
@@ -415,7 +411,7 @@ export class DetallepresupuestoComponent implements OnInit {
 
         let netoSoles = 0,
             netoDolares = 0;
-        // console.log('canculo de importe detraccion soles');
+ 
         let numeroTipoCambio: number = Number(tipoCambio);
         if (monedaEdicion == 'S') {
             //calculo de importe en soles de afectaciones
@@ -429,14 +425,10 @@ export class DetallepresupuestoComponent implements OnInit {
                 (importeDetraccionSoles +
                     importeRetencionSoles +
                     importePercepcionSoles);
-            // console.log(netoSoles);
-            // //calcular los valores de dolares
-            // console.log("moneda soles y se calcula monto pago dolares");
+
 
             montoPagoDolares = montoPagoSoles / numeroTipoCambio;
-            // console.log(montoPagoSoles);
-            // console.log(numeroTipoCambio);
-            // console.log(montoPagoDolares.toFixed(2));
+       
             importeDetraccionDolares =
                 (tasaDetraccion / 100) * montoPagoDolares;
             importeRetencionDolares = (tasaRetencion / 100) * montoPagoDolares;
@@ -463,8 +455,7 @@ export class DetallepresupuestoComponent implements OnInit {
             //cambio en soles soles
             //Convertir segun el tiop de cambio mont de pago dolares a monto pago soles ;
             montoPagoSoles = montoPagoDolares * numeroTipoCambio;
-            // console.log("moneda dolares y monto a pagar soles");
-            // console.log(montoPagoSoles);
+   
             importeDetraccionSoles = (tasaDetraccion / 100) * montoPagoSoles;
             importeRetencionSoles = (tasaRetencion / 100) * montoPagoSoles;
             importePercepcionSoles = (tasaRetencion / 100) * montoPagoSoles;
@@ -497,9 +488,9 @@ export class DetallepresupuestoComponent implements OnInit {
 
         //this.editingRow.importeDetraccion = importeDetraccionSoles;
 
-        // console.log("lectura de detalle.ban02ImporteDetraccionSoles dese el evento calculaNetoPago");
+      
         detalle.ban02ImporteDetraccionSoles = importeDetraccionSoles;
-        // console.log(detalle.ban02ImporteDetraccionSoles);
+
         detalle.ban02ImporteRetencionSoles = importeRetencionSoles;
         detalle.ban02ImportePercepcionSoles = importePercepcionSoles;
 
@@ -513,13 +504,12 @@ export class DetallepresupuestoComponent implements OnInit {
         this.editingRow.ban02ImportePercepcionDolares =
             importePercepcionDolares;
         this.editingRow.ban02NetoDolares = netoDolares;
-        // console.log('Editing Row ban02NetoSoles');
+   
         this.editingRow.ban02NetoSoles = netoSoles;
 
         detalle.ban02NetoDolares = netoDolares;
 
-        // console.log('detalle objeto neto soles');
-        // console.log(netoSoles);
+  
         detalle.ban02NetoSoles = netoSoles;
     }
     exportarPDFPendiente(){
@@ -957,8 +947,10 @@ export class DetallepresupuestoComponent implements OnInit {
     }
     
     generarArchivoPago(){
-        
+        console.log("codigo banco cod medio pago");
+        console.log(this.bancoCodMedioPago);
         if(this.bancoCodMedioPago == '01'){
+            
             this.generaArchivoInterbankCab();
             this.generaArchivoInterbankDet();
         }else if(this.bancoCodMedioPago == '02'){

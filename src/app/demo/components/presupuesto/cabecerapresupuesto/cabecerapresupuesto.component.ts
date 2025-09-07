@@ -112,9 +112,9 @@ export class CabecerapresupuestoComponent implements OnInit {
         this.loading = true;
         this.presupuestoService.obtenerMedioPago(codempresa).subscribe({
             next: (data) => {
-                // console.log(data);
+                
                 this.medioPagoLista = data;
-                // console.log(this.medioPagoLista);
+                
                 this.loading = false;
                 //if (data.length === 0) {
                 //    verMensajeInformativo(
@@ -172,8 +172,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             .subscribe({
                 next: (data) => {
                     this.presupuesto = data;
-                    console.log("Valor de data " , data);
-                    console.log("prespuesto entidad:" , this.presupuesto);
+                    
                     this.loading = false;
                     //if (data.length === 0) {
                     //    verMensajeInformativo(
@@ -212,11 +211,7 @@ export class CabecerapresupuestoComponent implements OnInit {
             },
             
         };
-        console.log("Datoa de navigation extras");
-        console.log("prespuesto.pagoNumero:", presupuesto.pagoNumero);
-        console.log("Presupuesto.bancoCodMedioPago:"+presupuesto.bancoCodMedioPago);
-        console.log("nomrbe medio pago:"+navigationExtras.state.nombreMedioPago);
-        console.log("banco codmedio pago:" +navigationExtras.state.bancoCodMedioPago);
+        
         this.router.navigate(['Home/detalle-presupuesto'], navigationExtras);
     }
     verVouchercontable(presupuesto: cabeceraPresupuesto) {
@@ -521,7 +516,7 @@ export class CabecerapresupuestoComponent implements OnInit {
     }
     confirmarPago(presupuesto: cabeceraPresupuesto) {
         this.selectedPagoNumero = presupuesto.pagoNumero;
-        // console.log(this.selectedPagoNumero)
+        
         this.verConfirmarPago = true;
     }
     onCloseModal() {

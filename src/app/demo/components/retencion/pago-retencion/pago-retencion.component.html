@@ -1,0 +1,166 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<p-dialog  [(visible)]="verConfirmarPago" [modal]="true"
+header="Confirmar pago"
+[style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false"
+[maximizable]="true"
+[baseZIndex]="10000" (onHide)="selectedPagoNumero = ''; onCloseModal()"
+
+>
+<app-confirmar-pago
+[pagoNumero]="selectedPagoNumero"
+ [modoDetraccion]="false"
+ [modoPresupuesto]="false"
+ [modoRetencion]="true"
+ [numeroLote]="selectedNumeroOperacion"
+
+(onClose)="onCloseModal()"
+
+ ></app-confirmar-pago>
+</p-dialog>
+
+<div class="container">
+    <p-panel>
+        <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
+    </p-panel>
+    <br/>
+    <div class="card">
+        <div class="flex justify-content-between align-items-center mb-3">
+            <div class="flex alighn-items-center">
+                <label for="rowsPerPage" class="mb-2">Filas por pagina:</label>
+                <p-dropdown id="rowsPerPage" [options]="[10, 20, 40]"
+                [(ngModel)]="rowsPerPage"
+                placeholder="Seleccionar" class="p-button-sm"></p-dropdown>
+            </div>
+
+        </div>
+
+
+    <!-- tabla de datos-->
+
+        <p-table
+        [value]="retencionCabLista"
+        [paginator]="true"
+        [rows]="rowsPerPage"
+        responsiveLayout="scrol"
+        styleClass="p-datatable-sm"
+        [loading]="loading"
+        >
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 8%;text-align: center;">Retencion<br>MensualNro</th>
+                <th style="width: 5%">Pago Nro
+                    <br />
+                    <br />
+                    <p-columnFilter type="text" field="pagoNro" placeholder="Buscar" ariaLabel="Pago Nro"
+                    [showMenu]="false" matchMode="contains"></p-columnFilter>
+                </th>
+            
+                <th style="width: 8%;text-align: center;">Fecha</th>
+
+                <th style="width: 8%;text-align: center;">Motivo</th>
+                <th style="width: 8%;text-align: center;">Medio Pago</th>
+
+                <th style="width: 8%;text-align: center;">Importe Factura (S/.)</th>
+                <th style="width: 8%;text-align: center;">Importe Retencion (S/.)</th>
+                <th style="width: 8%;text-align: center;">Operacion Nro</th>
+                <th style="width:10%; text-align: center;">Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body"
+            let-pagoretencion>
+            <tr>
+                <td style="text-align:right; white-space:nowrap;">
+                {{ pagoretencion.retencionesMensualesNro }}
+                </td>
+                <td style="text-align:right; white-space:nowrap;">
+                {{ pagoretencion.pagoNro }}
+                </td>
+            
+                <td style="text-align:left; white-space:nowrap;">
+                    {{pagoretencion.fecha}}
+                </td>
+                <td style="text-align:left; white-space:nowrap;">
+                    {{pagoretencion.pagoMotivo}}
+                </td>
+
+                <td style="text-align:left; white-space:nowrap;" >
+                    {{pagoretencion.pagoMedio}}
+                </td>
+
+                <td style="text-align:right; white-space:nowrap;">
+                    {{formatNumber(pagoretencion.facturasImporteSoles)}}
+                </td>
+
+                <td style="text-align:right; white-space:nowrap;">
+                    {{formatNumber(pagoretencion.retencionImporteSoles)}}
+                </td>
+                <td style="text-align:right; white-space:nowrap;">
+                    {{pagoretencion.nroOperacion}}
+                </td>
+
+                <td>
+                    <div class="flex justify-content-center gap-2">
+
+
+                        <button pButton icon="pi pi-eye" pVerDetalle
+                        class="p-button.p-button-rounded p-button-text p-button-sm p-button-info"
+                        (click)="verDetalle(pagoretencion)"
+                        ></button>
+                        <ng-container>
+
+                        </ng-container>
+
+                        <ng-container *ngIf="pagoretencion.pagoNro  != '00000'">
+                            <button pButton icon="pi pi-money-bill" pConfirmarPago
+                                class="p-button.p-button-rounded p-button-text p-button-sm p-button-disabled"
+                                [disabled]="true"
+                                (click)="confirmarPagoPresupuesto(pagoretencion)"></button>
+                        </ng-container>
+
+                        <ng-container *ngIf="pagoretencion.pagoNro == '00000'">
+                            <button pButton icon="pi pi-money-bill" pConfirmarPago
+                                class="p-button.p-button-rounded p-button-text p-button-sm p-succes"
+                                
+                                (click)="confirmarPagoPresupuesto(pagoretencion)"  ></button>
+                        </ng-container> 
+
+                        <ng-container *ngIf="pagoretencion.pagoNro == '00000'">
+                                <button pButton icon="pi pi-trash" pEliminarPago
+                                    class="p-button p-button-rounded p-button-text p-button-sm p-disabled"
+                                    [disabled] = "true"
+                                    (click)="eliminarPagoPresupuesto(pagoretencion)">
+                                </button>
+                        </ng-container>
+                        <ng-container *ngIf="pagoretencion.pagoNro !='00000'">
+                            <button pButton icon="pi pi-trash" pEliminarPago
+                                class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                                [disabled] = "false"
+                                (click)="eliminarPagoPresupuesto(pagoretencion)">
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="pagoretencion.pagoNro =='00000'">
+                                <button pButton icon="pi pi-file-pdf" pVerDocumento
+                                    class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                                    [disabled] = "true"
+                                    (click)="abrirdocumento(pagoretencion)">
+                                </button>
+                        </ng-container>
+                        <ng-container *ngIf="pagoretencion.pagoNro !='00000'">
+                                <button pButton icon="pi pi-file-pdf" pVerDocumento
+                                    class="p-button p-button-rounded p-button-text p-button-sm p-button-danger"
+                                    [disabled] = "false"
+                                    (click)="abrirdocumento(pagoretencion)">
+                                </button>
+                        </ng-container>
+                        
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        </p-table>
+    </div>
+
+</div>

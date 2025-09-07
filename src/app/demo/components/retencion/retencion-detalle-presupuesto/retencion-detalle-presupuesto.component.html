@@ -1,0 +1,199 @@
+<div class="container">
+      <p-panel header="Detraccion masiva prespuesto detalle" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
+    </p-panel>
+    </div>
+    <br/>
+    <div class="card p-2">
+            <!-- First row with 2 elements -->
+        <div style="display: flex; width: 100%; margin-bottom: 1rem;">
+            <div style="margin-right: 20px; flex: 1;">
+                <label for="username" class="text-sm">Pago Nro: </label>
+                <input pInputText id="username" aria-describedby="username-help"
+                 [value]="pagonro" [disabled]="true"
+                    style="width: 100%; height: 2.5rem;" />
+            </div>
+
+            <div style="flex: 1;">
+                <label for="fecha" class="text-sm">Fecha: </label>
+                <input id="fecha" [value]="fechaString" 
+                [disabled]="true" style="width: 100%; height: 2.5rem;" />
+                <!-- <p-calendar [disabled]="true" [(ngModel)]="fecha" style="width: 100%; height: 2.5rem;"
+                    inputStyleClass="p-input-sm" dateFormat="dd/mm/yy"></p-calendar> -->
+            </div>
+
+            
+
+        </div>
+
+         <div style="display: flex; width: 100%; margin-bottom: 1rem;">
+            <div style="margin-right: 20px; flex: 1;">
+                <label for="motivo" class="text-sm">Motivo: </label>
+                <input pInputText id="motivo" aria-describedby="motivo-help" [value]="motivo" [disabled]="true"
+                    style="width: 100%; height: 2.5rem;" />
+            </div>
+
+            <div style="flex: 1;">
+                <label for="medio-pago" class="text-sm">Medio Pago: </label>
+                <input pInputText id="medio-pago" aria-describedby="medio-pago-help" [value]="medio"
+                    [disabled]="true" style="width: 100%; height: 2.5rem;" />
+            </div>
+      </div>
+
+
+      <div class="card p-2">
+        <p-table [value]="detallePresupuesto" 
+        sortField="ban02Ruc" sortMode="single" 
+        rowGroupMode="subheader"
+            groupRowsBy="ban02Ruc" 
+            [scrollable]="true" 
+            scrollHeight="500px" [loading]="load"
+            
+            [globalFilterFields]="['ban02Ruc','razonsocial','ban02NroDoc']">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th rowspan="2">Item</th>
+                    <th rowspan="2">RUC
+                        <br>
+                        <br>
+                        <p-columnFilter type="text" field="ban02Ruc" placeholder="Buscar" ariaLabel="RUC"
+                            [showMenu]="false" matchMode="contains"></p-columnFilter>
+                    </th>
+                    <th rowspan="2">Razon Social
+                        <br>
+                        <br>
+                        <p-columnFilter type="text" field="razonsocial" placeholder="Buscar" ariaLabel="Razon Social"
+                            [showMenu]="false" matchMode="contains"></p-columnFilter>
+                    </th>
+                    <th rowspan="2">Tipo Doc</th>
+                    <th rowspan="2">Numero
+                        <br>
+                        <br>
+                        <p-columnFilter type="text" field="ban02NroDoc" placeholder="Buscar" ariaLabel="Nro Documento"
+                            [showMenu]="false" matchMode="contains"></p-columnFilter>
+                    </th>
+                        <th rowspan="2">Moneda <br>Original</th>
+                    <th rowspan="2">Fecha <br>emision</th>
+                    <th rowspan="2">Fecha <br>vencimiento</th>
+                    <th rowspan="2">Importe <br>Total S/.</th>
+                    <th rowspan="2">Importe <br>Total US$</th>
+
+                    <th colspan="2"></th>
+                    <th colspan="3">Detraccion</th>
+                    <!-- <th colspan="2">Retencion</th>
+                    <th colspan="2">Percepcion</th>
+                    <th colspan="2">Neto a Pagar</th>
+                     -->
+                </tr>
+                <tr>
+                    
+                    <!-- <th colspan="1">Tipo</th> -->
+                    <th colspan="1">Tasa</th>
+                    <th colspan="1">Importe <br/>Soles</th>
+                    <th colspan="1">Importe <br/>Dolares</th>
+         
+                    
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="groupheader" let-groupData>
+                <tr pRowGroupHeader>
+                    <!--
+                    <td colspan="8">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold">{{ groupData.ban02Proveedor }}</span>
+                        </div>
+                    </td>-->
+                </tr>
+            </ng-template>
+
+             <!-- <ng-template pTemplate="groupfooter" let-groupData>
+                <tr>
+                    <td colspan="8">
+                    </td>
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') |
+                        number:'1.2-2' }}</td>
+                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Dolares') |
+                        number:'1.2-2' }}</td>
+
+                
+                </tr>
+    
+            </ng-template> -->
+
+            <ng-template pTemplate="body" let-detalle>
+                <tr>
+                     <td style="text-align: left;">{{ detalle.item }}</td>
+                    <td style="text-align: left;">{{ detalle.ban02Ruc }}</td>
+                    <td style="text-align: left;">{{ detalle.razonsocial }}</td>
+                    <td style="text-align: left;">{{ detalle.nombreTipoDocumento }}</td>
+                    <td style="text-align: left;">{{ detalle.ban02NroDoc }}</td>
+                    <td
+                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 
+                        'dolares-class': detalle.nombremoneda === 'DOLARES'}" style="text-align: left;">
+                        {{ detalle.nombremoneda }}</td>
+                    <td style="text-align: left;">{{detalle.ban02FechaEmision}}</td>
+                    <td style="text-align: left;">{{detalle.ban02FechaVencimiento}}</td>
+                    <!--importe total Soles -->
+                    <td style="text-align: right;">{{ detalle.ban02Soles |
+                        number:'1.2-2' }}</td>
+                        <!--importe total dolares -->
+                    <td  style="text-align: right;">{{ detalle.ban02Dolares |
+                        number:'1.2-2' }}</td>
+                 
+                    <!-- Detraccion -->
+                    <!-- <td style="text-align: right;">
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTipoDetraccion">
+                            <input pInputText type="text" [(ngModel)]="editingRow.ban02TipoDetraccion" />
+                        </ng-container>
+                        <ng-template #viewModeTipoDetraccion>{{ detalle.ban02TipoDetraccion }}</ng-template>
+                    </td> -->
+                    <td style="text-align: left;">
+                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTasaDetraccion">
+                            <input pInputText type="number" [(ngModel)]="editingRow.ban02TasaRetencion" />
+                        </ng-container>
+                        <ng-template #viewModeTasaDetraccion>{{ detalle.ban02TasaRetencion }}</ng-template>
+                    </td>
+                    <td  [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
+                    style="text-align: right;" >
+                        
+                        {{ detalle.ban02PagoSoles     | number:'1.2-2'
+                            }}
+                    </td>
+                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" 
+                    style="text-align: right;">
+                        
+                        {{ detalle.ban02PagoDolares     | number:'1.2-2'
+                            }}
+                    </td>
+                  
+                   
+                </tr>
+            </ng-template>
+             <!-- <ng-template pTemplate="footer">
+                <tr>
+                     <td colspan="11" class="text-right font-bold"></td>
+                    <td class="font-bold" style="text-align: left;">Sumas</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoDolares') | number:'1.2-2' }}</td>
+                 
+                    <td></td>
+                </tr>
+            </ng-template>  -->
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="19" style="text-align: center; font-weight: bold; padding: 1rem;">
+                        No se encontraron registros
+                    </td>
+                </tr>
+            </ng-template>
+
+
+        </p-table>
+    </div>
+
+
+
+
+
+  </div>

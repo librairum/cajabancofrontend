@@ -47,8 +47,7 @@ private router:Router, private presupuestoservice:PresupuestoService)
 {
   const navigation = router.getCurrentNavigation();
   if(navigation?.extras?.state){
-    console.log( "metodo constructor");
-    console.log(navigation.extras.state);
+    
       this.navigationData = navigation.extras.state;
   }else{
     //this.router.navigate(['/Home/Detraccion']);
@@ -60,6 +59,7 @@ private router:Router, private presupuestoservice:PresupuestoService)
 
     this.breadCrumbService.setBreadcrumbs([
       {icon:'pi pi-home', routerLink:'/Home/Detraccion'},
+      {label:'Detraccion masiva', routerLink:'/Home/detraccion_masiva'},
       {label:'Detraccion masiva presupuesto detalle', routerLink:'/Home/detraccion_masiva_presupuesto_det'}
     ]);
     this.breadCrumbService.currentBreadcrumbs$.subscribe(bc=>{

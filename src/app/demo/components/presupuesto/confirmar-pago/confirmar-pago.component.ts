@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
@@ -22,6 +22,8 @@ import { insert_presupuesto, mediopago_lista } from 'src/app/demo/model/presupue
 import { DetraccioMasivaDetalleRequest } from 'src/app/demo/model/DetraccionMasiva';
 import { DetraccionService } from 'src/app/demo/service/detraccion.service';
 import { DetraccionIndividualDocPen, DetraccionIndividualRequest } from 'src/app/demo/model/DetraccionIndividual';
+import { Retencion } from 'src/app/demo/model/retencion';
+import { RetencionService } from 'src/app/demo/service/retencion.service';
 @Component({
     selector: 'app-confirmar-pago',
     standalone: true,
@@ -38,11 +40,14 @@ export class ConfirmarPagoComponent implements OnInit {
     //por si acaso el nro de pago de la fila 
     @Input() pagoNumero: string = '';
     @Input() modoDetraccion:boolean = false;
+    @Input() modoRetencion:boolean = false;
+    @Input() modoPresupuesto:boolean = false;
     @ViewChild('fu') fileUpload!: FileUpload;
     @Output() onClose = new EventEmitter<void>();
     @Input() presupuestoCab:insert_presupuesto;
     @Input() numeroLote:string;
     @Input() seleccionadoDocPen:DetraccionIndividualDocPen;
+    
     pagoForm: FormGroup;
     destinationPath: string = '';
 
@@ -65,6 +70,27 @@ export class ConfirmarPagoComponent implements OnInit {
     mes_combo: string = "";
     urlApi: string = '';
     modoDetraccionIndividual :boolean = false;
+
+    nuevoRetencion:Retencion={
+        ban01empresa:'',
+    ban01anio:'',
+    ban01mes:'',    
+    ban01descripcion: '',
+    ban01fecha:'',
+    ban01estado:'',
+    ban01usuario:'',
+    ban01pc:'',
+    ban01fecharegistro:'',
+    ban01mediopago:'',
+    ban01motivopagocod:'',
+    retencionMensualNro:'',
+    numerooperacion:'',
+    enlacepago:'',
+    nombrearchivo:'',
+    contenidoarchivo:'',
+    flagoperacion:''
+
+    }
     nuevoPresupuesto: insert_presupuesto={
         ban01Empresa: '',
         ban01Numero: '',
@@ -78,6 +104,7 @@ export class ConfirmarPagoComponent implements OnInit {
         ban01FechaRegistro: '',
         ban01mediopago: '',
     };
+    
     nuevoDetraccion: DetraccioMasivaDetalleRequest ={
         ban01Empresa: '',
         ban01Anio: '',
@@ -128,7 +155,9 @@ export class ConfirmarPagoComponent implements OnInit {
         private messageService: MessageService, 
         private pS: PresupuestoService, 
         private gS: GlobalService,
-        private configService: ConfigService, private detraccionService:DetraccionService) {
+        private configService: ConfigService, 
+        private detraccionService:DetraccionService
+        ,private retencionService:RetencionService) {
         this.pagoForm = this.fb.group({
             fechaejecucion: [null, Validators.required],
             nroOperacion: ['', Validators.required],
@@ -160,10 +189,9 @@ export class ConfirmarPagoComponent implements OnInit {
             }
         })
         this.destinationPath = this.configService.getRutaDoc();
-        if(this.modoDetraccion == true){
-            this.cargarMedioPago();
-            
 
+        if(this.modoDetraccion == true || this.modoRetencion == true){
+            this.cargarMedioPago();            
         }
                        
         
@@ -175,6 +203,62 @@ export class ConfirmarPagoComponent implements OnInit {
           this.nroOperacion = changes['pagoNumero'].currentValue;
         } por si se desea pasar el nro de pago
       }*/
+     guardarRetencion():void{
+        this.nuevoRetencion.ban01empresa = this.gS.getCodigoEmpresa();
+        
+          this.gS.selectedDate$.subscribe(date => {
+            if (date) {
+                this.anio_combo = date.getFullYear().toString();
+                this.mes_combo = (date.getMonth() + 1).toString().padStart(2, '0');
+            }
+        });
+
+        this.cargandoArchivo = true;
+        this.nuevoRetencion.ban01anio = this.anio_combo;
+        this.nuevoRetencion.ban01mes = this.mes_combo;
+        //npmbre del presupesto
+        this.nuevoRetencion.ban01descripcion = this.pagoForm.get('motivoPago')?.value; 
+        //fecha del prespuesto generado 
+        //formatear la fecha seleccionada
+        let fechaPagoInput = this.pagoForm.get('fechaejecucion')?.value;
+        let fechaPagoFormated = fechaPagoInput ? formatDate(new Date(fechaPagoInput)): null;
+        let fileUrl = this.rutaComprobante;
+
+        this.nuevoRetencion.ban01fecha= fechaPagoFormated;
+        this.nuevoRetencion.ban01estado = '02'; //presupuesto pagado
+        this.nuevoRetencion.ban01usuario = 'melissa';
+        this.nuevoRetencion.ban01pc = 'PC';
+        this.nuevoRetencion.ban01fecharegistro = fechaPagoFormated;
+        this.nuevoRetencion.ban01mediopago = this.pagoForm.get('medioPago')?.value; 
+        this.nuevoRetencion.retencionMensualNro = this.numeroLote;
+        this.nuevoRetencion.ban01motivopagocod = '04'; //04 pago retencion masiva 
+        this.nuevoRetencion.numerooperacion = this.pagoForm.get('nroOperacion')?.value;
+        this.nuevoRetencion.enlacepago = fileUrl;
+        this.nuevoRetencion.nombrearchivo =  this.archivoSeleccionado?.name;
+        this.nuevoRetencion.flagoperacion='I';
+        this.retencionService.insertRetencion(this.nuevoRetencion, 
+            this.archivoSeleccionado).subscribe({
+                next:(response) =>{
+                    setTimeout(() => {
+                        this.cargandoArchivo = false;
+                        this.finalizarGuardado();
+                    }, 500);
+                },
+                error:(error)=>{
+                     this.cargandoArchivo = false;
+                    verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        'No se pudo actualizar el comprobante:' + error
+                    );
+                    this.cargandoArchivo = false;
+                }
+            }); 
+       
+       
+     }
+
     guardarDetraccioMasivo():void{
         this.nuevoDetraccion.ban01Empresa = this.gS.getCodigoEmpresa();
         
@@ -282,6 +366,7 @@ export class ConfirmarPagoComponent implements OnInit {
 
     }
     guardarPresupuestoDetraccionPago():void{
+
         if(this.modoDetraccionIndividual == true){
             this.guardarDetraccionIndividual();
         }else{
@@ -359,11 +444,17 @@ export class ConfirmarPagoComponent implements OnInit {
             });
     }
     guardarConfirmacion() {
-        if(this.modoDetraccion == false){
+
+        if(this.modoDetraccion == false && this.modoRetencion == false){
             this.actualizarPresupuestoPago();
-        }else{
+            console.log("modo  detraccion");
+        }else if(this.modoRetencion == true && this.modoDetraccion==false){
+            this.guardarRetencion();
+            console.log("modo retencion");
+        }else if(this.modoDetraccion == true && this.modoRetencion == false){
             //modo crear  presupuesto de detraccion y actualizar el pago de la detraccion recien creada
             this.guardarPresupuestoDetraccionPago();
+            console.log("modo presupuesto");
         }
 
     }

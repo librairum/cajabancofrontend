@@ -2,8 +2,11 @@
 <p-confirmDialog></p-confirmDialog>
 <p-dialog [(visible)]="verConfirmarPago" [modal]="true" header="Confirmar pago"
     [style]="{ width: '20vw', height: 'auto' }" [draggable]="false" [resizable]="false" [maximizable]="true"
+    
     [baseZIndex]="10000" (onHide)="selectedPagoNumero = ''; onCloseModal()">
-    <app-confirmar-pago [pagoNumero]="selectedPagoNumero" (onClose)="onCloseModal()"></app-confirmar-pago>
+    <app-confirmar-pago [pagoNumero]="selectedPagoNumero" (onClose)="onCloseModal()"
+    [modoPresupuesto]="true" [modoDetraccion]="false" [modoRetencion]="false"
+    ></app-confirmar-pago>
 </p-dialog>
 
 <div class="container">

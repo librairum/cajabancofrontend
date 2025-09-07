@@ -49,10 +49,9 @@ private router:Router, private presupuestoservice:PresupuestoService)
   ngOnInit(): void {
     this.breadCrumbService.setBreadcrumbs([
 
-      {icon:'pi pi-home',
-       routerLink:'/Home/detraccion_individual'},
-      {label:'Detraccion individual  detalle',
-        routerLink:'/Home/detraccion_individual_det'}
+      {icon:'pi pi-home',routerLink:'/Home/detraccion_individual'},
+      {label:'Detraccion individual',routerLink:'/Home/detraccion_individual'},
+      {label:'Detraccion individual  detalle',routerLink:'/Home/detraccion_individual_det'}
     ]);
     this.breadCrumbService.currentBreadcrumbs$.subscribe(bc =>{
       this.items = bc;

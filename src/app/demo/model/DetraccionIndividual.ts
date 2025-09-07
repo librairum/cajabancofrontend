@@ -85,6 +85,7 @@ export interface DetraccionIndividualRequest{
     nombrearchivo:string;
     contenidoarchivo:string;
         flagoperacion:string;
+        
 }
 /*
 
