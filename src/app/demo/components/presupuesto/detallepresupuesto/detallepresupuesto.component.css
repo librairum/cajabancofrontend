@@ -120,3 +120,19 @@
     background-color: #ebf5eb; /* Light green background for Dolares */
     color: #2e8b57;
 }
+/* Solo agregar estas reglas al final de tu CSS existente */
+
+/* Anchos más pequeños solo para las columnas RUC y Número */
+::ng-deep .p-datatable th:nth-child(2), /* RUC */
+::ng-deep .p-datatable td:nth-child(2) {
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
+}
+
+::ng-deep .p-datatable th:nth-child(5), /* Número */
+::ng-deep .p-datatable td:nth-child(5) {
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
+}
