@@ -219,6 +219,8 @@ export class CabecerapresupuestoComponent implements OnInit {
             state: {
                 empresa: this.globalService.getCodigoEmpresa(),
                 PagoNro: presupuesto.pagoNumero,
+                menuOrigen: 'Presupuesto',
+                rutaOrigen:'/Home/presupuesto'
             },
         };
         this.router.navigate(['Home/voucher_contable'], navigationExtras);

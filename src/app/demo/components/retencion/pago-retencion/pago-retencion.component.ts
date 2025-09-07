@@ -258,6 +258,18 @@ export class PagoRetencionComponent {
                                   console.error('Error al obtener el documento: ', err);
                               },
                           });
-             }
+    }
+
+    verVouchercontable(registro: RetencionCab) {
+            const navigationExtras = {
+                state: {
+                    empresa: this.globalService.getCodigoEmpresa(),
+                    PagoNro: registro.pagoNro,
+                    menuOrigen: 'Pago retencion',
+                    rutaOrigen:'/Home/pago_retencion'
+             },
+            };
+            this.router.navigate(['Home/voucher_contable'], navigationExtras);
+    }
 
 }

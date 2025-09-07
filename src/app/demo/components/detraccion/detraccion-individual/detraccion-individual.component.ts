@@ -197,27 +197,27 @@ items: any[] = [];
         return null;
         }
         formatearNumero(numero: number): string {
-  if (numero === null || numero === undefined) {
-    return '0.00';
+            if (numero === null || numero === undefined) {
+              return '0.00';
+            }
+            
+            // Convertir a número si es string
+            const num = typeof numero === 'string' ? parseFloat(numero) : numero;
+            
+            // Formatear con 2 decimales y usar punto como separador decimal
+            const numeroFormateado = num.toFixed(2);
+            
+            // Separar la parte entera y decimal
+            const partes = numeroFormateado.split('.');
+            const parteEntera = partes[0];
+            const parteDecimal = partes[1];
+            
+            // Agregar comas para separar miles en la parte entera
+            const parteEnteraConComas = parteEntera.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            
+            // Retornar el número formateado
+            return `${parteEnteraConComas}.${parteDecimal}`;
   }
-  
-  // Convertir a número si es string
-  const num = typeof numero === 'string' ? parseFloat(numero) : numero;
-  
-  // Formatear con 2 decimales y usar punto como separador decimal
-  const numeroFormateado = num.toFixed(2);
-  
-  // Separar la parte entera y decimal
-  const partes = numeroFormateado.split('.');
-  const parteEntera = partes[0];
-  const parteDecimal = partes[1];
-  
-  // Agregar comas para separar miles en la parte entera
-  const parteEnteraConComas = parteEntera.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  
-  // Retornar el número formateado
-  return `${parteEnteraConComas}.${parteDecimal}`;
-}
   eliminarPagoPresupuesto(registro:DetraccionIndividual):void{
     console.log("evneto eleminar presupesto");
     console.log("empresa, numero :",registro.ban01empresa, "|",registro.ban01numero);
@@ -245,4 +245,16 @@ items: any[] = [];
         });
   
   }
+
+    verVouchercontable(registro: DetraccionIndividual) {
+              const navigationExtras = {
+                  state: {
+                      empresa: this.globalService.getCodigoEmpresa(),
+                      PagoNro: registro.ban01numero,
+                      menuOrigen: 'Detraccion individual',
+                      rutaOrigen:'/Home/detraccion_individual'
+               },
+              };
+              this.router.navigate(['Home/voucher_contable'], navigationExtras);
+      }
 }

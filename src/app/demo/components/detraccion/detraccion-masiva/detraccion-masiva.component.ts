@@ -260,6 +260,17 @@ onCloseModal() {
                           },
                       });
          }
+         verVouchercontable(registro: DetraccionMasiva) {
+                     const navigationExtras = {
+                         state: {
+                             empresa: this.globalService.getCodigoEmpresa(),
+                             PagoNro: registro.presupuestoCod,
+                             menuOrigen: 'Detraccion masiva',
+                             rutaOrigen:'/Home/detraccion_masiva'
+                      },
+                     };
+                     this.router.navigate(['Home/voucher_contable'], navigationExtras);
+             }
 
 
 }

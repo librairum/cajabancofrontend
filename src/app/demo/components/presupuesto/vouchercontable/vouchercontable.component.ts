@@ -69,7 +69,10 @@ export class VouchercontableComponent implements OnInit {
 
     verConfirmarActualizacion: boolean = false;
     selectedVoucherC: string;
-
+    // esDetraccionMasiva:boolean = false;
+    // esDetraccionIndiivudla:boolean = false;
+    // esRetencion:boolean = false;
+    // esPresupuesto:boolean = false;
     constructor(
         private messageService: MessageService,
         private presupuestoservice: PresupuestoService,
@@ -91,11 +94,18 @@ export class VouchercontableComponent implements OnInit {
 
     ngOnInit(): void {
         this.bs.clearBreadcrumbs();
+
+        // this.bs.setBreadcrumbs([
+        //     { icon: 'pi pi-home', routerLink: '/Home' },
+        //     { label: 'Presupuesto', routerLink: '/Home/presupuesto' },
+        //     { label: 'Voucher contable', routerLink: '/Home/voucher_contable' },
+        // ]);
         this.bs.setBreadcrumbs([
             { icon: 'pi pi-home', routerLink: '/Home' },
-            { label: 'Presupuesto', routerLink: '/Home/presupuesto' },
+            { label: this.navigationData.menuOrigen, routerLink: this.navigationData.rutaOrigen },
             { label: 'Voucher contable', routerLink: '/Home/voucher_contable' },
-        ]);
+            ]);
+        
         this.bs.currentBreadcrumbs$.subscribe((bc) => {
             this.items = bc;
         });

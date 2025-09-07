@@ -177,7 +177,11 @@ header="Confirmar pago individual"
                                 [disabled] = "false"
                                 (click)="abrirdocumento(detindividual)">
                         </button>
-
+                         <p-button icon="pi pi-file" styleClass="p-button-info p-button-sm"
+                                tooltipPosition="left" pTooltip="Ver voucher contable" [text]="true"
+                                (onClick)="verVouchercontable(detindividual)"
+                                [disabled]="detindividual.ban01numero !='00000' ? false:true ">
+                        </p-button>
                     </div>
                 </td>
 
