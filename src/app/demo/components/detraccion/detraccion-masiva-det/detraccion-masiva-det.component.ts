@@ -121,4 +121,13 @@ formatearNumero(numero: number): string {
       });
   }
 
+  getTotalColumn(field: string): number {
+          return this.listaDetraccionDet.reduce((total, item) => {
+              const value = item[field as keyof DetraccionMasivaDetalle];
+              return total + (typeof value === 'number' ? value : 0);
+          }, 0);
+      }
+
+
+
 }

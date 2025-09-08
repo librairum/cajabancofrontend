@@ -133,6 +133,7 @@ export class PagoRetencionComponent {
         .subscribe({
             next:(data)=>{
                 this.retencionCabLista = data;
+                console.log("valor de retorno de pago retencion:" + data);
                 
                 this.loading = false;
             },
@@ -159,8 +160,7 @@ export class PagoRetencionComponent {
                     motivo:retencion.pagoMotivo
           }
         }
-        console.log("medodo ver detalle");
-        console.log(navigationExtras);
+        
         //detall de presupuesto
         this.router.navigate(['Home/retencion-presupuesto-detalle'], navigationExtras);        
      }else{
