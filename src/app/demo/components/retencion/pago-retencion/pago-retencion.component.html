@@ -39,16 +39,17 @@ header="Confirmar pago"
     <!-- tabla de datos-->
 
         <p-table
-        [value]="retencionCabLista"
-        [paginator]="true"
-        [rows]="rowsPerPage"
-        responsiveLayout="scrol"
-        styleClass="p-datatable-sm"
-        [loading]="loading"
+            
+            [value]="retencionCabLista"
+            [paginator]="true"
+            [rows]="rowsPerPage"
+            responsiveLayout="scrol"
+            styleClass="p-datatable-sm"
+            [loading]="loading"
         >
         <ng-template pTemplate="header">
             <tr>
-                <th style="width: 8%;text-align: center;">Retencion<br>MensualNro</th>
+                <th style="width: 8%;text-align: center;">Lote<br>Retencion</th>
                 <th style="width: 5%">Pago Nro
                     <br />
                     <br />
@@ -61,9 +62,12 @@ header="Confirmar pago"
                 <th style="width: 8%;text-align: center;">Motivo</th>
                 <th style="width: 8%;text-align: center;">Medio Pago</th>
 
-                <th style="width: 8%;text-align: center;">Importe Factura (S/.)</th>
+                <!-- <th style="width: 8%;text-align: center;">Importe Factura (S/.)</th> -->
                 <th style="width: 8%;text-align: center;">Importe Retencion (S/.)</th>
+                <th style="width: 8%;text-align: center;">Estado</th>          
+                <th style="width: 8%;text-align: center;">Fecha ejecucion</th>  
                 <th style="width: 8%;text-align: center;">Operacion Nro</th>
+
                 <th style="width:10%; text-align: center;">Acciones</th>
             </tr>
         </ng-template>
@@ -89,13 +93,15 @@ header="Confirmar pago"
                     {{pagoretencion.pagoMedio}}
                 </td>
 
-                <td style="text-align:right; white-space:nowrap;">
+                <!-- <td style="text-align:right; white-space:nowrap;">
                     {{formatNumber(pagoretencion.facturasImporteSoles)}}
-                </td>
+                </td> -->
 
                 <td style="text-align:right; white-space:nowrap;">
                     {{formatNumber(pagoretencion.retencionImporteSoles)}}
                 </td>
+                <td>{{pagoretencion.estadoPresupuesto}}</td>
+                <td>{{pagoretencion.fechaPago}}</td>
                 <td style="text-align:right; white-space:nowrap;">
                     {{pagoretencion.nroOperacion}}
                 </td>

@@ -62,18 +62,18 @@ header="Confirmar pago individual"
             <th style="width: 8%;display: none;">Mes</th> -->
             <th style="width:8%;">Pago<br>Nro</th>
             <th style="width: 8%;">Lote<br>Detraccion</th>
-            <th style="width: 8%">fecha</th>        
-            <th style="width: 8%">motivo</th>
-            <th style="width: 8%">medio pago</th>
-            <th style="width: 8%">ruc</th>
-            <th style="width: 8%">proveedor</th>
-            <th style="width: 8%">nrodoc</th>
-            <th style="width: 8%">moneda</th>
+            <th style="width: 8%">Fecha</th>        
+            <th style="width: 8%">Motivo</th>
+            <th style="width: 8%">Medio Pago</th>
+            <th style="width: 8%">Ruc</th>
+            <th style="width: 8%">Proveedor</th>
+            <th style="width: 8%">Nrodoc</th>
+            <th style="width: 8%">Moneda</th>
             <th style="width: 8%">Detra<br>Soles</th>
             <th style="width: 8%">Detra<br>Dolares</th>
-            <th style="width: 8%">estado</th>
-            <th style="width: 8%">fec.<br>ejecucion</th>
-            <th style="width: 8%">nro<br>operacion</th>
+            <th style="width: 8%">Estado</th>
+            <th style="width: 8%">Fec.<br>Ejecucion</th>
+            <th style="width: 8%">Nro<br>Operacion</th>
             
             <th style="width:10%; text-align: center;">Acciones</th>
             
@@ -119,11 +119,11 @@ header="Confirmar pago individual"
                 <td style="text-align:left; white-space:nowrap;">
                     {{ detindividual.co05moneda}}
                 </td>
-                 <td style="text-align:left; white-space:nowrap;">
-                    {{ detindividual.pagodetracionsoles}}
+                 <td style="text-align:right; white-space:nowrap;">
+                    {{ formatearNumero(detindividual.pagodetracionsoles)}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
-                    {{ detindividual.pagodetraciondolares}}
+                <td style="text-align:right; white-space:nowrap;">
+                    {{ formatearNumero(detindividual.pagodetraciondolares)}}
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
                     {{detindividual.estadopresupuesto}}

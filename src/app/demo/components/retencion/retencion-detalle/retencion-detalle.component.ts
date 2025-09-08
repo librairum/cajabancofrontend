@@ -34,11 +34,24 @@ anioPeriodo:string;
 mesPeriodo:string;
 rowsPerPage:number = 10;
 items:any[] =[];
+navigationData: any;
 constructor(private globalService:GlobalService, 
   private breadCrumbService:BreadcrumbService, 
-  private retencionSerice:RetencionService
-,private messageService:MessageService){
+  private retencionSerice:RetencionService,
+  private messageService:MessageService, 
+  private router:Router){
+  const navigation = router.getCurrentNavigation();
+ 
+        if(navigation?.extras?.state){
 
+          this.navigationData = navigation.extras.state; 
+                    console.log("dato de nanvegacion  constructor detalle");
+          console.log(this.navigationData);   
+          this.anioPeriodo =  this.navigationData.anioRetencion;
+          this.mesPeriodo = this.navigationData.mesRetencion;
+          console.log("mes periodo");
+          console.log(this.mesPeriodo);           
+        }
 }
 
   ngOnInit(): void {
@@ -61,15 +74,19 @@ constructor(private globalService:GlobalService,
     this.breadCrumbService.currentBreadcrumbs$.subscribe(bc =>{
       this.items = bc;
     });
-
-this.globalService.selectedDate$.subscribe((date) =>{
-        if(date){
-          this.anioPeriodo = date.getFullYear().toString();
-          this.mesPeriodo = (date.getMonth()+1).toString().padStart(2,'0');
-          
-          this.cargar(this.anioPeriodo, this.mesPeriodo);
-        }
-    });
+    this.anioPeriodo = this.navigationData.anioRetencion;
+    this.mesPeriodo = this.navigationData.mesRetencion;
+    this.cargar(this.anioPeriodo, this.mesPeriodo);
+// this.globalService.selectedDate$.subscribe((date) =>{
+//         if(date){
+//           this.anioPeriodo = date.getFullYear().toString();
+//           this.mesPeriodo = (date.getMonth()+1).toString().padStart(2,'0');
+//           console.log("retencion selecicon periodo");
+//           console.log(this.anioPeriodo);
+//           console.log(this.mesPeriodo);
+//           this.cargar(this.anioPeriodo, this.mesPeriodo);
+//         }
+//     });
 
   }
 
@@ -114,5 +131,13 @@ this.globalService.selectedDate$.subscribe((date) =>{
                         });
                         
   }
+
+  getTotalColumn(field: string): number {
+        
+          return this.listaRetencionDet.reduce((total, item) => {
+              const value = item[field as keyof RetencionDet];
+              return total + (typeof value === 'number' ? value : 0);
+          }, 0);
+      }
 
 }

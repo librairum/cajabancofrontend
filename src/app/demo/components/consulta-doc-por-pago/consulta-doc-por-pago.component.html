@@ -28,6 +28,7 @@
             <th>Importe</th>
             <th>Fecha Pago</th>
             <th>Importe Pagado</th>
+            <th>Estado</th>
             <th>Ver Comprobante de pago</th>
             </tr>
         </ng-template>
@@ -40,8 +41,10 @@
             <td style="text-align: left; white-space: nowrap;">{{ doc.nroDoc }}</td>
             <td style="text-align: left; white-space: nowrap;">{{ doc.fechaDocumento }}</td>
             <td style="text-align: right; white-space: nowrap;">{{ doc.importeDocumento | number : "1.2-2" }}</td>
+      
             <td style="text-align: left; white-space: nowrap;">{{ doc.fechaPago}}</td>
             <td style="text-align: right; white-space: nowrap;">{{ doc.importePago | number : "1.2-2" }}</td>
+            <td style="text-align: center; white-space: nowrap;">{{doc.estadoPresupuesto}}</td> 
             <td style="text-align: center; white-space: nowrap;">
                 <p-button *ngIf="doc.fechaPago !== '' "label="" icon="pi pi-file"
                             styleClass="p-button-sm p-button-info"

@@ -33,7 +33,7 @@
 /* 1. Lote Detracción */
 ::ng-deep .p-datatable th:nth-child(1),
 ::ng-deep .p-datatable td:nth-child(1) {
-    width: 6% !important;
+    width: 8% !important;
     min-width: 50px;
     text-align: center;
 }
@@ -41,7 +41,7 @@
 /* 2. Pago Nro */
 ::ng-deep .p-datatable th:nth-child(2),
 ::ng-deep .p-datatable td:nth-child(2) {
-    width: 4% !important;
+    width: 8% !important;
     min-width: 40px;
     text-align: center;
 }

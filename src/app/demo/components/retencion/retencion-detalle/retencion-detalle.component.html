@@ -29,8 +29,9 @@
   
     <ng-template pTemplate="header">
         <tr>
-           
-            
+            <th rowspan="2">Item</th>
+            <th rowspan="2">NroRetencion</th>
+            <th rowspan="2">FechaRetencion</th>
             <th rowspan="2">Ruc
               <p-columnFilter type="text" 
                     field="ban02Ruc" 
@@ -71,7 +72,16 @@
     </ng-template>
     <ng-template pTemplate="body" let-detalleRetencion>
       <tr>
-      
+       <td style="text-align:left; white-space:nowrap;">
+          {{detalleRetencion.item}}
+        </td>
+        <td style="text-align:left; white-space:nowrap;">
+          {{detalleRetencion.retencionNro}}
+        </td>
+        
+        <td style="text-align:left; white-space:nowrap;">
+          {{detalleRetencion.retencionFecha}}
+        </td>
         <td style="text-align:left; white-space:nowrap;">
           {{detalleRetencion.proveedorDocNro}}
         </td>
@@ -96,7 +106,25 @@
         </td>                               
       </tr>
     </ng-template>
-
+    <ng-template pTemplate="footer">
+                <tr>
+                <td colspan="7" class="text-right font-bold">
+                    <td class="font-bold" style="text-align: left;">Sumas</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('proveedorDocImporteTotal') | number:'1.2-2' }}</td>
+                    
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('proveedorDocImporteRetenido') | number:'1.2-2' }}</td>
+                    
+                </tr>
+                <!--
+                <tr>
+                     <td colspan="11" class="text-right font-bold"></td>
+                    <td class="font-bold" style="text-align: left;">Sumas</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoSoles') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoDolares') | number:'1.2-2' }}</td>
+                 
+                    <td></td>
+                </tr>-->
+      </ng-template> 
     </p-table>
 
 </div>

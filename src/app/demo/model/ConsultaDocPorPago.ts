@@ -10,5 +10,6 @@ export interface ConsultaDocPorPago {
     importeDocumento:number;
     importePago	:number;
     fechaPago:string;
-    numeroPresupuesto: string
+    numeroPresupuesto: string;
+    estadoPresupuesto:string;
     }

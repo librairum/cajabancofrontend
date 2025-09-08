@@ -55,43 +55,7 @@ export class PagoRetencionComponent {
     mesPeriodo:string = '';
     retencionCabLista: RetencionCab[] = [];
 
-    pagoRetencionList: PagoRetencion[] = [
-        {
-            pagoNro: '01',
-            fecha: '21/01/2025',
-            motivo: 'Servicios profesionales',
-            medioPago: 'Transferencia',
-            importeFactura: 150000.55,
-            importeRetencion: 2250.55,
-            operacionNro: '1001'
-        },
-        {
-            pagoNro: '02',
-            fecha: '22/02/2025',
-            motivo: 'Compra de materiales',
-            medioPago: 'Cheque',
-            importeFactura: 200000.55,
-            importeRetencion: 3000.55,
-            operacionNro: '1002'
-        },
-        {
-            pagoNro: '03',
-            fecha: '23/03/2025',
-            motivo: 'Consultoría',
-            medioPago: '', // Agregar campo vacío
-            importeFactura: 120000.55,
-            importeRetencion: 1800.55,
-            operacionNro: '' // Agregar campo vacío
-        },
-        {
-            pagoNro: '04',
-            fecha: '24/04/2025',
-            motivo: 'Mantenimiento',
-            medioPago: '', // Agregar campo vacío
-            importeFactura: 180000.55,
-            importeRetencion: 2700.55,
-            operacionNro: '' // Agregar campo vacío
-        }];
+  
 
     constructor(
         private bs: BreadcrumbService,
@@ -161,11 +125,19 @@ export class PagoRetencionComponent {
           }
         }
         
-        //detall de presupuesto
+        //detalle de presupuesto
         this.router.navigate(['Home/retencion-presupuesto-detalle'], navigationExtras);        
      }else{
-        //detalle de retencion
-        this.router.navigate(['Home/retencion-detalle']);
+
+         const navigationExtras ={
+            state:{
+                    anioRetencion: retencion.anio,
+                    mesRetencion:retencion.mes
+                
+          }
+        }
+        //detalle de retencion sin presupuesto
+        this.router.navigate(['Home/retencion-detalle'],navigationExtras);
      }
         
     }

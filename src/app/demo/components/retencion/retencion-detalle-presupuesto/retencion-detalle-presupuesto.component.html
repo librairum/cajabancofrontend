@@ -43,9 +43,9 @@
 
       <div class="card p-2">
         <p-table [value]="detallePresupuesto" 
-        sortField="ban02Ruc" sortMode="single" 
+        sortField="item" sortMode="single" 
         rowGroupMode="subheader"
-            groupRowsBy="ban02Ruc" 
+            
             [scrollable]="true" 
             scrollHeight="500px" [loading]="load"
             
@@ -78,17 +78,13 @@
                     <th rowspan="2">Importe <br>Total S/.</th>
                     <th rowspan="2">Importe <br>Total US$</th>
 
-                    <th colspan="2"></th>
-                    <th colspan="3">Detraccion</th>
-                    <!-- <th colspan="2">Retencion</th>
-                    <th colspan="2">Percepcion</th>
-                    <th colspan="2">Neto a Pagar</th>
-                     -->
+                    
+                    <th colspan="2">Retencion</th>
+                
                 </tr>
                 <tr>
                     
-                    <!-- <th colspan="1">Tipo</th> -->
-                    <th colspan="1">Tasa</th>
+
                     <th colspan="1">Importe <br/>Soles</th>
                     <th colspan="1">Importe <br/>Dolares</th>
          
@@ -141,19 +137,7 @@
                     <td  style="text-align: right;">{{ detalle.ban02Dolares |
                         number:'1.2-2' }}</td>
                  
-                    <!-- Detraccion -->
-                    <!-- <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTipoDetraccion">
-                            <input pInputText type="text" [(ngModel)]="editingRow.ban02TipoDetraccion" />
-                        </ng-container>
-                        <ng-template #viewModeTipoDetraccion>{{ detalle.ban02TipoDetraccion }}</ng-template>
-                    </td> -->
-                    <td style="text-align: left;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTasaDetraccion">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02TasaRetencion" />
-                        </ng-container>
-                        <ng-template #viewModeTasaDetraccion>{{ detalle.ban02TasaRetencion }}</ng-template>
-                    </td>
+                 
                     <td  [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
                     style="text-align: right;" >
                         
@@ -170,9 +154,9 @@
                    
                 </tr>
             </ng-template>
-              <ng-template pTemplate="footer">
+            <ng-template pTemplate="footer">
                 <tr>
-                <td colspan="10" class="text-right font-bold">
+                <td colspan="9" class="text-right font-bold">
                     <td class="font-bold" style="text-align: left;">Sumas</td>
                     <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoSoles') | number:'1.2-2' }}</td>
                     <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoDolares') | number:'1.2-2' }}</td>

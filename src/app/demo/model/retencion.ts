@@ -9,11 +9,14 @@ export interface RetencionCab{
     pagoMedio:string;
     facturasImporteSoles: number;
     retencionImporteSoles:number;
+    estadoPresupuesto:string;
+    fechaPago:string;
     nroOperacion:string;
     retencionesMensualesNro:string;
 }
 
 export interface RetencionDet{
+    item:number;
     ban01Empresa:string;
     retencionNro:string;
     retencionFecha:string;
