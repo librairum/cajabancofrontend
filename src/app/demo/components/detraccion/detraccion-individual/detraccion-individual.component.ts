@@ -26,6 +26,7 @@ import { insert_presupuesto } from '../../../model/presupuesto';
 import { DetraccionIndividualAyudaComponent } from "../detraccion-individual-ayuda/detraccion-individual-ayuda.component";
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { HttpResponse } from '@angular/common/http';
+import { TagModule } from 'primeng/tag';
 
 
 @Component({
@@ -36,7 +37,7 @@ import { HttpResponse } from '@angular/common/http';
     InputTextModule, PanelModule, BreadcrumbModule,
     ConfirmDialogModule, FormsModule, DropdownModule,
     ButtonModule, CheckboxModule, ConfirmarPagoComponent, DialogModule,
-    DetraccionIndividualAyudaComponent],
+    DetraccionIndividualAyudaComponent, TagModule],
   templateUrl: './detraccion-individual.component.html',
   styleUrl: './detraccion-individual.component.css',
   providers:[MessageService,ConfirmationService ]

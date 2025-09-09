@@ -24,6 +24,7 @@ import { insert_presupuesto } from '../../../model/presupuesto';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { ConfigService } from 'src/app/demo/service/config.service';
 import { HttpResponse } from '@angular/common/http';
+import { TagModule } from 'primeng/tag';
 @Component({
   selector: 'app-detraccion-masiva',
   standalone: true,
@@ -31,7 +32,7 @@ import { HttpResponse } from '@angular/common/http';
     ReactiveFormsModule, CommonModule, CardModule,
     InputTextModule,PanelModule,BreadcrumbModule 
     ,ConfirmDialogModule,FormsModule,DropdownModule
-    ,ButtonModule,CheckboxModule, ConfirmarPagoComponent,DialogModule ],
+    ,ButtonModule,CheckboxModule, ConfirmarPagoComponent,DialogModule, TagModule ],
   templateUrl: './detraccion-masiva.component.html',
   styleUrl: './detraccion-masiva.component.css',
   providers:[MessageService, ConfirmationService,DatePipe]

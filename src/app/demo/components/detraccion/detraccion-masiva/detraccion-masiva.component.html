@@ -99,8 +99,11 @@ header="COnfirmar pago"
                             <!-- <td style="text-align:right; white-space:nowrap;">
                                 {{formatearNumero(detmasiva.detraccionImporteDolares)}}
                             </td> -->
-                            <td style="text-align:right;">
-                                {{detmasiva.estadopresupuesto}}
+                            <td style="text-align:center;">
+                                <p-tag 
+                                    [severity]="detmasiva.estadopresupuesto === 'PAGADO' ? 'info' : 'danger'">
+                                    {{ detmasiva.estadopresupuesto }}
+                                </p-tag>
                             </td>
                              <td>
                                 {{detmasiva.fechaejecucionpago}}

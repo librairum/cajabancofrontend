@@ -87,3 +87,15 @@
     z-index: 1050 !important;
 }
 
+.pagado-class {
+    font-weight: bold;
+    background-color: #d7ecfd; 
+    color: #1b67ca;
+}
+
+
+.pendiente-class {
+    font-weight: bold;
+    background-color: #f1b0a5; 
+    color: #a33333;
+}

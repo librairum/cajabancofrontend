@@ -125,8 +125,11 @@ header="Confirmar pago individual"
                 <td style="text-align:right; white-space:nowrap;">
                     {{ formatearNumero(detindividual.pagodetraciondolares)}}
                 </td>
-                <td style="text-align:left; white-space:nowrap;">
-                    {{detindividual.estadopresupuesto}}
+                <td style="text-align:center;">
+                    <p-tag 
+                        severity="detindividual.estadopresupuesto === 'PAGADO' ? 'info' : 'danger'">
+                        {{ detindividual.estadopresupuesto }}
+                    </p-tag>
                 </td>
                 <td style="text-align:left; white-space:nowrap;">
                     {{detindividual.fechaejecucionpago}}

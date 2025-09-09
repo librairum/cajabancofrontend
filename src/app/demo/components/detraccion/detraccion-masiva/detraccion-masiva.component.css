@@ -137,3 +137,16 @@
 ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(odd) {
     background-color: #ffffff;
 }
+
+.pagado-class {
+    font-weight: bold;
+    background-color: #d7ecfd; 
+    color: #1063ce;
+}
+.pendiente-class {
+    font-weight: bold;
+    background-color: #f1b0a5; 
+    color: #a33333;
+}
+
+

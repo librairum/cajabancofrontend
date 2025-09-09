@@ -10,11 +10,12 @@ import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { LoginComponent } from './demo/components/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
-    imports: [AppRoutingModule, AppLayoutModule,FormsModule,BrowserModule,ReactiveFormsModule,ToastModule,LoginComponent],
+    imports: [AppRoutingModule, AppLayoutModule,FormsModule,BrowserModule,ReactiveFormsModule,ToastModule,LoginComponent, TagModule],
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
 
