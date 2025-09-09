@@ -26,6 +26,7 @@ import { RetencionService } from '../../../service/retencion.service';
 import { Retencion, RetencionCab } from '../../../model/retencion';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { HttpResponse } from '@angular/common/http';
+import { TagModule } from 'primeng/tag';
 @Component({
   selector: 'app-pago-retencion',
   standalone: true,
@@ -33,7 +34,8 @@ import { HttpResponse } from '@angular/common/http';
       ReactiveFormsModule, CommonModule, CardModule,
       InputTextModule,PanelModule,BreadcrumbModule
       ,ConfirmDialogModule,FormsModule,DropdownModule
-      ,ButtonModule,CheckboxModule, ConfirmarPagoComponent,DialogModule ],
+      ,ButtonModule,CheckboxModule, ConfirmarPagoComponent,
+      DialogModule, TagModule ],
   templateUrl: './pago-retencion.component.html',
   styleUrl: './pago-retencion.component.css',
   providers: [MessageService, ConfirmationService]
@@ -170,12 +172,27 @@ export class PagoRetencionComponent {
 
 
     //Función para formatear los numeros mayores a 1000
-    formatNumber(value: number): string {
-        if (value === null || value === undefined) {
-            return '';
+    formatearNumero(numero: number): string {
+        if (numero === null || numero === undefined) {
+            return '0.00';
         }
-
-        return value.toLocaleString('en-US');
+        
+        // Convertir a número si es string
+        const num = typeof numero === 'string' ? parseFloat(numero) : numero;
+        
+        // Formatear con 2 decimales y usar punto como separador decimal
+        const numeroFormateado = num.toFixed(2);
+        
+        // Separar la parte entera y decimal
+        const partes = numeroFormateado.split('.');
+        const parteEntera = partes[0];
+        const parteDecimal = partes[1];
+        
+        // Agregar comas para separar miles en la parte entera
+        const parteEnteraConComas = parteEntera.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        
+        // Retornar el número formateado
+        return `${parteEnteraConComas}.${parteDecimal}`;
     }
 
     eliminarPagoPresupuesto(registro:RetencionCab){

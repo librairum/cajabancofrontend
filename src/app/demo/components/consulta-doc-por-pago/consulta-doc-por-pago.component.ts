@@ -22,6 +22,7 @@ import { Detallepresupuesto,agregar_Pago } from '../../model/presupuesto';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import {formatDateForFilename} from 'src/app/demo/components/utilities/funciones_utilitarias'; 
+import { TagModule } from 'primeng/tag';
 @Component({
     selector: 'app-consulta-doc-por-pago',
     standalone: true,
@@ -38,7 +39,7 @@ import {formatDateForFilename} from 'src/app/demo/components/utilities/funciones
         PanelModule,
         BreadcrumbModule,
         ConfirmDialogModule,
-        FormsModule,
+        FormsModule,TagModule
     ],
     providers: [MessageService, ConfirmationService],
 })

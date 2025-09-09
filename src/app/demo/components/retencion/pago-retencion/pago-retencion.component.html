@@ -98,9 +98,15 @@ header="Confirmar pago"
                 </td> -->
 
                 <td style="text-align:right; white-space:nowrap;">
-                    {{formatNumber(pagoretencion.retencionImporteSoles)}}
+                    {{formatearNumero(pagoretencion.retencionImporteSoles)}}
                 </td>
-                <td>{{pagoretencion.estadoPresupuesto}}</td>
+                <td>
+                    
+                    <p-tag 
+                        [severity]="pagoretencion.estadoPresupuesto === 'PAGADO' ? 'info' : 'danger'">
+                       {{pagoretencion.estadoPresupuesto}}
+                    </p-tag>
+                </td>
                 <td>{{pagoretencion.fechaPago}}</td>
                 <td style="text-align:right; white-space:nowrap;">
                     {{pagoretencion.nroOperacion}}

@@ -218,48 +218,15 @@
                     <td  [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
                     style="text-align: right;" >
                         
-                        {{ detalle.ban02PagoSoles     | number:'1.2-2'
-                            }}
+                        {{ formatearNumero(detalle.ban02PagoSoles) }}
                     </td>
                     <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" 
                     style="text-align: right;">
                         
-                        {{ detalle.ban02PagoDolares     | number:'1.2-2'
+                        {{  formatearNumero(detalle.ban02PagoDolares) 
                             }}
                     </td>
-                    <!-- retencion -->
-                    <!-- <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteRetencion">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteRetencionSoles" />
-                        </ng-container>
-                        <ng-template #viewModeImporteRetencion>{{ detalle.ban02ImporteRetencionSoles | number:'1.2-2'
-                            }}</ng-template>
-                    </td>
-                    <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImporteRetencion">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImporteRetencionDolares" />
-                        </ng-container>
-                        <ng-template #viewModeImporteRetencion>{{ detalle.ban02ImporteRetencionDolares | number:'1.2-2'
-                            }}</ng-template>
-                    </td> -->
-                    <!-- percepcion -->
-                    <!-- <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImportePercepcion">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImportePercepcionSoles" />
-                        </ng-container>
-                        <ng-template #viewModeImportePercepcion>{{ detalle.ban02ImportePercepcionSoles | number:'1.2-2'
-                            }}</ng-template>
-                    </td>
-                    <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeImportePercepcion">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02ImportePercepcionDolares" />
-                        </ng-container>
-                        <ng-template #viewModeImportePercepcion>{{ detalle.ban02ImportePercepcionDolares | number:'1.2-2'
-                            }}</ng-template>
-                    </td> -->
-
-                    <!-- <td style="text-align: right;">{{ detalle.ban02NetoSoles | number:'1.2-2' }}</td>
-                    <td style="text-align: right;">{{ detalle.ban02NetoDolares | number:'1.2-2' }}</td> -->
+               
                    
                 </tr>
             </ng-template>
@@ -267,24 +234,9 @@
                 <tr>
                      <td colspan="11" class="text-right font-bold"></td>
                     <td class="font-bold" style="text-align: left;">Sumas</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoDolares') | number:'1.2-2' }}</td>
-                    <!-- <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImporteDetraccionSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImporteDetraccionDolares') | number:'1.2-2' }}</td>
-                    
-                    
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImporteRetencionSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImporteRetencionDolares') | number:'1.2-2' }}</td>
-
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImportePercepcionSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02ImportePercepcionDolares') | number:'1.2-2' }}</td>
-
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02NetoSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02NetoDolares') | number:'1.2-2' }}</td> -->
+                    <td class="font-bold" style="text-align: right;">{{ formatearNumero(getTotalColumn('ban02PagoSoles'))  }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ formatearNumero(getTotalColumn('ban02PagoDolares')) }}</td>
+                 
                     <td></td>
                 </tr>
             </ng-template> 

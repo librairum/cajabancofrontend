@@ -141,13 +141,13 @@
                     <td  [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
                     style="text-align: right;" >
                         
-                        {{ detalle.ban02PagoSoles     | number:'1.2-2'
+                        {{ formatearNumero(detalle.ban02PagoSoles)
                             }}
                     </td>
                     <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" 
                     style="text-align: right;">
                         
-                        {{ detalle.ban02PagoDolares     | number:'1.2-2'
+                        {{ formatearNumero(detalle.ban02PagoDolares)
                             }}
                     </td>
                   
@@ -158,8 +158,8 @@
                 <tr>
                 <td colspan="9" class="text-right font-bold">
                     <td class="font-bold" style="text-align: left;">Sumas</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoSoles') | number:'1.2-2' }}</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('ban02PagoDolares') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ formatearNumero(getTotalColumn('ban02PagoSoles')) }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ formatearNumero(getTotalColumn('ban02PagoDolares')) }}</td>
                 </tr>
                 <!--
                 <tr>

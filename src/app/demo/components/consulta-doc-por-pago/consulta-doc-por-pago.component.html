@@ -44,7 +44,11 @@
       
             <td style="text-align: left; white-space: nowrap;">{{ doc.fechaPago}}</td>
             <td style="text-align: right; white-space: nowrap;">{{ doc.importePago | number : "1.2-2" }}</td>
-            <td style="text-align: center; white-space: nowrap;">{{doc.estadoPresupuesto}}</td> 
+            <td style="text-align: center; white-space: nowrap;">
+                <p-tag [severity]="doc.estadoPresupuesto==='PAGADO' ? 'info':'danger' ">
+                    {{doc.estadoPresupuesto}}
+                </p-tag>
+            </td> 
             <td style="text-align: center; white-space: nowrap;">
                 <p-button *ngIf="doc.fechaPago !== '' "label="" icon="pi pi-file"
                             styleClass="p-button-sm p-button-info"

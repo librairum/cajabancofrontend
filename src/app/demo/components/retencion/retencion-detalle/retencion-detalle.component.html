@@ -99,10 +99,10 @@
         </td>
     
         <td style="text-align:right; white-space:nowrap;">
-          {{detalleRetencion.proveedorDocImporteTotal | number:'1.2-2'}}
+          {{ formatearNumero(detalleRetencion.proveedorDocImporteTotal)}}
         </td>
         <td style="text-align:right; white-space:nowrap;">
-          {{detalleRetencion.proveedorDocImporteRetenido | number:'1.2-2'}}
+          {{formatearNumero(detalleRetencion.proveedorDocImporteRetenido)}}
         </td>                               
       </tr>
     </ng-template>
@@ -110,9 +110,9 @@
                 <tr>
                 <td colspan="7" class="text-right font-bold">
                     <td class="font-bold" style="text-align: left;">Sumas</td>
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('proveedorDocImporteTotal') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ formatearNumero(getTotalColumn('proveedorDocImporteTotal')) }}</td>
                     
-                    <td class="font-bold" style="text-align: right;">{{ getTotalColumn('proveedorDocImporteRetenido') | number:'1.2-2' }}</td>
+                    <td class="font-bold" style="text-align: right;">{{ formatearNumero(getTotalColumn('proveedorDocImporteRetenido')) }}</td>
                     
                 </tr>
                 <!--

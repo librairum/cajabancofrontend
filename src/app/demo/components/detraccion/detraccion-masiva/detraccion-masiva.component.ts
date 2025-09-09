@@ -32,7 +32,8 @@ import { TagModule } from 'primeng/tag';
     ReactiveFormsModule, CommonModule, CardModule,
     InputTextModule,PanelModule,BreadcrumbModule 
     ,ConfirmDialogModule,FormsModule,DropdownModule
-    ,ButtonModule,CheckboxModule, ConfirmarPagoComponent,DialogModule, TagModule ],
+    ,ButtonModule,CheckboxModule, ConfirmarPagoComponent,
+    DialogModule, TagModule ],
   templateUrl: './detraccion-masiva.component.html',
   styleUrl: './detraccion-masiva.component.css',
   providers:[MessageService, ConfirmationService,DatePipe]
