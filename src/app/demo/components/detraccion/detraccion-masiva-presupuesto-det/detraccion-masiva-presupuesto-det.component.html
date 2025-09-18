@@ -80,29 +80,15 @@
 
                     <th colspan="2"></th>
                     <th colspan="4">Detraccion</th>
-                    <!-- <th colspan="2">Retencion</th>
-                    <th colspan="2">Percepcion</th>
-                    <th colspan="2">Neto a Pagar</th>
-                     -->
+               
                 </tr>
                 <tr>
-                       <!-- cabecera en blanco -->
-                    <!-- <th colspan="1">Monto a <br> Pagar S/.</th>
-                    <th colspan="1">Monto a <br>Pagar $</th> -->
-                    <!-- detraccion -->
+                    
                     <th colspan="1">Tipo</th>
                     <th colspan="1">Tasa</th>
                     <th colspan="1">Importe <br/>Soles</th>
                     <th colspan="1">Importe <br/>Dolares</th>
-                    <!-- retencion-->
-                    <!-- <th colspan="1">Importe <br>Soles</th>
-                    <th colspan="1">Importe <br>Dolares</th> -->
-                    <!--percepcion -->
-                    <!-- <th colspan="1">Importe <br>Soles</th>
-                    <th colspan="1">Importe <br>Dolares</th> -->
-                    <!-- neto a pagar( total- afectaciones)-->
-                    <!-- <th colspan="1">S/.</th>
-                    <th colspan="1">US$</th> -->
+                    
                     
                 </tr>
             </ng-template>
@@ -117,49 +103,7 @@
                     </td>-->
                 </tr>
             </ng-template>
-<!--
-             <ng-template pTemplate="groupfooter" let-groupData>
-                <tr>
-                    <td colspan="8">
-                    </td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Dolares') |
-                        number:'1.2-2' }}</td>
 
-                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImporteDetraccionSoles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImporteDetraccionDolares') |
-                        number:'1.2-2' }}</td>
-
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImporteRetencionSoles') |
-                        number:'1.2-2' }}</td>
-                        <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImporteRetencionDolares') |
-                        number:'1.2-2' }}</td>
-
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImportePercepcionSoles') |
-                        number:'1.2-2' }}</td>
-                         <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc,
-                        'ban02ImportePercepcionDolares') |
-                        number:'1.2-2' }}</td>
-
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoSoles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02NetoDolares') |
-                        number:'1.2-2' }}</td> 
-                </tr>
-    
-            </ng-template>
--->
             <ng-template pTemplate="body" let-detalle>
                 <tr>
                      <td style="text-align: left;">{{ detalle.item }}</td>
@@ -167,41 +111,16 @@
                     <td style="text-align: left;">{{ detalle.razonsocial }}</td>
                     <td style="text-align: left;">{{ detalle.nombreTipoDocumento }}</td>
                     <td style="text-align: left;">{{ detalle.ban02NroDoc }}</td>
-                    <td
-                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 
-                        'dolares-class': detalle.nombremoneda === 'DOLARES'}" style="text-align: left;">
+                    <td style="text-align: left;">
                         {{ detalle.nombremoneda }}</td>
                     <td style="text-align: left;">{{detalle.ban02FechaEmision}}</td>
                     <td style="text-align: left;">{{detalle.ban02FechaVencimiento}}</td>
                     <!--importe total Soles -->
-                    <td style="text-align: right;">{{ detalle.ban02Soles |
-                        number:'1.2-2' }}</td>
+                    <td style="text-align: right;">{{ formatearNumero(detalle.ban02Soles) }}</td>
                         <!--importe total dolares -->
-                    <td  style="text-align: right;">{{ detalle.ban02Dolares |
-                        number:'1.2-2' }}</td>
-                    <!-- Monto pagar soles -->
-                    <!-- <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewMode">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoSoles"
-                                [disabled]="!esEditablePagoSoles" (change)="calcularNetoPago(detalle,'S')" />
-                        </ng-container>
-                        <ng-template #viewMode><span
-                                [style.font-weight]="detalle.nombremoneda === 'SOLES' ? 'bold' : 'normal'">
-                                {{ detalle.ban02PagoSoles | number:'1.2-2' }}
-                            </span></ng-template>
-                    </td> -->
-
-                    <!-- monto pagar dolares -->
-                    <!-- <td style="text-align: right;">
-                        <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeDolares">
-                            <input pInputText type="number" [(ngModel)]="editingRow.ban02PagoDolares"
-                                [disabled]="!esEditablePagoDolares" (change)="calcularNetoPago(detalle,'D')" />
-                        </ng-container>
-                        <ng-template #viewModeDolares><span
-                                [style.font-weight]="detalle.nombremoneda === 'DOLARES' ? 'bold' : 'normal'">
-                                {{ detalle.ban02PagoDolares | number:'1.2-2' }}
-                            </span></ng-template>
-                    </td> -->
+                    <td  style="text-align: right;">{{ formatearNumero(detalle.ban02Dolares) }}</td>
+                   
+                  
                     <!-- Detraccion -->
                     <td style="text-align: right;">
                         <ng-container *ngIf="editingRow?.item === detalle.item; else viewModeTipoDetraccion">
@@ -215,13 +134,11 @@
                         </ng-container>
                         <ng-template #viewModeTasaDetraccion>{{ detalle.ban02Tasadetraccion }}</ng-template>
                     </td>
-                    <td  [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
-                    style="text-align: right;" >
+                    <td style="text-align: right;" >
                         
                         {{ formatearNumero(detalle.ban02PagoSoles) }}
                     </td>
-                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" 
-                    style="text-align: right;">
+                    <td  style="text-align: right;">
                         
                         {{  formatearNumero(detalle.ban02PagoDolares) 
                             }}

@@ -23,6 +23,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { InterbankArchivoCab, InterbankArchivoDet } from 'src/app/demo/model/InterbankArchivo';
 import { verMensajeInformativo, formatDate, formatDateForFilename, formatDateWithTime } from 'src/app/demo/components/utilities/funciones_utilitarias';
+import { BanbifArchivoCab } from 'src/app/demo/model/BanbifArchivo';
 
 @Component({
     selector: 'app-detallepresupuesto',
@@ -955,19 +956,71 @@ export class DetallepresupuestoComponent implements OnInit {
             this.generaArchivoInterbankDet();
         }else if(this.bancoCodMedioPago == '02'){
             this.generaArchivoBIFCab();
-            this.generaArchivoBIFDet();
+            //this.generaArchivoBIFDet();
         }else if(this.bancoCodMedioPago == '02'){
 
             this.generaArchivoBCPCab();
             this.generaArchivoBCPDet();
         }
     }
-        generaArchivoBIFCab(){
-
+    generaArchivoBIFCab(){
+        //BanbifArchivoCab
+        var listaCab: BanbifArchivoCab[] = [];
+           if (!this.DetallePago || this.DetallePago.length === 0) {
+            verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
+             return;
         }
-        generaArchivoBIFDet(){
 
-        }
+        const codigoEmpresa = this.globalService.getCodigoEmpresa();
+        const numeroPresupesto = this.pagnro;
+        const fechaActual:Date = new Date();
+        const dia: number = fechaActual.getDate();
+        const mes: number = fechaActual.getMonth() + 1;
+        this.presupuestoservice.SpListaBanbifArchivoCab(codigoEmpresa, numeroPresupesto).subscribe({
+            next:(data) =>{
+                        try{
+
+                            listaCab = data;
+
+                                    if(data.length > 0){
+                                        let contenido = '';
+                                        listaCab.forEach((registro : BanbifArchivoCab) =>{
+                                                    const linea = `${registro.tipoDocumentoProveedor}${registro.numeroDocumentoProveedor}${registro.nombreProveedor}`
+                                                    +`${registro.tipoDocumentoPago}${registro.numeroDocumentoPago}${registro.monedaDocumentoPago}${registro.importePagar}`
+                                                    +`${registro.fechaPago}${registro.codigoDocumentoPropio}${registro.formaPago}`
+                                                    +`${registro.codigoBanco}${registro.monedaCuenta}${registro.numeroCuenta}${registro.documentoAplicarNotaCredito}`
+                                                    +`${registro.fechaAdelanto}${registro.constante}\n`;
+                                                    contenido += linea;
+                                            });
+                                            const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+                                            const fechaActual = new Date();
+                                            const nombreArchivo = `archivocarga_${formatDateForFilename(fechaActual)}.txt`;
+                                            saveAs(blob, nombreArchivo);
+                                            verMensajeInformativo(this.messageService, 'success', 'Éxito', 'Archivo TXT generado correctamente');
+                                    }
+                
+                            }catch(error){
+                                console.error('Error al generar archivo txt:', error);
+                                    verMensajeInformativo(this.messageService, 'error', 'Error', 'Ocurrió un error al generar el archivo TXT');
+                        
+                            }
+                        
+                        
+              
+                },
+                error:(error) =>{
+                     verMensajeInformativo(
+                        this.messageService,
+                        'error',
+                        'Error',
+                        `Error al cargar archivo banco: ${error.message}`
+                    );
+                }
+        });
+    }
+    generaArchivoBIFDet(){
+
+    }
     generaArchivoBCPCab(){
 
     }

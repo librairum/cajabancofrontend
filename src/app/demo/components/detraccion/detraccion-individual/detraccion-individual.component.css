@@ -6,7 +6,7 @@
 
 ::ng-deep .p-datatable th {
     padding: 6px; /* Espacio interno compacto */
-    font-size: 13px; /* Tamaño compacto */
+    font-size: 11px; /* Tamaño compacto */
     text-align: center;
     background-color: #f9f9f9; /* Fondo suave para diferenciar la cabecera */
     border-bottom: 1px solid #ccc; /* Linea Horizontal */
@@ -15,7 +15,7 @@
 
 ::ng-deep .p-datatable td {
     padding: 4px; /* Reduce el espacio interno de las celdas */
-    font-size: 12px; /* Tamaño compacto */
+    font-size: 11px; /* Tamaño compacto */
     text-align: center; /* Centra el contenido */
     word-wrap: break-word; /* Permite ajustar texto largo */
     border: 1px solid #ddd; /* Líneas horizontales y verticales */
@@ -24,7 +24,7 @@
 ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
     text-align: center;
     padding: 4px; /* Compacto */
-    font-size: 12px;
+    font-size: 11px;
     border: 1px solid #ddd; /* Líneas visibles para celdas */
 }
 

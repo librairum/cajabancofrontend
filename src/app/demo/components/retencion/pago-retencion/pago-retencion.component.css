@@ -6,7 +6,7 @@
 
 ::ng-deep .p-datatable th {
     padding: 6px; /* Espacio interno compacto */
-    font-size: 13px; /* Tamaño compacto */
+    font-size: 11px; /* Tamaño compacto */
     text-align: center;
     background-color: #f9f9f9; /* Fondo suave para diferenciar la cabecera */
     border-top: 2px solid #ddd;   /* 🔹 Nueva línea divisoria superior */

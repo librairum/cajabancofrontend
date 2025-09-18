@@ -99,7 +99,7 @@
     width: 84px !important;
     text-align: right !important;
     padding-right: 6px !important;
-    font-family: monospace !important;
+    /*font-family: monospace !important;*/
 }
 
 /* Tipo Operación */
@@ -129,7 +129,7 @@
     width: 84px !important;
     text-align: right !important;
     padding-right: 6px !important;
-    font-family: monospace !important;
+    /* font-family: monospace !important; */
 }
 
 /* Proveedor (código) */
@@ -137,7 +137,7 @@
 ::ng-deep .detraccion-detalle .p-datatable td:nth-child(12) {
     width: 96px !important;
     text-align: center !important;
-    font-family: monospace !important;
+    /* font-family: monospace !important; */
 }
 
 /* Zebra + Hover */

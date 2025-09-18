@@ -8,7 +8,7 @@
 /* Cabecera de tabla */
 ::ng-deep .p-datatable th {
     padding: 4px;
-    font-size: 12px;
+    font-size: 11px;
     text-align: center;
     background-color: #f9f9f9;
     border-bottom: 1px solid #ccc;
@@ -18,7 +18,7 @@
 /* Celdas de datos */
 ::ng-deep .p-datatable td {
     padding: 3px;
-    font-size: 12px;
+    font-size: 11px;
     text-align: center;
     word-wrap: break-word;
     border: 1px solid #ddd;
@@ -28,7 +28,7 @@
 ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
     text-align: center;
     padding: 3px;
-    font-size: 12px;
+    font-size: 11px;
     border: 1px solid #ddd;
 }
 

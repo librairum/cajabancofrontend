@@ -103,19 +103,7 @@
                 </tr>
             </ng-template>
 
-             <!-- <ng-template pTemplate="groupfooter" let-groupData>
-                <tr>
-                    <td colspan="8">
-                    </td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Soles') |
-                        number:'1.2-2' }}</td>
-                    <td class="font-bold pr-12" style="text-align: right;">{{ calculateGroupTotal(groupData.ban02Ruc, 'ban02Dolares') |
-                        number:'1.2-2' }}</td>
-
-                
-                </tr>
-    
-            </ng-template> -->
+        
 
             <ng-template pTemplate="body" let-detalle>
                 <tr>
@@ -125,8 +113,7 @@
                     <td style="text-align: left;">{{ detalle.nombreTipoDocumento }}</td>
                     <td style="text-align: left;">{{ detalle.ban02NroDoc }}</td>
                     <td
-                        [ngClass]="{'soles-class': detalle.nombremoneda === 'SOLES', 
-                        'dolares-class': detalle.nombremoneda === 'DOLARES'}" style="text-align: left;">
+                       style="text-align: left;">
                         {{ detalle.nombremoneda }}</td>
                     <td style="text-align: left;">{{detalle.ban02FechaEmision}}</td>
                     <td style="text-align: left;">{{detalle.ban02FechaVencimiento}}</td>
@@ -138,13 +125,13 @@
                         number:'1.2-2' }}</td>
                  
                  
-                    <td  [ngClass]="{'soles-classs': detalle.nombremoneda === 'SOLES'}" 
+                    <td  
                     style="text-align: right;" >
                         
                         {{ formatearNumero(detalle.ban02PagoSoles)
                             }}
                     </td>
-                    <td [ngClass]="{'dolares-classs': detalle.nombremoneda === 'DOLARES'}" 
+                    <td 
                     style="text-align: right;">
                         
                         {{ formatearNumero(detalle.ban02PagoDolares)

@@ -6,6 +6,7 @@ import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
 import { MedioPago } from '../model/presupuesto';
 import { InterbankArchivoCab, InterbankArchivoDet } from '../model/InterbankArchivo';
+import { BanbifArchivoCab } from '../model/BanbifArchivo';
 @Injectable({
     providedIn: 'root',
 })
@@ -285,36 +286,46 @@ export class PresupuestoService {
             )
             .pipe(map((response) => response.data));
     }
- public SpListaInterbankArchivoCab(
-    empresa:string, nombreLote:string , numeroPresupuesto:string
- ): Observable<InterbankArchivoCab[]>
- {
-    const params = new HttpParams()
-        .set('empresa', empresa )
-        .set('nombreLote', nombreLote)
-        .set('numeroPresupuesto', numeroPresupuesto);
-    return this.http
-    .get<RespuestaAPIBase<InterbankArchivoCab[]>>(
-        `${this.urlApi}/SpListaInterbankArchivoCab`,
+        public SpListaInterbankArchivoCab(
+            empresa:string, nombreLote:string , numeroPresupuesto:string
+        ): Observable<InterbankArchivoCab[]>
         {
-            params,
+                const params = new HttpParams()
+                    .set('empresa', empresa )
+                    .set('nombreLote', nombreLote)
+                    .set('numeroPresupuesto', numeroPresupuesto);
+                return this.http
+                .get<RespuestaAPIBase<InterbankArchivoCab[]>>(
+                    `${this.urlApi}/SpListaInterbankArchivoCab`,
+                    {
+                        params,
+                    }
+                )
+                .pipe(map((response) => response.data));
+            
         }
-    )
-    .pipe(map((response) => response.data));
-    
- }
- public SpListaInterbankArchivoDet(empresa:string,
-     numeroPresupuesto: string): Observable<InterbankArchivoDet[]>
- {
-    const params = new HttpParams()
-        .set('empresa', empresa)
-        .set('numeroPresupuesto',numeroPresupuesto);
-    return this.http.get<RespuestaAPIBase<InterbankArchivoDet[]>>(
-        `${this.urlApi}/SpListaInterbankArchivoDet`, {params}
-        ).pipe(map((response) => response.data));
-         
-     
- }
+        public SpListaInterbankArchivoDet(empresa:string,
+            numeroPresupuesto: string): Observable<InterbankArchivoDet[]>
+        {
+            const params = new HttpParams()
+                .set('empresa', empresa)
+                .set('numeroPresupuesto',numeroPresupuesto);
+            return this.http.get<RespuestaAPIBase<InterbankArchivoDet[]>>(
+                `${this.urlApi}/SpListaInterbankArchivoDet`, {params}
+                ).pipe(map((response) => response.data));
+                
+            
+        }
+        public SpListaBanbifArchivoCab(empresa:string, 
+            numeroPresupuesto:string) :Observable<BanbifArchivoCab[]>
+        {
+                  const params = new HttpParams()
+                .set('empresa', empresa)
+                .set('numeroPresupuesto',numeroPresupuesto);
+            return this.http.get<RespuestaAPIBase<BanbifArchivoCab[]>>(
+                `${this.urlApi}/SpListaBanbifArchivoCab`, {params}
+                ).pipe(map((response) => response.data));
+        }
 
 
 }
