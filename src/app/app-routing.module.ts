@@ -25,6 +25,9 @@ import { ConsultahistoricaCtaxcobrarComponent } from './demo/components/consulta
 import { DetraccionIndividualDetComponent } from './demo/components/detraccion/detraccion-individual-det/detraccion-individual-det.component';
 import { RetencionDetalleComponent } from './demo/components/retencion/retencion-detalle/retencion-detalle.component';
 import { RetencionDetallePresupuestoComponent } from './demo/components/retencion/retencion-detalle-presupuesto/retencion-detalle-presupuesto.component';
+import { RegistroCobroComponent } from './demo/components/cobrofactura/registro-cobro/registro-cobro.component';
+import { RegistroCobroDetalleComponent } from './demo/components/cobrofactura/registro-cobro-detalle/registro-cobro-detalle.component';
+import { AgregaFacturaxcobrarComponent } from './demo/components/cobrofactura/agrega-facturaxcobrar/agrega-facturaxcobrar.component';
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -60,6 +63,9 @@ import { RetencionDetallePresupuestoComponent } from './demo/components/retencio
                     ,{path:'detraccion_individual_det', component:DetraccionIndividualDetComponent}
                     ,{path:'retencion-detalle',component:RetencionDetalleComponent}
                     ,{path:'retencion-presupuesto-detalle', component:RetencionDetallePresupuestoComponent}
+                    ,{path:'registro_cobro', component:RegistroCobroComponent}
+                    ,{path:'registro_cobro_detalle', component:RegistroCobroDetalleComponent},
+                    ,{path:'agrega_facturaxcobrar', component:AgregaFacturaxcobrarComponent}
                 ]
             },
             { path: 'notfound', component: NotfoundComponent },
