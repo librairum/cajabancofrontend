@@ -1,1 +1,195 @@
-<p>registro-cobro-detalle works!</p>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="container">
+    <p-panel header="Detalle de Registro de Cobro" class="mb-3">
+        <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
+    </p-panel>
+    <br>
+    
+    <!-- Información General -->
+    <div class="card p-2">
+        <div style="display: flex; width: 100%; margin-bottom: 1rem;">
+            <div style="margin-right: 20px; flex: 1;">
+                <label for="cobro-nro" class="text-sm">Cobro Nro: </label>
+                <input pInputText id="cobro-nro" [value]="cobroNro" [disabled]="true"
+                    style="width: 100%; height: 2.5rem;" />
+            </div>
+
+            <div style="margin-right: 20px; flex: 1;">
+                <label for="fecha" class="text-sm">Fecha: </label>
+                <p-calendar [disabled]="true" [(ngModel)]="fecha" style="width: 100%; height: 2.5rem;"
+                    inputStyleClass="p-input-sm" dateFormat="dd/mm/yy"></p-calendar>
+            </div>
+
+            <div style="flex: 1;">
+                <label for="cliente" class="text-sm">Cliente: </label>
+                <input pInputText id="cliente" [value]="cliente" [disabled]="true"
+                    style="width: 100%; height: 2.5rem;" />
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR FLEX PARA LAS DOS TABLAS -->
+    <div class="flex gap-3">
+        <!-- Tabla 1: Facturas Afectadas -->
+        <div class="card p-2 flex-1">
+            <div class="flex justify-content-between align-items-center mb-2">
+                <h3 class="m-0">FACTURAS AFECTADAS</h3>
+                <p-button label="Nuevo" icon="pi pi-plus" styleClass="p-button-sm" 
+                          (onClick)="agregarNuevaFactura()"></p-button>
+            </div>
+            <p-table [value]="facturasAfectadas" styleClass="tabla-facturas" [scrollable]="true" scrollHeight="300px" [loading]="load">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Numero</th>
+                        <th>Fecha</th>
+                        <th>Moneda</th>
+                        <th>Importe Original</th>
+                        <th>Importe Pagado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-factura>
+                    <tr>
+                        <td>
+                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewNumero">
+                                <input pInputText [(ngModel)]="editingFactura.numero" style="width: 100%;" />
+                            </ng-container>
+                            <ng-template #viewNumero>{{ factura.numero }}</ng-template>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewFecha">
+                                <p-calendar [(ngModel)]="editingFactura.fecha" dateFormat="dd/mm/yy"></p-calendar>
+                            </ng-container>
+                            <ng-template #viewFecha>{{ factura.fecha | date:'dd/MM/yyyy' }}</ng-template>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewMoneda">
+                                <input pInputText [(ngModel)]="editingFactura.moneda" style="width: 100%;" />
+                            </ng-container>
+                            <ng-template #viewMoneda>{{ factura.moneda }}</ng-template>
+                        </td>
+                        <td style="text-align: right;">
+                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewOriginal">
+                                <input pInputText type="number" [(ngModel)]="editingFactura.importeOriginal" />
+                            </ng-container>
+                            <ng-template #viewOriginal>{{ factura.importeOriginal | number:'1.2-2' }}</ng-template>
+                        </td>
+                        <td style="text-align: right;">
+                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewPagado">
+                                <input pInputText type="number" [(ngModel)]="editingFactura.importePagado" />
+                            </ng-container>
+                            <ng-template #viewPagado>{{ factura.importePagado | number:'1.2-2' }}</ng-template>
+                        </td>
+                        <td>
+                            <div class="flex gap-2 justify-content-center">
+                                <ng-container *ngIf="editingFactura?.numero === factura.numero; else editButtons">
+                                    <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
+                                        (onClick)="saveEditingFactura()" pTooltip="Guardar" [text]="true"></p-button>
+                                    <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm"
+                                        (onClick)="cancelEditingFactura()" pTooltip="Cancelar" [text]="true"></p-button>
+                                </ng-container>
+                                <ng-template #editButtons>
+                                    <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-sm"
+                                        (onClick)="startEditingFactura(factura)" [disabled]="isAnyRowEditing"
+                                        pTooltip="Modificar" [text]="true"></p-button>
+                                    <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
+                                        [disabled]="isAnyRowEditing" pTooltip="Eliminar" [text]="true"
+                                        (onClick)="eliminarFactura(factura)"></p-button>
+                                </ng-template>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td colspan="3" style="text-align: left;" class="font-bold">Totales:</td>
+                        <td class="font-bold" style="text-align: right;">
+                            {{ getTotalFacturas('importeOriginal') | number:'1.2-2' }}
+                        </td>
+                        <td class="font-bold" style="text-align: right;">
+                            {{ getTotalFacturas('importePagado') | number:'1.2-2' }}
+                        </td>
+                        <td></td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6" style="text-align: center; font-weight: bold; padding: 1rem;">
+                            No se encontraron facturas
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <!-- Tabla 2: Sustento Adjunto -->
+        <div class="card p-2 flex-1">
+            <div class="flex justify-content-between align-items-center mb-2">
+                <h3 class="m-0">SUSTENTO ADJUNTO</h3>
+                <p-button label="Nuevo" icon="pi pi-plus" styleClass="p-button-sm" 
+                          (onClick)="agregarNuevoSustento()"></p-button>
+            </div>
+
+            <p-table [value]="sustentosAdjuntos" styleClass="tabla-sustentos" [scrollable]="true" scrollHeight="300px" [loading]="load">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Nombre de Archivo</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-sustento>
+                    <tr>
+                        <td>
+                            <ng-container *ngIf="editingSustento?.nombreArchivo === sustento.nombreArchivo; else viewArchivo">
+                                <input pInputText [(ngModel)]="editingSustento.nombreArchivo" style="width: 100%;" />
+                            </ng-container>
+                            <ng-template #viewArchivo>{{ sustento.nombreArchivo }}</ng-template>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="editingSustento?.nombreArchivo === sustento.nombreArchivo; else viewDesc">
+                                <input pInputText [(ngModel)]="editingSustento.descripcion" style="width: 100%;" />
+                            </ng-container>
+                            <ng-template #viewDesc>{{ sustento.descripcion }}</ng-template>
+                        </td>
+                        <td>
+                            <div class="flex gap-2 justify-content-center">
+                                <ng-container *ngIf="editingSustento?.nombreArchivo === sustento.nombreArchivo; else editButtons2">
+                                    <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
+                                        (onClick)="saveEditingSustento()" pTooltip="Guardar" [text]="true"></p-button>
+                                    <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm"
+                                        (onClick)="cancelEditingSustento()" pTooltip="Cancelar" [text]="true"></p-button>
+                                </ng-container>
+                                <ng-template #editButtons2>
+                                    <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
+                                        pTooltip="Ver" [text]="true"></p-button>
+                                    <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-sm"
+                                        (onClick)="startEditingSustento(sustento)" [disabled]="isAnyRowEditing"
+                                        pTooltip="Modificar" [text]="true"></p-button>
+                                    <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
+                                        [disabled]="isAnyRowEditing" pTooltip="Eliminar" [text]="true"
+                                        (onClick)="eliminarSustento(sustento)"></p-button>
+                                </ng-template>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="3" style="text-align: center; font-weight: bold; padding: 1rem;">
+                            No se encontraron sustentos adjuntos
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    
+</div>

@@ -295,5 +295,15 @@ export class RegistroCobroComponent implements OnInit{
       ];
   }
 
-
+verDetalles(registro: TraeRegistroCobro) {
+  this.router.navigate(['/Home/registro_cobro_detalle'], {
+    state: {
+      CobroNro: registro.ban03numero,
+      Fecha: registro.ban03FechaDeposito,
+      Cliente: registro.clienteNombre,
+      Anio: registro.ban03anio,
+      Mes: registro.ban03mes
+    }
+  });
+}
 }
