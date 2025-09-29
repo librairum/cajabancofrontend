@@ -1,0 +1,242 @@
+/* Estilos base de la tabla */
+::ng-deep .p-datatable table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: auto;
+}
+
+::ng-deep .p-datatable th {
+    padding: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #ddd;
+    border-right: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+::ng-deep .p-datatable td {
+    padding: 4px 8px;
+    font-size: 12px;
+    text-align: center;
+    word-wrap: break-word;
+    border: 1px solid #ddd;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    text-align: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    border: 1px solid #ddd;
+}
+
+/* COLUMNA DE ACCIONES - Optimizada */
+::ng-deep .p-datatable th:last-child,
+::ng-deep .p-datatable td:last-child {
+    width: 100px !important;
+    min-width: 100px !important;
+    max-width: 100px !important;
+    padding: 4px !important;
+}
+
+/* Contenedor de botones más compacto */
+::ng-deep .p-datatable td:last-child .flex {
+    gap: 2px !important;
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
+}
+
+/* Botones más pequeños */
+::ng-deep .p-datatable td:last-child .p-button {
+    padding: 0.25rem !important;
+    width: 26px !important;
+    height: 26px !important;
+}
+
+::ng-deep .p-datatable td:last-child .p-button .pi {
+    font-size: 0.8rem !important;
+}
+
+/* Estilos para los inputs en modo edición */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 50px;
+    height: 24px;
+    padding: 2px 4px;
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+/* Ajustar calendario en modo edición */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-calendar {
+    width: 100% !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-calendar .p-inputtext {
+    height: 24px;
+    font-size: 12px;
+    padding: 2px 4px;
+}
+
+/* ESTILOS ESPECÍFICOS PARA TABLA DE FACTURAS */
+::ng-deep .tabla-facturas th:nth-child(1),
+::ng-deep .tabla-facturas td:nth-child(1) {
+    width: 100px;
+    min-width: 100px;
+}
+
+::ng-deep .tabla-facturas th:nth-child(2),
+::ng-deep .tabla-facturas td:nth-child(2) {
+    width: 110px;
+    min-width: 110px;
+}
+
+::ng-deep .tabla-facturas th:nth-child(3),
+::ng-deep .tabla-facturas td:nth-child(3) {
+    width: 80px;
+    min-width: 80px;
+}
+
+::ng-deep .tabla-facturas th:nth-child(4),
+::ng-deep .tabla-facturas td:nth-child(4) {
+    width: 120px;
+    min-width: 120px;
+}
+
+::ng-deep .tabla-facturas th:nth-child(5),
+::ng-deep .tabla-facturas td:nth-child(5) {
+    width: 120px;
+    min-width: 120px;
+}
+
+/* ESTILOS ESPECÍFICOS PARA TABLA DE SUSTENTOS */
+::ng-deep .tabla-sustentos th:nth-child(1),
+::ng-deep .tabla-sustentos td:nth-child(1) {
+    text-align: left !important;
+    padding-left: 12px !important;
+}
+
+::ng-deep .tabla-sustentos th:nth-child(2),
+::ng-deep .tabla-sustentos td:nth-child(2) {
+    text-align: left !important;
+    padding-left: 12px !important;
+}
+
+/* Footer con totales */
+::ng-deep .p-datatable .p-datatable-tfoot > tr > td {
+    font-weight: bold;
+    background-color: #f9f9f9;
+    border-top: 2px solid #ddd;
+}
+
+/* Hover effect */
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Ajustes del scroll */
+::ng-deep .p-datatable-wrapper {
+    max-height: 400px;
+    overflow: auto;
+}
+
+/* Contenedor */
+.container {
+    padding: 1rem;
+}
+
+/* Mejoras para inputs numéricos */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td input[type="number"]::-webkit-outer-spin-button,
+::ng-deep .p-datatable .p-datatable-tbody > tr > td input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Estilos para monedas */
+.soles-class {
+    font-weight: bold;
+}
+
+.dolares-class {
+    font-weight: bold;
+}
+
+.soles-classs {
+    font-weight: bold;
+    background-color: #e6f7ff;
+    color: #0066cc;
+}
+
+.dolares-classs {
+    font-weight: bold;
+    background-color: #ebf5eb;
+    color: #2e8b57;
+}
+
+/* Texto pequeño para labels */
+.text-sm {
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+/* Títulos de las secciones de tabla más pequeños */
+.card h3 {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    color: #333;
+}
+
+/* Estilo para títulos de página principales */
+.page-title,
+h2.page-title,
+h3.page-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+    color: #333;
+}
+
+/* Reducir altura del header de las tablas */
+.card .flex.justify-content-between {
+    margin-bottom: 8px !important;
+    padding: 0 !important;
+}
+
+/* Mensajes vacíos */
+::ng-deep .p-datatable .p-datatable-emptymessage > td {
+    text-align: center !important;
+    font-weight: bold;
+    padding: 1rem !important;
+    color: #6c757d;
+}
+
+/* Optimización para el botón "Nuevo" */
+::ng-deep .p-button.p-button-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 1200px) {
+    ::ng-deep .p-datatable th:last-child,
+    ::ng-deep .p-datatable td:last-child {
+        width: 100px !important;
+        min-width: 100px !important;
+    }
+    
+    ::ng-deep .p-datatable td:last-child .p-button {
+        width: 24px !important;
+        height: 24px !important;
+    }
+}

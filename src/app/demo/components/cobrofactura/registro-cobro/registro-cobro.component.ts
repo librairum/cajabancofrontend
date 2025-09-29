@@ -316,7 +316,9 @@ export class RegistroCobroComponent implements OnInit{
       this.cargarproveedores();
   }
 
-  verDetalles(registro: TraeRegistroCobro) {
+
+verDetalles(registro: TraeRegistroCobro) {
+
   this.router.navigate(['/Home/registro_cobro_detalle'], {
     state: {
       CobroNro: registro.ban03numero,
@@ -324,9 +326,7 @@ export class RegistroCobroComponent implements OnInit{
       Cliente: registro.clienteNombre,
       Anio: registro.ban03anio,
       Mes: registro.ban03mes
-    }
-  });
-}
-
-
+      }
+    });
+  }
 }
