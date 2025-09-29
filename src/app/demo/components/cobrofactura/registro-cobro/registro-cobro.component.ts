@@ -96,7 +96,7 @@ export class RegistroCobroComponent implements OnInit{
     let mesActual = (fechaActual.getMonth() + 1)
             .toString()
             .padStart(2, '0');
-        this.cargarMedioPago();
+       
         
     this.nuevoFormulario = {
       ban03Empresa : this.globalService.getCodigoEmpresa(),
@@ -113,6 +113,12 @@ export class RegistroCobroComponent implements OnInit{
       ban03VoucherLibroCod:'',
       ban03VoucherNumero:'',
     }
+    this.cargarproveedores();
+     this.cargarMedioPago();
+     this.monedaOpciones = [
+          { label: 'Soles', value: 'S' },
+          { label: 'Dólares', value: 'D' }
+      ];
             
   }
   editaRegistro(registro:RegistroCobro) :void{
@@ -175,12 +181,14 @@ export class RegistroCobroComponent implements OnInit{
   cargarMedioPago():void{
     const codempresa: string = this.globalService.getCodigoEmpresa();
         this.loading = true;
-        
-        this.cobroService.getListaMedioPago(codempresa).subscribe({
+        console.log("medio de pago");
+        console.log(codempresa);
+        this.presupuestoService.obtenerMedioPago(codempresa).subscribe({
+          
             next: (data) => {
                 
                 this.medioPagoLista = data;
-                
+                console.log(this.medioPagoLista);
                 this.loading = false;
              
             },
@@ -197,8 +205,8 @@ export class RegistroCobroComponent implements OnInit{
   }
   cargarproveedores() {
           const cod_empresa = this.globalService.getCodigoEmpresa();
-          console.log("codigo de emprsa");
-          console.log(cod_empresa),
+          // console.log("codigo de emprsa");
+          // console.log(cod_empresa),
           this.presupuestoService
               .obtenerProveedores(cod_empresa)
               .subscribe((data: proveedores_lista[]) => {
@@ -240,22 +248,26 @@ export class RegistroCobroComponent implements OnInit{
           }
     }
   guardarNuevo(){
-      this.cobroService.insertRegistroCobro(this.nuevoFormulario)
-      .subscribe({
-          next:(response) =>{
-            verMensajeInformativo(this.messageService, 
-              'succes', 'Exito', 
-              'Registro guardardo');
-              this.mostrarNuevaFila = false;
-              this.botonesDeshabilitados = false;
-              this.cargar();
-              const nuevoCodigoRegistroCobro = response.item;
-              if(nuevoCodigoRegistroCobro){
-                //cargar detalle con codigo recine  generado 
+    console.log(this.nuevoFormulario);
+      // this.cobroService.insertRegistroCobro(this.nuevoFormulario)
+      // .subscribe({
+      //     next:(response) =>{
+      //       verMensajeInformativo(this.messageService, 
+      //         'succes', 'Exito', 
+      //         'Registro guardardo');
+      //         this.mostrarNuevaFila = false;
+      //         this.botonesDeshabilitados = false;
+      //         this.cargar();
+      //         const nuevoCodigoRegistroCobro = response.item;
+      //         if(nuevoCodigoRegistroCobro){
+      //           //cargar detalle con codigo recine  generado 
 
-              }
-          }
-      });
+      //         }
+      //     }
+      // });
+  }
+  cancelarNuevo(){
+     this.cargar();
   }
   guardarEdicion(nroRegistroCobro:string){
     this.cobroService.updateRegistroCobro(this.editaFormulario)
@@ -279,6 +291,9 @@ export class RegistroCobroComponent implements OnInit{
   
   onCloseMolda(){
 
+  }
+  eliminar(registro:TraeRegistroCobro):void{
+    
   }
   eliminarPago(registro:RegistroCobro){
     this.cobroService.deleteRegistroCobro(registro.ban03Empresa, 

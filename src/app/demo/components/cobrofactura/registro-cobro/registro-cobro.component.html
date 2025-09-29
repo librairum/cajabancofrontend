@@ -69,6 +69,7 @@
                     </td>
                     <td>
                            {{regcobro.ban03FechaDeposito}}
+                           
                     </td>
                     <td>
 
@@ -103,6 +104,11 @@
                         <p-button icon="pi pi-pencil" styleClass="p-button-info p-button-sm"
                                     pTooltip="Modificar" [text]="true" (onClick)="iniciarEdicion(regcobro)"
                                     [disabled]="botonesDeshabilitados"></p-button>
+                        <button (click)="eliminar(regcobro)" 
+                                pTooltip="Eliminar" 
+                                [text]="true"
+                                icon="pi pi-trash"
+                                class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
                         
                    
                     </td>
@@ -116,6 +122,7 @@
                         
                     </td>
                     <td style="min-width: 100px; min-height: 100px">
+                        <!-- cliente -->
                         <p-dropdown [options]="proveedores" optionLabel="razonsocial"
                             optionValue="ruc" [(ngModel)]="nuevoFormulario.ban03clienteruc"
                             class="p-inputtext-sm w-full" (onChange)="onMedioChange($event)" [filter]="true"
@@ -125,30 +132,68 @@
                     </td>
 
                     <td style="min-width: 130px">
-                        <!-- <p-calendar [(ngModel)]="nuevoPresupuesto.ban01Fecha" dateFormat="dd/mm/yy" placeholder="Fecha"
-                            (onSelect)="actualizarFecha($event)" [showIcon]="true" appendTo="body"
-                            class="w-full"></p-calendar> -->
+                        <!-- fecha deposito -->
+                       
+                         <ng-container>
+                            <p-calendar [(ngModel)]="nuevoFormulario.ban03FechaDeposito" 
+                                dateFormat="dd/mm/yy" placeholder="Fecha"
+                                (onSelect)="actualizarFechaEdicion($event)" 
+                                [showIcon]="true" appendTo="body"
+                                class="w-full"></p-calendar>
+                         </ng-container>
+                        
                     </td>
                      <td style="min-width: 200px">
-                    <!--
+                        <!-- moneda -->
+                        <!--
                         <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Descripcion" placeholder="Descripción"
                             class="w-full" /> -->
+                            <ng-container >
+                                <p-dropdown [options]="monedaOpciones" 
+                                    [(ngModel)]="nuevoFormulario.ban03Moneda"
+                                    placeholder="Seleccionar moneda" 
+                                    optionLabel="label" 
+                                    optionValue="value"
+                                    appendTo="body" 
+                                    class="p-inputtext-sm w-full">
+                                </p-dropdown>
+                            </ng-container>
                     </td>
                     
                     <td style="min-width: 80px">
-                        
+                        <!--Importe-->
+                        <ng-container>
+                            <input pInputText [(model)]="nuevoFormulario.ban03Importe"
+                                   placeholder="Ingresar importe"
+                                   class="w-full">
+                        </ng-container>
+                         
                     </td>
                     <td style="min-width: 100px">
-                        
+                        <!-- medio pago-->
+                         <ng-container>
+                            <p-dropdown [options]="medioPagoLista"
+                                [(ngModel)]="nuevoFormulario.ban03MedioPago"
+                                placenholder="seleccione medio pago"
+                                optionLabel="ban01Descripcion"
+                                optionValue="ban01IdTipoPago"
+                                appendTo="body"
+                                class="p-inputtext-sm w-full"
+                            ></p-dropdown>
+                            
+                         </ng-container>
                     </td>
                     <td style="min-width: 150px">
-                        
+                        <!-- motivo (texto)-->
+                          <input pInputText [(model)]="nuevoFormulario.ban03Motivo"
+                                   placeholder="Ingresar motivo"
+                                   class="w-full">
                     </td>
                     <td colspan="5"></td>
                     <td>
                         <div class="flex gap-2">
                             <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
-                                (onClick)="guardarNuevoPresupuesto()" pTooltip="Guardar"></p-button>
+                                (onClick)="guardarNuevo()" pTooltip="Guardar"></p-button>
                             <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
                                 (onClick)="cancelarNuevo()" pTooltip="Cancelar"></p-button>
                         </div>
