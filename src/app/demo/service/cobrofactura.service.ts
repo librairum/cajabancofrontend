@@ -12,6 +12,8 @@ import { RegistroCobro, RegistroCobroDetalle, FacturaPorCobrar } from "../model/
 import { HttpParams } from "@angular/common/http";
 import { MedioPago } from "../model/presupuesto";
 import { RetencionDetallePresupuestoComponent } from "../components/retencion/retencion-detalle-presupuesto/retencion-detalle-presupuesto.component";
+import { TraeRegistroCobro } from "../model/CuentaxCobrar";
+import { proveedores_lista } from "../model/presupuesto";
 @Injectable({
     providedIn:'root'
 })
@@ -28,12 +30,12 @@ constructor(
         this.urlAPI = `${this.apiUrl}/CobroFactura`;
         // console.log(this.urlAPI);
     }
-    public getListaRegistroCobro(empresa:string, anio:string, mes:string):Observable<RegistroCobro[]>{
+    public getListaRegistroCobro(empresa:string, anio:string, mes:string):Observable<TraeRegistroCobro[]>{
         let urlObtener = `${this.urlAPI}/Lista?empresa=${empresa}&anio=${anio}&mes=${mes}`;
         return this.http
-            .get<RespuestaAPIBase<RegistroCobro[]>>(urlObtener)
+            .get<RespuestaAPIBase<TraeRegistroCobro[]>>(urlObtener)
             .pipe(
-                map((response: RespuestaAPIBase<RegistroCobro[]>) =>
+                map((response: RespuestaAPIBase<TraeRegistroCobro[]>) =>
                 {
                     if(response.isSuccess && response.data){
                         return response.data;
@@ -91,6 +93,18 @@ this.cobroService.obtenerMedioPago
             .pipe(map((response) => response.data));
           } 
 
+     public getListaProveedores(
+            empresa: string
+        ): Observable<proveedores_lista[]> {
+            const params = new HttpParams().set('empresa', empresa);
+            return this.http
+                .get<RespuestaAPIBase<proveedores_lista[]>>(
+                    `/Presupuesto/SpTraeProveedores`,
+                    { params }
+                )
+                .pipe(map((response) => response.data));
+        }
+    //public getListaCliente()
     private handleError(error: HttpErrorResponse) {
         let errorMessage = 'Error desconocido';
         if (error.error instanceof ErrorEvent) {
@@ -102,6 +116,7 @@ this.cobroService.obtenerMedioPago
         return throwError(() => new Error(errorMessage));
 
     }
+
 
 
 }

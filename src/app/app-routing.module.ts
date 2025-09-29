@@ -64,7 +64,7 @@ import { AgregaFacturaxcobrarComponent } from './demo/components/cobrofactura/ag
                     ,{path:'retencion-detalle',component:RetencionDetalleComponent}
                     ,{path:'retencion-presupuesto-detalle', component:RetencionDetallePresupuestoComponent}
                     ,{path:'registro_cobro', component:RegistroCobroComponent}
-                    ,{path:'registro_cobro_detalle', component:RegistroCobroDetalleComponent},
+                    ,{path:'registro_cobro_detalle', component:RegistroCobroDetalleComponent}
                     ,{path:'agrega_facturaxcobrar', component:AgregaFacturaxcobrarComponent}
                 ]
             },

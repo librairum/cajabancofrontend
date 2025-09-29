@@ -6,13 +6,34 @@ export interface RegistroCobro
     ban03Numero:string;
     ban03clientetipoanalisis:string;
 ban03clienteruc:string;
+
 ban03Importe:number;
-ban03Moneda:string;
+ban03moneda:string;
 ban03FechaDeposito:string;
 ban03MedioPago:string;
 ban03Motivo:string;
 ban03VoucherLibroCod:string;
 ban03VoucherNumero:string;
+}
+
+export interface TraeRegistroCobro
+{
+    	 ban03empresa : string;
+		 ban03anio :string;
+		 ban03mes : string;
+		 ban03numero:string;
+		 clienteCodigo: string;
+		 clienteNombre: string;
+		 ban03FechaDeposito :string
+		 monedaDescripcion : string;
+		 ban03Importe:number;
+		 medioPagoCodigo:string
+		 medioPagoDescripcion:string;
+		 ban03Motivo:string;
+         ban03moneda:string;
+         ban03VoucherLibroCod:string;
+         ban03VoucherNumero:string;
+         
 }
 export interface RegistroCobroDetalle{
     ban04Empresa :string;

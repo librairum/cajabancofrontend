@@ -174,42 +174,42 @@ export class MediopagoComponent implements OnInit {
   }
     
   onRowEditInit(mediopago: MedioPago): void {
-    this.editingMedioPago = { ...mediopago };
-    this.isEditingAnyRow = true;
+      this.editingMedioPago = { ...mediopago };
+      this.isEditingAnyRow = true;
 
-    if (!mediopago.ban01AsiConFlagITF) {
-        mediopago.ban01AsiConFlagITF = null;
-    }
+      if (!mediopago.ban01AsiConFlagITF) {
+          mediopago.ban01AsiConFlagITF = null;
+      }
 
-    this.bancoService.GetBancos().subscribe({
-        next: (data) => {
-            this.bancosOptions = data.map(banco => ({
-                label: banco.ban01Descripcion,
-                value: banco.ban01IdBanco
-            }));
-        },
-        error: () => {
-            this.bancosOptions = [];
-        }
-    });
+      this.bancoService.GetBancos().subscribe({
+          next: (data) => {
+              this.bancosOptions = data.map(banco => ({
+                  label: banco.ban01Descripcion,
+                  value: banco.ban01IdBanco
+              }));
+          },
+          error: () => {
+              this.bancosOptions = [];
+          }
+      });
 
-    const bancoId = mediopago.ban01CtaBanBancoCod || this.bancosOptions[0]?.value;
-    this.cuentaBancariaService.GetCuentasBancarias(bancoId).subscribe({
-        next: (data) => {
-            this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = data.map(cuenta => ({
-                label: cuenta.nombreCuentaBancaria,
-                value: cuenta.nombreCuentaBancaria
-            }));
-        },
-        error: () => {
-            this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = [];
-        }
-    });
+      const bancoId = mediopago.ban01CtaBanBancoCod || this.bancosOptions[0]?.value;
+      this.cuentaBancariaService.GetCuentasBancarias(bancoId).subscribe({
+          next: (data) => {
+              this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = data.map(cuenta => ({
+                  label: cuenta.nombreCuentaBancaria,
+                  value: cuenta.nombreCuentaBancaria
+              }));
+          },
+          error: () => {
+              this.cuentasOptionsRow[mediopago.ban01IdTipoPago] = [];
+          }
+      });
 
-    this.monedaOptions = [
-        { label: 'Soles', value: 'S' },
-        { label: 'Dólares', value: 'D' }
-    ];
+      this.monedaOptions = [
+          { label: 'Soles', value: 'S' },
+          { label: 'Dólares', value: 'D' }
+      ];
   }
 
   onRowEditSave(mediopago: MedioPago): void {

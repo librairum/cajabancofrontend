@@ -25,7 +25,15 @@
         [tableStyle]="{ width: '100%', border: '0px solid black' }">
             <ng-template pTemplate="header">
                 <tr>
-                    <th rowspan="2">
+                    <th>Codigo</th>
+                    <th>Cliente</th>
+                    <th>Fec.Deposito</th>
+                    <th>Moneda</th>
+                    <th>Importe</th>
+                    <th>MedioPago</th>
+                    <th>Motivo</th>
+                    <th>Acciones</th>
+                    <!-- <th rowspan="2">
                         Pago Nro
                         <br />
                         <br />
@@ -38,26 +46,68 @@
                     <th colspan="2" class="text-center">Bruto a Pagar</th>
                     <th colspan="3" class="text-center">Afectos</th>
                     <th colspan="2" class="text-center">Neto a Pagar</th>
-                    <th colspan="5"></th>
+                    <th colspan="5"></th> -->
+
                 </tr>
-                <tr>
-                    <th colspan="1">S/.</th>
-                    <th colspan="1">US$</th>
-                    <th colspan="1">Detracción</th>
-                    <th colspan="1">Retención</th>
-                    <th colspan="1">Percepción</th>
-                    <th colspan="1">S/.</th>
-                    <th colspan="1">US$</th>
-                    <th colspan="1">Estado</th>
-                    <th colspan="1">Fecha Ejecución Pago</th>
-                    <th colspan="1">nro Operacion</th>
-                    <th colspan="1">Adjuntar / Ver Comprobante pago</th>
-                    <th colspan="1">Acciones</th>
-                </tr>
+               
             </ng-template>
-            <ng-template pTemplate="body" let-presupuesto>
+            <ng-template pTemplate="body" let-regcobro>
                 <tr>
-                    <td style="text-align: left; white-space: nowrap;">{{ presupuesto.pagoNumero }}</td>
+                    <td>
+                        <ng-container *ngIf="!editingRegCobro[regcobro.ban03numero] else viewMode">
+                            {{regcobro.ban03numero}}
+                        </ng-container>
+                        <ng-template #viewMode>
+                            <input pInputText [(ngModel)]="editaFormulario.ban03numero"
+                            class="w-full" />
+                        </ng-template>
+                        
+                    </td>
+                    <td>
+                           {{regcobro.clienteNombre}}
+                    </td>
+                    <td>
+                           {{regcobro.ban03FechaDeposito}}
+                    </td>
+                    <td>
+                        {{regcobro.ban03Moneda}}
+                        <!-- <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown [options]="monedaOpciones" [(ngModel)]="regcobro.ban03Moneda"
+                                    placeholder="Seleccionar moneda" optionLabel="label" optionValue="value"
+                                    appendTo="body" class="p-inputtext-sm w-full">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{
+                                regcobro.ban03Moneda === 'S' ? 'Soles' :
+                                regcobro.ban03Moneda === 'D' ? 'Dólares' : ''
+                                }}
+                            </ng-template>
+                        </p-cellEditor> -->
+                    </td>
+                    <td>
+                           {{regcobro.ban03Importe}}
+                    </td>
+                    <td>
+                           {{regcobro.medioPagoDescripcion}}
+                    </td>
+                    <td>
+                           {{regcobro.ban03Motivo}}
+                    </td>
+                    <td>
+                        <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
+                                    pTooltip="Ver Detalles" [text]="true" (onClick)="verDetalles(regcobro)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                        <p-button icon="pi pi-pencil" styleClass="p-button-info p-button-sm"
+                                    pTooltip="Modificar" [text]="true" (onClick)="iniciarEdicion(regcobro)"
+                                    [disabled]="botonesDeshabilitados"></p-button>
+                        
+                   
+                            
+                        <!-- </div> -->
+                    </td>
+                    <!-- <td style="text-align: left; white-space: nowrap;">{{ presupuesto.pagoNumero }}</td>
                     <td style="text-align: left; white-space: nowrap;">
                         <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{ presupuesto.fecha | date : "dd/MM/yyyy" }}
@@ -178,15 +228,14 @@
                                     " pTooltip="Cancelar"></p-button>
                             </ng-container>
                         </div>
-                    </td>
+                    </td> -->
                 </tr>
             </ng-template>
-            <ng-template pTemplate="footer">
+            <!-- <ng-template pTemplate="footer">
                 <tr *ngIf="mostrarNuevaFila">
                     <td style="min-width: 100px">
                         {{ nuevoPresupuesto.ban01IdBanco }}
-                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Numero" placeholder="Número"
-                            class="w-full"> -->
+                        
                     </td>
                     <td style="min-width: 130px">
                         <p-calendar [(ngModel)]="nuevoPresupuesto.ban01Fecha" dateFormat="dd/mm/yy" placeholder="Fecha"
@@ -203,16 +252,16 @@
                             class="p-inputtext-sm w-full" (onChange)="onMedioChange($event)" [filter]="true"
                             filterBy="ban01Descripcion" filterMatchMode="contains" placeholder="medio" appendTo="body">
                         </p-dropdown>
-                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Anio" placeholder="Año" class="w-full"> -->
+                        
                     </td>
                     <td style="min-width: 80px">
-                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Mes" placeholder="Mes" class="w-full"> -->
+                        
                     </td>
                     <td style="min-width: 100px">
-                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Pc" placeholder="PC" class="w-full"> -->
+                        
                     </td>
                     <td style="min-width: 150px">
-                        <!-- <input pInputText [(ngModel)]="nuevoPresupuesto.ban01FechaRegistro" [readonly]="true" class="w-full"> -->
+                        
                     </td>
                     <td colspan="5"></td>
                     <td>
@@ -224,7 +273,7 @@
                         </div>
                     </td>
                 </tr>
-            </ng-template>
+            </ng-template> -->
             <ng-template pTemplate="emptymessage">
                 <tr>
                     <td colspan="16" style="
