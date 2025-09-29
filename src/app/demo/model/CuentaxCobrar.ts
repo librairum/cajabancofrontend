@@ -30,7 +30,7 @@ export interface TraeRegistroCobro
 		 medioPagoCodigo:string
 		 medioPagoDescripcion:string;
 		 ban03Motivo:string;
-         ban03moneda:string;
+         Ban03Moneda:string;
          ban03VoucherLibroCod:string;
          ban03VoucherNumero:string;
          

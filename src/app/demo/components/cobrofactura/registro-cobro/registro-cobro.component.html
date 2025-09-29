@@ -64,14 +64,15 @@
                         
                     </td>
                     <td>
+                    
                            {{regcobro.clienteNombre}}
                     </td>
                     <td>
                            {{regcobro.ban03FechaDeposito}}
                     </td>
                     <td>
-                        {{regcobro.ban03Moneda}}
-                        <!-- <p-cellEditor>
+
+                        <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <p-dropdown [options]="monedaOpciones" [(ngModel)]="regcobro.ban03Moneda"
                                     placeholder="Seleccionar moneda" optionLabel="label" optionValue="value"
@@ -84,7 +85,7 @@
                                 regcobro.ban03Moneda === 'D' ? 'Dólares' : ''
                                 }}
                             </ng-template>
-                        </p-cellEditor> -->
+                        </p-cellEditor>
                     </td>
                     <td>
                            {{regcobro.ban03Importe}}
@@ -104,156 +105,36 @@
                                     [disabled]="botonesDeshabilitados"></p-button>
                         
                    
-                            
-                        <!-- </div> -->
                     </td>
-                    <!-- <td style="text-align: left; white-space: nowrap;">{{ presupuesto.pagoNumero }}</td>
-                    <td style="text-align: left; white-space: nowrap;">
-                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
-                            {{ presupuesto.fecha | date : "dd/MM/yyyy" }}
-                        </ng-container>
-                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
-                            <p-calendar [(ngModel)]="editForm.ban01Fecha" dateFormat="dd/mm/yy"
-                                (onSelect)="actualizarFechaEdicion($event)" [showIcon]="true" appendTo="body"
-                                class="w-full"></p-calendar>
-                        </ng-container>
-                    </td>
-                    <td style="text-align: left; white-space: nowrap;">
-                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
-                            {{ presupuesto.motivo }}
-                        </ng-container>
-                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
-                            <input pInputText [(ngModel)]="editForm.ban01Descripcion" placeholder="Descripción"
-                                class="w-full" />
-                        </ng-container>
-                    </td>
-                    <td style="text-align: left; white-space: nowrap;">
-                        <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
-                            {{ presupuesto.nombreMedioPago }}
-                        </ng-container>
-                        <ng-container *ngIf="editingPresupuesto[presupuesto.pagoNumero]">
-                            <p-dropdown [options]="medioPagoLista" optionLabel="ban01Descripcion"
-                                optionValue="ban01IdTipoPago" 
-                                [(ngModel)]="editForm.ban01mediopago"
-                                class="p-inputtext-sm w-full" 
-                                [filter]="true" filterMatchMode="contains"
-                                filterBy="ban01Descripcion" 
-                                placeholder="medio" 
-                                appendTo="body"
-                                [style]="{'width': '150px'}"
-                                [panelStyle]="{'max-width': '300px', 'overflow-x': 'auto'}"></p-dropdown>
-                        </ng-container>
-                        
-                    </td>
-                    <td style="text-align: right; white-space: nowrap;">{{ presupuesto.impBrutoSoles | number : "1.2-2" }}</td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        {{ presupuesto.impBrutoDolares | number : "1.2-2" }}
-                    </td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        {{ presupuesto.impDetraccionSoles | number : "1.2-2" }}
-                    </td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        {{ presupuesto.impRetencionSoles | number : "1.2-2" }}
-                    </td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        {{ presupuesto.impPercepcionSoles | number : "1.2-2" }}
-                    </td>
-                    <td style="text-align: right; white-space: nowrap;">{{ presupuesto.netoPagaSoles | number : "1.2-2" }}</td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        {{ presupuesto.netoPagoDolares | number : "1.2-2" }}
-                    </td >
-                    <td style="text-align: left; white-space: nowrap;">{{ presupuesto.estado }}</td>
-                    <td style="text-align: left; white-space: nowrap;">
-                        {{
-                        presupuesto.ban01FechaEjecucionPago
-                        | date : "dd/MM/yyyy"
-                        }}
-                    </td>
-                    <td style="text-align: left; white-space: nowrap;">{{ presupuesto.ban01NroOperacion }}</td>
-                    <td>
-                        <p-button *ngIf="presupuesto.ban01EnlacePago" label="" icon="pi pi-file"
-                            styleClass="p-button-sm p-button-info"
-                            (onClick)="abrirdocumento(presupuesto.pagoNumero)
-                            " [text]="false">
-                        </p-button>
-                        <p-button *ngIf="!presupuesto.ban01EnlacePago" label="" icon="pi pi-file-excel"
-                            styleClass="p-button-sm p-button-danger" [disabled]="true" [text]="false">
-                        </p-button>
-                    </td>
-                    <td>
-                        <div class="flex gap-2">
-                            <ng-container *ngIf="
-                                    !editingPresupuesto[presupuesto.pagoNumero]
-                                ">
-                                <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
-                                    pTooltip="Ver Detalles" [text]="true" (onClick)="verDetalles(presupuesto)"
-                                    [disabled]="botonesDeshabilitados"></p-button>
-                                <p-button icon="pi pi-pencil" styleClass="p-button-info p-button-sm"
-                                    pTooltip="Modificar" [text]="true" (onClick)="iniciarEdicion(presupuesto)"
-                                    [disabled]="botonesDeshabilitados"></p-button>
-                                <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
-                                    pTooltip="Eliminar" [text]="true" (onClick)="eliminarPago(presupuesto)"
-                                    [disabled]="botonesDeshabilitados"></p-button>
-                                <p-button icon="pi pi-money-bill" styleClass="p-button-success p-button-sm"
-                                    pTooltip="Confirmar Pago" [text]="true" (onClick)="confirmarPago(presupuesto)"
-                                    [disabled]="
-                                        botonesDeshabilitados ||
-                                        presupuesto.ban01EnlacePago ||
-                                            presupuesto.ban01NroOperacion ||
-                                            presupuesto.ban01FechaEjecucionPago
-                                    "></p-button>
-                                <p-button icon="pi pi-ban" styleClass="p-button-danger p-button-sm"
-                                    (onClick)="anularPago(presupuesto)" [text]="true" pTooltip="Anular pago" [disabled]="
-                                        botonesDeshabilitados ||
-                                        (!presupuesto.ban01EnlacePago &&
-                                            !presupuesto.ban01NroOperacion &&
-                                            !presupuesto.ban01FechaEjecucionPago)
-                                    "></p-button>
-                                <p-button icon="pi pi-file" styleClass="p-button-info p-button-sm"
-                                    tooltipPosition="left" pTooltip="Ver voucher contable" [text]="true"
-                                    (onClick)="verVouchercontable(presupuesto)"
-                                    [disabled]="botonesDeshabilitados || !presupuesto.ban01EnlacePago"></p-button>
-
-                            </ng-container>
-                            <ng-container *ngIf="
-                                    editingPresupuesto[presupuesto.pagoNumero]
-                                ">
-                                <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
-                                    (onClick)="
-                                        guardarEdicion(presupuesto.pagoNumero)
-                                    " pTooltip="Actualizar"></p-button>
-                                <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
-                                    (onClick)="
-                                        cancelarEdicion(presupuesto.pagoNumero)
-                                    " pTooltip="Cancelar"></p-button>
-                            </ng-container>
-                        </div>
-                    </td> -->
+                    
                 </tr>
             </ng-template>
-            <!-- <ng-template pTemplate="footer">
+            <ng-template pTemplate="footer">
                 <tr *ngIf="mostrarNuevaFila">
                     <td style="min-width: 100px">
-                        {{ nuevoPresupuesto.ban01IdBanco }}
+                        {{ nuevoFormulario.ban03Numero }}
                         
                     </td>
-                    <td style="min-width: 130px">
-                        <p-calendar [(ngModel)]="nuevoPresupuesto.ban01Fecha" dateFormat="dd/mm/yy" placeholder="Fecha"
-                            (onSelect)="actualizarFecha($event)" [showIcon]="true" appendTo="body"
-                            class="w-full"></p-calendar>
-                    </td>
-                    <td style="min-width: 200px">
-                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Descripcion" placeholder="Descripción"
-                            class="w-full" />
-                    </td>
                     <td style="min-width: 100px; min-height: 100px">
-                        <p-dropdown [options]="medioPagoLista" optionLabel="ban01Descripcion"
-                            optionValue="ban01IdTipoPago" [(ngModel)]="nuevoPresupuesto.ban01mediopago"
+                        <p-dropdown [options]="proveedores" optionLabel="razonsocial"
+                            optionValue="ruc" [(ngModel)]="nuevoFormulario.ban03clienteruc"
                             class="p-inputtext-sm w-full" (onChange)="onMedioChange($event)" [filter]="true"
-                            filterBy="ban01Descripcion" filterMatchMode="contains" placeholder="medio" appendTo="body">
+                            filterBy="razonsocial" filterMatchMode="contains" placeholder="cliente" appendTo="body">
                         </p-dropdown>
                         
                     </td>
+
+                    <td style="min-width: 130px">
+                        <!-- <p-calendar [(ngModel)]="nuevoPresupuesto.ban01Fecha" dateFormat="dd/mm/yy" placeholder="Fecha"
+                            (onSelect)="actualizarFecha($event)" [showIcon]="true" appendTo="body"
+                            class="w-full"></p-calendar> -->
+                    </td>
+                     <td style="min-width: 200px">
+                    <!--
+                        <input pInputText [(ngModel)]="nuevoPresupuesto.ban01Descripcion" placeholder="Descripción"
+                            class="w-full" /> -->
+                    </td>
+                    
                     <td style="min-width: 80px">
                         
                     </td>
@@ -273,7 +154,7 @@
                         </div>
                     </td>
                 </tr>
-            </ng-template> -->
+            </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
                     <td colspan="16" style="

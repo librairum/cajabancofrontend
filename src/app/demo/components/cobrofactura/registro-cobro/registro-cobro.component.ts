@@ -21,6 +21,8 @@ import { CobroFacturaService } from 'src/app/demo/service/cobrofactura.service';
 import { verMensajeInformativo } from '../../utilities/funciones_utilitarias';
 import { TraeRegistroCobro } from 'src/app/demo/model/CuentaxCobrar';
 import { NgIf } from '@angular/common';
+import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
+import { proveedores_lista } from 'src/app/demo/model/presupuesto';
 @Component({
   selector: 'app-registro-cobro',
   standalone: true,
@@ -46,7 +48,8 @@ export class RegistroCobroComponent implements OnInit{
    selectMedioPago: string | null = null;
    rowsPerPage: number = 10; // Numero de filas por página
    monedaOpciones : any[] = [];
-
+  proveedores: proveedores_lista[];
+  selectCliente:string | null =null;
 
  nuevoFormulario: RegistroCobro ={
     ban03Empresa : '',
@@ -81,6 +84,7 @@ export class RegistroCobroComponent implements OnInit{
   }
 
    iniciarNuevoRegistro():void{
+    
     this.mostrarNuevaFila = true;
     this.botonesDeshabilitados = true;
     let  fechaActual = new Date();
@@ -92,7 +96,8 @@ export class RegistroCobroComponent implements OnInit{
     let mesActual = (fechaActual.getMonth() + 1)
             .toString()
             .padStart(2, '0');
-  
+        this.cargarMedioPago();
+        
     this.nuevoFormulario = {
       ban03Empresa : this.globalService.getCodigoEmpresa(),
       ban03Anio: anioActual,
@@ -138,6 +143,7 @@ export class RegistroCobroComponent implements OnInit{
     private datePipe:DatePipe,
     private configService:ConfigService,
     private cobroService:CobroFacturaService
+    ,private presupuestoService: PresupuestoService
   ){
 
 
@@ -163,6 +169,7 @@ export class RegistroCobroComponent implements OnInit{
               }
 
     });
+    // this.cargarproveedores();
   }
 
   cargarMedioPago():void{
@@ -188,7 +195,20 @@ export class RegistroCobroComponent implements OnInit{
             },
         });
   }
-
+  cargarproveedores() {
+          const cod_empresa = this.globalService.getCodigoEmpresa();
+          console.log("codigo de emprsa");
+          console.log(cod_empresa),
+          this.presupuestoService
+              .obtenerProveedores(cod_empresa)
+              .subscribe((data: proveedores_lista[]) => {
+                  this.proveedores = data;
+                console.log(this.proveedores);
+              });
+      }
+  onMedioChange(event: any) {
+        this.selectCliente = event.value;
+  }
   cargar():void{
     let empresa = this.globalService.getCodigoEmpresa();
     this.loading = true;
@@ -282,7 +302,7 @@ export class RegistroCobroComponent implements OnInit{
         ban03clientetipoanalisis:'01',
         ban03clienteruc:registro.clienteCodigo,
         ban03Importe:registro.ban03Importe,
-        ban03moneda: registro.ban03moneda,
+        ban03moneda: registro.Ban03Moneda,
         ban03FechaDeposito : registro.ban03FechaDeposito,
         ban03MedioPago: obtenerMedioPago ? obtenerMedioPago.ban01IdTipoPago:'',
         ban03Motivo: registro.ban03Motivo,
@@ -293,7 +313,20 @@ export class RegistroCobroComponent implements OnInit{
           { label: 'Soles', value: 'S' },
           { label: 'Dólares', value: 'D' }
       ];
+      this.cargarproveedores();
   }
+
+  verDetalles(registro: TraeRegistroCobro) {
+  this.router.navigate(['/Home/registro_cobro_detalle'], {
+    state: {
+      CobroNro: registro.ban03numero,
+      Fecha: registro.ban03FechaDeposito,
+      Cliente: registro.clienteNombre,
+      Anio: registro.ban03anio,
+      Mes: registro.ban03mes
+    }
+  });
+}
 
 
 }
