@@ -13,7 +13,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RegistroCobro } from 'src/app/demo/model/CuentaxCobrar';
+import { ClienteconFactura, RegistroCobro } from 'src/app/demo/model/CuentaxCobrar';
 import { mediopago_lista } from 'src/app/demo/model/presupuesto';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { ConfigService } from 'src/app/demo/service/config.service';
@@ -50,6 +50,8 @@ export class RegistroCobroComponent implements OnInit{
    monedaOpciones : any[] = [];
   proveedores: proveedores_lista[];
   selectCliente:string | null =null;
+  listaClientes:ClienteconFactura[] =[];
+  
 
  nuevoFormulario: RegistroCobro ={
     ban03Empresa : '',
@@ -113,8 +115,10 @@ export class RegistroCobroComponent implements OnInit{
       ban03VoucherLibroCod:'',
       ban03VoucherNumero:'',
     }
-    this.cargarproveedores();
+    //this.cargarproveedores();
+    this.cargarCliente();
      this.cargarMedioPago();
+     
      this.monedaOpciones = [
           { label: 'Soles', value: 'S' },
           { label: 'Dólares', value: 'D' }
@@ -181,14 +185,13 @@ export class RegistroCobroComponent implements OnInit{
   cargarMedioPago():void{
     const codempresa: string = this.globalService.getCodigoEmpresa();
         this.loading = true;
-        console.log("medio de pago");
-        console.log(codempresa);
+        
         this.presupuestoService.obtenerMedioPago(codempresa).subscribe({
           
             next: (data) => {
                 
                 this.medioPagoLista = data;
-                console.log(this.medioPagoLista);
+                
                 this.loading = false;
              
             },
@@ -205,14 +208,22 @@ export class RegistroCobroComponent implements OnInit{
   }
   cargarproveedores() {
           const cod_empresa = this.globalService.getCodigoEmpresa();
-          // console.log("codigo de emprsa");
-          // console.log(cod_empresa),
+          
           this.presupuestoService
               .obtenerProveedores(cod_empresa)
               .subscribe((data: proveedores_lista[]) => {
                   this.proveedores = data;
-                console.log(this.proveedores);
+                
               });
+      }
+
+      cargarCliente(){
+        const codempresa = this.globalService.getCodigoEmpresa();
+        this.cobroService.getListaCliente(codempresa)
+        .subscribe((data: ClienteconFactura[])=>{
+          this.listaClientes = data;
+          
+        });
       }
   onMedioChange(event: any) {
         this.selectCliente = event.value;
@@ -226,7 +237,7 @@ export class RegistroCobroComponent implements OnInit{
                         next:(data) =>{
                           this.listaRegistroCobro = data;
                           this.loading = false;
-                          // console.log(this.listaRegistroCobro);
+                          
                         },
                         error:(error) =>{
                           this.loading = false;
@@ -248,7 +259,7 @@ export class RegistroCobroComponent implements OnInit{
           }
     }
   guardarNuevo(){
-    //console.log(this.nuevoFormulario);
+    
       this.cobroService.insertRegistroCobro(this.nuevoFormulario)
       .subscribe({
           next:(response) =>{
@@ -342,7 +353,7 @@ export class RegistroCobroComponent implements OnInit{
   }
 
   iniciarEdicion(registro:TraeRegistroCobro):void{
-    console.log(registro);
+    
       this.editingRegCobro[registro.ban03numero] = true;
      
       let obtenerMedioPago = this.medioPagoLista.find(
@@ -367,12 +378,13 @@ export class RegistroCobroComponent implements OnInit{
           { label: 'Soles', value: 'S' },
           { label: 'Dólares', value: 'D' }
       ];
-      this.cargarproveedores();
+      //this.cargarproveedores();
+      this.cargarCliente();
   }
 
 
 verDetalles(registro: TraeRegistroCobro) {
-
+  
   this.router.navigate(['/Home/registro_cobro_detalle'], {
     state: {
       CobroNro: registro.ban03numero,

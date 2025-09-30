@@ -124,10 +124,10 @@
                     </td>
                     <td class="col-cliente">
                         <!-- cliente -->
-                        <p-dropdown [options]="proveedores" optionLabel="razonsocial"
-                            optionValue="ruc" [(ngModel)]="nuevoFormulario.ban03clienteruc"
+                        <p-dropdown [options]="listaClientes" optionLabel="nombreCliente"
+                            optionValue="codigoCliente" [(ngModel)]="nuevoFormulario.ban03clienteruc"
                             class="p-inputtext-sm w-full" (onChange)="onMedioChange($event)" [filter]="true"
-                            filterBy="razonsocial" filterMatchMode="contains" placeholder="cliente" appendTo="body">
+                            filterBy="codigoCliente" filterMatchMode="contains" placeholder="cliente" appendTo="body">
                         </p-dropdown>
                         
                     </td>

@@ -14,6 +14,7 @@ import { MedioPago } from "../model/presupuesto";
 import { RetencionDetallePresupuestoComponent } from "../components/retencion/retencion-detalle-presupuesto/retencion-detalle-presupuesto.component";
 import { TraeRegistroCobro } from "../model/CuentaxCobrar";
 import { proveedores_lista } from "../model/presupuesto";
+import { ClienteconFactura } from "../model/CuentaxCobrar";
 @Injectable({
     providedIn:'root'
 })
@@ -78,12 +79,14 @@ constructor(
 this.cobroService.obtenerMedioPago
 */ 
     public getListaFacturaPorCobrar( empresa:string,  anio:string,
-          mes:string,  usuario:string):Observable<FacturaPorCobrar[]>{
+          mes:string,  usuario:string, 
+          clientecodigo:string):Observable<FacturaPorCobrar[]>{
             const params = new HttpParams()
             .set('empresa', empresa)
             .set('anio', anio)
             .set('mes', mes)
-            .set('usuario',usuario);
+            .set('usuario',usuario)
+            .set('clientecodigo',clientecodigo);
         return this.http
             .get<RespuestaAPIBase<FacturaPorCobrar[]>>(
                 `${this.urlAPI}/TraeFacturaPorCobrar`,
@@ -105,6 +108,16 @@ this.cobroService.obtenerMedioPago
                 )
                 .pipe(map((response) => response.data));
         }
+
+    public getListaCliente(empresa:string
+        ):Observable<ClienteconFactura[]>{
+            const params = new HttpParams().set('empresa', empresa);
+            return this.http.get<RespuestaAPIBase<ClienteconFactura[]>>(
+            `${this.urlAPI}/TraeClienteconFactura`,{params}
+            ).pipe(map((response)=>response.data));
+
+        }
+
     //public getListaCliente()
     private handleError(error: HttpErrorResponse) {
         let errorMessage = 'Error desconocido';

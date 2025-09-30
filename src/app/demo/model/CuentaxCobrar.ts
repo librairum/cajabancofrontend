@@ -69,6 +69,10 @@ export interface FacturaPorCobrar{
     clienteNombre:string;
 
 }
+export interface ClienteconFactura{
+    codigoCliente:string;
+    nombreCliente:string;
+}
 /*
 Ban05Empresa	varchar
 Ban05Numero	varchar
