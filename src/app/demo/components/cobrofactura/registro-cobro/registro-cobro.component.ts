@@ -56,7 +56,7 @@ export class RegistroCobroComponent implements OnInit{
     ban03Anio: '',
     ban03Mes: '',
     ban03Numero: '',
-    ban03clientetipoanalisis: '',
+    ban03clientetipoanalisis: '01',
     ban03clienteruc: '',
     ban03Importe:0,
     ban03moneda: '',
@@ -103,7 +103,7 @@ export class RegistroCobroComponent implements OnInit{
       ban03Anio: anioActual,
       ban03Mes: mesActual,
       ban03Numero: '',
-      ban03clientetipoanalisis: '',
+      ban03clientetipoanalisis: '01',
       ban03clienteruc: '',
       ban03Importe:0,
       ban03moneda: '',
@@ -248,23 +248,28 @@ export class RegistroCobroComponent implements OnInit{
           }
     }
   guardarNuevo(){
-    console.log(this.nuevoFormulario);
-      // this.cobroService.insertRegistroCobro(this.nuevoFormulario)
-      // .subscribe({
-      //     next:(response) =>{
-      //       verMensajeInformativo(this.messageService, 
-      //         'succes', 'Exito', 
-      //         'Registro guardardo');
-      //         this.mostrarNuevaFila = false;
-      //         this.botonesDeshabilitados = false;
-      //         this.cargar();
-      //         const nuevoCodigoRegistroCobro = response.item;
-      //         if(nuevoCodigoRegistroCobro){
-      //           //cargar detalle con codigo recine  generado 
+    //console.log(this.nuevoFormulario);
+      this.cobroService.insertRegistroCobro(this.nuevoFormulario)
+      .subscribe({
+          next:(response) =>{
+            verMensajeInformativo(this.messageService, 
+              'succes', 'Exito', 
+              'Registro guardardo');
+              this.mostrarNuevaFila = false;
+              this.botonesDeshabilitados = false;
+              this.cargar();
+              const nuevoCodigoRegistroCobro = response.item;
+              // if(nuevoCodigoRegistroCobro){
+              //   //cargar detalle con codigo recine  generado 
 
-      //         }
-      //     }
-      // });
+              // }
+          }, 
+          error:(error) =>{
+            verMensajeInformativo(this.messageService, 
+              'error', 'error', 
+              'Error al insertar');
+          }
+      });
   }
   cancelarNuevo(){
      this.cargar();

@@ -57,11 +57,11 @@ constructor(
     }
 
     public deleteRegistroCobro(empresa:string, 
-        anio:string, mes:string, numero:string ){ 
-        // Se revierte a la interpolación de cadenas para garantizar la máxima compatibilidad de enrutamiento con el Backend C#.
-        let urlElimina = `${this.urlAPI}/Elimina?empresa=${empresa}&anio=${anio}&mes=${mes}&numero=${numero}`;
-        return this.http.delete<any>(urlElimina);
-    }
+        anio:string, mes:string, numero:string ){ 
+        // Se revierte a la interpolación de cadenas para garantizar la máxima compatibilidad de enrutamiento con el Backend C#.
+        let urlElimina = `${this.urlAPI}/Elimina?empresa=${empresa}&anio=${anio}&mes=${mes}&numero=${numero}`;
+        return this.http.delete<any>(urlElimina);
+    }
     public getListaMedioPago(empresa: string): Observable<MedioPago[]> {
             const params = new HttpParams().set('empresa', empresa);
             /*https://localhost:7277/Presupuesto/SpTraeTipoPago?empresa=01*/
