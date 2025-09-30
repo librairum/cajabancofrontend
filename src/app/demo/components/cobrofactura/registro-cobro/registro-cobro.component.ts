@@ -283,7 +283,22 @@ export class RegistroCobroComponent implements OnInit{
       });
   }
   cancelarNuevo(){
-     this.cargar();
+    this.mostrarNuevaFila = false;
+      this.nuevoFormulario = {
+      ban03Empresa : this.globalService.getCodigoEmpresa(),
+      ban03Anio: '',
+      ban03Mes: '',
+      ban03Numero: '',
+      ban03clientetipoanalisis: '01',
+      ban03clienteruc: '',
+      ban03Importe:0,
+      ban03moneda: '',
+      ban03FechaDeposito: '',
+      ban03MedioPago: '',
+      ban03Motivo: '',
+      ban03VoucherLibroCod:'',
+      ban03VoucherNumero:'',
+    }
   }
   guardarEdicion(nroRegistroCobro:string){
     this.cobroService.updateRegistroCobro(this.editaFormulario)
