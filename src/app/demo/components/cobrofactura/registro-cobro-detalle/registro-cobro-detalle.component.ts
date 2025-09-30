@@ -61,7 +61,7 @@ export class RegistroCobroDetalleComponent implements OnInit {
   cobroNro: string = '';
   fecha: Date;
   cliente: string = '';
-  
+  clienteCodigo:string = '';
   // Tablas
   facturasAfectadas: FacturaDetalle[] = [];
   sustentosAdjuntos: SustentoAdjunto[] = [];
@@ -141,7 +141,7 @@ export class RegistroCobroDetalleComponent implements OnInit {
   valoresCampos() {
     this.cobroNro = this.navigationData?.CobroNro || '';
     this.cliente = this.navigationData?.Cliente || '';
-    
+    this.clienteCodigo = this.navigationData?.ClienteCodigo || '';
     const fechaString = this.navigationData?.Fecha;
     if (fechaString) {
       const [day, month, year] = fechaString.split('/').map(Number);
@@ -330,4 +330,10 @@ export class RegistroCobroDetalleComponent implements OnInit {
       0
     );
   }
+
+  traeAyudaFacturaPorCobrar():void{
+    
+  }
+
+
 }

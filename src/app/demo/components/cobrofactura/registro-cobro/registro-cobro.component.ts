@@ -390,6 +390,7 @@ verDetalles(registro: TraeRegistroCobro) {
       CobroNro: registro.ban03numero,
       Fecha: registro.ban03FechaDeposito,
       Cliente: registro.clienteNombre,
+      ClienteCodigo:registro.clienteCodigo,
       Anio: registro.ban03anio,
       Mes: registro.ban03mes
       }
