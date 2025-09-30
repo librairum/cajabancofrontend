@@ -44,10 +44,10 @@
     text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
     font-size: 12px;
-    padding: 2px;
-    line-height: 1;
+    padding: 2px; 
+    line-height: 1; 
 }
 
 /* SOLO inputs de filtros en la cabecera de la tabla */
@@ -124,3 +124,34 @@
     width: 100% !important;
     max-width: 100% !important;
 }
+
+/* Quitar variación del ancho */
+
+::ng-deep .p-datatable .col-cliente {
+    width: 250px !important; 
+    min-width: 250px !important;
+    max-width: 250px !important;
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+
+::ng-deep .p-datatable .col-moneda { 
+    width: 110px !important; 
+    min-width: 110px !important; 
+    max-width: 110px !important;
+    overflow: hidden; /* Importante para que el contenido no se desborde */
+    white-space: nowrap; /* Importante para que el texto no se desborde */
+    text-overflow: ellipsis; /* Importante para que el texto que no cabe se oculte */
+}
+
+
+::ng-deep .p-datatable .col-mediopago {
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+
