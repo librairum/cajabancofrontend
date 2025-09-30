@@ -103,14 +103,15 @@
                         <p-button icon="pi pi-pencil" styleClass="p-button-info p-button-sm"
                                     pTooltip="Modificar" [text]="true" (onClick)="iniciarEdicion(regcobro)"
                                     [disabled]="botonesDeshabilitados"></p-button>
-                        <p-button (click)="eliminar(regcobro)"  styleClass="p-button-info p-button-sm"
-                                pTooltip="Eliminar" 
-                                [text]="true"
-                                icon="pi pi-trash"
-                                class="p-button-rounded p-button-text p-button-sm p-button-danger">
-                            </p-button>
-                        
-                   
+                        <p-button 
+                            icon="pi pi-trash" 
+                            styleClass="p-button-info p-button-sm" 
+                            (click)="eliminarPago(regcobro)"
+                            [text]="true"
+                            pTooltip="Eliminar"
+                            [disabled]="botonesDeshabilitados">
+                        </p-button>
+                         
                     </td>
                     
                 </tr>

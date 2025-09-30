@@ -295,13 +295,47 @@ export class RegistroCobroComponent implements OnInit{
   eliminar(registro:TraeRegistroCobro):void{
     
   }
-  eliminarPago(registro:RegistroCobro){
-    this.cobroService.deleteRegistroCobro(registro.ban03Empresa, 
-      registro.ban03Anio, registro.ban03Mes, registro.ban03Numero)
-      .subscribe({
-
-      });
+  eliminarPago(registro: TraeRegistroCobro): void {
+    
+    // 1. Mostrar diálogo de confirmación
+    this.confirmationService.confirm({
+      message: `¿Estás seguro que deseas eliminar el registro de cobro Nro. ${registro.ban03numero}? Esta acción es irreversible.`,
+      header: 'Confirmar Eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      
+      accept: () => {
+        this.cobroService
+          .deleteRegistroCobro(
+            this.globalService.getCodigoEmpresa(), 
+            registro.ban03anio, 
+            registro.ban03mes,  
+            registro.ban03numero 
+          )
+          .subscribe({
+            next: (response) => {
+              if (response.isSuccess) {
+                // 3. Manejo de éxito
+                verMensajeInformativo(
+                  this.messageService,
+                  'success',
+                  'Éxito',
+                  response.message || `Registro ${registro.ban03numero} eliminado correctamente.`
+                );
+                this.cargar(); 
+              } else {
+                verMensajeInformativo(
+                  this.messageService,
+                  'error',
+                  'Error al eliminar',
+                  response.message || 'No se puedo realizar la eliminación'
+                );
+              }
+            }
+          });
+      }
+    });
   }
+
   iniciarEdicion(registro:TraeRegistroCobro):void{
     console.log(registro);
       this.editingRegCobro[registro.ban03numero] = true;
