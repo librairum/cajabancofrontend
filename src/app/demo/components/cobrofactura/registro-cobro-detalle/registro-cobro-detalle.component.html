@@ -1,6 +1,11 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
 
+<!-- Input file oculto para seleccionar archivos -->
+<input #fileInput type="file" multiple style="display: none;" 
+       (change)="onFileSelected($event)" 
+       accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx" />
+
 <div class="container">
     <p-panel header="Detalle de Registro de Cobro" class="mb-3">
         <p-breadcrumb [model]="items" class="max-w-full;"></p-breadcrumb>
@@ -53,33 +58,14 @@
 
                 <ng-template pTemplate="body" let-factura>
                     <tr>
-                        <td>
-                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewNumero">
-                                <input pInputText [(ngModel)]="editingFactura.numero" style="width: 100%;" />
-                            </ng-container>
-                            <ng-template #viewNumero>{{ factura.numero }}</ng-template>
-                        </td>
-                        <td>
-                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewFecha">
-                                <p-calendar [(ngModel)]="editingFactura.fecha" dateFormat="dd/mm/yy"></p-calendar>
-                            </ng-container>
-                            <ng-template #viewFecha>{{ factura.fecha | date:'dd/MM/yyyy' }}</ng-template>
-                        </td>
-                        <td>
-                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewMoneda">
-                                <input pInputText [(ngModel)]="editingFactura.moneda" style="width: 100%;" />
-                            </ng-container>
-                            <ng-template #viewMoneda>{{ factura.moneda }}</ng-template>
-                        </td>
-                        <td style="text-align: right;">
-                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewOriginal">
-                                <input pInputText type="number" [(ngModel)]="editingFactura.importeOriginal" />
-                            </ng-container>
-                            <ng-template #viewOriginal>{{ factura.importeOriginal | number:'1.2-2' }}</ng-template>
-                        </td>
+                        <td>{{ factura.numero }}</td>
+                        <td>{{ factura.fecha | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ factura.moneda }}</td>
+                        <td style="text-align: right;">{{ factura.importeOriginal | number:'1.2-2' }}</td>
                         <td style="text-align: right;">
                             <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewPagado">
-                                <input pInputText type="number" [(ngModel)]="editingFactura.importePagado" />
+                                <input pInputText type="number" [(ngModel)]="editingFactura.importePagado" 
+                                       style="width: 100%; text-align: right;" />
                             </ng-container>
                             <ng-template #viewPagado>{{ factura.importePagado | number:'1.2-2' }}</ng-template>
                         </td>
@@ -146,12 +132,7 @@
 
                 <ng-template pTemplate="body" let-sustento>
                     <tr>
-                        <td>
-                            <ng-container *ngIf="editingSustento?.nombreArchivo === sustento.nombreArchivo; else viewArchivo">
-                                <input pInputText [(ngModel)]="editingSustento.nombreArchivo" style="width: 100%;" />
-                            </ng-container>
-                            <ng-template #viewArchivo>{{ sustento.nombreArchivo }}</ng-template>
-                        </td>
+                        <td>{{ sustento.nombreArchivo }}</td>
                         <td>
                             <ng-container *ngIf="editingSustento?.nombreArchivo === sustento.nombreArchivo; else viewDesc">
                                 <input pInputText [(ngModel)]="editingSustento.descripcion" style="width: 100%;" />
@@ -168,7 +149,7 @@
                                 </ng-container>
                                 <ng-template #editButtons2>
                                     <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
-                                        pTooltip="Ver" [text]="true"></p-button>
+                                        (onClick)="verSustento(sustento)" pTooltip="Ver" [text]="true"></p-button>
                                     <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-sm"
                                         (onClick)="startEditingSustento(sustento)" [disabled]="isAnyRowEditing"
                                         pTooltip="Modificar" [text]="true"></p-button>

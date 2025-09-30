@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -27,6 +27,7 @@ interface FacturaDetalle {
 interface SustentoAdjunto {
   nombreArchivo: string;
   descripcion: string;
+  archivo?: File;
 }
 
 @Component({
@@ -51,6 +52,8 @@ interface SustentoAdjunto {
   providers: [ConfirmationService, MessageService, DatePipe],
 })
 export class RegistroCobroDetalleComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  
   navigationData: any;
   items: any[] = [];
   
@@ -129,11 +132,8 @@ export class RegistroCobroDetalleComponent implements OnInit {
       }
     ];
     
-    this.sustentosAdjuntos = [
-      { nombreArchivo: 'deposito.pdf', descripcion: 'Deposito' },
-      { nombreArchivo: 'Correo de pago.pdf', descripcion: 'Correo' },
-      { nombreArchivo: '1503461.pdf', descripcion: 'doc de pago sani' }
-    ];
+    // Inicializa vacío para que solo se muestren los archivos seleccionados
+    this.sustentosAdjuntos = [];
     
     this.load = false;
   }
@@ -200,7 +200,68 @@ export class RegistroCobroDetalleComponent implements OnInit {
     });
   }
 
+  agregarNuevaFactura() {
+    // TODO: Implementar funcionalidad
+    console.log('Agregar nueva factura');
+  }
+
   // Métodos para tabla Sustentos Adjuntos
+  agregarNuevoSustento() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const archivos = Array.from(input.files);
+      
+      archivos.forEach(archivo => {
+        // Verificar si el archivo ya existe
+        const existe = this.sustentosAdjuntos.some(
+          s => s.nombreArchivo === archivo.name
+        );
+        
+        if (!existe) {
+          // Extraer el nombre sin extensión para la descripción
+          const nombreSinExtension = this.obtenerNombreSinExtension(archivo.name);
+          
+          const nuevoSustento: SustentoAdjunto = {
+            nombreArchivo: archivo.name,
+            descripcion: nombreSinExtension,
+            archivo: archivo
+          };
+          
+          this.sustentosAdjuntos.push(nuevoSustento);
+        } else {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Advertencia',
+            detail: `El archivo ${archivo.name} ya fue agregado`
+          });
+        }
+      });
+      
+      if (archivos.length > 0) {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `${archivos.length} archivo(s) agregado(s) correctamente`
+        });
+      }
+      
+      // Limpiar el input para permitir seleccionar los mismos archivos nuevamente
+      input.value = '';
+    }
+  }
+
+  obtenerNombreSinExtension(nombreArchivo: string): string {
+    const ultimoPunto = nombreArchivo.lastIndexOf('.');
+    if (ultimoPunto === -1) {
+      return nombreArchivo;
+    }
+    return nombreArchivo.substring(0, ultimoPunto);
+  }
+
   startEditingSustento(sustento: SustentoAdjunto) {
     if (this.isAnyRowEditing) return;
     this.editingSustento = { ...sustento };
@@ -249,6 +310,19 @@ export class RegistroCobroDetalleComponent implements OnInit {
     });
   }
 
+  verSustento(sustento: SustentoAdjunto) {
+    if (sustento.archivo) {
+      const url = URL.createObjectURL(sustento.archivo);
+      window.open(url, '_blank');
+    } else {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Información',
+        detail: 'No se puede previsualizar este archivo'
+      });
+    }
+  }
+
   // Métodos de utilidad
   getTotalFacturas(field: keyof FacturaDetalle): number {
     return this.facturasAfectadas.reduce(
@@ -256,13 +330,4 @@ export class RegistroCobroDetalleComponent implements OnInit {
       0
     );
   }
-  agregarNuevaFactura() {
-  // TODO: Implementar funcionalidad
-  console.log('Agregar nueva factura');
-}
-
-agregarNuevoSustento() {
-  // TODO: Implementar funcionalidad
-  console.log('Agregar nuevo sustento');
-}
 }
