@@ -114,7 +114,7 @@ constructor(
                 // console.log(this.numeropresupuestoMod);
                 // console.log(this.fechapresupuestoMod);
                 // console.log('--- end component agregar pago typscript');
-
+                
                 // const detallePresupuesto: insert_detalle = {
                 //     empresa: this.globalService.getCodigoEmpresa(),
                 //     numeropresupuesto: this.numeropresupuestoMod || '', // Si es null, enviar string vacío

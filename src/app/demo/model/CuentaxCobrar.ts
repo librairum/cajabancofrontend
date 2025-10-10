@@ -74,6 +74,15 @@ export interface ClienteconFactura{
     codigoCliente:string;
     nombreCliente:string;
 }
+export interface TraeRegistroCobroDetalle{
+    nroDocumento:string;	
+    fechaDocumento:string;
+    importeOriginalDolares:string;
+    importeOriginalSoles:string;
+    importePagadoDolares:string;
+    importePagadoSoles:string;
+
+}
 /*
 Ban05Empresa	varchar
 Ban05Numero	varchar

@@ -8,7 +8,7 @@ import {
 } from 'rxjs';
 import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
-import { RegistroCobro, RegistroCobroDetalle, FacturaPorCobrar } from "../model/CuentaxCobrar";
+import { RegistroCobro, RegistroCobroDetalle, FacturaPorCobrar, TraeRegistroCobroDetalle } from "../model/CuentaxCobrar";
 import { HttpParams } from "@angular/common/http";
 import { MedioPago } from "../model/presupuesto";
 import { RetencionDetallePresupuestoComponent } from "../components/retencion/retencion-detalle-presupuesto/retencion-detalle-presupuesto.component";
@@ -117,6 +117,26 @@ this.cobroService.obtenerMedioPago
 
         }
 
+        public getListaDetalle(empresa:string, 
+            numeroRegistroCobroCab:string):Observable<TraeRegistroCobroDetalle[]>{
+                const params = new HttpParams().set('empresa', empresa)
+                                                .set('numeroRegistroCobroCab',numeroRegistroCobroCab);
+                            return this.http.get<RespuestaAPIBase<TraeRegistroCobroDetalle[]>>(
+                                `${this.urlAPI}/ListaDetalle`, {params}
+                            ).pipe(map((response)=> response.data));
+
+        }
+    public actualizaDetalle(registro:RegistroCobroDetalle){
+        return this.http.put<any>(this.urlAPI+ '/ActualizaDetalle', registro);
+    }
+    /*
+    string empresa, string numeroRegistroCobroCab, int item, string tipodoc, string nroDocumento
+    */ 
+    public eliminarDetale(empresa:string, numeroRegistroCobroCab:string, 
+        item:number, tipodoc:string, nroDocumento:string){
+          let urlElimina = `${this.urlAPI}/EliminaDetalle?empresa=${empresa}&numeroRegistroCobroCab=${numeroRegistroCobroCab}&item=${item}&tipodoc=${tipodoc}&nroDocumento=${nroDocumento}`;
+            return this.http.delete<any>(urlElimina);
+        }
     //public getListaCliente()
     private handleError(error: HttpErrorResponse) {
         let errorMessage = 'Error desconocido';
