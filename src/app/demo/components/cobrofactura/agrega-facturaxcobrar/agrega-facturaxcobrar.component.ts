@@ -108,8 +108,8 @@ constructor(
                 });
         
                 const xmlString = new XMLSerializer().serializeToString(xmlDoc);
-                console.log("dato de xml");
-                 console.log(xmlString);
+                // console.log("dato de xml");
+                //  console.log(xmlString);
                 // console.log('--- component agregar pago typscript');
                 // console.log(this.numeropresupuestoMod);
                 // console.log(this.fechapresupuestoMod);

@@ -27,8 +27,8 @@
                 <!-- Contenedor de botones alineados a la derecha -->
                 <div style="display: flex; gap: 0.5rem;">
                     <p-button label="Agregar" icon="pi pi-plus" (onClick)="onAddSelected()"></p-button>
-                    <p-button label="Cancelar" icon="pi pi-ban" severity="danger"  (onClick)="onCancelSelection()"></p-button> 
-                
+                    <p-button label="Cancelar" icon="pi pi-ban" severity="danger"  (onClick)="onCancelSelection()"></p-button>
+
                     <!--
                     <p-button label="Cerrar" icon="pi pi-times" (onClick)="onCerrar()"></p-button>
                 -->
@@ -37,13 +37,13 @@
         </form>
         <br>
 
-    
-      
-
         <p-table [value]="listaFacturas" [scrollable]="true" scrollHeight="400px"
             [scrollDirection]="'both'" [loading]="loading"
             showGridlines [(selection)]="selectedItems"
-            dataKey="clave">
+            dataKey="clave"
+            [virtualScroll]="true"
+            [rows]="100"
+            >
             <ng-template pTemplate="header">
                 <tr>
 
@@ -56,7 +56,7 @@
                     <th>S/. </th>
                     <th>US$</th>
                     <th>Fecha Emision</th>
-                    
+
                     <th style="width: 4rem">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
@@ -72,8 +72,8 @@
                     <td style="text-align: right;">{{ayudapago.totalSoles | number:'1.2-2'}}</td>
                     <td style="text-align: right;">{{ayudapago.totalDolares | number:'1.2-2'}}</td>
                     <td style="text-align: left;">{{ayudapago.fecha}}</td>
-                    
-                    
+
+
                     <td>
                         <p-tableCheckbox [value]="ayudapago"></p-tableCheckbox>
                     </td>
