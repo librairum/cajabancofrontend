@@ -1,6 +1,15 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
+<p-dialog [(visible)]="displayModal"  [modal]="true" header="Confirmar pago"  
+[style]="{ width: '100vw', height: 'auto' }" [draggable]="false" 
+[resizable]="false" [maximizable]="true" 
+[baseZIndex]="10000">
+    <app-agrega-facturaxcobrar 
+        [codigoCliente]="clienteCodigo"
+        [nombreCliente]="clienteNombre" >
 
+    </app-agrega-facturaxcobrar>
+</p-dialog>
 <!-- Input file oculto para seleccionar archivos -->
 <input #fileInput type="file" multiple style="display: none;" 
        (change)="onFileSelected($event)" 
@@ -29,7 +38,7 @@
 
             <div style="flex: 1;">
                 <label for="cliente" class="text-sm">Cliente: </label>
-                <input pInputText id="cliente" [value]="cliente" [disabled]="true"
+                <input pInputText id="cliente" [value]="clienteNombre" [disabled]="true"
                     style="width: 100%; height: 2.5rem;" />
             </div>
         </div>
@@ -52,6 +61,7 @@
                         <th>Moneda</th>
                         <th>Importe Original</th>
                         <th>Importe Pagado</th>
+                        <th>Observaciones</th>
                         <th>Acciones</th>
                     </tr>
                 </ng-template>
@@ -68,7 +78,9 @@
                                        style="width: 100%; text-align: right;" />
                             </ng-container>
                             <ng-template #viewPagado>{{ factura.importePagado | number:'1.2-2' }}</ng-template>
+                            
                         </td>
+                        <td>Observaciones</td>
                         <td>
                             <div class="flex gap-2 justify-content-center">
                                 <ng-container *ngIf="editingFactura?.numero === factura.numero; else editButtons">

@@ -15,6 +15,7 @@ import { DialogModule } from 'primeng/dialog';
 import { BreadcrumbService } from 'src/app/demo/service/breadcrumb.service';
 import { GlobalService } from 'src/app/demo/service/global.service';
 import { CobroFacturaService } from 'src/app/demo/service/cobrofactura.service';
+import { AgregaFacturaxcobrarComponent } from "../agrega-facturaxcobrar/agrega-facturaxcobrar.component";
 
 interface FacturaDetalle {
   numero: string;
@@ -46,7 +47,8 @@ interface SustentoAdjunto {
     CommonModule,
     FormsModule,
     DialogModule,
-  ],
+    AgregaFacturaxcobrarComponent
+],
   templateUrl: './registro-cobro-detalle.component.html',
   styleUrl: './registro-cobro-detalle.component.css',
   providers: [ConfirmationService, MessageService, DatePipe],
@@ -60,7 +62,7 @@ export class RegistroCobroDetalleComponent implements OnInit {
   // Campos de formulario
   cobroNro: string = '';
   fecha: Date;
-  cliente: string = '';
+  clienteNombre: string = '';
   clienteCodigo:string = '';
   // Tablas
   facturasAfectadas: FacturaDetalle[] = [];
@@ -72,6 +74,7 @@ export class RegistroCobroDetalleComponent implements OnInit {
   editingFactura: FacturaDetalle | null = null;
   editingSustento: SustentoAdjunto | null = null;
   isAnyRowEditing: boolean = false;
+  displayModal: boolean = false;
 
   constructor(
     private messageService: MessageService,
@@ -85,6 +88,8 @@ export class RegistroCobroDetalleComponent implements OnInit {
     const navigation = router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       this.navigationData = navigation.extras.state;
+      
+      // this.clienteCodigo =  this.navigationData.ClienteCodigo;
     } else {
       this.router.navigate(['Home/registro-cobro']);
     }
@@ -140,7 +145,7 @@ export class RegistroCobroDetalleComponent implements OnInit {
 
   valoresCampos() {
     this.cobroNro = this.navigationData?.CobroNro || '';
-    this.cliente = this.navigationData?.Cliente || '';
+    this.clienteNombre = this.navigationData?.clienteNombre || '';
     this.clienteCodigo = this.navigationData?.ClienteCodigo || '';
     const fechaString = this.navigationData?.Fecha;
     if (fechaString) {
@@ -202,7 +207,8 @@ export class RegistroCobroDetalleComponent implements OnInit {
 
   agregarNuevaFactura() {
     // TODO: Implementar funcionalidad
-    console.log('Agregar nueva factura');
+    
+    this.displayModal = true;
   }
 
   // Métodos para tabla Sustentos Adjuntos
@@ -253,7 +259,9 @@ export class RegistroCobroDetalleComponent implements OnInit {
       input.value = '';
     }
   }
-
+onCloseModal(){
+  this.displayModal = false;
+}
   obtenerNombreSinExtension(nombreArchivo: string): string {
     const ultimoPunto = nombreArchivo.lastIndexOf('.');
     if (ultimoPunto === -1) {

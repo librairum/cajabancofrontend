@@ -67,7 +67,8 @@ export interface FacturaPorCobrar{
     totalDolares:number;
     clave:string;
     clienteNombre:string;
-
+    moneda:string;
+    clienteCodigo:string;
 }
 export interface ClienteconFactura{
     codigoCliente:string;

@@ -78,14 +78,13 @@ constructor(
 /*
 this.cobroService.obtenerMedioPago
 */ 
-    public getListaFacturaPorCobrar( empresa:string,  anio:string,
-          mes:string,  usuario:string, 
+    public getListaAyudaFacturaPorCobrar( empresa:string,usuario:string, 
           clientecodigo:string):Observable<FacturaPorCobrar[]>{
             const params = new HttpParams()
             .set('empresa', empresa)
-            .set('anio', anio)
-            .set('mes', mes)
-            .set('usuario',usuario)
+            // .set('anio', anio)
+            // .set('mes', mes)
+            .set('usuario','sara')
             .set('clientecodigo',clientecodigo);
         return this.http
             .get<RespuestaAPIBase<FacturaPorCobrar[]>>(

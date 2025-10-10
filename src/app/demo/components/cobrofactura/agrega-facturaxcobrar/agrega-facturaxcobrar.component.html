@@ -5,7 +5,8 @@
         <form [formGroup]="filtroFRM">
             <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <label>Proveedor: </label>
+                    <label>Codigo: </label>
+                    <label>{{codigoCliente}}</label>
                     <!-- <p-dropdown [options]="proveedores" optionLabel="razonsocial" optionValue="ruc" formControlName="ruc"
                         (onChange)="onProveedorChallenge($event)" [filter]="true" filterBy="razonsocial" [showClear]="true"
                         placeholder="Seleccione un proveedor" styleClass="w-15rem" [virtualScroll]="true"
@@ -14,8 +15,8 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <label>Numero de Documento: </label>
-                    <input type="text" pInputText formControlName="nrodoc" style="width: 210px; overflow: hidden;" />
+                    <label>Razon social:</label>
+                   <label>{{nombreCliente}}</label>
                 </div>
             </div>
 
@@ -25,30 +26,29 @@
 
                 <!-- Contenedor de botones alineados a la derecha -->
                 <div style="display: flex; gap: 0.5rem;">
-                    <!-- <p-button label="Agregar" icon="pi pi-plus" (onClick)="onAddSelected()"></p-button>
-                    <p-button label="Cancelar" icon="pi pi-ban" severity="danger"  (onClick)="onCancelSelection()"></p-button> -->
+                    <p-button label="Agregar" icon="pi pi-plus" (onClick)="onAddSelected()"></p-button>
+                    <p-button label="Cancelar" icon="pi pi-ban" severity="danger"  (onClick)="onCancelSelection()"></p-button> 
+                
                     <!--
                     <p-button label="Cerrar" icon="pi pi-times" (onClick)="onCerrar()"></p-button>
-                    -->
+                -->
                 </div>
             </div>
         </form>
         <br>
 
-        <!--
-                <p-calendar formControlName="fechavencimiento" [showIcon]="true" [showOnFocus]="false"
-                    inputId="buttondisplay" styleClass="w-15rem" [panelStyle]="{width:'350px', overflow: 'hidden'}">
-                </p-calendar>-->
-<!-- 
-        <p-table [value]="ayudapago" [scrollable]="true" scrollHeight="400px"
+    
+      
+
+        <p-table [value]="listaFacturas" [scrollable]="true" scrollHeight="400px"
             [scrollDirection]="'both'" [loading]="loading"
             showGridlines [(selection)]="selectedItems"
             dataKey="clave">
             <ng-template pTemplate="header">
                 <tr>
 
-                    <th>RUC</th>
-                    <th>Razon Social</th>
+                    <!-- <th>RUC</th>
+                    <th>Razon Social</th> -->
                     <th>Tipo Doc</th>
                     <th>Numero</th>
 
@@ -56,10 +56,7 @@
                     <th>S/. </th>
                     <th>US$</th>
                     <th>Fecha Emision</th>
-                    <th>Fecha Vencimiento</th>
-                    <th>Dias Atrazo</th>
-                    <th>AfectaDetraccion</th>
-                    <th>AfectaRetencion</th>
+                    
                     <th style="width: 4rem">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
@@ -67,18 +64,16 @@
             </ng-template>
             <ng-template pTemplate="body" let-ayudapago>
                 <tr>
-                    <td style="text-align: left;">{{ayudapago.ruc}}</td>
-                    <td style="text-align: left;">{{ayudapago.razonSocial}}</td>
-                    <td style="text-align: left;">{{ayudapago.nombreTipoDOc}}</td>
-                    <td style="text-align: left;">{{ayudapago.numeroDOcumento}}</td>
-                    <td style="text-align: left;">{{ayudapago.monedaOriginal}}</td>
-                    <td style="text-align: right;">{{ayudapago.soles | number:'1.2-2'}}</td>
-                    <td style="text-align: right;">{{ayudapago.dolares | number:'1.2-2'}}</td>
-                    <td style="text-align: left;">{{ayudapago.fechaEmision}}</td>
-                    <td style="text-align: left;">{{ayudapago.fechaVencimiento}}</td>
-                    <td style="text-align: left;">{{ayudapago.diasAtrazo}}</td>
-                    <td style="text-align: left;">{{ayudapago.afectoDetraccion}}</td>
-                    <td style="text-align: left;">{{ayudapago.afectoRetencion}}</td>
+                    <!-- <td style="text-align: left;">{{ayudapago.clienteCodigo}}</td>
+                    <td style="text-align: left;">{{ayudapago.clienteNombre}}</td> -->
+                    <td style="text-align: left;">{{ayudapago.descripcionDocumento}}</td>
+                    <td style="text-align: left;">{{ayudapago.numeroDocumento}}</td>
+                    <td style="text-align: left;">{{ayudapago.moneda}}</td>
+                    <td style="text-align: right;">{{ayudapago.totalSoles | number:'1.2-2'}}</td>
+                    <td style="text-align: right;">{{ayudapago.totalDolares | number:'1.2-2'}}</td>
+                    <td style="text-align: left;">{{ayudapago.fecha}}</td>
+                    
+                    
                     <td>
                         <p-tableCheckbox [value]="ayudapago"></p-tableCheckbox>
                     </td>
@@ -91,7 +86,7 @@
                     </td>
                 </tr>
             </ng-template>
-        </p-table> -->
+        </p-table>
 
     </p-panel>
 </div>

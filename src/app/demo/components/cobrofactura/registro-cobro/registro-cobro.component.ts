@@ -23,6 +23,7 @@ import { TraeRegistroCobro } from 'src/app/demo/model/CuentaxCobrar';
 import { NgIf } from '@angular/common';
 import { PresupuestoService } from 'src/app/demo/service/presupuesto.service';
 import { proveedores_lista } from 'src/app/demo/model/presupuesto';
+
 @Component({
   selector: 'app-registro-cobro',
   standalone: true,
@@ -37,17 +38,17 @@ import { proveedores_lista } from 'src/app/demo/model/presupuesto';
 export class RegistroCobroComponent implements OnInit{
 
   items: any[] = [];
-    prueba!: any[];
-    anioFecha: string = '';
-    mesFecha: string = '';
-    listaRegistroCobro: TraeRegistroCobro[] = [];
-    loading: boolean = false;
-    mostrarNuevaFila: boolean = false;
-    botonesDeshabilitados: boolean = false;
-   medioPagoLista: mediopago_lista[] = [];
-   selectMedioPago: string | null = null;
-   rowsPerPage: number = 10; // Numero de filas por página
-   monedaOpciones : any[] = [];
+  prueba!: any[];
+  anioFecha: string = '';
+  mesFecha: string = '';
+  listaRegistroCobro: TraeRegistroCobro[] = [];
+  loading: boolean = false;
+  mostrarNuevaFila: boolean = false;
+  botonesDeshabilitados: boolean = false;
+  medioPagoLista: mediopago_lista[] = [];
+  selectMedioPago: string | null = null;
+  rowsPerPage: number = 10; // Numero de filas por página
+  monedaOpciones : any[] = [];
   proveedores: proveedores_lista[];
   selectCliente:string | null =null;
   listaClientes:ClienteconFactura[] =[];
@@ -268,8 +269,24 @@ export class RegistroCobroComponent implements OnInit{
               'Registro guardardo');
               this.mostrarNuevaFila = false;
               this.botonesDeshabilitados = false;
+
               this.cargar();
               const nuevoCodigoRegistroCobro = response.item;
+              //abrir la venta de factura la iniciar el formulario detALLE
+              if(nuevoCodigoRegistroCobro){
+                this.router.navigate(['/Home/registro_cobro_detalle'], {
+                state: {
+                  CobroNro: nuevoCodigoRegistroCobro,
+                  Fecha: this.nuevoFormulario.ban03FechaDeposito,
+                  Cliente: '',
+                  ClienteCodigo:this.nuevoFormulario.ban03clienteruc,
+                  Anio: this.nuevoFormulario.ban03Anio,
+                  Mes: this.nuevoFormulario.ban03Mes,
+                  verFacturas:true
+                  
+                  }
+                });
+              }
               // if(nuevoCodigoRegistroCobro){
               //   //cargar detalle con codigo recine  generado 
 
@@ -397,9 +414,11 @@ export class RegistroCobroComponent implements OnInit{
       this.cargarCliente();
   }
 
+verDetalleNuevo(registro:RegistroCobro, nuevoCodigoRegistroCobro:boolean){
 
-verDetalles(registro: TraeRegistroCobro) {
-  
+}
+verDetalles(registro: TraeRegistroCobro,nuevoRegistro:boolean) {
+ 
   this.router.navigate(['/Home/registro_cobro_detalle'], {
     state: {
       CobroNro: registro.ban03numero,
@@ -407,8 +426,11 @@ verDetalles(registro: TraeRegistroCobro) {
       Cliente: registro.clienteNombre,
       ClienteCodigo:registro.clienteCodigo,
       Anio: registro.ban03anio,
-      Mes: registro.ban03mes
+      Mes: registro.ban03mes,
+      verFacturas:nuevoRegistro
+      
       }
     });
+    
   }
 }
