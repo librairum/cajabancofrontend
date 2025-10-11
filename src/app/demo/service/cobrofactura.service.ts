@@ -5,151 +5,394 @@ import {
     map,
     Observable,
     throwError,
+    switchMap,
+    forkJoin,
+    of,
+    expand,
+    takeWhile,
+    delay
 } from 'rxjs';
 import { ConfigService } from './config.service';
 import { RespuestaAPIBase } from '../components/utilities/funciones_utilitarias';
-import { RegistroCobro, RegistroCobroDetalle, FacturaPorCobrar, TraeRegistroCobroDetalle } from "../model/CuentaxCobrar";
+import { 
+    RegistroCobro, 
+    RegistroCobroDetalle, 
+    RegistroCobroDocSustento,
+    FacturaPorCobrar, 
+    TraeRegistroCobroDetalle,
+    TraeRegistroCobro,
+    ClienteconFactura 
+} from "../model/CuentaxCobrar";
 import { HttpParams } from "@angular/common/http";
-import { MedioPago } from "../model/presupuesto";
-import { RetencionDetallePresupuestoComponent } from "../components/retencion/retencion-detalle-presupuesto/retencion-detalle-presupuesto.component";
-import { TraeRegistroCobro } from "../model/CuentaxCobrar";
-import { proveedores_lista } from "../model/presupuesto";
-import { ClienteconFactura } from "../model/CuentaxCobrar";
+import { MedioPago, proveedores_lista } from "../model/presupuesto";
+
 @Injectable({
     providedIn:'root'
 })
 export class CobroFacturaService{
-        private http = inject(HttpClient);
-    //apiUrl: string = ''; //
-    urlAPI: string = ''; //
+    private http = inject(HttpClient);
+    urlAPI: string = '';
     apiUrl: any;
-constructor(
+
+    constructor(
         private httpClient: HttpClient,
         private configService: ConfigService
     ) {
         this.apiUrl = configService.getApiUrl();
         this.urlAPI = `${this.apiUrl}/CobroFactura`;
-        // console.log(this.urlAPI);
     }
+
+    // ==================== MÉTODOS CABECERA ====================
+    
     public getListaRegistroCobro(empresa:string, anio:string, mes:string):Observable<TraeRegistroCobro[]>{
         let urlObtener = `${this.urlAPI}/Lista?empresa=${empresa}&anio=${anio}&mes=${mes}`;
         return this.http
             .get<RespuestaAPIBase<TraeRegistroCobro[]>>(urlObtener)
             .pipe(
-                map((response: RespuestaAPIBase<TraeRegistroCobro[]>) =>
-                {
+                map((response: RespuestaAPIBase<TraeRegistroCobro[]>) => {
                     if(response.isSuccess && response.data){
                         return response.data;
                     }else{
-                        console.error('Error en la API:' , 
+                        console.error('Error en la API:', 
                             response.message,
-                        response.messageException);
+                            response.messageException);
                         return [];
                     }
-                }), catchError(this.handleError)
-            )
-    }
-    public insertRegistroCobro(registro:RegistroCobro):Observable<any>{
-        return this.http.post<any>(this.urlAPI + '/Inserta' , registro);
+                }), 
+                catchError(this.handleError)
+            );
     }
 
-    public updateRegistroCobro(registro:RegistroCobro){
+    public insertRegistroCobro(registro:RegistroCobro):Observable<any>{
+        return this.http.post<any>(this.urlAPI + '/Inserta', registro);
+    }
+
+    public updateRegistroCobro(registro:RegistroCobro):Observable<any>{
         return this.http.put<any>(this.urlAPI + '/Actualiza', registro);
     }
 
-    public deleteRegistroCobro(empresa:string, 
-        anio:string, mes:string, numero:string ){ 
-        // Se revierte a la interpolación de cadenas para garantizar la máxima compatibilidad de enrutamiento con el Backend C#.
+    public deleteRegistroCobro(empresa:string, anio:string, mes:string, numero:string):Observable<any>{ 
         let urlElimina = `${this.urlAPI}/Elimina?empresa=${empresa}&anio=${anio}&mes=${mes}&numero=${numero}`;
         return this.http.delete<any>(urlElimina);
     }
-    public getListaMedioPago(empresa: string): Observable<MedioPago[]> {
-            const params = new HttpParams().set('empresa', empresa);
-            /*https://localhost:7277/Presupuesto/SpTraeTipoPago?empresa=01*/
-            return this.http
-                .get<RespuestaAPIBase<MedioPago[]>>(
-                    `/Presupuesto/SpTraeTipoPago`,
-                    {
-                        params,
-                    }
-                )
-                .pipe(map((response) => response.data));
+
+    // ==================== MÉTODOS DETALLE ====================
+
+    public insertarDetalleXML(data: any): Observable<any> {
+        console.log('📡 POST InsertaDetalle');
+        
+        return this.http.post<any>(`${this.urlAPI}/InsertaDetalle`, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).pipe(
+            map(response => {
+                console.log('✅ POST Response:', response);
+                
+                if (response.isSuccess === false) {
+                    const errorMsg = response.messageException || response.message || 'Error en servidor';
+                    throw new Error(errorMsg);
+                }
+                
+                return response;
+            }),
+            catchError((error) => {
+                console.error('❌ Error POST:', error);
+                
+                let errorMessage = 'Error desconocido';
+                
+                if (error instanceof Error) {
+                    errorMessage = error.message;
+                } else if (error.error) {
+                    errorMessage = error.error.messageException 
+                        || error.error.message 
+                        || error.error.Message 
+                        || JSON.stringify(error.error);
+                }
+                
+                return throwError(() => new Error(errorMessage));
+            })
+        );
     }
-/*
-this.cobroService.obtenerMedioPago
-*/ 
-    public getListaAyudaFacturaPorCobrar( empresa:string,usuario:string, 
-          clientecodigo:string):Observable<FacturaPorCobrar[]>{
-            const params = new HttpParams()
+
+    public actualizaDetalle(
+        empresa: string,
+        numeroRegistroCobroCab: string,
+        item: number,
+        tipodoc: string,
+        nroDocumento: string,
+        pagoSoles: number,
+        pagoDolares: number,
+        observacion: string
+    ): Observable<any> {
+        const params = new HttpParams()
             .set('empresa', empresa)
-            // .set('anio', anio)
-            // .set('mes', mes)
-            .set('usuario','sara')
-            .set('clientecodigo',clientecodigo);
+            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
+            .set('item', item.toString())
+            .set('tipodoc', tipodoc)
+            .set('nroDocumento', nroDocumento)
+            .set('pagoSoles', pagoSoles.toString())
+            .set('pagoDolares', pagoDolares.toString())
+            .set('observacion', observacion);
+        
+        console.log('📡 PUT ActualizaDetalle:', params.toString());
+        
+        return this.http.put<any>(`${this.urlAPI}/ActualizaDetalle`, null, { params }).pipe(
+            map(response => {
+                console.log('✅ PUT Response:', response);
+                return response;
+            }),
+            catchError(this.handleError)
+        );
+    }
+
+    public eliminarDetale(
+        empresa: string, 
+        numeroRegistroCobroCab: string, 
+        item: number, 
+        tipodoc: string, 
+        nroDocumento: string
+    ): Observable<any> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
+            .set('item', item.toString())
+            .set('tipodoc', tipodoc)
+            .set('nroDocumento', nroDocumento);
+        
+        console.log('📡 DELETE EliminaDetalle:', params.toString());
+        
+        return this.http.delete<any>(`${this.urlAPI}/EliminaDetalle`, { params }).pipe(
+            map(response => {
+                console.log('✅ DELETE Response:', response);
+                return response;
+            }),
+            catchError(this.handleError)
+        );
+    }
+
+    /**
+     * 🔥 ESTRATEGIA NUEVA: Eliminar de forma recursiva hasta que ya no exista
+     * El backend elimina de a uno, así que llamamos múltiples veces
+     */
+    public eliminarDetalePorDocumento(
+        empresa: string, 
+        numeroRegistroCobroCab: string, 
+        nroDocumento: string
+    ): Observable<any> {
+        console.log('🔄 Iniciando eliminación recursiva de:', nroDocumento);
+        
+        let intentos = 0;
+        const maxIntentos = 10; // Máximo 10 intentos para evitar loop infinito
+        
+        // Función recursiva que elimina uno por uno
+        return this.eliminarUnaVez(empresa, numeroRegistroCobroCab, nroDocumento, 1).pipe(
+            expand(() => {
+                intentos++;
+                
+                if (intentos >= maxIntentos) {
+                    console.log('⚠️ Alcanzado máximo de intentos');
+                    return of(null);
+                }
+                
+                // Verificar si aún existe el documento
+                return this.getListaDetalle(empresa, numeroRegistroCobroCab).pipe(
+                    delay(300), // Pequeño delay para que el backend procese
+                    switchMap(detalles => {
+                        const existe = detalles.some(d => d.nroDocumento === nroDocumento);
+                        
+                        if (existe) {
+                            console.log(`🔄 Aún existe, reintentando... (intento ${intentos + 1})`);
+                            return this.eliminarUnaVez(empresa, numeroRegistroCobroCab, nroDocumento, intentos + 1);
+                        } else {
+                            console.log('✅ Documento completamente eliminado');
+                            return of(null);
+                        }
+                    })
+                );
+            }),
+            takeWhile(result => result !== null, true),
+            map(() => ({ success: true, intentos: intentos + 1 }))
+        );
+    }
+
+    /**
+     * Elimina un registro con el nroDocumento (el backend decide cuál)
+     */
+    private eliminarUnaVez(
+        empresa: string,
+        numeroRegistroCobroCab: string,
+        nroDocumento: string,
+        intento: number
+    ): Observable<any> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
+            .set('item', '1') // Siempre 1, el backend debe manejar por nroDocumento
+            .set('tipodoc', '01')
+            .set('nroDocumento', nroDocumento);
+        
+        console.log(`   🗑️ Intento ${intento} - DELETE con nroDocumento: ${nroDocumento}`);
+        
+        return this.http.delete<any>(`${this.urlAPI}/EliminaDetalle`, { params }).pipe(
+            map(response => {
+                console.log(`   ✅ Backend respondió: ${JSON.stringify(response)}`);
+                return response;
+            }),
+            catchError(error => {
+                console.error(`   ❌ Error:`, error);
+                return of({ success: false });
+            })
+        );
+    }
+
+    public getListaDetalle(
+        empresa: string, 
+        numeroRegistroCobroCab: string
+    ): Observable<TraeRegistroCobroDetalle[]> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('numeroRegistroCobroCab', numeroRegistroCobroCab);
+        
+        return this.http.get<RespuestaAPIBase<TraeRegistroCobroDetalle[]>>(
+            `${this.urlAPI}/ListaDetalle`, 
+            { params }
+        ).pipe(
+            map((response) => {
+                if(response.isSuccess && response.data){
+                    return response.data;
+                } else {
+                    console.error('⚠️ API error:', response.message);
+                    return [];
+                }
+            }),
+            catchError(this.handleError)
+        );
+    }
+
+    // ==================== MÉTODOS SUSTENTOS ====================
+
+    public insertarSustento(registro: RegistroCobroDocSustento): Observable<any> {
+        return this.http.post<any>(`${this.urlAPI}/InsertaSustento`, registro).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    public actualizarSustento(
+        empresa: string,
+        numeroRegistroCobroCab: string,
+        item: number,
+        nombreArchivo: string,
+        descripcionArchivo: string
+    ): Observable<any> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
+            .set('item', item.toString())
+            .set('nombreArchivo', nombreArchivo)
+            .set('descripcionArchivo', descripcionArchivo);
+        
+        return this.http.put<any>(`${this.urlAPI}/ActualizaSustento`, null, { params }).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    public eliminarSustento(
+        empresa: string,
+        numeroRegistroCobroCab: string,
+        item: number
+    ): Observable<any> {
+        let urlElimina = `${this.urlAPI}/EliminaSustento?empresa=${empresa}&numeroRegistroCobroCab=${numeroRegistroCobroCab}&item=${item}`;
+        return this.http.delete<any>(urlElimina).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    public obtenerSustento(
+        empresa: string,
+        numeroRegistroCobroCab: string,
+        item: number
+    ): Observable<any> {
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
+            .set('item', item.toString());
+        
+        return this.http.get<any>(`${this.urlAPI}/ObtenerSustento`, { params }).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    // ==================== MÉTODOS AUXILIARES ====================
+
+    public getListaMedioPago(empresa: string): Observable<MedioPago[]> {
+        const params = new HttpParams().set('empresa', empresa);
+        return this.http
+            .get<RespuestaAPIBase<MedioPago[]>>(
+                `/Presupuesto/SpTraeTipoPago`,
+                { params }
+            )
+            .pipe(
+                map((response) => response.data),
+                catchError(this.handleError)
+            );
+    }
+
+    public getListaAyudaFacturaPorCobrar(
+        empresa:string,
+        usuario:string, 
+        clientecodigo:string
+    ):Observable<FacturaPorCobrar[]>{
+        const params = new HttpParams()
+            .set('empresa', empresa)
+            .set('usuario', usuario)
+            .set('clientecodigo', clientecodigo);
+        
         return this.http
             .get<RespuestaAPIBase<FacturaPorCobrar[]>>(
                 `${this.urlAPI}/TraeFacturaPorCobrar`,
-                {
-                    params
-                }
+                { params }
             )
-            .pipe(map((response) => response.data));
-          } 
+            .pipe(
+                map((response) => response.data),
+                catchError(this.handleError)
+            );
+    } 
 
-     public getListaProveedores(
-            empresa: string
-        ): Observable<proveedores_lista[]> {
-            const params = new HttpParams().set('empresa', empresa);
-            return this.http
-                .get<RespuestaAPIBase<proveedores_lista[]>>(
-                    `/Presupuesto/SpTraeProveedores`,
-                    { params }
-                )
-                .pipe(map((response) => response.data));
-        }
-
-    public getListaCliente(empresa:string
-        ):Observable<ClienteconFactura[]>{
-            const params = new HttpParams().set('empresa', empresa);
-            return this.http.get<RespuestaAPIBase<ClienteconFactura[]>>(
-            `${this.urlAPI}/TraeClienteconFactura`,{params}
-            ).pipe(map((response)=>response.data));
-
-        }
-
-        public getListaDetalle(empresa:string, 
-            numeroRegistroCobroCab:string):Observable<TraeRegistroCobroDetalle[]>{
-                const params = new HttpParams().set('empresa', empresa)
-                                                .set('numeroRegistroCobroCab',numeroRegistroCobroCab);
-                            return this.http.get<RespuestaAPIBase<TraeRegistroCobroDetalle[]>>(
-                                `${this.urlAPI}/ListaDetalle`, {params}
-                            ).pipe(map((response)=> response.data));
-
-        }
-    public actualizaDetalle(registro:RegistroCobroDetalle){
-        return this.http.put<any>(this.urlAPI+ '/ActualizaDetalle', registro);
+    public getListaProveedores(empresa: string): Observable<proveedores_lista[]> {
+        const params = new HttpParams().set('empresa', empresa);
+        return this.http
+            .get<RespuestaAPIBase<proveedores_lista[]>>(
+                `/Presupuesto/SpTraeProveedores`,
+                { params }
+            )
+            .pipe(
+                map((response) => response.data),
+                catchError(this.handleError)
+            );
     }
-    /*
-    string empresa, string numeroRegistroCobroCab, int item, string tipodoc, string nroDocumento
-    */ 
-    public eliminarDetale(empresa:string, numeroRegistroCobroCab:string, 
-        item:number, tipodoc:string, nroDocumento:string){
-          let urlElimina = `${this.urlAPI}/EliminaDetalle?empresa=${empresa}&numeroRegistroCobroCab=${numeroRegistroCobroCab}&item=${item}&tipodoc=${tipodoc}&nroDocumento=${nroDocumento}`;
-            return this.http.delete<any>(urlElimina);
-        }
-    //public getListaCliente()
+
+    public getListaCliente(empresa:string):Observable<ClienteconFactura[]>{
+        const params = new HttpParams().set('empresa', empresa);
+        return this.http.get<RespuestaAPIBase<ClienteconFactura[]>>(
+            `${this.urlAPI}/TraeClienteconFactura`,
+            { params }
+        ).pipe(
+            map((response) => response.data),
+            catchError(this.handleError)
+        );
+    }
+
+    // ==================== MANEJO DE ERRORES ====================
+
     private handleError(error: HttpErrorResponse) {
         let errorMessage = 'Error desconocido';
         if (error.error instanceof ErrorEvent) {
             errorMessage = `Error: ${error.error.message}`;
         } else {
-            errorMessage = `Código de error: ${error.status}\nMensaje: ${error.message}`;
+            errorMessage = `Código: ${error.status}\nMensaje: ${error.message}`;
         }
         console.error(errorMessage);
         return throwError(() => new Error(errorMessage));
-
     }
-
-
-
 }

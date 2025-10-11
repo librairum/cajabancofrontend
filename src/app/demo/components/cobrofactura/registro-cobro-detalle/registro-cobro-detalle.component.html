@@ -1,15 +1,6 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
-<p-dialog [(visible)]="displayModal"  [modal]="true" header="Confirmar pago"  
-[style]="{ width: '100vw', height: 'auto' }" [draggable]="false" 
-[resizable]="false" [maximizable]="true" 
-[baseZIndex]="10000">
-    <app-agrega-facturaxcobrar 
-        [codigoCliente]="clienteCodigo"
-        [nombreCliente]="clienteNombre" >
 
-    </app-agrega-facturaxcobrar>
-</p-dialog>
 <!-- Input file oculto para seleccionar archivos -->
 <input #fileInput type="file" multiple style="display: none;" 
        (change)="onFileSelected($event)" 
@@ -51,7 +42,8 @@
             <div class="flex justify-content-between align-items-center mb-2">
                 <h3 class="m-0">FACTURAS AFECTADAS</h3>
                 <p-button label="Nuevo" icon="pi pi-plus" styleClass="p-button-sm" 
-                          (onClick)="agregarNuevaFactura()"></p-button>
+                          (onClick)="agregarNuevaFactura()"
+                          [disabled]="isAnyRowEditing"></p-button>
             </div>
             <p-table [value]="facturasAfectadas" styleClass="tabla-facturas" [scrollable]="true" scrollHeight="300px" [loading]="load">
                 <ng-template pTemplate="header">
@@ -78,9 +70,14 @@
                                        style="width: 100%; text-align: right;" />
                             </ng-container>
                             <ng-template #viewPagado>{{ factura.importePagado | number:'1.2-2' }}</ng-template>
-                            
                         </td>
-                        <td>Observaciones</td>
+                        <td>
+                            <ng-container *ngIf="editingFactura?.numero === factura.numero; else viewObs">
+                                <input pInputText [(ngModel)]="editingFactura.observaciones" 
+                                       style="width: 100%;" />
+                            </ng-container>
+                            <ng-template #viewObs>{{ factura.observaciones }}</ng-template>
+                        </td>
                         <td>
                             <div class="flex gap-2 justify-content-center">
                                 <ng-container *ngIf="editingFactura?.numero === factura.numero; else editButtons">
@@ -111,13 +108,13 @@
                         <td class="font-bold" style="text-align: right;">
                             {{ getTotalFacturas('importePagado') | number:'1.2-2' }}
                         </td>
-                        <td></td>
+                        <td colspan="2"></td>
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="6" style="text-align: center; font-weight: bold; padding: 1rem;">
+                        <td colspan="7" style="text-align: center; font-weight: bold; padding: 1rem;">
                             No se encontraron facturas
                         </td>
                     </tr>
@@ -130,7 +127,8 @@
             <div class="flex justify-content-between align-items-center mb-2">
                 <h3 class="m-0">SUSTENTO ADJUNTO</h3>
                 <p-button label="Nuevo" icon="pi pi-plus" styleClass="p-button-sm" 
-                          (onClick)="agregarNuevoSustento()"></p-button>
+                          (onClick)="agregarNuevoSustento()"
+                          [disabled]="isAnyRowEditing"></p-button>
             </div>
 
             <p-table [value]="sustentosAdjuntos" styleClass="tabla-sustentos" [scrollable]="true" scrollHeight="300px" [loading]="load">
@@ -186,3 +184,25 @@
     </div>
     
 </div>
+
+<!-- Modal para agregar facturas -->
+<p-dialog 
+    [(visible)]="displayModal"  
+    [modal]="true" 
+    header="Seleccionar Facturas"  
+    [style]="{ width: '90vw', height: 'auto' }" 
+    [draggable]="false" 
+    [resizable]="false" 
+    [maximizable]="true" 
+    [baseZIndex]="10000"
+    (onHide)="onCloseModal()">
+    
+    <app-agrega-facturaxcobrar 
+        [codigoCliente]="clienteCodigo"
+        [nombreCliente]="clienteNombre"
+        [cobroNro]="cobroNro"
+        [empresa]="empresa"
+        (xmlGenerado)="onFacturasSeleccionadas($event)"
+        (onClose)="onCloseModal()">
+    </app-agrega-facturaxcobrar>
+</p-dialog>
