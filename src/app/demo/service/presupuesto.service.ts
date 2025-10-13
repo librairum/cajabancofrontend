@@ -200,12 +200,12 @@ export class PresupuestoService {
 
   
     // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
-    public EliminarArchivo(rutaArchivo: string): Observable<any> {
-        const params = new HttpParams().set('rutaArchivo', rutaArchivo);
-        return this.http.delete(`${this.urlApi}/EliminarArchivo`, {
-            params,
-        });
-    }
+    // public EliminarArchivo(rutaArchivo: string): Observable<any> {
+    //     const params = new HttpParams().set('rutaArchivo', rutaArchivo);
+    //     return this.http.delete(`${this.urlApi}/EliminarArchivo`, {
+    //         params,
+    //     });
+    // }
 
     ////obetener voucher contable////////////////
     public obtenerVoucherContableDetalle(
@@ -243,16 +243,16 @@ export class PresupuestoService {
     }
 
     // metodo para  validar y retirar  ya  qe no es llamado a ninguna componente
-    public eliminarVoucherContableDetalle(
-        empresa: string,
-        orden: number
-    ): Observable<any> {
-        const params = new HttpParams()
-            .set('empresa', empresa)
-            .set('orden', orden.toString()); // Ajuste para que coincida con la interfaz
+    // public eliminarVoucherContableDetalle(
+    //     empresa: string,
+    //     orden: number
+    // ): Observable<any> {
+    //     const params = new HttpParams()
+    //         .set('empresa', empresa)
+    //         .set('orden', orden.toString()); // Ajuste para que coincida con la interfaz
 
-        return this.http.delete(`${this.urlApi}/SpEliminaDet`, { params });
-    }
+    //     return this.http.delete(`${this.urlApi}/SpEliminaDet`, { params });
+    // }
 
     public obtenerArchivo(empresa: string, anio: string, mes: string, 
         numeroPresupuesto: string): Observable<HttpResponse<Blob>>{

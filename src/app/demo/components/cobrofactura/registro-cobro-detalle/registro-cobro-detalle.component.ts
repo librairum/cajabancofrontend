@@ -17,7 +17,8 @@ import { GlobalService } from 'src/app/demo/service/global.service';
 import { CobroFacturaService } from 'src/app/demo/service/cobrofactura.service';
 import { AgregaFacturaxcobrarComponent } from "../agrega-facturaxcobrar/agrega-facturaxcobrar.component";
 import { RegistroCobroDetalle } from 'src/app/demo/model/CuentaxCobrar';
-
+import { RegistroCobroDocSustento } from 'src/app/demo/model/CuentaxCobrar';
+import { verMensajeInformativo } from '../../utilities/funciones_utilitarias';
 interface FacturaDetalle {
   numero: string;
   fecha: Date;
@@ -29,12 +30,7 @@ interface FacturaDetalle {
   tipodoc?: string;
 }
 
-interface SustentoAdjunto {
-  nombreArchivo: string;
-  descripcion: string;
-  archivo?: File;
-  item?: number;
-}
+
 
 @Component({
   selector: 'app-registro-cobro-detalle',
@@ -73,13 +69,13 @@ export class RegistroCobroDetalleComponent implements OnInit {
   
   // Tablas
   facturasAfectadas: FacturaDetalle[] = [];
-  sustentosAdjuntos: SustentoAdjunto[] = [];
+  listaSustentos: RegistroCobroDocSustento[] = [];
   
   load: boolean = false;
   
   // Edición
   editingFactura: FacturaDetalle | null = null;
-  editingSustento: SustentoAdjunto | null = null;
+  editingSustento: RegistroCobroDocSustento | null = null;
   isAnyRowEditing: boolean = false;
   displayModal: boolean = false;
 
@@ -120,7 +116,7 @@ export class RegistroCobroDetalleComponent implements OnInit {
 
   valoresCampos() {
     this.cobroNro = this.navigationData?.CobroNro || this.navigationData?.ban03numero || '';
-    this.clienteNombre = this.navigationData?.clienteNombre || '';
+    this.clienteNombre = this.navigationData?.Cliente || '';
     this.clienteCodigo = this.navigationData?.ClienteCodigo || this.navigationData?.clienteCodigo || '';
     
     this.empresa = this.navigationData?.ban03empresa || 
@@ -135,8 +131,10 @@ export class RegistroCobroDetalleComponent implements OnInit {
       this.fecha = new Date();
     }
   }
-
+  
   cargarDetalles() {
+
+    this.getlistaSustento(this.empresa,this.cobroNro);
     if (!this.empresa || !this.cobroNro) {
       this.facturasAfectadas = [];
       return;
@@ -198,6 +196,7 @@ export class RegistroCobroDetalleComponent implements OnInit {
         this.load = false;
       }
     });
+    
   }
 
   determinarMoneda(importeSoles: string, importeDolares: string): string {
@@ -360,85 +359,114 @@ export class RegistroCobroDetalleComponent implements OnInit {
       }
     });
   }
-
-  // ==================== MÉTODOS PARA SUSTENTOS ADJUNTOS ====================
+  // ======================== metodo sustento con bd =========================
   
+  insertSustento(){
+    
+  }
+  // ==================== MÉTODOS PARA SUSTENTOS ADJUNTOS ====================
+     base64ToBlob(base64: string, contentType: string = '', sliceSize: number = 512): Blob {
+    // 1. Eliminar el prefijo 'data:...' si existe
+    const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
+    
+    // 2. Decodificar la cadena Base64
+    const byteCharacters = atob(base64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+      const byteNumbers = new Array(slice.length);
+      
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    // 3. Crear y retornar el Blob
+    return new Blob(byteArrays, { type: contentType });
+  }
+  abrirdocumento(registro: RegistroCobroDocSustento): void {
+          this.cobroService
+              .traeDocumentoSustento(
+                  this.globalService.getCodigoEmpresa(),
+                  this.cobroNro,registro.ban05Item
+              )
+              .subscribe({
+                  next: (response) => {
+                      const blob = response.body;
+                      //const mimeType = 'application/pdf'; // <<-- AJUSTAR ESTE VALOR
+      
+                      //const blob = this.base64ToBlob(base64contenido, mimeType);
+
+                      //const blob = response.body;
+                      if (blob) {
+                          const url = window.URL.createObjectURL(blob);
+                          window.open(url, '_blank');
+                      } else {
+                          verMensajeInformativo(
+                              this.messageService,
+                              'error',
+                              'Error',
+                              'No se encontró el documento'
+                          );
+                      }
+                  },
+                  error: (err) => {
+                      console.error('Error al obtener el documento: ', err);
+                  },
+              });
+      }
+
+  verSustento(registro:RegistroCobroDocSustento){
+    
+    // this.cobroService.traeDocumentoSustento(this.empresa, this.cobroNro,registro.ban05Item.subscribe({
+    //   next:(response) =>{
+
+    //   },error:(error)=>{
+
+    //   }
+    // }));
+  } 
+
+
   agregarNuevoSustento() {
     this.fileInput.nativeElement.click();
   }
 
   onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
+   const input = event.target as HTMLInputElement;
+
     if (input.files && input.files.length > 0) {
       const archivos = Array.from(input.files);
-      
-      archivos.forEach(archivo => {
-        const existe = this.sustentosAdjuntos.some(
-          s => s.nombreArchivo === archivo.name
-        );
-        
-        if (!existe) {
-          const nombreSinExtension = this.obtenerNombreSinExtension(archivo.name);
-          const nuevoItem = this.sustentosAdjuntos.length + 1;
-          
-          const nuevoSustento: SustentoAdjunto = {
-            nombreArchivo: archivo.name,
-            descripcion: nombreSinExtension,
-            archivo: archivo,
-            item: nuevoItem
-          };
-          
-          this.insertarSustento(nuevoSustento);
-        } else {
+      this.cobroService.SubirArchivo('01',this.cobroNro, archivos).subscribe({
+        next: (response) => {
           this.messageService.add({
-            severity: 'warn',
-            summary: 'Advertencia',
-            detail: `El archivo ${archivo.name} ya fue agregado`
+            severity:'succces',
+            summary:'exito',
+            detail:'Sustento  registrado corretamente'
           });
-        }
-      });
-      
-      input.value = '';
-    }
-  }
-
-  insertarSustento(sustento: SustentoAdjunto) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      const base64Content = base64.split(',')[1];
-      
-      const registro = {
-        ban05Empresa: this.empresa,
-        ban05Numero: this.cobroNro,
-        ban05Item: sustento.item || 0,
-        ban05NombreArchivo: sustento.nombreArchivo,
-        ban05DescripcionArchivo: sustento.descripcion,
-        ban05contenidoArchivo: base64Content
-      };
-
-      this.cobroService.insertarSustento(registro).subscribe({
-        next: () => {
-          this.sustentosAdjuntos.push(sustento);
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Archivo agregado correctamente'
-          });
-        },
-        error: (error) => {
-          this.messageService.add({
+          setTimeout(() => {
+            this.getlistaSustento(this.empresa, this.cobroNro);
+          }, 300);
+        },error:(error)  =>{
+          this.messageService.add({             
             severity: 'error',
             summary: 'Error',
-            detail: 'Error al agregar el archivo'
+            detail: `Error al insertar facturas: ${error.message || 'Error desconocido'}`
           });
         }
       });
-    };
-    
-    if (sustento.archivo) {
-      reader.readAsDataURL(sustento.archivo);
+
+
     }
+
+  }
+
+  insertarSustento(registro: RegistroCobroDocSustento) {
+   
   }
 
   obtenerNombreSinExtension(nombreArchivo: string): string {
@@ -449,28 +477,19 @@ export class RegistroCobroDetalleComponent implements OnInit {
     return nombreArchivo.substring(0, ultimoPunto);
   }
 
-  startEditingSustento(sustento: SustentoAdjunto) {
+  startEditingSustento(registro: RegistroCobroDocSustento) {
     if (this.isAnyRowEditing) return;
-    this.editingSustento = { ...sustento };
+    this.editingSustento = { ...registro };
     this.isAnyRowEditing = true;
+
   }
 
-  saveEditingSustento() {
+  saveEditingSustento(registro:RegistroCobroDocSustento) {
     if (this.editingSustento) {
-      this.cobroService.actualizarSustento(
-        this.empresa,
-        this.cobroNro,
-        this.editingSustento.item || 0,
-        this.editingSustento.nombreArchivo,
-        this.editingSustento.descripcion
-      ).subscribe({
-        next: () => {
-          const index = this.sustentosAdjuntos.findIndex(
-            s => s.nombreArchivo === this.editingSustento!.nombreArchivo
-          );
-          if (index !== -1) {
-            this.sustentosAdjuntos[index] = { ...this.editingSustento! };
-          }
+      this.cobroService.actualizarDocumentoSustento(registro)
+      .subscribe({
+        next: (response) => {
+          this.getlistaSustento(this.empresa,this.cobroNro);
           this.messageService.add({
             severity: 'success',
             summary: 'Éxito',
@@ -490,32 +509,29 @@ export class RegistroCobroDetalleComponent implements OnInit {
   }
 
   cancelEditingSustento() {
-    this.editingSustento = null;
+     this.editingSustento = null;
     this.isAnyRowEditing = false;
   }
 
-  eliminarSustento(sustento: SustentoAdjunto) {
+  eliminarSustento(registro: RegistroCobroDocSustento) {
     this.confirmationService.confirm({
-      message: `¿Está seguro de eliminar el archivo ${sustento.nombreArchivo}?`,
+      message: `¿Está seguro de eliminar el archivo ${registro.ban05NombreArchivo}?`,
       header: 'Confirmar Eliminación',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sí',
       rejectLabel: 'No',
       accept: () => {
-        this.cobroService.eliminarSustento(
-          this.empresa,
-          this.cobroNro,
-          sustento.item || 0
-        ).subscribe({
-          next: () => {
-            this.sustentosAdjuntos = this.sustentosAdjuntos.filter(
-              s => s.nombreArchivo !== sustento.nombreArchivo
-            );
+        this.cobroService.eliminarDocumentoSustento(this.empresa, 
+          this.cobroNro,registro.ban05Item)
+        .subscribe({
+          next: (response) => {
+          this.getlistaSustento(this.empresa,this.cobroNro);
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
               detail: 'Sustento eliminado correctamente'
             });
+            
           },
           error: (error) => {
             this.messageService.add({
@@ -529,37 +545,21 @@ export class RegistroCobroDetalleComponent implements OnInit {
     });
   }
 
-  verSustento(sustento: SustentoAdjunto) {
-    if (sustento.archivo) {
-      const url = URL.createObjectURL(sustento.archivo);
-      window.open(url, '_blank');
-    } else {
-      this.cobroService.obtenerSustento(
-        this.empresa,
-        this.cobroNro,
-        sustento.item || 0
-      ).subscribe({
-        next: (response) => {
-          const base64 = response.data.ban05contenidoArchivo;
-          const byteCharacters = atob(base64);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray]);
-          const url = URL.createObjectURL(blob);
-          window.open(url, '_blank');
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'No se pudo obtener el archivo'
-          });
-        }
-      });
-    }
+  getlistaSustento(empresa:string, numeroRegistroCobroCab:string) {
+    this.cobroService.listarSustento(empresa, numeroRegistroCobroCab).subscribe({
+      next:(response) =>{
+        this.listaSustentos = response;
+        
+        console.log(this.listaSustentos);
+
+      },
+      error:(error) =>{
+        verMensajeInformativo(this.messageService, 
+          'error', 'Error', 
+          `Error al traer lista de sustentos:${error.message}`);
+      }
+    });
+    
   }
 
   getTotalFacturas(field: keyof FacturaDetalle): number {

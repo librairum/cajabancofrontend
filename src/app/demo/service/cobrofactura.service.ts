@@ -25,7 +25,8 @@ import {
 } from "../model/CuentaxCobrar";
 import { HttpParams } from "@angular/common/http";
 import { MedioPago, proveedores_lista } from "../model/presupuesto";
-
+import { observableToBeFn } from "rxjs/internal/testing/TestScheduler";
+import { HttpResponse } from "@angular/common/http";
 @Injectable({
     providedIn:'root'
 })
@@ -272,57 +273,54 @@ export class CobroFacturaService{
 
     // ==================== MÉTODOS SUSTENTOS ====================
 
-    public insertarSustento(registro: RegistroCobroDocSustento): Observable<any> {
-        return this.http.post<any>(`${this.urlAPI}/InsertaSustento`, registro).pipe(
-            catchError(this.handleError)
-        );
-    }
-
-    public actualizarSustento(
-        empresa: string,
-        numeroRegistroCobroCab: string,
-        item: number,
-        nombreArchivo: string,
-        descripcionArchivo: string
-    ): Observable<any> {
-        const params = new HttpParams()
-            .set('empresa', empresa)
-            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
-            .set('item', item.toString())
-            .set('nombreArchivo', nombreArchivo)
-            .set('descripcionArchivo', descripcionArchivo);
+   
+    // ====== metodo sustento con base de datos  ===================
+      public  SubirArchivo(empresa:string, numeroRegCobCab:string, archivosSeleccionados:File[]):Observable<any>{
+        //const params = new HttpParams()
+        const formData = new FormData();
+        formData.append('empresa', empresa);
+        formData.append('numeroRegCobroCab', numeroRegCobCab);
         
-        return this.http.put<any>(`${this.urlAPI}/ActualizaSustento`, null, { params }).pipe(
-            catchError(this.handleError)
-        );
-    }
+        archivosSeleccionados.forEach(file => {
+            formData.append('archivosOriginales', file, file.name);
+        });
 
-    public eliminarSustento(
-        empresa: string,
-        numeroRegistroCobroCab: string,
-        item: number
-    ): Observable<any> {
-        let urlElimina = `${this.urlAPI}/EliminaSustento?empresa=${empresa}&numeroRegistroCobroCab=${numeroRegistroCobroCab}&item=${item}`;
-        return this.http.delete<any>(urlElimina).pipe(
-            catchError(this.handleError)
-        );
-    }
-
-    public obtenerSustento(
-        empresa: string,
-        numeroRegistroCobroCab: string,
-        item: number
-    ): Observable<any> {
-        const params = new HttpParams()
-            .set('empresa', empresa)
-            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
-            .set('item', item.toString());
         
-        return this.http.get<any>(`${this.urlAPI}/ObtenerSustento`, { params }).pipe(
-            catchError(this.handleError)
-        );
+        //.set('archivosOriginales', )
+        return this.http.post<any>(`${this.urlAPI}/InsertarSustentoArchivo`, formData);
     }
+    public listarSustento(empresa:string, numeroRegistroCobroCab:string):Observable<RegistroCobroDocSustento[]>
+    {
+        //ListaSustento
+        const params = new HttpParams().set('empresa', empresa).set('numeroRegistroCobroCab', numeroRegistroCobroCab);
+        return this.http.get<RespuestaAPIBase<RegistroCobroDocSustento[]>>(
+            `${this.urlAPI}/ListaSustento`,
+            { params }
+        ).pipe( map((response)=> response.data),
+        catchError(this.handleError)
+        );
+        
+    }
+    public traeDocumentoSustento(empresa:string, numeroRegistroCobroCab:string, item:number):Observable<HttpResponse<Blob>>
+    {
 
+        //TraeDocumentoSustento
+        const url = `${this.urlAPI}/TraeDocumentoSustento?empresa=${empresa}&numeroRegistroCobroCab=${numeroRegistroCobroCab}&item=${item}`;
+        return this.http.get(url,{
+             observe:'response', responseType:'blob'
+        })
+        // return this.http.get<RespuestaAPIBase<RegistroCobroDocSustento>>(url)
+        // .pipe( map((response)=>response.data), catchError(this.handleError));
+    }
+    public actualizarDocumentoSustento(registro:RegistroCobroDocSustento ){
+        //ActualizaSustento
+        return this.http.put<any>(`${this.urlAPI}/ActualizaSustento`, registro);
+    
+    }
+    public eliminarDocumentoSustento(empresa:string, numeroRegCobroCab, item:number){
+        //EliminaSustento
+        return this.http.delete<any>(`${this.urlAPI}/EliminaSustento?empresa=${empresa}&numeroRegCobroCab=${numeroRegCobroCab}&item=${item}`)
+    }
     // ==================== MÉTODOS AUXILIARES ====================
 
     public getListaMedioPago(empresa: string): Observable<MedioPago[]> {

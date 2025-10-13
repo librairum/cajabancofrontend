@@ -131,7 +131,7 @@
                           [disabled]="isAnyRowEditing"></p-button>
             </div>
 
-            <p-table [value]="sustentosAdjuntos" styleClass="tabla-sustentos" [scrollable]="true" scrollHeight="300px" [loading]="load">
+            <p-table [value]="listaSustentos" styleClass="tabla-sustentos" [scrollable]="true" scrollHeight="300px" [loading]="load">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Nombre de Archivo</th>
@@ -142,16 +142,19 @@
 
                 <ng-template pTemplate="body" let-sustento>
                     <tr>
-                        <td>{{ sustento.nombreArchivo }}</td>
+                        <td>{{ sustento.ban05NombreArchivo }}</td>
                         <td>
-                            <ng-container *ngIf="editingSustento?.nombreArchivo === sustento.nombreArchivo; else viewDesc">
-                                <input pInputText [(ngModel)]="editingSustento.descripcion" style="width: 100%;" />
+                            <ng-container *ngIf="editingSustento?.ban05NombreArchivo === sustento.ban05NombreArchivo; 
+                                else viewDesc">
+                                <input pInputText [(ngModel)]="editingSustento.ban05DescripcionArchivo" 
+                                style="width: 100%;" />
                             </ng-container>
-                            <ng-template #viewDesc>{{ sustento.descripcion }}</ng-template>
+                            <ng-template #viewDesc>{{ sustento.ban05DescripcionArchivo }}</ng-template>
                         </td>
                         <td>
                             <div class="flex gap-2 justify-content-center">
-                                <ng-container *ngIf="editingSustento?.nombreArchivo === sustento.nombreArchivo; else editButtons2">
+                                <ng-container *ngIf="editingSustento?.ban05NombreArchivo === sustento.ban05NombreArchivo; 
+                                    else editButtons2">
                                     <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm"
                                         (onClick)="saveEditingSustento()" pTooltip="Guardar" [text]="true"></p-button>
                                     <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm"
@@ -159,7 +162,7 @@
                                 </ng-container>
                                 <ng-template #editButtons2>
                                     <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
-                                        (onClick)="verSustento(sustento)" pTooltip="Ver" [text]="true"></p-button>
+                                        (onClick)="abrirdocumento(sustento)" pTooltip="Ver" [text]="true"></p-button>
                                     <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-sm"
                                         (onClick)="startEditingSustento(sustento)" [disabled]="isAnyRowEditing"
                                         pTooltip="Modificar" [text]="true"></p-button>
