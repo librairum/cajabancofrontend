@@ -15,6 +15,13 @@
     border-right: 1px solid #ccc;
 }
 
+/* Altura de celdas del header con filtros */
+::ng-deep .p-datatable th:has(.p-column-filter) {
+    height: 60px;
+    vertical-align: top;
+    padding: 4px;
+}
+
 /* Celdas de datos */
 ::ng-deep .p-datatable td {
     padding: 3px;
@@ -37,42 +44,44 @@
     background-color: #f5f5f5;
 }
 
-/* Filtros de columnas - ESPECÍFICO PARA FILTROS EN CABECERA */
-::ng-deep .p-datatable .p-column-filter {
-    width: 80px;
-    margin: auto;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    font-size: 12px;
-    padding: 2px; 
-    line-height: 1; 
+/* Filtros de columnas - contenedor */
+::ng-deep .p-datatable thead .p-column-filter {
+    width: 100%;
+    margin-top: 4px;
+    display: block;
 }
 
-/* SOLO inputs de filtros en la cabecera de la tabla */
-::ng-deep .p-datatable thead .p-column-filter input,
-::ng-deep .p-datatable thead .p-inputtext {
-    width: 180% !important;
-    max-width: 180% !important;
-    min-width: 180% !important;
+/* Filtros de columnas - inputs en cabecera */
+::ng-deep .p-datatable thead .p-column-filter input {
+    width: 95% !important;
+    max-width: 95% !important;
+    min-width: 95% !important;
     box-sizing: border-box;
-    font-size: 12px;
-    margin: 0 !important;
-    padding: 2px 4px !important;
-    position: relative;
-    z-index: 10;
+    font-size: 11px;
+    margin: 0 auto !important;
+    padding: 3px 6px !important;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
-/* Inputs normales en formularios - mantener tamaño normal */
-::ng-deep .p-dialog .p-inputtext,
-::ng-deep .p-dialog input[type="text"],
-::ng-deep .p-dialog .p-calendar input {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: auto !important;
-    font-size: 12px;
-    padding: 8px 12px !important;
+/* Ajuste específico para columna de cliente con filtro */
+::ng-deep .p-datatable .col-cliente .p-column-filter input {
+    width: 230px !important;
+    max-width: 230px !important;
+}
+
+/* Columna de código - ancho más pequeño */
+::ng-deep .p-datatable th:first-child,
+::ng-deep .p-datatable td:first-child {
+    width: 90px !important;
+    min-width: 90px !important;
+    max-width: 90px !important;
+}
+
+/* Input de filtro para código - más pequeño */
+::ng-deep .p-datatable th:first-child .p-column-filter input {
+    width: 80px !important;
+    max-width: 80px !important;
 }
 
 /* Contenedor con scroll */
@@ -106,7 +115,7 @@
     min-width: 110px;
 }
 
-
+/* Inputs en footer */
 ::ng-deep .p-datatable .p-datatable-tfoot input {
     min-width: 80px;
     width: auto;
@@ -119,14 +128,24 @@
     z-index: 1050 !important;
 }
 
-
+/* Inputs normales (fuera de filtros de tabla) */
 ::ng-deep .p-inputtext:not(.p-datatable thead .p-inputtext):not(.p-column-filter input) {
     width: 100% !important;
     max-width: 100% !important;
 }
 
-/* Quitar variación del ancho */
+/* Inputs normales en formularios - mantener tamaño normal */
+::ng-deep .p-dialog .p-inputtext,
+::ng-deep .p-dialog input[type="text"],
+::ng-deep .p-dialog .p-calendar input {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: auto !important;
+    font-size: 12px;
+    padding: 8px 12px !important;
+}
 
+/* Columna de cliente - ancho fijo */
 ::ng-deep .p-datatable .col-cliente {
     width: 250px !important; 
     min-width: 250px !important;
@@ -136,16 +155,17 @@
     text-overflow: ellipsis;
 }
 
+/* Columna de moneda - ancho fijo */
 ::ng-deep .p-datatable .col-moneda { 
     width: 110px !important; 
     min-width: 110px !important; 
     max-width: 110px !important;
-    overflow: hidden; /* Importante para que el contenido no se desborde */
-    white-space: nowrap; /* Importante para que el texto no se desborde */
-    text-overflow: ellipsis; /* Importante para que el texto que no cabe se oculte */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-
+/* Columna de medio de pago - ancho fijo */
 ::ng-deep .p-datatable .col-mediopago {
     width: 120px !important;
     min-width: 120px !important;
@@ -154,4 +174,3 @@
     white-space: nowrap; 
     text-overflow: ellipsis;
 }
-
