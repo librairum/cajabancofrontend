@@ -59,20 +59,17 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
   navigationData: any;
   items: any[] = [];
   
-  // Campos de formulario
   cobroNro: string = '';
   fecha: Date = new Date();
   clienteNombre: string = '';
   clienteCodigo: string = '';
   empresa: string = '';
   
-  // Tablas
   facturasAfectadas: FacturaDetalle[] = [];
   listaSustentos: RegistroCobroDocSustento[] = [];
   
   load: boolean = false;
   
-  // Edición
   editingFactura: FacturaDetalle | null = null;
   editingSustento: RegistroCobroDocSustento | null = null;
   isAnyRowEditing: boolean = false;
@@ -114,7 +111,6 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Cerrar cualquier diálogo de confirmación abierto al destruir el componente
     this.confirmationService.close();
   }
 
@@ -137,14 +133,15 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
   }
   
   cargarDetalles() {
-    this.getlistaSustento(this.empresa,this.cobroNro);
+    this.getlistaSustento(this.empresa, this.cobroNro);
+  
     if (!this.empresa || !this.cobroNro) {
       this.facturasAfectadas = [];
       return;
     }
 
     this.load = true;
-    
+  
     this.cobroService.getListaDetalle(this.empresa, this.cobroNro).subscribe({
       next: (response) => {
         if (!response || response.length === 0) {
@@ -153,9 +150,7 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
           return;
         }
         
-        this.facturasAfectadas = [];
-        
-        this.facturasAfectadas = response.map((detalle, index) => {
+        this.facturasAfectadas = response.map((detalle) => {  
           const moneda = this.determinarMoneda(
             detalle.importeOriginalSoles, 
             detalle.importeOriginalDolares
@@ -175,9 +170,9 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
             moneda: moneda,
             importeOriginal: importeOriginal,
             importePagado: importePagado,
-            observaciones: 'Observaciones',
-            item: index + 1,
-            tipodoc: '01'
+            observaciones: detalle.observacion || '',
+            item: detalle.item,
+            tipodoc: detalle.tipodoc || '01'
           };
         });
         
@@ -223,10 +218,7 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
     return new Date(fechaString);
   }
 
-  // ==================== MÉTODOS PARA FACTURAS AFECTADAS ====================
-  
   agregarNuevaFactura() {  
-    // Cerrar cualquier diálogo de confirmación antes de abrir el modal
     this.confirmationService.close();
     this.cancelEditingFactura(); 
     this.cancelEditingSustento();
@@ -234,7 +226,6 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
   }
 
   onCloseModal() {
-    // Cerrar cualquier diálogo de confirmación al cerrar el modal
     this.confirmationService.close();
     this.displayModal = false;
   }
@@ -260,7 +251,6 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
         });
 
         this.displayModal = false;
-        // Cerrar confirmación al agregar facturas
         this.confirmationService.close();
 
         setTimeout(() => {
@@ -297,19 +287,14 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
         this.empresa,
         this.cobroNro,
         this.editingFactura.item || 0,
-        this.editingFactura.tipodoc || 'FAC',
+        this.editingFactura.tipodoc || '01',
         this.editingFactura.numero,
         pagoSoles,
         pagoDolares,
         this.editingFactura.observaciones || ''
       ).subscribe({
-        next: () => {
-          const index = this.facturasAfectadas.findIndex(
-            f => f.numero === this.editingFactura!.numero
-          );
-          if (index !== -1) {
-            this.facturasAfectadas[index] = { ...this.editingFactura! };
-          }
+        next: (response) => {
+          this.cargarDetalles();
           this.messageService.add({
             severity: 'success',
             summary: 'Éxito',
@@ -334,7 +319,6 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
   }
 
   eliminarFactura(factura: FacturaDetalle) {
-    // Cerrar cualquier confirmación previa antes de abrir una nueva
     this.confirmationService.close();
     
     this.confirmationService.confirm({
@@ -351,16 +335,21 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
           factura.tipodoc || 'FAC',
           factura.numero
         ).subscribe({
-          next: () => {
+          next: (response) => {
             this.facturasAfectadas = this.facturasAfectadas.filter(
               f => f.numero !== factura.numero
             );
+            
+            setTimeout(() => {
+              this.cargarDetalles();
+            }, 1000);
+            
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
               detail: 'Factura eliminada correctamente'
             });
-            // Cerrar el diálogo después de eliminar
+            
             this.confirmationService.close();
           },
           error: (error) => {
@@ -374,14 +363,11 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
         });
       },
       reject: () => {
-        // Cerrar explícitamente cuando se rechaza
         this.confirmationService.close();
       }
     });
   }
 
-  // ==================== MÉTODOS PARA SUSTENTOS ADJUNTOS ====================
-  
   base64ToBlob(base64: string, contentType: string = '', sliceSize: number = 512): Blob {
     const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
     const byteCharacters = atob(base64Data);
@@ -424,14 +410,11 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
             );
           }
         },
-        error: (err) => {
-          console.error('Error al obtener el documento: ', err);
-        },
+        error: (err) => {}
       });
   }
 
   agregarNuevoSustento() {
-    // Cerrar cualquier diálogo de confirmación antes de abrir el selector de archivos
     this.confirmationService.close();
     this.fileInput.nativeElement.click();
   }
@@ -507,7 +490,6 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
   }
 
   eliminarSustento(registro: RegistroCobroDocSustento) {
-    // Cerrar cualquier confirmación previa antes de abrir una nueva
     this.confirmationService.close();
     
     this.confirmationService.confirm({
@@ -529,7 +511,6 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
               summary: 'Éxito',
               detail: 'Sustento eliminado correctamente'
             });
-            // Cerrar el diálogo después de eliminar
             this.confirmationService.close();
           },
           error: (error) => {
@@ -543,7 +524,6 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
         });
       },
       reject: () => {
-        // Cerrar explícitamente cuando se rechaza
         this.confirmationService.close();
       }
     });

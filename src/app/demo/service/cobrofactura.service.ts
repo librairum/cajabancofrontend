@@ -27,6 +27,7 @@ import { HttpParams } from "@angular/common/http";
 import { MedioPago, proveedores_lista } from "../model/presupuesto";
 import { observableToBeFn } from "rxjs/internal/testing/TestScheduler";
 import { HttpResponse } from "@angular/common/http";
+
 @Injectable({
     providedIn:'root'
 })
@@ -54,9 +55,6 @@ export class CobroFacturaService{
                     if(response.isSuccess && response.data){
                         return response.data;
                     }else{
-                        console.error('Error en la API:', 
-                            response.message,
-                            response.messageException);
                         return [];
                     }
                 }), 
@@ -80,26 +78,19 @@ export class CobroFacturaService{
     // ==================== MÉTODOS DETALLE ====================
 
     public insertarDetalleXML(data: any): Observable<any> {
-        console.log('📡 POST InsertaDetalle');
-        
         return this.http.post<any>(`${this.urlAPI}/InsertaDetalle`, data, {
             headers: {
                 'Content-Type': 'application/json'
             }
         }).pipe(
             map(response => {
-                console.log('✅ POST Response:', response);
-                
                 if (response.isSuccess === false) {
                     const errorMsg = response.messageException || response.message || 'Error en servidor';
                     throw new Error(errorMsg);
                 }
-                
                 return response;
             }),
             catchError((error) => {
-                console.error('❌ Error POST:', error);
-                
                 let errorMessage = 'Error desconocido';
                 
                 if (error instanceof Error) {
@@ -136,13 +127,8 @@ export class CobroFacturaService{
             .set('pagoDolares', pagoDolares.toString())
             .set('observacion', observacion);
         
-        console.log('📡 PUT ActualizaDetalle:', params.toString());
-        
         return this.http.put<any>(`${this.urlAPI}/ActualizaDetalle`, null, { params }).pipe(
-            map(response => {
-                console.log('✅ PUT Response:', response);
-                return response;
-            }),
+            map(response => response),
             catchError(this.handleError)
         );
     }
@@ -161,52 +147,34 @@ export class CobroFacturaService{
             .set('tipodoc', tipodoc)
             .set('nroDocumento', nroDocumento);
         
-        console.log('📡 DELETE EliminaDetalle:', params.toString());
-        
         return this.http.delete<any>(`${this.urlAPI}/EliminaDetalle`, { params }).pipe(
-            map(response => {
-                console.log('✅ DELETE Response:', response);
-                return response;
-            }),
+            map(response => response),
             catchError(this.handleError)
         );
     }
 
-    /**
-     * 🔥 ESTRATEGIA NUEVA: Eliminar de forma recursiva hasta que ya no exista
-     * El backend elimina de a uno, así que llamamos múltiples veces
-     */
     public eliminarDetalePorDocumento(
         empresa: string, 
         numeroRegistroCobroCab: string, 
         nroDocumento: string
     ): Observable<any> {
-        console.log('🔄 Iniciando eliminación recursiva de:', nroDocumento);
-        
         let intentos = 0;
-        const maxIntentos = 10; // Máximo 10 intentos para evitar loop infinito
+        const maxIntentos = 10;
         
-        // Función recursiva que elimina uno por uno
         return this.eliminarUnaVez(empresa, numeroRegistroCobroCab, nroDocumento, 1).pipe(
             expand(() => {
                 intentos++;
-                
                 if (intentos >= maxIntentos) {
-                    console.log('⚠️ Alcanzado máximo de intentos');
                     return of(null);
                 }
                 
-                // Verificar si aún existe el documento
                 return this.getListaDetalle(empresa, numeroRegistroCobroCab).pipe(
-                    delay(300), // Pequeño delay para que el backend procese
+                    delay(300),
                     switchMap(detalles => {
                         const existe = detalles.some(d => d.nroDocumento === nroDocumento);
-                        
                         if (existe) {
-                            console.log(`🔄 Aún existe, reintentando... (intento ${intentos + 1})`);
                             return this.eliminarUnaVez(empresa, numeroRegistroCobroCab, nroDocumento, intentos + 1);
                         } else {
-                            console.log('✅ Documento completamente eliminado');
                             return of(null);
                         }
                     })
@@ -217,9 +185,6 @@ export class CobroFacturaService{
         );
     }
 
-    /**
-     * Elimina un registro con el nroDocumento (el backend decide cuál)
-     */
     private eliminarUnaVez(
         empresa: string,
         numeroRegistroCobroCab: string,
@@ -229,21 +194,13 @@ export class CobroFacturaService{
         const params = new HttpParams()
             .set('empresa', empresa)
             .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
-            .set('item', '1') // Siempre 1, el backend debe manejar por nroDocumento
+            .set('item', '1')
             .set('tipodoc', '01')
             .set('nroDocumento', nroDocumento);
         
-        console.log(`   🗑️ Intento ${intento} - DELETE con nroDocumento: ${nroDocumento}`);
-        
         return this.http.delete<any>(`${this.urlAPI}/EliminaDetalle`, { params }).pipe(
-            map(response => {
-                console.log(`   ✅ Backend respondió: ${JSON.stringify(response)}`);
-                return response;
-            }),
-            catchError(error => {
-                console.error(`   ❌ Error:`, error);
-                return of({ success: false });
-            })
+            map(response => response),
+            catchError(error => of({ success: false }))
         );
     }
 
@@ -253,17 +210,24 @@ export class CobroFacturaService{
     ): Observable<TraeRegistroCobroDetalle[]> {
         const params = new HttpParams()
             .set('empresa', empresa)
-            .set('numeroRegistroCobroCab', numeroRegistroCobroCab);
+            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
+            .set('_t', Date.now().toString());
         
         return this.http.get<RespuestaAPIBase<TraeRegistroCobroDetalle[]>>(
             `${this.urlAPI}/ListaDetalle`, 
-            { params }
+            { 
+                params,
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            }
         ).pipe(
             map((response) => {
                 if(response.isSuccess && response.data){
                     return response.data;
                 } else {
-                    console.error('⚠️ API error:', response.message);
                     return [];
                 }
             }),
@@ -273,10 +237,7 @@ export class CobroFacturaService{
 
     // ==================== MÉTODOS SUSTENTOS ====================
 
-   
-    // ====== metodo sustento con base de datos  ===================
-      public  SubirArchivo(empresa:string, numeroRegCobCab:string, archivosSeleccionados:File[]):Observable<any>{
-        //const params = new HttpParams()
+    public SubirArchivo(empresa:string, numeroRegCobCab:string, archivosSeleccionados:File[]):Observable<any>{
         const formData = new FormData();
         formData.append('empresa', empresa);
         formData.append('numeroRegCobroCab', numeroRegCobCab);
@@ -284,43 +245,33 @@ export class CobroFacturaService{
         archivosSeleccionados.forEach(file => {
             formData.append('archivosOriginales', file, file.name);
         });
-
-        
-        //.set('archivosOriginales', )
         return this.http.post<any>(`${this.urlAPI}/InsertarSustentoArchivo`, formData);
     }
-    public listarSustento(empresa:string, numeroRegistroCobroCab:string):Observable<RegistroCobroDocSustento[]>
-    {
-        //ListaSustento
+
+    public listarSustento(empresa:string, numeroRegistroCobroCab:string):Observable<RegistroCobroDocSustento[]>{
         const params = new HttpParams().set('empresa', empresa).set('numeroRegistroCobroCab', numeroRegistroCobroCab);
         return this.http.get<RespuestaAPIBase<RegistroCobroDocSustento[]>>(
             `${this.urlAPI}/ListaSustento`,
             { params }
-        ).pipe( map((response)=> response.data),
-        catchError(this.handleError)
+        ).pipe( 
+            map((response)=> response.data),
+            catchError(this.handleError)
         );
-        
     }
-    public traeDocumentoSustento(empresa:string, numeroRegistroCobroCab:string, item:number):Observable<HttpResponse<Blob>>
-    {
 
-        //TraeDocumentoSustento
+    public traeDocumentoSustento(empresa:string, numeroRegistroCobroCab:string, item:number):Observable<HttpResponse<Blob>>{
         const url = `${this.urlAPI}/TraeDocumentoSustento?empresa=${empresa}&numeroRegistroCobroCab=${numeroRegistroCobroCab}&item=${item}`;
-        return this.http.get(url,{
-             observe:'response', responseType:'blob'
-        })
-        // return this.http.get<RespuestaAPIBase<RegistroCobroDocSustento>>(url)
-        // .pipe( map((response)=>response.data), catchError(this.handleError));
+        return this.http.get(url,{ observe:'response', responseType:'blob' });
     }
+
     public actualizarDocumentoSustento(registro:RegistroCobroDocSustento ){
-        //ActualizaSustento
         return this.http.put<any>(`${this.urlAPI}/ActualizaSustento`, registro);
-    
     }
+
     public eliminarDocumentoSustento(empresa:string, numeroRegCobroCab, item:number){
-        //EliminaSustento
         return this.http.delete<any>(`${this.urlAPI}/EliminaSustento?empresa=${empresa}&numeroRegCobroCab=${numeroRegCobroCab}&item=${item}`)
     }
+
     // ==================== MÉTODOS AUXILIARES ====================
 
     public getListaMedioPago(empresa: string): Observable<MedioPago[]> {
@@ -390,7 +341,6 @@ export class CobroFacturaService{
         } else {
             errorMessage = `Código: ${error.status}\nMensaje: ${error.message}`;
         }
-        console.error(errorMessage);
         return throwError(() => new Error(errorMessage));
     }
 }

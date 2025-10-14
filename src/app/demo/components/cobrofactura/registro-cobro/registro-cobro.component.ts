@@ -390,37 +390,35 @@ export class RegistroCobroComponent implements OnInit{
     });
   }
 
-  iniciarEdicion(registro:TraeRegistroCobro):void{
-    
-      this.editingRegCobro[registro.ban03numero] = true;
-      this.botonesDeshabilitados = true; 
+  iniciarEdicion(registro: TraeRegistroCobro): void {
+    this.editingRegCobro[registro.ban03numero] = true;
+    this.botonesDeshabilitados = true; 
 
-      let obtenerMedioPago = this.medioPagoLista.find(
+    this.monedaOpciones = [
+        { label: 'Soles', value: 'S' },
+        { label: 'Dólares', value: 'D' }
+    ];
+
+    let obtenerMedioPago = this.medioPagoLista.find(
         (mp: any) => mp.ban01Descripcion === registro.medioPagoDescripcion
-      );
-      
-      this.editaFormulario ={
-        ban03Empresa :this.globalService.getCodigoEmpresa(),
-        ban03Anio:registro.ban03anio,
-        ban03Mes:registro.ban03mes,
+    );
+    
+    this.editaFormulario = {
+        ban03Empresa: this.globalService.getCodigoEmpresa(),
+        ban03Anio: registro.ban03anio,
+        ban03Mes: registro.ban03mes,
         ban03Numero: registro.ban03numero,
-        ban03clientetipoanalisis:'01',
-        ban03clienteruc:registro.clienteCodigo,
-        ban03Importe:registro.ban03Importe,
-        ban03moneda: registro.Ban03Moneda,
-        ban03FechaDeposito : registro.ban03FechaDeposito,
+        ban03clientetipoanalisis: '01',
+        ban03clienteruc: registro.clienteCodigo,
+        ban03Importe: registro.ban03Importe,
+        ban03moneda: registro.Ban03Moneda === 'Soles' ? 'S' : 'D',  // 🔥 DIRECTO
+        ban03FechaDeposito: registro.ban03FechaDeposito,
         ban03MedioPago: obtenerMedioPago ? obtenerMedioPago.ban01IdTipoPago : '', 
         ban03Motivo: registro.ban03Motivo,
         ban03VoucherLibroCod: registro.ban03VoucherLibroCod,
-        ban03VoucherNumero:registro.ban03VoucherNumero
-      }
-       this.monedaOpciones = [
-          { label: 'Soles', value: 'S' },
-          { label: 'Dólares', value: 'D' }
-      ];
-      //this.cargarproveedores();
-      
-  }
+        ban03VoucherNumero: registro.ban03VoucherNumero
+    };
+}
 
 verDetalleNuevo(registro:RegistroCobro, nuevoCodigoRegistroCobro:boolean){
 
