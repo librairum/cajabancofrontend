@@ -14,20 +14,26 @@
     
     <!-- Información General -->
     <div class="card p-2">
-        <div style="display: flex; width: 100%; margin-bottom: 1rem;">
-            <div style="margin-right: 20px; flex: 1;">
+        <div style="display: flex; width: 100%; margin-bottom: 1rem; gap: 20px;">
+            <div style="flex: 1;">
                 <label for="cobro-nro" class="text-sm">Cobro Nro: </label>
                 <input pInputText id="cobro-nro" [value]="cobroNro" [disabled]="true"
                     style="width: 100%; height: 2.5rem;" />
             </div>
 
-            <div style="margin-right: 20px; flex: 1;">
+            <div style="flex: 1;">
                 <label for="fecha" class="text-sm">Fecha: </label>
                 <p-calendar [disabled]="true" [(ngModel)]="fecha" style="width: 100%; height: 2.5rem;"
                     inputStyleClass="p-input-sm" dateFormat="dd/mm/yy"></p-calendar>
             </div>
 
             <div style="flex: 1;">
+                <label for="ruc" class="text-sm">RUC/Código: </label>
+                <input pInputText id="ruc" [value]="clienteCodigo" [disabled]="true"
+                    style="width: 100%; height: 2.5rem;" />
+            </div>
+
+            <div style="flex: 2;">
                 <label for="cliente" class="text-sm">Cliente: </label>
                 <input pInputText id="cliente" [value]="clienteNombre" [disabled]="true"
                     style="width: 100%; height: 2.5rem;" />

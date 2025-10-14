@@ -62,26 +62,47 @@
     padding: 3px 6px !important;
     border: 1px solid #ccc;
     border-radius: 3px;
+    text-align: center !important;
 }
 
 /* Ajuste específico para columna de cliente con filtro */
 ::ng-deep .p-datatable .col-cliente .p-column-filter input {
     width: 230px !important;
     max-width: 230px !important;
+    text-align: center !important;
 }
 
-/* Columna de código - ancho más pequeño */
+/* Columna de código - ancho aumentado */
 ::ng-deep .p-datatable th:first-child,
 ::ng-deep .p-datatable td:first-child {
-    width: 90px !important;
-    min-width: 90px !important;
-    max-width: 90px !important;
+    width: 110px !important;
+    min-width: 110px !important;
+    max-width: 110px !important;
 }
 
-/* Input de filtro para código - más pequeño */
+/* Input de filtro para código - aumentado */
 ::ng-deep .p-datatable th:first-child .p-column-filter input {
-    width: 80px !important;
-    max-width: 80px !important;
+    width: 100px !important;
+    max-width: 100px !important;
+    text-align: center !important;
+}
+
+/* Columna de RUC/Código - ancho más pequeño y texto centrado */
+::ng-deep .p-datatable .col-ruc {
+    width: 130px !important;
+    min-width: 130px !important;
+    max-width: 130px !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center !important;
+}
+
+/* Input de filtro para RUC/Código */
+::ng-deep .p-datatable .col-ruc .p-column-filter input {
+    width: 120px !important;
+    max-width: 120px !important;
+    text-align: center !important;
 }
 
 /* Contenedor con scroll */
@@ -145,7 +166,7 @@
     padding: 8px 12px !important;
 }
 
-/* Columna de cliente - ancho fijo */
+/* Columna de cliente - ancho fijo y texto centrado */
 ::ng-deep .p-datatable .col-cliente {
     width: 250px !important; 
     min-width: 250px !important;
@@ -153,6 +174,7 @@
     overflow: hidden; 
     white-space: nowrap; 
     text-overflow: ellipsis;
+    text-align: center !important;
 }
 
 /* Columna de moneda - ancho fijo */

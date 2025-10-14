@@ -441,4 +441,9 @@ verDetalles(registro: TraeRegistroCobro,nuevoRegistro:boolean) {
     });
     
   }
+  onClienteRucChange(event: any) {
+  this.selectCliente = event.value;
+  // Sincroniza ambos dropdowns cuando se selecciona por RUC
+  this.nuevoFormulario.ban03clienteruc = event.value;
+}
 }

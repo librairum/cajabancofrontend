@@ -20,7 +20,7 @@
             </div>
         </div>
         <p-table [value]="listaRegistroCobro" [scrollable]="true" 
-        [loading]="loading" [globalFilterFields]="['ban03numero', 'clienteNombre']" 
+        [loading]="loading" [globalFilterFields]="['ban03numero', 'clienteNombre', 'clienteCodigo']" 
         [rows]="rowsPerPage" [paginator]="true" 
         [tableStyle]="{ width: '100%', border: '0px solid black' }">
             <ng-template pTemplate="header">
@@ -32,6 +32,17 @@
                             type="text" 
                             field="ban03numero" 
                             placeholder="Buscar código" 
+                            [showMenu]="false" 
+                            matchMode="contains">
+                        </p-columnFilter>
+                    </th>
+                    <th class="col-ruc">
+                        RUC/Código
+                        <br />
+                        <p-columnFilter 
+                            type="text" 
+                            field="clienteCodigo" 
+                            placeholder="Buscar RUC" 
                             [showMenu]="false" 
                             matchMode="contains">
                         </p-columnFilter>
@@ -59,6 +70,9 @@
                 <tr>
                     <td>             
                         {{regcobro.ban03numero}}
+                    </td>
+                    <td>
+                        {{regcobro.clienteCodigo}}
                     </td>
                     <td class="col-cliente">
                         {{regcobro.clienteNombre}}
@@ -156,8 +170,23 @@
                     <td style="min-width: 100px">
                         {{ nuevoFormulario.ban03Numero }}
                     </td>
+                    <td>
+                        <p-dropdown [options]="listaClientes" 
+                            optionLabel="codigoCliente"
+                            optionValue="codigoCliente" 
+                            [(ngModel)]="nuevoFormulario.ban03clienteruc"
+                            class="p-inputtext-sm w-full" 
+                            (onChange)="onClienteRucChange($event)" 
+                            [filter]="true"
+                            filterBy="codigoCliente" 
+                            filterMatchMode="contains" 
+                            placeholder="RUC" 
+                            appendTo="body">
+                        </p-dropdown>
+                    </td>
                     <td class="col-cliente">
-                        <p-dropdown [options]="listaClientes" optionLabel="nombreCliente"
+                        <p-dropdown [options]="listaClientes" 
+                            optionLabel="nombreCliente"
                             optionValue="codigoCliente" 
                             [(ngModel)]="nuevoFormulario.ban03clienteruc"
                             class="p-inputtext-sm w-full" 
@@ -165,7 +194,8 @@
                             [filter]="true"
                             filterBy="nombreCliente" 
                             filterMatchMode="contains" 
-                            placeholder="cliente" appendTo="body">
+                            placeholder="cliente" 
+                            appendTo="body">
                         </p-dropdown>
                     </td>
 
@@ -227,7 +257,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="8" style="text-align: center; font-weight: bold; padding: 1rem;">
+                    <td colspan="9" style="text-align: center; font-weight: bold; padding: 1rem;">
                         No se encontraron registros
                     </td>
                 </tr>
