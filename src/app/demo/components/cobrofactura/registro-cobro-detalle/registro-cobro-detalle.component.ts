@@ -223,7 +223,9 @@ export class RegistroCobroDetalleComponent implements OnInit {
 
   // ==================== MÉTODOS PARA FACTURAS AFECTADAS ====================
   
-  agregarNuevaFactura() {
+  agregarNuevaFactura() {  
+    this.cancelEditingFactura(); 
+    this.cancelEditingSustento();
     this.displayModal = true;
   }
 
@@ -484,32 +486,33 @@ export class RegistroCobroDetalleComponent implements OnInit {
 
   }
 
-  saveEditingSustento(registro:RegistroCobroDocSustento) {
+  saveEditingSustento_sin_parametro() {
     if (this.editingSustento) {
-      this.cobroService.actualizarDocumentoSustento(registro)
-      .subscribe({
-        next: (response) => {
-          this.getlistaSustento(this.empresa,this.cobroNro);
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Sustento actualizado correctamente'
-          });
-          this.cancelEditingSustento();
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Error al actualizar el sustento'
-          });
-        }
-      });
+        // Usa directamente this.editingSustento para la llamada al servicio
+        this.cobroService.actualizarDocumentoSustento(this.editingSustento) // USAR this.editingSustento
+        .subscribe({
+            next: (response) => {
+                this.getlistaSustento(this.empresa, this.cobroNro);
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Éxito',
+                    detail: 'Sustento actualizado correctamente'
+                });
+                this.cancelEditingSustento();
+            },
+            error: (error) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Error al actualizar el sustento'
+                });
+            }
+        });
     }
-  }
+}
 
   cancelEditingSustento() {
-     this.editingSustento = null;
+    this.editingSustento = null;
     this.isAnyRowEditing = false;
   }
 
@@ -539,8 +542,11 @@ export class RegistroCobroDetalleComponent implements OnInit {
               summary: 'Error',
               detail: 'Error al eliminar el sustento'
             });
-          }
+          },        
         });
+      },
+      reject: () => {
+        this.confirmationService.close(); // Cerrar el diálogo de confirmación
       }
     });
   }

@@ -56,15 +56,8 @@
             </ng-template>
             <ng-template pTemplate="body" let-regcobro>
                 <tr>
-                    <td>
-                        <ng-container *ngIf="!editingRegCobro[regcobro.ban03numero] else viewMode">
+                    <td>             
                             {{regcobro.ban03numero}}
-                        </ng-container>
-                        <ng-template #viewMode>
-                            <input pInputText [(ngModel)]="editaFormulario.ban03numero"
-                            class="w-full" />
-                        </ng-template>
-                        
                     </td>
                     <td class="col-cliente">
                            {{regcobro.clienteNombre}}
@@ -74,45 +67,87 @@
                            
                     </td>
                     <td class="col-moneda">
-
-                        <p-cellEditor>
-                            <ng-template pTemplate="input">
-                                <p-dropdown [options]="monedaOpciones" [(ngModel)]="regcobro.ban03Moneda"
-                                    placeholder="Seleccionar moneda" optionLabel="label" optionValue="value"
-                                    appendTo="body" class="p-inputtext-sm w-full">
-                                </p-dropdown>
-                            </ng-template>
-                            <ng-template pTemplate="output">
-                                {{
+                        <ng-container *ngIf="!editingRegCobro[regcobro.ban03numero] else monedaEditMode">
+                            {{
                                 regcobro.ban03Moneda === 'S' ? 'Soles' :
                                 regcobro.ban03Moneda === 'D' ? 'Dólares' : ''
-                                }}
-                            </ng-template>
-                        </p-cellEditor>
+                            }}
+                        </ng-container>
+                        <ng-template #monedaEditMode>
+                            <p-dropdown [options]="monedaOpciones" [(ngModel)]="editaFormulario.ban03Moneda"
+                                placeholder="Seleccionar moneda" optionLabel="label" optionValue="value"
+                                appendTo="body" class="p-inputtext-sm w-full">
+                            </p-dropdown>
+                        </ng-template>
                     </td>
-                    <td>
-                           {{regcobro.ban03Importe}}
+                    <td style="width: 100px; max-width: 100px;">
+                        <ng-container *ngIf="!editingRegCobro[regcobro.ban03numero] else importeEditMode">
+                            {{regcobro.ban03Importe}}
+                        </ng-container>
+                        <ng-template #importeEditMode>
+                            <input pInputText type="number" [(ngModel)]="editaFormulario.ban03Importe"
+                             class="w-full" />
+                        </ng-template>
                     </td>
+
                     <td class="col-mediopago">
+                        <ng-container *ngIf="!editingRegCobro[regcobro.ban03numero] else medioPagoEditMode">
                            {{regcobro.medioPagoDescripcion}}
-                    </td>
-                    <td>
-                           {{regcobro.ban03Motivo}}
-                    </td>
-                    <td>
-                        <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
-                                    pTooltip="Ver Detalles" [text]="true" (onClick)="verDetalles(regcobro, false)"
-                                    [disabled]="botonesDeshabilitados"></p-button>
+                        </ng-container>
                         
-                        <p-button 
-                            icon="pi pi-trash" 
-                            styleClass="p-button-info p-button-sm" 
-                            (click)="eliminarPago(regcobro)"
-                            [text]="true"
-                            pTooltip="Eliminar"
-                            [disabled]="botonesDeshabilitados">
-                        </p-button>
-                         
+                        <ng-template #medioPagoEditMode>
+                            <p-dropdown [options]="medioPagoLista" [(ngModel)]="editaFormulario.ban03MedioPago"
+                                placeholder="Seleccionar medio de pago" 
+                                optionLabel="ban01Descripcion" optionValue="ban01IdTipoPago" 
+                                appendTo="body" class="p-inputtext-sm w-full">
+                            </p-dropdown>
+                        </ng-template>
+                    </td>
+
+                    <td style="width: 100px; max-width: 100px;">
+                        <ng-container *ngIf="!editingRegCobro[regcobro.ban03numero] else motivoEditMode">
+                           {{regcobro.ban03Motivo}}
+                        </ng-container>
+                        <ng-template #motivoEditMode> 
+                            <input pInputText [(ngModel)]="editaFormulario.ban03Motivo" placeholder="Motivo"
+                                class="w-full" />
+                        </ng-template>
+                    </td>
+
+                    <td>
+                        <ng-container *ngIf="!editingRegCobro[regcobro.ban03numero] else editMode">
+                            <p-button icon="pi pi-eye" styleClass="p-button-info p-button-sm"
+                                        pTooltip="Ver Detalles" [text]="true" (onClick)="verDetalles(regcobro, false)"
+                                        [disabled]="botonesDeshabilitados">
+                            </p-button>
+
+                            <p-button 
+                                icon="pi pi-pencil" styleClass="p-button-text p-button-sm"
+                                (onClick)="iniciarEdicion(regcobro)" 
+                                [disabled]="botonesDeshabilitados"
+                                pTooltip="Modificar" [text]="true">
+                            </p-button>
+
+                            <p-button 
+                                icon="pi pi-trash" 
+                                styleClass="p-button-danger p-button-sm" 
+                                (click)="eliminarPago(regcobro)"
+                                [text]="true"
+                                pTooltip="Eliminar"
+                                [disabled]="botonesDeshabilitados">
+                            </p-button>
+                        </ng-container>
+
+                        <ng-container *ngIf="editingRegCobro[regcobro.ban03numero]">
+                            <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
+                                (onClick)="guardarEdicion(regcobro.ban03numero)" 
+                                pTooltip="Actualizar">
+                            </p-button>
+                            <p-button icon="pi pi-times" styleClass="p-button-danger p-button-sm" [text]="true"
+                                (onClick)="cancelarEdicion(regcobro.ban03numero)" 
+                                pTooltip="Cancelar">
+                            </p-button>
+                        </ng-container>                     
                     </td>
                     
                 </tr>
@@ -196,7 +231,7 @@
                                    placeholder="Ingresar motivo"
                                    class="w-full">
                     </td>                  
-                    <td>
+                    <td>                 
                         <div class="flex gap-2">
                             <p-button icon="pi pi-check" styleClass="p-button-success p-button-sm" [text]="true"
                                 (onClick)="guardarNuevo()" pTooltip="Guardar"></p-button>

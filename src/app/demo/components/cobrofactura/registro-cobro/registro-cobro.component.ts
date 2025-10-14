@@ -52,7 +52,6 @@ export class RegistroCobroComponent implements OnInit{
   proveedores: proveedores_lista[];
   selectCliente:string | null =null;
   listaClientes:ClienteconFactura[] =[];
-  
 
  nuevoFormulario: RegistroCobro ={
     ban03Empresa : '',
@@ -160,7 +159,7 @@ export class RegistroCobroComponent implements OnInit{
 
   }
   ngOnInit(): void {
-
+    
     this.bs.setBreadcrumbs([
       {icon:'pi pi-home', routerLink:'/Home'},
       {label:'Registro cobro', routerLink:'/Home/registro_cobro'}
@@ -168,6 +167,8 @@ export class RegistroCobroComponent implements OnInit{
     this.bs.currentBreadcrumbs$.subscribe((bc) =>{
       this.items = bc;
     });
+
+    this.cargarMedioPago();
 
     this.globalService.selectedDate$.subscribe((date)=>{
         if(date){
@@ -181,6 +182,7 @@ export class RegistroCobroComponent implements OnInit{
 
     });
     // this.cargarproveedores();
+    
   }
 
   cargarMedioPago():void{
@@ -301,6 +303,7 @@ export class RegistroCobroComponent implements OnInit{
   }
   cancelarNuevo(){
     this.mostrarNuevaFila = false;
+    this.botonesDeshabilitados = false; 
       this.nuevoFormulario = {
       ban03Empresa : this.globalService.getCodigoEmpresa(),
       ban03Anio: '',
@@ -317,6 +320,7 @@ export class RegistroCobroComponent implements OnInit{
       ban03VoucherNumero:'',
     }
   }
+
   guardarEdicion(nroRegistroCobro:string){
     this.cobroService.updateRegistroCobro(this.editaFormulario)
     .subscribe({
@@ -325,6 +329,7 @@ export class RegistroCobroComponent implements OnInit{
           'Exito', 'registro actualizado');
           //libera el registro  del arreglo de la lista de seleccionado
           delete this.editingRegCobro[nroRegistroCobro];
+          this.botonesDeshabilitados = false; 
           this.cargar();
       },
       error:(error) =>{
@@ -335,6 +340,7 @@ export class RegistroCobroComponent implements OnInit{
   }
   cancelarEdicion(nroRegistroCobro:string){
     delete this.editingRegCobro[nroRegistroCobro];
+    this.botonesDeshabilitados = false;
   }
   
   onCloseMolda(){
@@ -387,10 +393,12 @@ export class RegistroCobroComponent implements OnInit{
   iniciarEdicion(registro:TraeRegistroCobro):void{
     
       this.editingRegCobro[registro.ban03numero] = true;
-     
+      this.botonesDeshabilitados = true; 
+
       let obtenerMedioPago = this.medioPagoLista.find(
-        (mp) => mp.ban01Descripcion === registro.medioPagoDescripcion
+        (mp: any) => mp.ban01Descripcion === registro.medioPagoDescripcion
       );
+      
       this.editaFormulario ={
         ban03Empresa :this.globalService.getCodigoEmpresa(),
         ban03Anio:registro.ban03anio,
@@ -401,7 +409,7 @@ export class RegistroCobroComponent implements OnInit{
         ban03Importe:registro.ban03Importe,
         ban03moneda: registro.Ban03Moneda,
         ban03FechaDeposito : registro.ban03FechaDeposito,
-        ban03MedioPago: obtenerMedioPago ? obtenerMedioPago.ban01IdTipoPago:'',
+        ban03MedioPago: obtenerMedioPago ? obtenerMedioPago.ban01IdTipoPago : '', 
         ban03Motivo: registro.ban03Motivo,
         ban03VoucherLibroCod: registro.ban03VoucherLibroCod,
         ban03VoucherNumero:registro.ban03VoucherNumero
@@ -411,7 +419,7 @@ export class RegistroCobroComponent implements OnInit{
           { label: 'Dólares', value: 'D' }
       ];
       //this.cargarproveedores();
-      this.cargarCliente();
+      
   }
 
 verDetalleNuevo(registro:RegistroCobro, nuevoCodigoRegistroCobro:boolean){

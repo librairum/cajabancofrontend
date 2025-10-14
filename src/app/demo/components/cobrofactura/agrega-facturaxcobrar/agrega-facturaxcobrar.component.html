@@ -5,7 +5,7 @@
         <form [formGroup]="filtroFRM">
             <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <label>Codigo: </label>
+                    <label><strong>Codigo:</strong></label>
                     <label>{{codigoCliente}}</label>
                     <!-- <p-dropdown [options]="proveedores" optionLabel="razonsocial" optionValue="ruc" formControlName="ruc"
                         (onChange)="onProveedorChallenge($event)" [filter]="true" filterBy="razonsocial" [showClear]="true"
@@ -15,21 +15,16 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <label>Razon social:</label>
+                    <label><strong>Razon social:</strong></label> 
                    <label>{{nombreCliente}}</label>
                 </div>
             </div>
 
-            <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                <!-- Botón Filtrar alineado a la izquierda -->
-                <!-- <p-button label="Buscar" icon="pi pi-search" (onClick)="filtrar()"></p-button> -->
-
-                <!-- Contenedor de botones alineados a la derecha -->
+            <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
                 <div style="display: flex; gap: 0.5rem;">
                     <p-button label="Agregar" icon="pi pi-plus" (onClick)="onAddSelected()"></p-button>
                     <p-button label="Cancelar" icon="pi pi-ban" severity="danger"  (onClick)="onCancelSelection()"></p-button>
-
-                    <!--
+                <!--
                     <p-button label="Cerrar" icon="pi pi-times" (onClick)="onCerrar()"></p-button>
                 -->
                 </div>
