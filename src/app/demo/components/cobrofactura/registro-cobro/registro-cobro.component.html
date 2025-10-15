@@ -47,7 +47,7 @@
                             matchMode="contains">
                         </p-columnFilter>
                     </th>
-                    <th class="col-cliente">
+                    <th style="width: 100px; max-width: 100px;" class="col-cliente">
                         Cliente
                         <br />
                         <p-columnFilter 
@@ -58,14 +58,15 @@
                             matchMode="contains">
                         </p-columnFilter>
                     </th>
-                    <th>Fec.Deposito</th>
+                    <th style="width: 100px; max-width: 100px;">Fec.Deposito</th>
                     <th class="col-moneda">Moneda</th>
-                    <th>Importe</th>
+                    <th style="width: 100px; max-width: 100px;">Importe</th>
                     <th class="col-mediopago">MedioPago</th>
-                    <th>Motivo</th>
-                    <th>Acciones</th>
+                    <th style="width: 100px; max-width: 100px;">Motivo</th>
+                    <th style="width: 100px; max-width: 100px;">Acciones</th>
                 </tr>
             </ng-template>
+            
             <ng-template pTemplate="body" let-regcobro>
                 <tr>
                     <td>             
@@ -88,7 +89,7 @@
                             }}
                         </ng-container>
                         <ng-template #monedaEditMode>
-                            <p-dropdown [options]="monedaOpciones" [(ngModel)]="editaFormulario.ban03Moneda"
+                            <p-dropdown [options]="monedaOpciones" [(ngModel)]="editaFormulario.ban03moneda"
                                 placeholder="Seleccionar moneda" optionLabel="label" optionValue="value"
                                 appendTo="body" class="p-inputtext-sm w-full">
                             </p-dropdown>

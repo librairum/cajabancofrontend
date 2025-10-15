@@ -17,7 +17,7 @@
 
 /* Altura de celdas del header con filtros */
 ::ng-deep .p-datatable th:has(.p-column-filter) {
-    height: 60px;
+    height: 20px;
     vertical-align: top;
     padding: 4px;
 }
@@ -47,7 +47,8 @@
 /* Filtros de columnas - contenedor */
 ::ng-deep .p-datatable thead .p-column-filter {
     width: 100%;
-    margin-top: 4px;
+    margin-top: 5px;
+    margin-bottom: -15px;
     display: block;
 }
 
@@ -67,8 +68,8 @@
 
 /* Ajuste específico para columna de cliente con filtro */
 ::ng-deep .p-datatable .col-cliente .p-column-filter input {
-    width: 230px !important;
-    max-width: 230px !important;
+    width: 50px !important;
+    max-width: 50px !important;
     text-align: center !important;
 }
 
@@ -93,7 +94,6 @@
     min-width: 130px !important;
     max-width: 130px !important;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
     text-align: center !important;
 }
@@ -172,7 +172,6 @@
     min-width: 250px !important;
     max-width: 250px !important;
     overflow: hidden; 
-    white-space: nowrap; 
     text-overflow: ellipsis;
     text-align: center !important;
 }
@@ -196,3 +195,4 @@
     white-space: nowrap; 
     text-overflow: ellipsis;
 }
+

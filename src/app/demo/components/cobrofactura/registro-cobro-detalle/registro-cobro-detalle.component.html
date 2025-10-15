@@ -140,16 +140,16 @@
             <p-table [value]="listaSustentos" styleClass="tabla-sustentos" [scrollable]="true" scrollHeight="300px" [loading]="load">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Nombre de Archivo</th>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
+                        <th style="text-align: center !important; ">Nombre de Archivo</th>
+                        <th style="text-align: center !important;">Descripción</th>
+                        <th style="text-align: center !important;">Acciones</th>
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-sustento>
                     <tr>
-                        <td>{{ sustento.ban05NombreArchivo }}</td>
-                        <td>
+                        <td style="width: 200px; max-width: 200px;">{{ sustento.ban05NombreArchivo }}</td>
+                        <td style="width: 200px; max-width: 200px;">
                             <ng-container *ngIf="editingSustento?.ban05NombreArchivo === sustento.ban05NombreArchivo; 
                                 else viewDesc">
                                 <input pInputText [(ngModel)]="editingSustento.ban05DescripcionArchivo" 

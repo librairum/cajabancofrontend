@@ -273,7 +273,7 @@ export class RegistroCobroComponent implements OnInit{
               this.botonesDeshabilitados = false;
 
               this.cargar();
-              const nuevoCodigoRegistroCobro = response.item;
+              /*const nuevoCodigoRegistroCobro = response.item;
               //abrir la venta de factura la iniciar el formulario detALLE
               if(nuevoCodigoRegistroCobro){
                 this.router.navigate(['/Home/registro_cobro_detalle'], {
@@ -288,7 +288,7 @@ export class RegistroCobroComponent implements OnInit{
                   
                   }
                 });
-              }
+              }*/
               // if(nuevoCodigoRegistroCobro){
               //   //cargar detalle con codigo recine  generado 
 
@@ -301,6 +301,7 @@ export class RegistroCobroComponent implements OnInit{
           }
       });
   }
+
   cancelarNuevo(){
     this.mostrarNuevaFila = false;
     this.botonesDeshabilitados = false; 
@@ -399,9 +400,9 @@ export class RegistroCobroComponent implements OnInit{
         { label: 'Dólares', value: 'D' }
     ];
 
-    let obtenerMedioPago = this.medioPagoLista.find(
+    /*let obtenerMedioPago = this.medioPagoLista.find(
         (mp: any) => mp.ban01Descripcion === registro.medioPagoDescripcion
-    );
+    );*/
     
     this.editaFormulario = {
         ban03Empresa: this.globalService.getCodigoEmpresa(),
@@ -411,9 +412,9 @@ export class RegistroCobroComponent implements OnInit{
         ban03clientetipoanalisis: '01',
         ban03clienteruc: registro.clienteCodigo,
         ban03Importe: registro.ban03Importe,
-        ban03moneda: registro.Ban03Moneda === 'Soles' ? 'S' : 'D',  // 🔥 DIRECTO
+        ban03moneda: registro.Ban03Moneda === 'Soles' ? 'S' : 'D',  
         ban03FechaDeposito: registro.ban03FechaDeposito,
-        ban03MedioPago: obtenerMedioPago ? obtenerMedioPago.ban01IdTipoPago : '', 
+        ban03MedioPago: registro.medioPagoCodigo,  
         ban03Motivo: registro.ban03Motivo,
         ban03VoucherLibroCod: registro.ban03VoucherLibroCod,
         ban03VoucherNumero: registro.ban03VoucherNumero
