@@ -84,7 +84,7 @@
                                 class="w-full" />
                         </ng-container>
                     </td>
-                    <td style="text-align: left; white-space: nowrap;">
+                    <td style="text-align: left; white-space: nowrap;"class="col-mediopago">
                         <ng-container *ngIf="!editingPresupuesto[presupuesto.pagoNumero]">
                             {{ presupuesto.nombreMedioPago }}
                         </ng-container>
@@ -93,7 +93,7 @@
                                 optionValue="ban01IdTipoPago" 
                                 [(ngModel)]="editForm.ban01mediopago"
                                 class="p-inputtext-sm w-full" 
-                                [filter]="true" filterMatchMode="contains"
+                                [filter]="true" 
                                 filterBy="ban01Descripcion" 
                                 placeholder="medio" 
                                 appendTo="body"

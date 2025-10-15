@@ -361,10 +361,13 @@ export class CabecerapresupuestoComponent implements OnInit {
 
     iniciarEdicion(presupuesto: cabeceraPresupuesto) {
         this.editingPresupuesto[presupuesto.pagoNumero] = true;
+        this.botonesDeshabilitados = true;
+
         const fechaSeleccionada = new Date(presupuesto.fecha);
         const foundMedioPago = this.medioPagoLista.find(
             (mp) => mp.ban01Descripcion === presupuesto.nombreMedioPago
         );
+        
         this.editForm = {
             ban01Empresa: this.globalService.getCodigoEmpresa(),
             ban01Numero: presupuesto.pagoNumero,
@@ -380,14 +383,17 @@ export class CabecerapresupuestoComponent implements OnInit {
             ban01Pc: 'PC',
             ban01FechaRegistro:
                 this.datePipe.transform(new Date(), 'dd/MM/yyyy') || '',
-            ban01mediopago: foundMedioPago
-                ? foundMedioPago.ban01IdTipoPago
-                : '',
+            ban01mediopago:
+      foundMedioPago?.ban01IdTipoPago ||
+      presupuesto.mediopago ||
+      presupuesto.bancoCodMedioPago ||
+      '',
         };
     }
 
     cancelarEdicion(pagoNumero: string) {
         delete this.editingPresupuesto[pagoNumero];
+        this.botonesDeshabilitados = false;
     }
 
     actualizarFechaEdicion(event: Date) {
@@ -432,7 +438,9 @@ export class CabecerapresupuestoComponent implements OnInit {
                 );
             },
         });
+        this.botonesDeshabilitados = false;
     }
+
     eliminarPago(presupuesto: cabeceraPresupuesto) {
         this.presupuestoService.obtenerDetallePresupuesto(this.globalService.getCodigoEmpresa(), presupuesto.pagoNumero).subscribe({
             next: (detalles) => {

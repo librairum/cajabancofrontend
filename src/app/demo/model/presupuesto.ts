@@ -16,7 +16,6 @@ export interface cabeceraPresupuesto {
     ban01NroOperacion: string;
     ban01EnlacePago: string;
     bancoCodMedioPago : string;
-
 }
 
 export interface Detallepresupuesto {

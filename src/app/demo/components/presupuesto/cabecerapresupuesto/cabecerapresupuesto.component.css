@@ -124,3 +124,13 @@
     width: 100% !important;
     max-width: 100% !important;
 }
+
+/* Columna de medio de pago - ancho fijo */
+::ng-deep .p-datatable .col-mediopago {
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
