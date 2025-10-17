@@ -26,12 +26,6 @@ import { formatDateForFilename } from 'src/app/demo/components/utilities/funcion
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DialogModule } from 'primeng/dialog';
 
-
-
-import { TagModule } from 'primeng/tag';
-import { ConsultaDocPorPagoExtendido } from '../../model/ConsultaDocPorPagoExtendido';
-
-
 @Component({
   selector: 'app-consultahistorica-ctaxcobrar',
   standalone: true,
@@ -47,8 +41,7 @@ import { ConsultaDocPorPagoExtendido } from '../../model/ConsultaDocPorPagoExten
     ConfirmDialogModule,
     ProgressBarModule,
     DialogModule,
-    FormsModule,
-    TagModule,],
+    FormsModule,],
   providers: [MessageService, ConfirmationService],
   templateUrl: './consultahistorica-ctaxcobrar.component.html',
   styleUrl: './consultahistorica-ctaxcobrar.component.css'
@@ -56,7 +49,6 @@ import { ConsultaDocPorPagoExtendido } from '../../model/ConsultaDocPorPagoExten
 export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
   consultaDocPorPagoForm: FormGroup;
   consultaDocPorPagoList: ConsultaDocPorPago[] = [];
-
   isEditing: boolean = false;
   items: any[] = []; //lista de breadcrumbs
   isNew: boolean = false; //controla si se está creando un nuevo registro
@@ -65,11 +57,7 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
   DetallePago: Detallepresupuesto[];
   load: boolean = false;
   groupTotals: any[] = [];
-
   ayudapago: agregar_Pago[] = [];
-
-  // Utilizaremos esto
-  consultaDocPorPagoExtendidoList: ConsultaDocPorPagoExtendido[] = [];
 
   searchPerformed: boolean = false; //indica si ya se ejecuté una busqueda
 
@@ -174,138 +162,18 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
         },
       });
   }
-
-
-
-  combinarDatos(): void {
-    this.consultaDocPorPagoExtendidoList = [];
-
-    // Crear un mapa para búsqueda rápida en ayudapago por clave
-    const pagoMap = new Map<string, agregar_Pago>();
-    this.ayudapago.forEach(pago => {
-        pagoMap.set(pago.clave, pago);
-    });
-
-    this.consultaDocPorPagoList.forEach(doc => {
-
-        // Construir la clave igual que en ayudapago
-        const clave = `${doc.ruc}${doc.nroDoc}`;
-        const pago = pagoMap.get(clave);
-
-        let soles = 0;
-        let dolares = 0;
-
-        if (pago && (pago.soles > 0 || pago.dolares > 0)) {
-            soles = pago.soles;
-            dolares = pago.dolares;
-        }
-        else {
-            // Si no hay pago o ambos son 0, usar importePago según moneda
-            if (doc.moneda && doc.moneda.toUpperCase().includes('SOLES')) {
-                soles = doc.importePago;
-            } else if (doc.moneda && doc.moneda.toUpperCase().includes('DOLARES')) {
-                dolares = doc.importePago;
-            }
-        }
-            this.consultaDocPorPagoExtendidoList.push({
-                ...doc,
-                soles: soles,
-                dolares: dolares,
-                // Puedes agregar más campos de pago si lo necesitas
-            });
-        });
-    }
-
-
-
   listarconsultadocporpago(): void {
-
-    this.load = true;
-    let filtro = this.textoBuscar.trim();
-
-    // Llama ambos servicios y espera sus respuestas
-    this.presupuestoService.obtenerDocPendienteReporte(
-        this.globalService.getCodigoEmpresa(),
-        filtro
-    ).subscribe({
-        next: (data) => {
-        this.ayudapago = data;
-        // Cuando termine de cargar ayudapago, carga consultaDocPorPagoList
-        this.consultaDocPorPagoService.GetConsultaDocPorPago(filtro)
-            .subscribe({
-            next: (data2) => {
-                this.consultaDocPorPagoList = data2;
-                this.combinarDatos(); // <-- Aquí sí es correcto
-                this.load = false;
-            },
-            error: () => {
-                this.load = false;
-                verMensajeInformativo(
-                this.messageService,
-                'error',
-                'Error',
-                'Error al cargar documentos por pago'
-                );
-            }
-            });
-        },
-        error: () => {
-        this.load = false;
-        verMensajeInformativo(
-            this.messageService,
-            'error',
-            'Error',
-            'Error al cargar documentos por pago'
-        );
-        }
-    });
-
-    /*
-    this.load = true;
     let filtro = this.textoBuscar.trim();
 
     if (filtro === '') {
       // No cargar nada si el filtro está vacío
-
-      this.ayudapago = [];
-
-      //this.consultaDocPorPagoList = [];
-      //this.searchPerformed = false;
-
+      this.consultaDocPorPagoList = [];
+      this.searchPerformed = false;
       this.load=false;
       return;
-    }*/
+    }
 
-
-    //Aqui se cargan los datos
-    /*
-    this.presupuestoService.obtenerDocPendienteReporte(
-        this.globalService.getCodigoEmpresa(),
-        filtro
-    ).subscribe({
-        next: (data) => {
-        this.ayudapago = data;
-        this.load = false;
-        if (this.ayudapago.length === 0) {
-            verMensajeInformativo(
-            this.messageService,
-            'info',
-            'Información',
-            'No se encontraron documentos pendientes'
-            );
-        }
-        },
-        error: () => {
-        this.load = false;
-        verMensajeInformativo(
-            this.messageService,
-            'error',
-            'Error',
-            'Error al cargar documentos por pago'
-        );
-        }
-    });
-
+    this.load = true;
     this.consultaDocPorPagoService
       .GetConsultaDocPorPago(filtro)
       .subscribe({
@@ -334,7 +202,6 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
           );
         },
       });
-    */
   }
 
 

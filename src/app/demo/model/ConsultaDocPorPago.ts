@@ -12,4 +12,6 @@ export interface ConsultaDocPorPago {
     fechaPago:string;
     numeroPresupuesto: string;
     estadoPresupuesto:string;
+
+    //
     }
