@@ -26,6 +26,12 @@ import { formatDateForFilename } from 'src/app/demo/components/utilities/funcion
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DialogModule } from 'primeng/dialog';
 
+
+
+import { TagModule } from 'primeng/tag';
+import { ConsultaDocPorPagoExtendido } from '../../model/ConsultaDocPorPagoExtendido';
+
+
 @Component({
   selector: 'app-consultahistorica-ctaxcobrar',
   standalone: true,
@@ -41,7 +47,8 @@ import { DialogModule } from 'primeng/dialog';
     ConfirmDialogModule,
     ProgressBarModule,
     DialogModule,
-    FormsModule,],
+    FormsModule,
+    TagModule,],
   providers: [MessageService, ConfirmationService],
   templateUrl: './consultahistorica-ctaxcobrar.component.html',
   styleUrl: './consultahistorica-ctaxcobrar.component.css'
@@ -49,6 +56,7 @@ import { DialogModule } from 'primeng/dialog';
 export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
   consultaDocPorPagoForm: FormGroup;
   consultaDocPorPagoList: ConsultaDocPorPago[] = [];
+
   isEditing: boolean = false;
   items: any[] = []; //lista de breadcrumbs
   isNew: boolean = false; //controla si se está creando un nuevo registro
@@ -57,7 +65,11 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
   DetallePago: Detallepresupuesto[];
   load: boolean = false;
   groupTotals: any[] = [];
+
   ayudapago: agregar_Pago[] = [];
+
+  // Utilizaremos esto
+  consultaDocPorPagoExtendidoList: ConsultaDocPorPagoExtendido[] = [];
 
   searchPerformed: boolean = false; //indica si ya se ejecuté una busqueda
 
@@ -103,7 +115,7 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
       return;
     }
     this.searchPerformed = true;
-    this.load=true; 
+    this.load=true;
     this.listarconsultadocporpago();
   }
 
@@ -162,18 +174,119 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
         },
       });
   }
+
+  combinarDatos(): void {
+    this.consultaDocPorPagoExtendidoList = [];
+    this.consultaDocPorPagoList.forEach(doc => {
+        const pagos = this.ayudapago.filter(p => p.numeroDOcumento === doc.nroDoc);
+        if (pagos.length > 0) {
+        pagos.forEach(pago => {
+            this.consultaDocPorPagoExtendidoList.push({
+            ...doc,
+            soles: pago.soles,
+            dolares: pago.dolares,
+            // puedes agregar aquí otras propiedades de pago si necesitas
+            });
+        });
+        } else {
+        // Si no hay pagos, igual agrega el documento con montos en 0
+        this.consultaDocPorPagoExtendidoList.push({
+            ...doc,
+            soles: 0,
+            dolares: 0,
+        });
+        }
+    });
+    }
+
   listarconsultadocporpago(): void {
+
+    this.load = true;
+    let filtro = this.textoBuscar.trim();
+
+    // Llama ambos servicios y espera sus respuestas
+    this.presupuestoService.obtenerDocPendienteReporte(
+        this.globalService.getCodigoEmpresa(),
+        filtro
+    ).subscribe({
+        next: (data) => {
+        this.ayudapago = data;
+        // Cuando termine de cargar ayudapago, carga consultaDocPorPagoList
+        this.consultaDocPorPagoService.GetConsultaDocPorPago(filtro)
+            .subscribe({
+            next: (data2) => {
+                this.consultaDocPorPagoList = data2;
+                this.combinarDatos(); // <-- Aquí sí es correcto
+                this.load = false;
+            },
+            error: () => {
+                this.load = false;
+                verMensajeInformativo(
+                this.messageService,
+                'error',
+                'Error',
+                'Error al cargar documentos por pago'
+                );
+            }
+            });
+        },
+        error: () => {
+        this.load = false;
+        verMensajeInformativo(
+            this.messageService,
+            'error',
+            'Error',
+            'Error al cargar documentos por pago'
+        );
+        }
+    });
+
+    /*
+    this.load = true;
     let filtro = this.textoBuscar.trim();
 
     if (filtro === '') {
       // No cargar nada si el filtro está vacío
-      this.consultaDocPorPagoList = [];
-      this.searchPerformed = false;
+
+      this.ayudapago = [];
+
+      //this.consultaDocPorPagoList = [];
+      //this.searchPerformed = false;
+
       this.load=false;
       return;
-    }
+    }*/
 
-    this.load = true;
+
+    //Aqui se cargan los datos
+    /*
+    this.presupuestoService.obtenerDocPendienteReporte(
+        this.globalService.getCodigoEmpresa(),
+        filtro
+    ).subscribe({
+        next: (data) => {
+        this.ayudapago = data;
+        this.load = false;
+        if (this.ayudapago.length === 0) {
+            verMensajeInformativo(
+            this.messageService,
+            'info',
+            'Información',
+            'No se encontraron documentos pendientes'
+            );
+        }
+        },
+        error: () => {
+        this.load = false;
+        verMensajeInformativo(
+            this.messageService,
+            'error',
+            'Error',
+            'Error al cargar documentos por pago'
+        );
+        }
+    });
+
     this.consultaDocPorPagoService
       .GetConsultaDocPorPago(filtro)
       .subscribe({
@@ -202,6 +315,7 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
           );
         },
       });
+    */
   }
 
 
@@ -258,7 +372,7 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
         { text: 'RUC', rowSpan: 2, style: 'tableHeader' },//1
         { text: 'Razon Social', rowSpan: 2, style: 'tableHeader' },//2
         { text: 'Tipo Doc', rowSpan: 2, style: 'tableHeader' }, //3
-        { text: 'Numero', rowSpan: 2, style: 'tableHeader' },       //4          
+        { text: 'Numero', rowSpan: 2, style: 'tableHeader' },       //4
         { text: 'Fecha emision', rowSpan: 2, style: 'tableHeader' }, //5
         { text: 'Fecha vencimiento', rowSpan: 2, style: 'tableHeader' }, //6
         { text: 'Moneda Original', rowSpan: 2, style: 'tableHeader' }, //7
@@ -303,7 +417,7 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
 
       groupItems.forEach((item) => {
         body.push([
-          item.ruc,        //1            
+          item.ruc,        //1
           item.razonSocial, //2
           item.nombreTipoDOc, //3
           item.numeroDOcumento, //4
@@ -311,7 +425,7 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
           item.fechaVencimiento, //6
           item.monedaOriginal, //7
           formatCell(item.soles), //8
-          formatCell(item.dolares),   //9                  
+          formatCell(item.dolares),   //9
 
         ]);
       });
@@ -374,8 +488,8 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
               150,  //2  razon social
               30,  //3 tipo documento
               28,  //4 numero del documento  factura
-              40, //5 fecha emision 
-              40,  //6 fecha vencimiento 
+              40, //5 fecha emision
+              40,  //6 fecha vencimiento
               33, //7 moneda original
               60, //8 importe total S/
               60, //9 importe total $
