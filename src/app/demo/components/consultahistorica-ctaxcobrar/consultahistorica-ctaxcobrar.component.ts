@@ -175,29 +175,48 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
       });
   }
 
+
+
   combinarDatos(): void {
     this.consultaDocPorPagoExtendidoList = [];
+
+    // Crear un mapa para búsqueda rápida en ayudapago por clave
+    const pagoMap = new Map<string, agregar_Pago>();
+    this.ayudapago.forEach(pago => {
+        pagoMap.set(pago.clave, pago);
+    });
+
     this.consultaDocPorPagoList.forEach(doc => {
-        const pagos = this.ayudapago.filter(p => p.numeroDOcumento === doc.nroDoc);
-        if (pagos.length > 0) {
-        pagos.forEach(pago => {
+
+        // Construir la clave igual que en ayudapago
+        const clave = `${doc.ruc}${doc.nroDoc}`;
+        const pago = pagoMap.get(clave);
+
+        let soles = 0;
+        let dolares = 0;
+
+        if (pago && (pago.soles > 0 || pago.dolares > 0)) {
+            soles = pago.soles;
+            dolares = pago.dolares;
+        }
+        else {
+            // Si no hay pago o ambos son 0, usar importePago según moneda
+            if (doc.moneda && doc.moneda.toUpperCase().includes('SOLES')) {
+                soles = doc.importePago;
+            } else if (doc.moneda && doc.moneda.toUpperCase().includes('DOLARES')) {
+                dolares = doc.importePago;
+            }
+        }
             this.consultaDocPorPagoExtendidoList.push({
-            ...doc,
-            soles: pago.soles,
-            dolares: pago.dolares,
-            // puedes agregar aquí otras propiedades de pago si necesitas
+                ...doc,
+                soles: soles,
+                dolares: dolares,
+                // Puedes agregar más campos de pago si lo necesitas
             });
         });
-        } else {
-        // Si no hay pagos, igual agrega el documento con montos en 0
-        this.consultaDocPorPagoExtendidoList.push({
-            ...doc,
-            soles: 0,
-            dolares: 0,
-        });
-        }
-    });
     }
+
+
 
   listarconsultadocporpago(): void {
 
