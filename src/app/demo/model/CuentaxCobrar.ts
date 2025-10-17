@@ -115,3 +115,18 @@ export interface insertarDetalle {
     xmlDetalle: string;
     ban04Observacion: string;
 }
+
+export  interface TraeHistoricoCtaxCobra {
+    ruc:string;
+    	razonSocial:string;
+        	tipoDoc:string;	
+            nroComprobante:string;
+            fecha:string;
+            importeFactura:number;	
+            monedaFactura:number;
+            fechapago:string;
+            importePagoSoles:number;
+            importePagoDolares:number;
+            estadopago:string;
+
+}

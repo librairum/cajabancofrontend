@@ -136,12 +136,13 @@ export class AgregaFacturaxcobrarComponent implements OnInit {
       let soles = '0';
       let dolares = '0';
 
-      if (item.moneda === 'SOLES' || item.moneda === 'Soles') {
-        soles = item.totalSoles?.toString() || '0';
-      } else if (item.moneda === 'DOLARES' || item.moneda === 'Dólares') {
-        dolares = item.totalDolares?.toString() || '0';
-      }
-
+      // if (item.moneda === 'SOLES' || item.moneda === 'Soles') {
+      //   soles = item.totalSoles?.toString() || '0';
+      // } else if (item.moneda === 'DOLARES' || item.moneda === 'Dólares') {
+      //   dolares = item.totalDolares?.toString() || '0';
+      // }
+      soles = item.totalSoles?.toString() ||  '0';
+      dolares = item.totalDolares?.toString() ||  '0';
       const fields = {
         codigoTipDoc: item.codigoTipoDocumento || '01',
         numeroDocumento: item.numeroDocumento,
@@ -157,9 +158,10 @@ export class AgregaFacturaxcobrarComponent implements OnInit {
 
       xmlDoc.documentElement.appendChild(tblElement);
     });
-
+    console.log('valor xml detalle ayuda');
+    
     const xmlString = new XMLSerializer().serializeToString(xmlDoc);
-
+    console.log(xmlString);
     this.xmlGenerado.emit(xmlString);
     this.selectedItems = [];
   }

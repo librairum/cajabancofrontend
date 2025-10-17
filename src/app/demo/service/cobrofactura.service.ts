@@ -21,7 +21,8 @@ import {
     FacturaPorCobrar, 
     TraeRegistroCobroDetalle,
     TraeRegistroCobro,
-    ClienteconFactura 
+    ClienteconFactura, 
+    TraeHistoricoCtaxCobra
 } from "../model/CuentaxCobrar";
 import { HttpParams } from "@angular/common/http";
 import { MedioPago, proveedores_lista } from "../model/presupuesto";
@@ -235,6 +236,16 @@ export class CobroFacturaService{
         );
     }
 
+    // === REPORTE ============
+    public ListaHistoricoReporte(empresa:string, filtro:string): Observable<TraeHistoricoCtaxCobra[]>
+    {
+        const params = new HttpParams().set('empresa', empresa).set('filtro',filtro);
+        return this.http.get<RespuestaAPIBase<TraeHistoricoCtaxCobra[]>>(
+            `${this.urlAPI}/ListaHistorico`,{params}
+        ).pipe(
+            map((response)=>response.data),catchError(this.handleError)
+        );
+    }
     // ==================== MÉTODOS SUSTENTOS ====================
 
     public SubirArchivo(empresa:string, numeroRegCobCab:string, archivosSeleccionados:File[]):Observable<any>{
