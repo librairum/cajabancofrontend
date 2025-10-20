@@ -17,6 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { PresupuestoService } from '../../service/presupuesto.service';
+import { CobroFacturaService } from '../../service/cobrofactura.service';
 import { HttpResponse } from '@angular/common/http';
 import { Detallepresupuesto, agregar_Pago } from '../../model/presupuesto';
 import * as pdfMake from 'pdfmake/build/pdfmake';
@@ -25,6 +26,8 @@ import { formatDateForFilename } from 'src/app/demo/components/utilities/funcion
 //import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DialogModule } from 'primeng/dialog';
+import { TraeHistoricoCtaxCobra } from '../../model/CuentaxCobrar';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-consultahistorica-ctaxcobrar',
@@ -41,7 +44,7 @@ import { DialogModule } from 'primeng/dialog';
     ConfirmDialogModule,
     ProgressBarModule,
     DialogModule,
-    FormsModule,],
+    FormsModule,TagModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './consultahistorica-ctaxcobrar.component.html',
   styleUrl: './consultahistorica-ctaxcobrar.component.css'
@@ -49,6 +52,7 @@ import { DialogModule } from 'primeng/dialog';
 export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
   consultaDocPorPagoForm: FormGroup;
   consultaDocPorPagoList: ConsultaDocPorPago[] = [];
+  traerHistoricoList: TraeHistoricoCtaxCobra[] =[];
   isEditing: boolean = false;
   items: any[] = []; //lista de breadcrumbs
   isNew: boolean = false; //controla si se está creando un nuevo registro
@@ -68,7 +72,7 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
     private router: Router,
     private globalService: GlobalService,
     private messageService: MessageService,
-    private presupuestoService: PresupuestoService
+    private cobrarService: CobroFacturaService
   ) { }
 
   ngOnInit(): void {
@@ -130,37 +134,37 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
     const mesFecha = fecha[1];
     const anioFecha = fecha[2];
 
-    this.presupuestoService
-      .obtenerArchivo(
-        this.globalService.getCodigoEmpresa(),
-        anioFecha,
-        mesFecha,
-        numeroPresupuesto
-      )
-      .subscribe({
-        next: (response: HttpResponse<Blob>) => {
-          const blob = response.body;
-          if (blob && blob.size > 0) {
-            const url = window.URL.createObjectURL(blob);
-            window.open(url, '_blank');
-          } else {
-            verMensajeInformativo(
-              this.messageService,
-              'error',
-              'Error',
-              'No se encontró el documento'
-            );
-          }
-        },
-        error: (err) => {
-          verMensajeInformativo(
-            this.messageService,
-            'error',
-            'Error',
-            'Error al cargar el documento'
-          );
-        },
-      });
+    // this.presupuestoService
+    //   .obtenerArchivo(
+    //     this.globalService.getCodigoEmpresa(),
+    //     anioFecha,
+    //     mesFecha,
+    //     numeroPresupuesto
+    //   )
+    //   .subscribe({
+    //     next: (response: HttpResponse<Blob>) => {
+    //       const blob = response.body;
+    //       if (blob && blob.size > 0) {
+    //         const url = window.URL.createObjectURL(blob);
+    //         window.open(url, '_blank');
+    //       } else {
+    //         verMensajeInformativo(
+    //           this.messageService,
+    //           'error',
+    //           'Error',
+    //           'No se encontró el documento'
+    //         );
+    //       }
+    //     },
+    //     error: (err) => {
+    //       verMensajeInformativo(
+    //         this.messageService,
+    //         'error',
+    //         'Error',
+    //         'Error al cargar el documento'
+    //       );
+    //     },
+    //   });
   }
   listarconsultadocporpago(): void {
     let filtro = this.textoBuscar.trim();
@@ -174,6 +178,25 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
     }
 
     this.load = true;
+    this.cobrarService.ListaHistoricoReporte(this.globalService.getCodigoEmpresa(),filtro)
+    .subscribe({
+      next:(data)=>{
+        this.traerHistoricoList = data;
+        this.load = false;
+        console.log("dato de historica ctaxcobrar");
+        console.log(data);
+        if(data.length === 0 ){
+        verMensajeInformativo(
+              this.messageService,
+              'info',
+              'Información',
+              'No se encontro el ruc o nro doc'
+            );
+        }
+         
+      }
+    })
+
     this.consultaDocPorPagoService
       .GetConsultaDocPorPago(filtro)
       .subscribe({
@@ -209,31 +232,49 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
     //const nroDoc = this.filtroFRM.get('nrodoc').value ?? '';
     //const ruc = this.filtroFRM.get('ruc').value ?? '';
     console.log("metodo obtenr factura pendiente");
-    const nroDoc = '';
-    const ruc = this.textoBuscar.trim();
-    this.presupuestoService.obtenerDocPendiente(
-      this.globalService.getCodigoEmpresa(), ruc, nroDoc)
-      .subscribe({
-        next: (data) => {
+    
+    const filtro = this.textoBuscar.trim();
+    this.load = true;
+    this.cobrarService.ListaHistoricoReporte(
+          this.globalService.getCodigoEmpresa(), filtro)
+          .subscribe({
+            next:(data)=>{
+              this.traerHistoricoList = data;
+               this.load = false;
+              if(data.length == 0){
+                verMensajeInformativo(this.messageService, 'Info','Informacion','No se encontro informacion');
+               
+              }
+              
+            }, error:(errordt) =>{
+              verMensajeInformativo(this.messageService, 'error','Error','Error al traer informacion');
+              console.log(errordt);
+            }
+          });
 
-          this.ayudapago = data;
-          console.log("data de tra er documento pendiente");
-          console.log(this.ayudapago);
-          this.generarPDFPendiente(this.ayudapago);
-          //this.loading = false;
-          if (data.length === 0) {
-            verMensajeInformativo(
-              this.messageService,
-              'warn',
-              'Advertencia',
-              'No se encontraron registros del proveedor'
-            );
-          }
-        }, error: (error) => {
-          //this.loading = false;
-          verMensajeInformativo(this.messageService, 'error', 'Error', `Error al cargar los registros ${error.message}`);
-        },
-      });
+    // this.presupuestoService.obtenerDocPendiente(
+    //   this.globalService.getCodigoEmpresa(), ruc, nroDoc)
+    //   .subscribe({
+    //     next: (data) => {
+
+    //       this.ayudapago = data;
+    //       console.log("data de tra er documento pendiente");
+    //       console.log(this.ayudapago);
+    //       this.generarPDFPendiente(this.ayudapago);
+    //       //this.loading = false;
+    //       if (data.length === 0) {
+    //         verMensajeInformativo(
+    //           this.messageService,
+    //           'warn',
+    //           'Advertencia',
+    //           'No se encontraron registros del proveedor'
+    //         );
+    //       }
+    //     }, error: (error) => {
+    //       //this.loading = false;
+    //       verMensajeInformativo(this.messageService, 'error', 'Error', `Error al cargar los registros ${error.message}`);
+    //     },
+    //   });
 
   }
   generarPDFPendiente(dataReporte: agregar_Pago[]): void {

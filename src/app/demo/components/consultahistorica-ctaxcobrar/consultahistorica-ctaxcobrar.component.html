@@ -17,33 +17,54 @@
     </p-panel>
     <br />
     <div class="card p-2">
-        <p-table [value]="consultaDocPorPagoList" [scrollable]="true"
+        <p-table [value]="traerHistoricoList" [scrollable]="true"
             [tableStyle]="{width: '100%', border: '0px solid black'}" [loading]="load">
             <ng-template pTemplate="header">
                 <tr>
                     <th style="text-align: center;">RUC</th>
-                    <th style="text-align: center;">Nombre</th>
-                    <th style="text-align: center;">Tipo Documento</th>
-                    <th style="text-align: center;">Numero</th>
-                    <th style="text-align: center;">Fecha</th>
-                    <th style="text-align: center;">Importe</th>
-                    <th style="text-align: center;">Fecha Pago</th>
-                    <th style="text-align: center;">Importe Pagado</th>
-                    <th style="text-align: center;">Ver Comprobante de pago</th>
+                    <th style="text-align: center;">razonSocial</th>
+                    <th style="text-align: center;">tipoDoc</th>
+                    <th style="text-align: center;">tipoDocDesc</th>
+                    <th style="text-align: center;">nroComprobante</th>
+                    <th style="text-align: center;">fecha</th>
+                    <th style="text-align: center;">importeFactura</th>
+                    <th style="text-align: center;">monedaFactura</th>
+                    <th style="text-align: center;">fechapago</th>
+                    <th style="text-align: center;">importePagoSoles</th>
+                    <th style="text-align: center;">importePagoDolares</th>
+                    <th style="text-align: center;">estadopago</th>
+
+                    <!--
+                    ruc	razonSocial	tipoDoc	tipoDocDesc	nroComprobante	fecha	
+                    importeFactura	monedaFactura	fechapago	
+                    importePagoSoles	importePagoDolares	estadopago
+
+                    -->
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-doc>
                 <tr>
                     <td style="text-align: center; white-space: nowrap;">{{ doc.ruc }}</td>
-                    <td style="text-align: center; white-space: nowrap;">{{ doc.nombreEmpresa }}</td>
-                    <td style="text-align: center; white-space: nowrap;">{{ doc.nombreTipoDocumento }}</td>
-                    <td style="text-align: center; white-space: nowrap;">{{ doc.nroDoc }}</td>
-                    <td style="text-align: left; white-space: nowrap;">{{ doc.fechaDocumento }}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.importeDocumento | number : "1.2-2" }}
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.razonSocial }}</td>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.tipoDoc }}</td>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.tipoDocDesc }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.nroComprobante }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.fecha  }}
                     </td>
-                    <td style="text-align: left; white-space: nowrap;">{{ doc.fechaPago}}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.importePago | number : "1.1-2" }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.importeFactura | number : "1.1-2"}}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.monedaFactura }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.fechapago }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoSoles | number : "1.1-2" }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoDolares | number : "1.1-2" }}</td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <!--  -->
+                        <p-tag [severity]="doc.estadopago==='Pendiente' ? 'danger':'info'">
+                            {{ doc.estadopago }}
+                        </p-tag>
+                    </td>
+                    
+                    <!--
                     <td style="text-align: center; white-space: nowrap;">
                         <p-button *ngIf="doc.fechaPago !== '' " label="" icon="pi pi-file"
                             styleClass="p-button-sm p-button-info" (onClick)="abrirdocumento(doc.fechaPago, doc.numeroPresupuesto)
@@ -53,6 +74,7 @@
                             styleClass="p-button-sm p-button-danger" [disabled]="true" [text]="false">
                         </p-button>
                     </td>
+                    -->
                 </tr>
             </ng-template>
         </p-table>

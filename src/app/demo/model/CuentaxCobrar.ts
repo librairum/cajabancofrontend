@@ -120,6 +120,7 @@ export  interface TraeHistoricoCtaxCobra {
     ruc:string;
     	razonSocial:string;
         	tipoDoc:string;	
+            tipoDocDesc:string;
             nroComprobante:string;
             fecha:string;
             importeFactura:number;	
