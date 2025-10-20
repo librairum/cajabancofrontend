@@ -81,6 +81,7 @@ load: boolean = false;
 buscar():void{
 
     this.listarconsultadocporpago();
+    console.log("consulkta doc pendiente reporte");
 }
 
 

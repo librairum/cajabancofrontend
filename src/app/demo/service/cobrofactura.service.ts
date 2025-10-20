@@ -22,7 +22,8 @@ import {
     TraeRegistroCobroDetalle,
     TraeRegistroCobro,
     ClienteconFactura, 
-    TraeHistoricoCtaxCobra
+    TraeHistoricoCtaxCobra,
+    TraeDocPendienteCtaxCobra
 } from "../model/CuentaxCobrar";
 import { HttpParams } from "@angular/common/http";
 import { MedioPago, proveedores_lista } from "../model/presupuesto";
@@ -241,10 +242,21 @@ export class CobroFacturaService{
     {
         const params = new HttpParams().set('empresa', empresa).set('filtro',filtro);
         return this.http.get<RespuestaAPIBase<TraeHistoricoCtaxCobra[]>>(
-            `${this.urlAPI}/ListaHistorico`,{params}
+            `${this.urlAPI}/ListaHistoricoReporte`,{params}
         ).pipe(
             map((response)=>response.data),catchError(this.handleError)
         );
+    }
+    public ListaDocPendienteReporte(empresa:string, 
+        filtro:string): Observable<TraeDocPendienteCtaxCobra[]>
+        
+    {
+        const params = new HttpParams().set('empresa', empresa) .set('filtro', filtro);
+        return this.http.get<RespuestaAPIBase<TraeDocPendienteCtaxCobra[]>>(
+             `${this.urlAPI}/ListaHistoricoReporte`,{params}).pipe(
+                map((response) => response.data), catchError(this.handleError)
+             );
+        
     }
     // ==================== MÉTODOS SUSTENTOS ====================
 

@@ -28,8 +28,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressBarModule } from 'primeng/progressbar';
 
-
-
+import { CobroFacturaService } from '../../service/cobrofactura.service';
+import { TraeDocPendienteCtaxCobra } from '../../model/CuentaxCobrar';
 @Component({
   selector: 'app-consultadocpendiente-ctaxcobrar', /*nombre del componente para usar en HTML*/
   standalone: true,
@@ -56,13 +56,14 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
 
   items: any[] = [];
   textoBuscar: string = '';
-  consultaDocPorPagoList: DocPendCtaxCobrar[] = [];
+  //consultaDocPorPagoList: DocPendCtaxCobrar[] = [];
   ayudapago: agregar_Pago[] = [];
+  consultaDocPagoList: TraeDocPendienteCtaxCobra[] =[];
   load: boolean = false;
   constructor(private presupuestoService: PresupuestoService,
     private breadcrumbService: BreadcrumbService,
     private globalService: GlobalService,
-    private messageService: MessageService) { }
+    private messageService: MessageService, private cobroFacturaService: CobroFacturaService) { }
 
   ngOnInit(): void {
     this.breadcrumbService.setBreadcrumbs([
@@ -87,24 +88,35 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
   listarconsultadocporpago(): void {
     this.load = true;
     let filtro = this.textoBuscar.trim();
-    this.presupuestoService.obtenerDocPendienteReporte(this.globalService.getCodigoEmpresa(),
-      filtro)
-      .subscribe({
-        next: (data) => {
-          this.ayudapago = data;
-          if (this.ayudapago.length == 0) {
+    this.cobroFacturaService.ListaDocPendienteReporte(this.globalService.getCodigoEmpresa(), filtro)
+    .subscribe({
+        next:(data)=>{
+            this.consultaDocPagoList = data;
             this.load = false;
-          } else {
-            this.load = false;
-          }
-        }
-        ,
-        error: () => {
+        }, error:()=>{
           verMensajeInformativo(this.messageService,
             'error',
             'error', 'error al cargar documentos por pago');
         }
-      });
+    });
+    // this.presupuestoService.obtenerDocPendienteReporte(this.globalService.getCodigoEmpresa(),
+    //   filtro)
+    //   .subscribe({
+    //     next: (data) => {
+    //       this.ayudapago = data;
+    //       if (this.ayudapago.length == 0) {
+    //         this.load = false;
+    //       } else {
+    //         this.load = false;
+    //       }
+    //     }
+    //     ,
+    //     error: () => {
+    //       verMensajeInformativo(this.messageService,
+    //         'error',
+    //         'error', 'error al cargar documentos por pago');
+    //     }
+    //   });
   }
   obtenerFacturaPendiente(): void {
     //const nroDoc = this.filtroFRM.get('nrodoc').value ?? '';

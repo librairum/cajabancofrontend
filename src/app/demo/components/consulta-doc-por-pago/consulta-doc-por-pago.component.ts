@@ -162,6 +162,7 @@ export class ConsultaDocPorPagoComponent implements OnInit {
             });
     }
     listarconsultadocporpago(): void {
+        console.log("consulta doc por pago");
         let filtro = this.textoBuscar.trim();
 
         if(filtro === ''){

@@ -17,7 +17,7 @@
     </p-panel>
     <br />
     <div class="card p-2">
-        <p-table [value]="ayudapago" [scrollable]="true" [tableStyle]="{width: '100%', border: '0px solid black'}"
+        <p-table [value]="consultaDocPagoList" [scrollable]="true" [tableStyle]="{width: '100%', border: '0px solid black'}"
             groupRowsBy="ruc" rowGroupMode="subheader" [loading]="load">
             <ng-template pTemplate="header">
                 <tr>
@@ -25,11 +25,10 @@
                     <th>Nombre</th>
                     <th>Tipo Documento</th>
                     <th>Numero</th>
-                    <th>Fecha emision</th>
-                    <th>Fecha vencimiento</th>
-                    <th>Moneda</th>
+                    <th>Fecha Factura</th>
+                    <th>Moneda Fact.</th>
                     <th>Soles</th>
-                    <th>Dolares</th>
+                    <th>Dolares</th>                
                 </tr>
             </ng-template>
 
@@ -67,13 +66,12 @@
                 <tr>
                     <td style="text-align: left; white-space: nowrap;">{{ doc.ruc }}</td>
                     <td style="text-align: left; white-space: nowrap;">{{ doc.razonSocial }}</td>
-                    <td style="text-align: left; white-space: nowrap;">{{ doc.nombreTipoDOc }}</td>
-                    <td style="text-align: left; white-space: nowrap;">{{ doc.numeroDOcumento }}</td>
-                    <td style="text-align: left; white-space: nowrap;">{{ doc.fechaEmision }}</td>
-                    <td style="text-align: left; white-space: nowrap;">{{ doc.fechaVencimiento }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.tipoDocDesc }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.nroComprobante }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{doc.fecha}}</td>
                     <td style="text-align: right; white-space: nowrap;">{{ doc.monedaOriginal }}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.soles | number : "1.2-2"}}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.dolares | number : "1.2-2" }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.importeFactura | number : "1.2-2"}}</td>
+                    
                 </tr>
             </ng-template>
 

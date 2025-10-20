@@ -131,3 +131,17 @@ export  interface TraeHistoricoCtaxCobra {
             estadopago:string;
 
 }
+export interface TraeDocPendienteCtaxCobra{
+        ruc:string;
+        razonSocial:string;
+        tipoDoc:string;	
+        tipoDocDesc:string;
+        nroComprobante:string;
+        fecha:string;
+        importeFactura:number;	
+        monedaFactura:number;
+        fechapago:string;
+        importePagoSoles:number;
+        importePagoDolares:number;
+        estadopago:string;
+}
