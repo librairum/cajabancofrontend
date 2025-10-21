@@ -22,18 +22,18 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th style="text-align: center;">RUC</th>
-                    <th style="text-align: center;">razonSocial</th>
+                    <th style="text-align: center;">Razon Social</th>
                     <!-- <th style="text-align: center;">tipoDoc</th> -->
                     <th style="text-align: center;">Tip.Doc</th>
-                    <th style="text-align: center;">nroComprobante</th>
-                    <th style="text-align: center;">fecha</th>
-                    <th style="text-align: center;">importeFactura</th>
-                    <th style="text-align: center;">monedaFactura</th>
-                    <th style="text-align: center;">fechapago</th>
-                    <th style="text-align: center;">importePagoSoles</th>
-                    <th style="text-align: center;">importePagoDolares</th>
-                    <th style="text-align: center;">estadopago</th>
-
+                    <th style="text-align: center;">Numero</th>
+                    <th style="text-align: center;">Fecha</th>
+                    <th style="text-align: center;">Imp.Fact</th>
+                    <th style="text-align: center;">Moneda</th>
+                    <th style="text-align: center;">Fec.Pago</th>
+                    <th style="text-align: center;">Pago S/.</th>
+                    <th style="text-align: center;">Pago $</th>
+                    <th style="text-align: center;">Estado</th>
+                    <th style="text-align: center;">Saldo</th>
                     <!--
                     ruc	razonSocial	tipoDoc	tipoDocDesc	nroComprobante	fecha	
                     importeFactura	monedaFactura	fechapago	
@@ -46,15 +46,15 @@
             <ng-template pTemplate="body" let-doc>
                 <tr>
                     <td style="text-align: center; white-space: nowrap;">{{ doc.ruc }}</td>
-                    <td style="text-align: center; white-space: nowrap;">{{ doc.razonSocial }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{ doc.razonSocial }}</td>
                     <!-- <td style="text-align: center; white-space: nowrap;">{{ doc.tipoDoc }}</td> -->
                     <td style="text-align: center; white-space: nowrap;">{{ doc.tipoDocDesc }}</td>
-                    <td style="text-align: left; white-space: nowrap;">{{ doc.nroComprobante }}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.fecha  }}
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.nroComprobante }}</td>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.fecha  }}
                     </td>
-                    <td style="text-align: left; white-space: nowrap;">{{ doc.importeFactura | number : "1.1-2"}}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.monedaFactura }}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.fechapago }}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.importeFactura | number : "1.1-2"}}</td>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.monedaFactura }}</td>
+                    <td style="text-align: center; white-space: nowrap;">{{ doc.fechapago }}</td>
                     <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoSoles | number : "1.1-2" }}</td>
                     <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoDolares | number : "1.1-2" }}</td>
                     <td style="text-align: right; white-space: nowrap;">
@@ -63,6 +63,9 @@
                             (doc.estadopago === 'Parcial' ? 'warning' : 'secondary'))">
                             {{ doc.estadopago }}
                         </p-tag>
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        {{doc.saldo | number:"1.1-2"}}
                     </td>
                     
                     <!--
