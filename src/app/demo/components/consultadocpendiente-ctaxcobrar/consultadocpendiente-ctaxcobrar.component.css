@@ -1,84 +1,101 @@
-
 ::ng-deep .p-datatable table {
     border-collapse: collapse;
     width: 100%;
-    table-layout: auto;
-    /* Permite ajustar columnas al contenido */
+    table-layout: fixed; /* Cambiado a fixed para controlar mejor los anchos */
 }
-
 
 ::ng-deep .p-datatable th {
     padding: 6px;
-    /* Espacio interno compacto */
     font-size: 13px;
-    /* Tamaño compacto */
     text-align: center;
     background-color: #f9f9f9;
-    /* Fondo suave para diferenciar la cabecera */
     border-bottom: 1px solid #ccc;
-    /* Linea Horizontal */
     border-right: 1px solid #ccc;
-    /* Nuevo: Linea Vertical */
+    white-space: nowrap;
 }
 
 ::ng-deep .p-datatable td {
     padding: 4px;
-    /* Reduce el espacio interno de las celdas */
     font-size: 12px;
-    /* Tamaño compacto */
     text-align: center;
-    /* Centra el contenido */
     word-wrap: break-word;
-    /* Permite ajustar texto largo */
     border: 1px solid #ddd;
-    /* Líneas horizontales y verticales */
+    vertical-align: middle;
 }
 
 ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
     text-align: center;
     padding: 4px;
-    /* Compacto */
     font-size: 12px;
     border: 1px solid #ddd;
-    /* Líneas visibles para celdas */
+}
+
+/* Configuración específica para la columna Razón Social (segunda columna) */
+::ng-deep .p-datatable th:nth-child(2),
+::ng-deep .p-datatable td:nth-child(2) {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    white-space: normal !important; /* Permite múltiples líneas */
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow: visible !important;
+    line-height: 1.3;
+    text-align: left; /* Alinear a la izquierda para mejor legibilidad */
+    padding: 6px 4px; /* Más espacio vertical */
+}
+
+/* Opcional: Si quieres controlar otras columnas específicas */
+::ng-deep .p-datatable th:nth-child(1),
+::ng-deep .p-datatable td:nth-child(1) {
+    width: 100px;
+    min-width: 100px;
+    white-space: nowrap;
+}
+
+::ng-deep .p-datatable th:nth-child(3),
+::ng-deep .p-datatable td:nth-child(3) {
+    width: 80px;
+    min-width: 80px;
+    white-space: nowrap;
+}
+
+::ng-deep .p-datatable th:nth-child(4),
+::ng-deep .p-datatable td:nth-child(4) {
+    width: 110px;
+    min-width: 110px;
+    white-space: nowrap;
 }
 
 ::ng-deep .p-datatable .p-datatable-tbody>tr:hover {
     background-color: #f5f5f5;
-    /* Resalta la fila al pasar el cursor */
 }
 
 ::ng-deep .p-datatable .p-column-filter {
     width: 100px;
-    /* Reduce el ancho del filtro */
     margin: auto;
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 10px;
-    /* Tamaño de letra más pequeño */
     padding: 2px;
-    /* Ajusta el padding */
     line-height: 1;
-    /* Más compacto */
 }
 
 /* Ajustes generales del scroll */
 ::ng-deep .p-datatable-wrapper {
     max-height: 400px;
-    overflow: auto;
-    /* Habilita scroll */
+    overflow-x: auto; /* Scroll horizontal si es necesario */
+    overflow-y: auto; /* Scroll vertical */
 }
 
-/* Opcional: Añade un margen para separarlo de otros elementos */
 .container {
     padding: 1rem;
 }
 
 ::ng-deep .p-datepicker {
     z-index: 1000 !important;
-    /* Asegura que esté por encima de otros elementos */
 }
 
 /* Ajusta las columnas del footer para que se adapten al contenido */
@@ -88,20 +105,15 @@
     min-width: fit-content;
 }
 
-/* Ajusta el tamaño del calendario en el footer */
 ::ng-deep .p-datatable .p-datatable-tfoot .p-calendar {
     min-width: fit-content;
-    /* Ajusta este valor según necesites */
 }
 
-/* Ajusta los inputs en el footer */
 ::ng-deep .p-datatable .p-datatable-tfoot input {
     min-width: fit-content;
-    /* Ajusta este valor según necesites */
     width: auto;
 }
 
-/* Asegura que los elementos del footer no se deformen */
 ::ng-deep .p-datatable .p-datatable-tfoot>tr>td {
     padding: 4px;
     vertical-align: middle;
