@@ -275,11 +275,11 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
 
   saveEditingFactura() {
     if (this.editingFactura) {
-      const pagoSoles = this.editingFactura.moneda === 'Soles' 
+      const pagoSoles = this.editingFactura.moneda === 'SOLES' 
         ? this.editingFactura.importePagado 
         : 0;
       
-      const pagoDolares = this.editingFactura.moneda === 'Dólares' 
+      const pagoDolares = this.editingFactura.moneda === 'DOLARES' 
         ? this.editingFactura.importePagado 
         : 0;
 
