@@ -134,67 +134,67 @@ export class RegistroCobroDetalleComponent implements OnInit, OnDestroy {
   
   cargarDetalles() {
     this.getlistaSustento(this.empresa, this.cobroNro);
-  
+
     if (!this.empresa || !this.cobroNro) {
-      this.facturasAfectadas = [];
-      return;
+        this.facturasAfectadas = [];
+        return;
     }
 
     this.load = true;
-  
-    this.cobroService.getListaDetalle(this.empresa, this.cobroNro).subscribe({
-      next: (response) => {
-        if (!response || response.length === 0) {
-          this.facturasAfectadas = [];
-          this.load = false;
-          return;
-        }
-        
-        this.facturasAfectadas = response.map((detalle) => {  
-          const moneda = this.determinarMoneda(
-            detalle.importeOriginalSoles, 
-            detalle.importeOriginalDolares
-          );
-          
-          const importeOriginal = moneda === 'Soles' 
-            ? parseFloat(detalle.importeOriginalSoles) || 0
-            : parseFloat(detalle.importeOriginalDolares) || 0;
-          
-          const importePagado = moneda === 'Soles'
-            ? parseFloat(detalle.importePagadoSoles) || 0
-            : parseFloat(detalle.importePagadoDolares) || 0;
 
-          return {
-            numero: detalle.nroDocumento,
-            fecha: this.parsearFecha(detalle.fechaDocumento),
-            moneda: moneda,
-            importeOriginal: importeOriginal,
-            importePagado: importePagado,
-            observaciones: detalle.observacion || '',
-            item: detalle.item,
-            tipodoc: detalle.tipodoc || '01'
-          };
-        });
-        
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: `Se cargaron ${this.facturasAfectadas.length} factura(s)`
-        });
-        
-        this.load = false;
-      },
-      error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Error al cargar los detalles del cobro'
-        });
-        this.facturasAfectadas = [];
-        this.load = false;
-      }
+    this.cobroService.getListaDetalle(this.empresa, this.cobroNro).subscribe({
+        next: (response) => {
+            if (!response || response.length === 0) {
+                this.facturasAfectadas = [];
+                this.load = false;
+                return;
+            }
+            
+            this.facturasAfectadas = response.map((detalle) => {  
+                //Usamos la propiedad 'moneda' que ya fue inferida y asignada en el SERVICIO
+                const moneda = detalle.moneda;
+                
+                const importeOriginal = (moneda === 'SOLES') 
+                    ? parseFloat(detalle.importeOriginalSoles || '0')
+                    : parseFloat(detalle.importeOriginalDolares || '0');
+                
+                const importePagado = (moneda === 'SOLES')
+                    ? parseFloat(detalle.importePagadoSoles || '0')
+                    : parseFloat(detalle.importePagadoDolares || '0');
+                
+                const fechaDocumento = this.parsearFecha(detalle.fechaDocumento);
+
+                return {
+                    numero: detalle.nroDocumento,
+                    fecha: fechaDocumento,
+                    moneda: moneda, // Usamos la moneda estandarizada del servicio
+                    importeOriginal: importeOriginal,
+                    importePagado: importePagado,
+                    observaciones: detalle.observacion || '',
+                    item: detalle.item,
+                    tipodoc: detalle.tipodoc || '01'
+                };
+            });
+            
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Éxito',
+                detail: `Se cargaron ${this.facturasAfectadas.length} factura(s)`
+            });
+            
+            this.load = false;
+        },
+        error: (error) => {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Error al cargar los detalles del cobro'
+            });
+            this.facturasAfectadas = [];
+            this.load = false;
+        }
     });
-  }
+}
 
   determinarMoneda(importeSoles: string, importeDolares: string): string {
     const soles = parseFloat(importeSoles) || 0;

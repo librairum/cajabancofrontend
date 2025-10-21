@@ -58,8 +58,9 @@
                     <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoSoles | number : "1.1-2" }}</td>
                     <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoDolares | number : "1.1-2" }}</td>
                     <td style="text-align: right; white-space: nowrap;">
-                        <!--  -->
-                        <p-tag [severity]="doc.estadopago==='Pendiente' ? 'danger':'info'">
+                        <p-tag 
+                            [severity]="doc.estadopago === 'Pendiente' ? 'danger' : (doc.estadopago === 'Cobrado' ? 'info' : 
+                            (doc.estadopago === 'Parcial' ? 'warning' : 'secondary'))">
                             {{ doc.estadopago }}
                         </p-tag>
                     </td>

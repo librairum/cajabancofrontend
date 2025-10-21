@@ -267,13 +267,14 @@ export class RegistroCobroComponent implements OnInit{
       .subscribe({
           next:(response) =>{
             verMensajeInformativo(this.messageService, 
-              'succes', 'Exito', 
+              'success', 'Exito', 
               'Registro guardardo');
               this.mostrarNuevaFila = false;
               this.botonesDeshabilitados = false;
 
               this.cargar();
-              /*const nuevoCodigoRegistroCobro = response.item;
+              const nuevoCodigoRegistroCobro = response.item;
+
               //abrir la venta de factura la iniciar el formulario detALLE
               if(nuevoCodigoRegistroCobro){
                 this.router.navigate(['/Home/registro_cobro_detalle'], {
@@ -288,7 +289,8 @@ export class RegistroCobroComponent implements OnInit{
                   
                   }
                 });
-              }*/
+              }
+
               // if(nuevoCodigoRegistroCobro){
               //   //cargar detalle con codigo recine  generado 
 
@@ -357,6 +359,8 @@ export class RegistroCobroComponent implements OnInit{
       message: `¿Estás seguro que deseas eliminar el registro de cobro Nro. ${registro.ban03numero}? Esta acción es irreversible.`,
       header: 'Confirmar Eliminación',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
       
       accept: () => {
         this.cobroService
@@ -374,7 +378,7 @@ export class RegistroCobroComponent implements OnInit{
                   this.messageService,
                   'success',
                   'Éxito',
-                  response.message || `Registro ${registro.ban03numero} eliminado correctamente.`
+                  `Registro ${registro.ban03numero} eliminado correctamente.`
                 );
                 this.cargar(); 
               } else {

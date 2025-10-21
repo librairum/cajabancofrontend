@@ -207,35 +207,64 @@ export class CobroFacturaService{
     }
 
     public getListaDetalle(
-        empresa: string, 
-        numeroRegistroCobroCab: string
-    ): Observable<TraeRegistroCobroDetalle[]> {
-        const params = new HttpParams()
-            .set('empresa', empresa)
-            .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
-            .set('_t', Date.now().toString());
-        
-        return this.http.get<RespuestaAPIBase<TraeRegistroCobroDetalle[]>>(
-            `${this.urlAPI}/ListaDetalle`, 
-            { 
-                params,
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0'
-                }
+    empresa: string, 
+    numeroRegistroCobroCab: string
+): Observable<TraeRegistroCobroDetalle[]> {
+    const params = new HttpParams()
+        .set('empresa', empresa)
+        .set('numeroRegistroCobroCab', numeroRegistroCobroCab)
+        .set('_t', Date.now().toString());
+    
+    return this.http.get<RespuestaAPIBase<TraeRegistroCobroDetalle[]>>(
+        `${this.urlAPI}/ListaDetalle`, 
+        { 
+            params,
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             }
-        ).pipe(
-            map((response) => {
-                if(response.isSuccess && response.data){
-                    return response.data;
-                } else {
-                    return [];
-                }
-            }),
-            catchError(this.handleError)
-        );
-    }
+        }
+    ).pipe(
+        map((response) => {
+            if(response.isSuccess && response.data){
+                
+                return response.data.map(detalle => {
+                    
+                    // Convertir importes a número para una comparación segura
+                    const importeSoles = parseFloat(detalle.importeOriginalSoles || '0');
+                    const importeDolares = parseFloat(detalle.importeOriginalDolares || '0');
+                    const pagoSoles = parseFloat(detalle.importePagadoSoles || '0');
+                    const pagoDolares = parseFloat(detalle.importePagadoDolares || '0');
+                    
+                    let monedaInferida: string;
+
+                    // Lógica de inferencia: si hay algún importe (original o pagado) en Soles, es Soles.
+                    if (importeSoles > 0 || pagoSoles > 0) {
+                        monedaInferida = 'SOLES';
+                    } 
+                    // Si hay algún importe (original o pagado) en Dólares, es Dólares.
+                    else if (importeDolares > 0 || pagoDolares > 0) {
+                        monedaInferida = 'DÓLARES';
+                    } 
+                    //  usar el valor que vino del backend por defecto.
+                    else {
+                        monedaInferida = detalle.moneda;
+                    }
+                    
+                    return {
+                        ...detalle,
+                        moneda: monedaInferida 
+                    } as TraeRegistroCobroDetalle;
+                });
+
+            } else {
+                return [];
+            }
+        }),
+        catchError(this.handleError)
+    );
+}
 
     // === REPORTE ============
     public ListaHistoricoReporte(empresa:string, filtro:string): Observable<TraeHistoricoCtaxCobra[]>

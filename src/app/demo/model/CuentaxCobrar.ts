@@ -9,6 +9,7 @@ export interface TraeRegistroCobroDetalle {
     importeOriginalSoles: string;
     importePagadoDolares: string;
     importePagadoSoles: string;
+    moneda: string; //AÑADIR
     observacion?: string;  // ⬅️ AÑADIR
     tipodoc?: string;      // ⬅️ AÑADIR
     item?: number;         // ⬅️ AÑADIR
