@@ -27,8 +27,10 @@
                     <th>Numero</th>
                     <th>Fecha Factura</th>
                     <th>Moneda Fact.</th>
+                    <th>Imp.Fact.</th>
                     <th>Soles</th>
-                    <th>Dolares</th>                
+                    <th>Dolares</th>       
+                    <th>Estado</th>
                 </tr>
             </ng-template>
 
@@ -38,7 +40,7 @@
             </ng-template>
             <ng-template pTemplate="groupfooter" let-groupData>
                 <tr>
-                    <td colspan="7">
+                    <td colspan="8">
                     </td>
                     <td class="font-bold pr-12" style="text-align: right;">
                         {{calculateGroupTotal(groupData.ruc, 'soles') | number:'1.2-2' }}
@@ -54,10 +56,10 @@
                 <tr>
                     <td colspan="7" class="font-bold" style="text-align: right;">TOTAL GENERAL:</td>
                     <td class="font-bold" style="text-align: right;">
-                        {{ getTotalTabla('soles') | number: '1.2-2' }}
+                        {{ getTotalTabla('importePagoSoles') | number: '1.2-2' }}
                     </td>
                     <td class="font-bold" style="text-align: right;">
-                        {{ getTotalTabla('dolares') | number: '1.2-2' }}
+                        {{ getTotalTabla('importePagoDolares') | number: '1.2-2' }}
                     </td>
                 </tr>
             </ng-template>
@@ -69,15 +71,18 @@
                     <td style="text-align: left; white-space: nowrap;">{{ doc.tipoDocDesc }}</td>
                     <td style="text-align: left; white-space: nowrap;">{{ doc.nroComprobante }}</td>
                     <td style="text-align: left; white-space: nowrap;">{{doc.fecha}}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.monedaOriginal }}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.importeFactura | number : "1.2-2"}}</td>
                     
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.monedaFactura }}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{doc.importeFactura | number : "1.2-2"}}</td>                    
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoSoles | number : "1.2-2"}}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoDolares | number : "1.2-2"}}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.estadopago }}</td>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="11" style="text-align: center; font-weight: bold; padding: 1rem;">
+                    <td colspan="10" style="text-align: center; font-weight: bold; padding: 1rem;">
                         no hay resultado
                     </td>
                 </tr>

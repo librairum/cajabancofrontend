@@ -379,7 +379,7 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
       dolaresTotal
     };
   }
-  getTotalTabla(field: 'soles' | 'dolares'): number {
+  getTotalTabla(field: 'importePagoSoles' | 'importePagoDolares'): number {
     return this.ayudapago.reduce((sum, item) => sum + (item[field] || 0), 0);
   };
 }

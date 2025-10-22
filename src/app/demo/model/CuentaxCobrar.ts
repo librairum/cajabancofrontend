@@ -130,6 +130,7 @@ export  interface TraeHistoricoCtaxCobra {
             importePagoSoles:number;
             importePagoDolares:number;
             estadopago:string;
+            saldo:number;
 
 }
 export interface TraeDocPendienteCtaxCobra{
