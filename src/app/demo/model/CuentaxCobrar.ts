@@ -139,11 +139,15 @@ export interface TraeDocPendienteCtaxCobra{
         tipoDoc:string;	
         tipoDocDesc:string;
         nroComprobante:string;
-        fecha:string;
+        fechaFactura:string;
+        fecVencimiento:string;
+        diasAtraso:number;
         importeFactura:number;	
         monedaFactura:number;
         fechapago:string;
         importePagoSoles:number;
         importePagoDolares:number;
         estadopago:string;
+        saldoSoles:number;
+        saldDolares:number;
 }

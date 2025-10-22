@@ -282,7 +282,7 @@ export class CobroFacturaService{
     {
         const params = new HttpParams().set('empresa', empresa) .set('filtro', filtro);
         return this.http.get<RespuestaAPIBase<TraeDocPendienteCtaxCobra[]>>(
-             `${this.urlAPI}/ListaHistoricoReporte`,{params}).pipe(
+             `${this.urlAPI}/ListaDocPendienteReporte`,{params}).pipe(
                 map((response) => response.data), catchError(this.handleError)
              );
         

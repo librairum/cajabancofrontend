@@ -23,13 +23,19 @@
                 <tr>
                     <th>RUC</th>
                     <th>Nombre</th>
-                    <th>Tipo Documento</th>
+                    <th>Tip.Doc</th>
                     <th>Numero</th>
-                    <th>Fecha Factura</th>
                     <th>Moneda Fact.</th>
+                    <th>Fecha Factura</th>
+                    <th>Fecha Venc.</th>
+                    <th>Dias atrazo</th>
                     <th>Imp.Fact.</th>
-                    <th>Soles</th>
-                    <th>Dolares</th>       
+                    <th>Fec.Pago</th>
+                    <th>Pago Soles</th>
+                    <th>Pago Dolares</th>  
+                    <th>Saldo $</th>
+                    <th>Saldo S/.</th>
+                         
                     <th>Estado</th>
                 </tr>
             </ng-template>
@@ -40,13 +46,13 @@
             </ng-template>
             <ng-template pTemplate="groupfooter" let-groupData>
                 <tr>
-                    <td colspan="8">
+                    <td colspan="10">
                     </td>
                     <td class="font-bold pr-12" style="text-align: right;">
-                        {{calculateGroupTotal(groupData.ruc, 'soles') | number:'1.2-2' }}
+                        {{calculateGroupTotal(groupData.ruc, 'importePagoSoles') | number:'1.2-2' }}
                     </td>
                     <td class="font-bold pr-12" style="text-align: right;">
-                        {{calculateGroupTotal(groupData.ruc, 'dolares') | number:'1.2-2' }}
+                        {{calculateGroupTotal(groupData.ruc, 'importePagoDolares') | number:'1.2-2' }}
                     </td>
                 </tr>
 
@@ -54,7 +60,7 @@
 
             <ng-template pTemplate="footer">
                 <tr>
-                    <td colspan="7" class="font-bold" style="text-align: right;">TOTAL GENERAL:</td>
+                    <td colspan="10" class="font-bold" style="text-align: right;">TOTAL GENERAL:</td>
                     <td class="font-bold" style="text-align: right;">
                         {{ getTotalTabla('importePagoSoles') | number: '1.2-2' }}
                     </td>
@@ -70,19 +76,32 @@
                     <td style="text-align: left; white-space: nowrap;">{{ doc.razonSocial }}</td>
                     <td style="text-align: left; white-space: nowrap;">{{ doc.tipoDocDesc }}</td>
                     <td style="text-align: left; white-space: nowrap;">{{ doc.nroComprobante }}</td>
-                    <td style="text-align: left; white-space: nowrap;">{{doc.fecha}}</td>
-                    
                     <td style="text-align: right; white-space: nowrap;">{{ doc.monedaFactura }}</td>
-                    <td style="text-align: left; white-space: nowrap;">{{doc.importeFactura | number : "1.2-2"}}</td>                    
+                    <td style="text-align: left; white-space: nowrap;">{{doc.fechaFactura}}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{doc.fecVencimiento}}</td>
+                    <td style="text-align: left; white-space: nowrap;">{{doc.diasAtraso }}</td>  
+                   <td style="text-align: left; white-space: nowrap;">{{doc.importeFactura | number : "1.2-2" }}</td>  
+                    <td style="text-align: left; white-space: nowrap;">{{doc.fechapago }}</td>  
                     <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoSoles | number : "1.2-2"}}</td>
                     <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoDolares | number : "1.2-2"}}</td>
-                    <td style="text-align: right; white-space: nowrap;">{{ doc.estadopago }}</td>
+
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.saldoSoles | number : "1.2-2"}}</td>
+                    <td style="text-align: right; white-space: nowrap;">{{ doc.saldDolares | number : "1.2-2"}}</td>
+                    <!-- <td style="text-align: right; white-space: nowrap;">{{ doc.estadopago }}</td>                     -->
+                     <td style="text-align: right; white-space: nowrap;">
+                        <p-tag 
+                            [severity]="doc.estadopago === 'Pendiente' ? 'danger' : (doc.estadopago === 'Cobrado' ? 'info' : 
+                            (doc.estadopago === 'Parcial' ? 'warning' : 'secondary'))">
+                            {{ doc.estadopago }}
+                        </p-tag>
+                    </td>
+
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="10" style="text-align: center; font-weight: bold; padding: 1rem;">
+                    <td colspan="15" style="text-align: center; font-weight: bold; padding: 1rem;">
                         no hay resultado
                     </td>
                 </tr>

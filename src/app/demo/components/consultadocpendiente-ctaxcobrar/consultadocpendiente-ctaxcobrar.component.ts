@@ -30,6 +30,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 
 import { CobroFacturaService } from '../../service/cobrofactura.service';
 import { TraeDocPendienteCtaxCobra } from '../../model/CuentaxCobrar';
+import { TagModule } from 'primeng/tag';
 @Component({
   selector: 'app-consultadocpendiente-ctaxcobrar', /*nombre del componente para usar en HTML*/
   standalone: true,
@@ -46,7 +47,7 @@ import { TraeDocPendienteCtaxCobra } from '../../model/CuentaxCobrar';
     ProgressBarModule,
     DialogModule,
     FormsModule,
-    InputNumberModule],
+    InputNumberModule,TagModule],
   providers: [MessageService, DatePipe],
   templateUrl: './consultadocpendiente-ctaxcobrar.component.html',
   styleUrl: './consultadocpendiente-ctaxcobrar.component.css'
