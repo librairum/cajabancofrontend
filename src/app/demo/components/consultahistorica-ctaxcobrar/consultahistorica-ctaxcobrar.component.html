@@ -32,8 +32,9 @@
                     <th style="text-align: center;">Fec.Pago</th>
                     <th style="text-align: center;">Pago S/.</th>
                     <th style="text-align: center;">Pago $</th>
-                    <th style="text-align: center;">Estado</th>
+                    
                     <th style="text-align: center;">Saldo</th>
+                    <th style="text-align: center;">Estado</th>
                     <!--
                     ruc	razonSocial	tipoDoc	tipoDocDesc	nroComprobante	fecha	
                     importeFactura	monedaFactura	fechapago	
@@ -57,15 +58,24 @@
                     <td style="text-align: center; white-space: nowrap;">{{ doc.fechapago }}</td>
                     <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoSoles | number : "1.1-2" }}</td>
                     <td style="text-align: right; white-space: nowrap;">{{ doc.importePagoDolares | number : "1.1-2" }}</td>
+                    
+                    <td style="text-align: right; white-space: nowrap;">
+                        {{doc.saldo | number:"1.1-2"}}
+                    </td>
                     <td style="text-align: right; white-space: nowrap;">
                         <p-tag 
                             [severity]="doc.estadopago === 'Pendiente' ? 'danger' : (doc.estadopago === 'Cobrado' ? 'info' : 
                             (doc.estadopago === 'Parcial' ? 'warning' : 'secondary'))">
                             {{ doc.estadopago }}
-                        </p-tag>
+                        </p-tag>                        
                     </td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        {{doc.saldo | number:"1.1-2"}}
+                    <td>
+                        <p-button *ngIf="doc.fechaPago !== '' "label="" 
+                                    icon="pi pi-file"
+                                    styleClass="p-button-sm p-button-info"
+                                    (onClick)="abrirdocumento(doc.fechaPago, doc.numeroPresupuesto)
+                                " [text]="false">
+                        </p-button>
                     </td>
                     
                     <!--
