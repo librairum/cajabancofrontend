@@ -152,11 +152,16 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
 
   }
   calculateGroupTotal(ruc: string, field: string): number {
-    return this.consultaDocPagoList.filter((item) => item.ruc === ruc).reduce(
-      (sum, item) => sum + (item[field] || 0),
-      0
-    );
-  }
+  const filtered = this.consultaDocPagoList.filter((item) => item.ruc === ruc);
+  
+  const total = filtered.reduce((sum, item) => {
+    const value = item[field];
+    const numValue = typeof value === 'number' ? value : parseFloat(value) || 0;
+    return sum + numValue;
+  }, 0);
+  
+  return total;
+}
   generarPDFPendiente(dataReporte: agregar_Pago[]): void {
 
     //this.obtenerFacturaPendiente();
@@ -381,7 +386,10 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
     };
   }
   getTotalTabla(field: 'importePagoSoles' | 'importePagoDolares' | 'importeFactura' | 'saldoSoles' | 'saldoDolares'): number {
-    return this.consultaDocPagoList.reduce((sum, item) => sum + (item[field] || 0), 0);
-    //return this.ayudapago.reduce((sum, item) => sum + (item[field] || 0), 0);
-  };
+  return this.consultaDocPagoList.reduce((sum, item) => {
+    const value = item[field];
+    const numValue = typeof value === 'number' ? value : parseFloat(value) || 0;
+    return sum + numValue;
+  }, 0);
+}
 }
