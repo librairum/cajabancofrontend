@@ -152,7 +152,7 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
 
   }
   calculateGroupTotal(ruc: string, field: string): number {
-    return this.ayudapago.filter((item) => item.ruc === ruc).reduce(
+    return this.consultaDocPagoList.filter((item) => item.ruc === ruc).reduce(
       (sum, item) => sum + (item[field] || 0),
       0
     );
@@ -380,7 +380,8 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
       dolaresTotal
     };
   }
-  getTotalTabla(field: 'importePagoSoles' | 'importePagoDolares'): number {
-    return this.ayudapago.reduce((sum, item) => sum + (item[field] || 0), 0);
+  getTotalTabla(field: 'importePagoSoles' | 'importePagoDolares' | 'importeFactura' | 'saldoSoles' | 'saldoDolares'): number {
+    return this.consultaDocPagoList.reduce((sum, item) => sum + (item[field] || 0), 0);
+    //return this.ayudapago.reduce((sum, item) => sum + (item[field] || 0), 0);
   };
 }

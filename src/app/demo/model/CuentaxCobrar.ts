@@ -149,5 +149,5 @@ export interface TraeDocPendienteCtaxCobra{
         importePagoDolares:number;
         estadopago:string;
         saldoSoles:number;
-        saldDolares:number;
+        saldoDolares:number;
 }
