@@ -24,17 +24,18 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { formatDateForFilename } from 'src/app/demo/components/utilities/funciones_utilitarias';
 import { InputNumberModule } from 'primeng/inputnumber';
 
-//import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressBarModule } from 'primeng/progressbar';
 
 import { CobroFacturaService } from '../../service/cobrofactura.service';
 import { TraeDocPendienteCtaxCobra } from '../../model/CuentaxCobrar';
 import { TagModule } from 'primeng/tag';
+
 @Component({
-  selector: 'app-consultadocpendiente-ctaxcobrar', /*nombre del componente para usar en HTML*/
+  selector: 'app-consultadocpendiente-ctaxcobrar',
   standalone: true,
-  imports: [ToastModule,
+  imports: [
+    ToastModule,
     TableModule,
     ReactiveFormsModule,
     CommonModule,
@@ -47,24 +48,27 @@ import { TagModule } from 'primeng/tag';
     ProgressBarModule,
     DialogModule,
     FormsModule,
-    InputNumberModule,TagModule],
+    InputNumberModule,
+    TagModule
+  ],
   providers: [MessageService, DatePipe],
   templateUrl: './consultadocpendiente-ctaxcobrar.component.html',
   styleUrl: './consultadocpendiente-ctaxcobrar.component.css'
 })
-
-export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*oninit: para inicializar una pagina*/
+export class ConsultadocpendienteCtaxcobrarComponent implements OnInit {
 
   items: any[] = [];
   textoBuscar: string = '';
-  //consultaDocPorPagoList: DocPendCtaxCobrar[] = [];
-  ayudapago: agregar_Pago[] = [];
-  consultaDocPagoList: TraeDocPendienteCtaxCobra[] =[];
+  consultaDocPagoList: TraeDocPendienteCtaxCobra[] = [];
   load: boolean = false;
-  constructor(private presupuestoService: PresupuestoService,
+
+  constructor(
+    private presupuestoService: PresupuestoService,
     private breadcrumbService: BreadcrumbService,
     private globalService: GlobalService,
-    private messageService: MessageService, private cobroFacturaService: CobroFacturaService) { }
+    private messageService: MessageService,
+    private cobroFacturaService: CobroFacturaService
+  ) { }
 
   ngOnInit(): void {
     this.breadcrumbService.setBreadcrumbs([
@@ -78,8 +82,9 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
       this.items = bc;
     });
     this.initForm();
-    (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+    (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
   }
+
   initForm(): void { }
 
   buscar(): void {
@@ -88,120 +93,110 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
 
   listarconsultadocporpago(): void {
     this.load = true;
-    let filtro = this.textoBuscar.trim();
-    this.cobroFacturaService.ListaDocPendienteReporte(this.globalService.getCodigoEmpresa(), filtro)
-    .subscribe({
-        next:(data)=>{
-            this.consultaDocPagoList = data;
-            this.load = false;
-        }, error:()=>{
-          verMensajeInformativo(this.messageService,
-            'error',
-            'error', 'error al cargar documentos por pago');
-        }
-    });
-    // this.presupuestoService.obtenerDocPendienteReporte(this.globalService.getCodigoEmpresa(),
-    //   filtro)
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.ayudapago = data;
-    //       if (this.ayudapago.length == 0) {
-    //         this.load = false;
-    //       } else {
-    //         this.load = false;
-    //       }
-    //     }
-    //     ,
-    //     error: () => {
-    //       verMensajeInformativo(this.messageService,
-    //         'error',
-    //         'error', 'error al cargar documentos por pago');
-    //     }
-    //   });
-  }
-  obtenerFacturaPendiente(): void {
-    //const nroDoc = this.filtroFRM.get('nrodoc').value ?? '';
-    //const ruc = this.filtroFRM.get('ruc').value ?? '';
-    console.log("metodo obtenr factura pendiente");
-    const nroDoc = '';
     const filtro = this.textoBuscar.trim();
-    this.presupuestoService.obtenerDocPendienteReporte(this.globalService.getCodigoEmpresa(), filtro)
-      //this.presupuestoService.obtenerDocPendiente(filtro
-      //  this.globalService.getCodigoEmpresa(),ruc,nroDoc )
+    this.cobroFacturaService.ListaDocPendienteReporte(this.globalService.getCodigoEmpresa(), filtro)
       .subscribe({
         next: (data) => {
+          this.consultaDocPagoList = data;
+          this.load = false;
+        }, 
+        error: () => {
+          verMensajeInformativo(
+            this.messageService,
+            'error',
+            'error', 
+            'error al cargar documentos por pago'
+          );
+          this.load = false;
+        }
+      });
+  }
 
-          this.ayudapago = data;
-          console.log("data de tra er documento pendiente");
-          console.log(this.ayudapago);
-          this.generarPDFPendiente(this.ayudapago);
-          //this.loading = false;
+  obtenerFacturaPendiente(): void {
+    console.log("metodo obtener factura pendiente");
+    const filtro = this.textoBuscar.trim();
+
+    this.cobroFacturaService.ListaDocPendienteReporte(this.globalService.getCodigoEmpresa(), filtro)
+      .subscribe({
+        next: (data) => {
+          console.log("data de traer documento pendiente");
+          console.log(data);
+
           if (data.length === 0) {
             verMensajeInformativo(
               this.messageService,
               'warn',
               'Advertencia',
-              'No se encontraron registros del proveedor'
+              'No se encontraron registros'
             );
+            return;
           }
-        }, error: (error) => {
-          //this.loading = false;
-          verMensajeInformativo(this.messageService, 'error', 'Error', `Error al cargar los registros ${error.message}`);
+
+          this.generarPDFPendiente(data);
+        },
+        error: (error) => {
+          verMensajeInformativo(
+            this.messageService,
+            'error',
+            'Error',
+            `Error al cargar los registros: ${error.message}`
+          );
         },
       });
-
   }
+
   calculateGroupTotal(ruc: string, field: string): number {
-  const filtered = this.consultaDocPagoList.filter((item) => item.ruc === ruc);
-  
-  const total = filtered.reduce((sum, item) => {
-    const value = item[field];
-    const numValue = typeof value === 'number' ? value : parseFloat(value) || 0;
-    return sum + numValue;
-  }, 0);
-  
-  return total;
-}
-  generarPDFPendiente(dataReporte: agregar_Pago[]): void {
+    const filtered = this.consultaDocPagoList.filter((item: any) => item.ruc === ruc);
 
-    //this.obtenerFacturaPendiente();
+    const total = filtered.reduce((sum: number, item: any) => {
+      const value = item[field];
+      const numValue = typeof value === 'number' ? value : parseFloat(value) || 0;
+      return sum + numValue;
+    }, 0);
 
+    return total;
+  }
+
+  generarPDFPendiente(dataReporte: TraeDocPendienteCtaxCobra[]): void {
     if (!dataReporte || dataReporte.length === 0) {
-      // verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
-      console.log("No retoarn datoa de ayuda pago");
+      console.log("No hay datos para el reporte");
       return;
     }
-    dataReporte.sort((a, b) => {
+
+    // Ordenar por RUC y fecha de factura
+    dataReporte.sort((a: any, b: any) => {
       if (a.ruc < b.ruc) return -1;
       if (a.ruc > b.ruc) return 1;
-      // Si el RUC es igual, ordenar por fechaEmision DESC
-      const fechaA = new Date(a.fechaEmision);
-      const fechaB = new Date(b.fechaEmision);
+      // Si el RUC es igual, ordenar por fechaFactura DESC
+      const fechaA = new Date(a.fechaFactura);
+      const fechaB = new Date(b.fechaFactura);
       return fechaB.getTime() - fechaA.getTime();
     });
-    var resultados = dataReporte;
 
-    // Definimos las cabeceras
+    // Definir las cabeceras
     const headers = [
       [
-
-        { text: 'RUC', style: 'tableHeader' },//1
-        { text: 'Razon Social', style: 'tableHeader' },//2
-        { text: 'Tipo Doc', style: 'tableHeader' }, //3
-        { text: 'Numero', style: 'tableHeader' },       //4          
-        { text: 'Fecha emision', style: 'tableHeader' }, //5
-        { text: 'Fecha vencimiento', style: 'tableHeader' }, //6
-        { text: 'Moneda Original', style: 'tableHeader' }, //7
-        { text: 'Importe Total S/.', style: 'tableHeader' },//8
-        { text: 'Importe Total US $', style: 'tableHeader' },//9
-
+        { text: 'RUC', style: 'tableHeader' },
+        { text: 'Razón Social', style: 'tableHeader' },
+        { text: 'Tip.Doc', style: 'tableHeader' },
+        { text: 'Número', style: 'tableHeader' },
+        { text: 'Moneda', style: 'tableHeader' },
+        { text: 'Fecha Fact.', style: 'tableHeader' },
+        { text: 'Fecha Venc.', style: 'tableHeader' },
+        { text: 'Días atraso', style: 'tableHeader' },
+        { text: 'Imp.Fact.', style: 'tableHeader' },
+        { text: 'Fec.Pago', style: 'tableHeader' },
+        { text: 'Pago S/.', style: 'tableHeader' },
+        { text: 'Pago $', style: 'tableHeader' },
+        { text: 'Saldo S/.', style: 'tableHeader' },
+        { text: 'Saldo $', style: 'tableHeader' },
+        { text: 'Estado', style: 'tableHeader' },
       ],
-
     ];
 
-    // Agrupamos por RUC
-    const groupedData = {};
-    this.ayudapago.forEach((item) => {
+    // Agrupar por RUC
+    const groupedData: any = {};
+    dataReporte.forEach((item: any) => {
       if (!groupedData[item.ruc]) {
         groupedData[item.ruc] = [];
       }
@@ -214,86 +209,99 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
     });
 
     // Cuerpo de la tabla
-    const body = [...headers];
+    const body: any[] = [...headers];
 
-    Object.keys(groupedData).forEach((ruc) => {
+    Object.keys(groupedData).forEach((ruc: string) => {
       const groupItems = groupedData[ruc];
 
-      groupItems.forEach((item) => {
+      groupItems.forEach((item: any) => {
         body.push([
-          item.ruc,        //1            
-          item.razonSocial, //2
-          item.nombreTipoDOc, //3
-          item.numeroDOcumento, //4
-          item.fechaEmision, //5
-          item.fechaVencimiento, //6
-          item.monedaOriginal, //7
-          formatCell(item.soles), //8
-          formatCell(item.dolares),   //9                  
-
+          item.ruc,
+          item.razonSocial,
+          item.tipoDocDesc,
+          item.nroComprobante,
+          item.monedaFactura,
+          item.fechaFactura,
+          item.fecVencimiento,
+          item.diasAtraso?.toString() || '',
+          formatCell(item.importeFactura),
+          item.fechapago || '',
+          formatCell(item.importePagoSoles),
+          formatCell(item.importePagoDolares),
+          formatCell(item.saldoSoles),
+          formatCell(item.saldoDolares),
+          item.estadopago,
         ]);
       });
 
-      const solesSubtotal = this.calculateGroupTotal(ruc, 'soles');
-      const dolaresSubtotal = this.calculateGroupTotal(ruc, 'dolares');
+      // Subtotales por grupo
+      const importeFacturaSubtotal = this.calculateGroupTotal(ruc, 'importeFactura');
+      const pagoSolesSubtotal = this.calculateGroupTotal(ruc, 'importePagoSoles');
+      const pagoDolaresSubtotal = this.calculateGroupTotal(ruc, 'importePagoDolares');
+      const saldoSolesSubtotal = this.calculateGroupTotal(ruc, 'saldoSoles');
+      const saldoDolaresSubtotal = this.calculateGroupTotal(ruc, 'saldoDolares');
 
-      body.push(this.getSubtotalRow(ruc, solesSubtotal, dolaresSubtotal));
+      body.push([
+        { text: 'Subtotal', colSpan: 8, style: 'subtotal' },
+        {}, {}, {}, {}, {}, {}, {},
+        { text: this.formatNumber(importeFacturaSubtotal), alignment: 'right', style: 'subtotal' },
+        {},
+        { text: this.formatNumber(pagoSolesSubtotal), alignment: 'right', style: 'subtotal' },
+        { text: this.formatNumber(pagoDolaresSubtotal), alignment: 'right', style: 'subtotal' },
+        { text: this.formatNumber(saldoSolesSubtotal), alignment: 'right', style: 'subtotal' },
+        { text: this.formatNumber(saldoDolaresSubtotal), alignment: 'right', style: 'subtotal' },
+        {}
+      ]);
     });
 
-    //suma totales
-    // Calcular total general y añadir fila al final
-    const totalGeneral = this.getTotalGeneral(this.ayudapago);
-    body.push(this.getTotalRow(totalGeneral.solesTotal, totalGeneral.dolaresTotal));
-    const docDefinition = {
+    // Total general
+    const totalImporteFactura = this.getTotalTabla('importeFactura');
+    const totalPagoSoles = this.getTotalTabla('importePagoSoles');
+    const totalPagoDolares = this.getTotalTabla('importePagoDolares');
+    const totalSaldoSoles = this.getTotalTabla('saldoSoles');
+    const totalSaldoDolares = this.getTotalTabla('saldoDolares');
+
+    body.push([
+      { text: 'TOTAL GENERAL', colSpan: 8, style: 'total' },
+      {}, {}, {}, {}, {}, {}, {},
+      { text: this.formatNumber(totalImporteFactura), alignment: 'right', style: 'total' },
+      {},
+      { text: this.formatNumber(totalPagoSoles), alignment: 'right', style: 'total' },
+      { text: this.formatNumber(totalPagoDolares), alignment: 'right', style: 'total' },
+      { text: this.formatNumber(totalSaldoSoles), alignment: 'right', style: 'total' },
+      { text: this.formatNumber(totalSaldoDolares), alignment: 'right', style: 'total' },
+      {}
+    ]);
+
+    const docDefinition: any = {
       pageOrientation: 'landscape',
       pageMargins: [20, 20, 20, 20],
       content: [
-        //title
-        { text: 'Lista de Documentos Pendiente de pago', style: 'header' },
+        { text: 'Lista de Documentos Pendientes - Cuentas por Cobrar', style: 'header' },
         {
           table: {
             headerRows: 1,
-            widths: [
-              40, //1 // ruc
-              270,  //2  razon social
-              30,  //3 tipo documento
-              50,  //4 numero del documento  factura
-              40, //5 fecha emision 
-              40,  //6 fecha vencimiento 
-              33, //7 moneda original
-              60, //8 importe total S/
-              60, //9 importe total $
-            ],
+            widths: [40, 120, 30, 50, 30, 40, 40, 30, 50, 40, 45, 45, 45, 45, 40],
             body: body,
             alignment: 'center',
           },
           layout: {
-            hLineWidth: function (i, node) {
-              return i === 0 ||
-                i === 1 ||
-                i === 2 ||
-                i === node.table.body.length
-                ? 1
-                : 0.5;
+            hLineWidth: function (i: number, node: any) {
+              return i === 0 || i === 1 || i === node.table.body.length ? 1 : 0.5;
             },
-            vLineWidth: function (i, node) {
+            vLineWidth: function (i: number, node: any) {
               return 0.5;
             },
-            hLineColor: function (i, node) {
-              return i === 0 ||
-                i === 1 ||
-                i === 2 ||
-                i === node.table.body.length
-                ? 'black'
-                : '#aaa';
+            hLineColor: function (i: number, node: any) {
+              return i === 0 || i === 1 || i === node.table.body.length ? 'black' : '#aaa';
             },
-            vLineColor: function (i, node) {
+            vLineColor: function (i: number, node: any) {
               return '#aaa';
             },
-            paddingTop: function (i) {
+            paddingTop: function (i: number) {
               return 4;
             },
-            paddingBottom: function (i) {
+            paddingBottom: function (i: number) {
               return 4;
             },
           },
@@ -305,13 +313,6 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
           bold: true,
           alignment: 'center',
           margin: [0, 0, 0, 11],
-        },
-        label: {
-          bold: true,
-          fontSize: 8,
-        },
-        value: {
-          fontSize: 8,
         },
         tableHeader: {
           bold: true,
@@ -327,8 +328,9 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
         },
         total: {
           bold: true,
-          fontSize: 6,
+          fontSize: 7,
           alignment: 'right',
+          fillColor: '#e0e0e0',
         },
       },
       defaultStyle: {
@@ -337,17 +339,15 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
       },
     };
 
-    // Generamos el pdf                
-    const fileName = 'DetallePrespuesto_' + '01' + formatDateForFilename(new Date()) + '.pdf';
-
+    const fileName = 'DocHistorico_CtaxCobrar_' + formatDateForFilename(new Date()) + '.pdf';
 
     pdfMake.createPdf(docDefinition).open({
       filename: fileName
     });
-
   }
-  //metodos de la clase
-  formatNumber = (num) => {
+
+  // Métodos auxiliares
+  formatNumber = (num: any): string => {
     const numero = Number(num);
     if (isNaN(numero)) return '0.00';
 
@@ -356,40 +356,12 @@ export class ConsultadocpendienteCtaxcobrarComponent implements OnInit { /*onini
       maximumFractionDigits: 2,
     });
   };
-  getSubtotalRow(ruc: string, soles: number,
-    dolares: number): any[] {
-    return [
-      { text: 'Subtotal ', colSpan: 7, style: 'subtotal' },
-      { text: '' }, { text: '' }, { text: '' }, { text: '' },
-      { text: '' }, { text: '' },  // 7 celdas vacías para completar el colSpan
-      { text: this.formatNumber(soles), alignment: 'right' },
-      { text: this.formatNumber(dolares), alignment: 'right' },
-      { text: '', alignment: 'right' }, { text: '', alignment: 'right' }
-    ];
-  }
-  getTotalRow(soles: number, dolares: number): any[] {
-    return [
-      { text: 'total ', colSpan: 7, style: 'subtotal' },
-      { text: '' }, { text: '' }, { text: '' }, { text: '' },
-      { text: '' }, { text: '' },  // 7 celdas vacías para completar el colSpan
-      { text: this.formatNumber(soles), alignment: 'right' },
-      { text: this.formatNumber(dolares), alignment: 'right' },
-      { text: '', alignment: 'right' }, { text: '', alignment: 'right' }
-    ];
-  }
-  getTotalGeneral(data: agregar_Pago[]): { solesTotal: number, dolaresTotal: number } {
-    let solesTotal = data.reduce((sum, item) => sum + (item.soles || 0), 1);
-    let dolaresTotal = data.reduce((sum, item) => sum + (item.dolares || 0), 0);
-    return {
-      solesTotal,
-      dolaresTotal
-    };
-  }
+
   getTotalTabla(field: 'importePagoSoles' | 'importePagoDolares' | 'importeFactura' | 'saldoSoles' | 'saldoDolares'): number {
-  return this.consultaDocPagoList.reduce((sum, item) => {
-    const value = item[field];
-    const numValue = typeof value === 'number' ? value : parseFloat(value) || 0;
-    return sum + numValue;
-  }, 0);
-}
+    return this.consultaDocPagoList.reduce((sum: number, item: any) => {
+      const value = item[field];
+      const numValue = typeof value === 'number' ? value : parseFloat(value) || 0;
+      return sum + numValue;
+    }, 0);
+  }
 }
