@@ -23,16 +23,18 @@ import { Detallepresupuesto, agregar_Pago } from '../../model/presupuesto';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { formatDateForFilename } from 'src/app/demo/components/utilities/funciones_utilitarias';
-//import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DialogModule } from 'primeng/dialog';
 import { TraeHistoricoCtaxCobra } from '../../model/CuentaxCobrar';
 import { TagModule } from 'primeng/tag';
+import { RegistroCobroDocSustento } from '../../model/CuentaxCobrar';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-consultahistorica-ctaxcobrar',
   standalone: true,
-  imports: [ToastModule,
+  imports: [
+    ToastModule,
     TableModule,
     ReactiveFormsModule,
     CommonModule,
@@ -44,18 +46,21 @@ import { TagModule } from 'primeng/tag';
     ConfirmDialogModule,
     ProgressBarModule,
     DialogModule,
-    FormsModule,TagModule],
+    FormsModule,
+    TagModule,
+    TooltipModule
+  ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './consultahistorica-ctaxcobrar.component.html',
   styleUrl: './consultahistorica-ctaxcobrar.component.css'
 })
-export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
+export class ConsultahistoricaCtaxcobrarComponent implements OnInit {
   consultaDocPorPagoForm: FormGroup;
   consultaDocPorPagoList: ConsultaDocPorPago[] = [];
-  traerHistoricoList: TraeHistoricoCtaxCobra[] =[];
+  traerHistoricoList: TraeHistoricoCtaxCobra[] = [];
   isEditing: boolean = false;
-  items: any[] = []; //lista de breadcrumbs
-  isNew: boolean = false; //controla si se está creando un nuevo registro
+  items: any[] = [];
+  isNew: boolean = false;
   textoBuscar: string = '';
 
   DetallePago: Detallepresupuesto[];
@@ -63,7 +68,13 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
   groupTotals: any[] = [];
   ayudapago: agregar_Pago[] = [];
 
-  searchPerformed: boolean = false; //indica si ya se ejecuté una busqueda
+  searchPerformed: boolean = false;
+
+  // Variables para el modal de sustentos
+  displayModalSustentos: boolean = false;
+  listaSustentos: RegistroCobroDocSustento[] = [];
+  loadingSustentos: boolean = false;
+  registroSeleccionado: TraeHistoricoCtaxCobra | null = null;
 
   constructor(
     private consultaDocPorPagoService: ConsultaDocPorPagoService,
@@ -89,9 +100,6 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
     this.initForm();
 
     (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
-    // No cargar datos automáticamente - solo cuando el usuario busque
-
-
   }
 
   buscar(): void {
@@ -107,7 +115,7 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
       return;
     }
     this.searchPerformed = true;
-    this.load=true;
+    this.load = true;
     this.listarconsultadocporpago();
   }
 
@@ -129,384 +137,166 @@ export class ConsultahistoricaCtaxcobrarComponent implements OnInit{
     });
   }
 
-  abrirdocumento(fechaPago: string, numeroPresupuesto: string): void {
-    const fecha = fechaPago.split('/');
-    const mesFecha = fecha[1];
-    const anioFecha = fecha[2];
-
-    // this.presupuestoService
-    //   .obtenerArchivo(
-    //     this.globalService.getCodigoEmpresa(),
-    //     anioFecha,
-    //     mesFecha,
-    //     numeroPresupuesto
-    //   )
-    //   .subscribe({
-    //     next: (response: HttpResponse<Blob>) => {
-    //       const blob = response.body;
-    //       if (blob && blob.size > 0) {
-    //         const url = window.URL.createObjectURL(blob);
-    //         window.open(url, '_blank');
-    //       } else {
-    //         verMensajeInformativo(
-    //           this.messageService,
-    //           'error',
-    //           'Error',
-    //           'No se encontró el documento'
-    //         );
-    //       }
-    //     },
-    //     error: (err) => {
-    //       verMensajeInformativo(
-    //         this.messageService,
-    //         'error',
-    //         'Error',
-    //         'Error al cargar el documento'
-    //       );
-    //     },
-    //   });
-  }
   listarconsultadocporpago(): void {
     let filtro = this.textoBuscar.trim();
 
     if (filtro === '') {
-      // No cargar nada si el filtro está vacío
       this.consultaDocPorPagoList = [];
       this.searchPerformed = false;
-      this.load=false;
+      this.load = false;
       return;
     }
 
     this.load = true;
-    this.cobrarService.ListaHistoricoReporte(this.globalService.getCodigoEmpresa(),filtro)
-    .subscribe({
-      next:(data)=>{
+    this.cobrarService.ListaHistoricoReporte(
+      this.globalService.getCodigoEmpresa(),
+      filtro
+    ).subscribe({
+      next: (data) => {
         this.traerHistoricoList = data;
         this.load = false;
-        console.log("dato de historica ctaxcobrar");
-        console.log(data);
-        if(data.length === 0 ){
-        verMensajeInformativo(
-              this.messageService,
-              'info',
-              'Información',
-              'No se encontro el ruc o nro doc'
-            );
+        
+        if (data.length === 0) {
+          verMensajeInformativo(
+            this.messageService,
+            'info',
+            'Información',
+            'No se encontró el ruc o nro doc'
+          );
         }
-         
+      },
+      error: () => {
+        this.load = false;
+        verMensajeInformativo(
+          this.messageService,
+          'error',
+          'Error',
+          'Error al cargar documentos por pago'
+        );
       }
-    })
+    });
+  }
 
-    this.consultaDocPorPagoService
-      .GetConsultaDocPorPago(filtro)
-      .subscribe({
-        next: (data) => {
-          this.consultaDocPorPagoList = data;
-          this.load = false;
-          if (data.length === 0) {
-            this.load = false;
-            verMensajeInformativo(
-              this.messageService,
-              'info',
-              'Información',
-              'No se encontro el ruc o nro doc'
-            );
-          } else {
+  /**
+   * Abre el modal con los sustentos asociados al registro de cobro
+   */
+  abrirModalSustentos(doc: TraeHistoricoCtaxCobra): void {
+    // Validar que el documento tenga estado Cobrado o Pagado
+    if (doc.estadopago !== 'Cobrado' && doc.estadopago !== 'Pagado') {
+      verMensajeInformativo(
+        this.messageService,
+        'warn',
+        'Advertencia',
+        'Solo se pueden ver sustentos de documentos cobrados o pagados'
+      );
+      return;
+    }
+    
+    // Validar que tenga numeroRegCobro
+    if (!doc.numeroRegCobro || doc.numeroRegCobro.trim() === '') {
+      verMensajeInformativo(
+        this.messageService,
+        'warn',
+        'Advertencia',
+        'Este documento no tiene un registro de cobro asociado. No se pueden mostrar sustentos.'
+      );
+      return;
+    }
 
-            this.load = false;
-          }
-        },
-        error: () => {
+    this.registroSeleccionado = doc;
+    this.displayModalSustentos = true;
+    this.loadingSustentos = true;
+    this.listaSustentos = [];
+
+    // Llamar al servicio para obtener los sustentos
+    this.cobrarService.listarSustento(
+      this.globalService.getCodigoEmpresa(),
+      doc.numeroRegCobro
+    ).subscribe({
+      next: (response) => {
+        this.listaSustentos = response;
+        this.loadingSustentos = false;
+
+        if (!response || response.length === 0) {
+          verMensajeInformativo(
+            this.messageService,
+            'info',
+            'Información',
+            'No se encontraron archivos de sustento para este registro'
+          );
+        }
+      },
+      error: (error) => {
+        this.loadingSustentos = false;
+        verMensajeInformativo(
+          this.messageService,
+          'error',
+          'Error',
+          `Error al cargar los sustentos: ${error.message || 'Error desconocido'}`
+        );
+      }
+    });
+  }
+
+  /**
+   * Cierra el modal de sustentos
+   */
+  cerrarModalSustentos(): void {
+    this.displayModalSustentos = false;
+    this.listaSustentos = [];
+    this.registroSeleccionado = null;
+  }
+
+  /**
+   * Abre/descarga un documento de sustento
+   */
+  abrirDocumentoSustento(sustento: RegistroCobroDocSustento): void {
+    if (!this.registroSeleccionado || !this.registroSeleccionado.numeroRegCobro) {
+      verMensajeInformativo(
+        this.messageService,
+        'error',
+        'Error',
+        'No se puede abrir el documento. Falta el número de registro de cobro.'
+      );
+      return;
+    }
+
+    this.cobrarService.traeDocumentoSustento(
+      this.globalService.getCodigoEmpresa(),
+      this.registroSeleccionado.numeroRegCobro,
+      sustento.ban05Item
+    ).subscribe({
+      next: (response: HttpResponse<Blob>) => {
+        const blob = response.body;
+        if (blob && blob.size > 0) {
+          const url = window.URL.createObjectURL(blob);
+          window.open(url, '_blank');
+        } else {
           verMensajeInformativo(
             this.messageService,
             'error',
             'Error',
-            'Error al cargar documentos por pago'
+            'No se encontró el documento'
           );
-        },
-      });
-  }
-
-
-  obtenerFacturaPendiente(): void {
-    //const nroDoc = this.filtroFRM.get('nrodoc').value ?? '';
-    //const ruc = this.filtroFRM.get('ruc').value ?? '';
-    console.log("metodo obtenr factura pendiente");
-    
-    const filtro = this.textoBuscar.trim();
-    this.load = true;
-    this.cobrarService.ListaHistoricoReporte(
-          this.globalService.getCodigoEmpresa(), filtro)
-          .subscribe({
-            next:(data)=>{
-              this.traerHistoricoList = data;
-               this.load = false;
-              if(data.length == 0){
-                verMensajeInformativo(this.messageService, 'Info','Informacion','No se encontro informacion');
-               
-              }
-              
-            }, error:(errordt) =>{
-              verMensajeInformativo(this.messageService, 'error','Error','Error al traer informacion');
-              console.log(errordt);
-            }
-          });
-
-    // this.presupuestoService.obtenerDocPendiente(
-    //   this.globalService.getCodigoEmpresa(), ruc, nroDoc)
-    //   .subscribe({
-    //     next: (data) => {
-
-    //       this.ayudapago = data;
-    //       console.log("data de tra er documento pendiente");
-    //       console.log(this.ayudapago);
-    //       this.generarPDFPendiente(this.ayudapago);
-    //       //this.loading = false;
-    //       if (data.length === 0) {
-    //         verMensajeInformativo(
-    //           this.messageService,
-    //           'warn',
-    //           'Advertencia',
-    //           'No se encontraron registros del proveedor'
-    //         );
-    //       }
-    //     }, error: (error) => {
-    //       //this.loading = false;
-    //       verMensajeInformativo(this.messageService, 'error', 'Error', `Error al cargar los registros ${error.message}`);
-    //     },
-    //   });
-
-  }
-  generarPDFPendiente(dataReporte: agregar_Pago[]): void {
-
-    //this.obtenerFacturaPendiente();
-
-
-
-    if (!dataReporte || dataReporte.length === 0) {
-      // verMensajeInformativo(this.messageService,'warn', 'Advertencia', 'No hay datos para exportar');
-      console.log("No retoarn datoa de ayuda pago");
-      return;
-    }
-    console.log("metodo generar pdf pendiente:");
-
-    console.log("metod generar pdf");
-    var resultados = dataReporte;
-    console.log("datos generaro en generar pdf:" + resultados);
-    const headers = [
-      [
-
-        { text: 'RUC', rowSpan: 2, style: 'tableHeader' },//1
-        { text: 'Razon Social', rowSpan: 2, style: 'tableHeader' },//2
-        { text: 'Tipo Doc', rowSpan: 2, style: 'tableHeader' }, //3
-        { text: 'Numero', rowSpan: 2, style: 'tableHeader' },       //4
-        { text: 'Fecha emision', rowSpan: 2, style: 'tableHeader' }, //5
-        { text: 'Fecha vencimiento', rowSpan: 2, style: 'tableHeader' }, //6
-        { text: 'Moneda Original', rowSpan: 2, style: 'tableHeader' }, //7
-        { text: 'Importe Total S/.', rowSpan: 2, style: 'tableHeader' },//8
-        { text: 'Importe Total US$', rowSpan: 2, style: 'tableHeader' },//9
-      ],
-
-    ];
-    console.log("metod generar cabececera");
-    // Agrupamos por RUC
-    const groupedData = {};
-    this.ayudapago.forEach((item) => {
-      if (!groupedData[item.ruc]) {
-        groupedData[item.ruc] = [];
+        }
+      },
+      error: (err) => {
+        verMensajeInformativo(
+          this.messageService,
+          'error',
+          'Error',
+          'Error al cargar el documento'
+        );
       }
-      groupedData[item.ruc].push(item);
     });
-
-    console.log("metod agrupar datos ");
-    // Formato para los numeros
-    const formatNumber = (num) => {
-      const numero = Number(num);
-      if (isNaN(numero)) return '0.00';
-
-      return numero.toLocaleString('es-PE', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-    };
-
-    const formatCell = (value: any) => ({
-      text: formatNumber(value),
-      alignment: 'right'
-    });
-
-
-    // Cuerpo de la tabla
-    const body = [...headers];
-
-    Object.keys(groupedData).forEach((ruc) => {
-      const groupItems = groupedData[ruc];
-
-      groupItems.forEach((item) => {
-        body.push([
-          item.ruc,        //1
-          item.razonSocial, //2
-          item.nombreTipoDOc, //3
-          item.numeroDOcumento, //4
-          item.fechaEmision, //5
-          item.fechaVencimiento, //6
-          item.monedaOriginal, //7
-          formatCell(item.soles), //8
-          formatCell(item.dolares),   //9
-
-        ]);
-      });
-
-    });
-    console.log("se crero el reporte, falta mostrar");
-    const docDefinition = {
-      pageOrientation: 'landscape',
-      pageMargins: [20, 20, 20, 20],
-      content: [
-        //title
-        { text: 'Detalle de Presupuesto', style: 'header' },
-        //description
-        {
-          columns: [
-            {
-              width: 'auto',
-              text: [
-                { text: 'Numero de Pago: ', style: 'label' },
-                //{ text: this.pagnro, style: 'value' },
-                { text: '001', style: 'value' },
-              ],
-            },
-            {
-              width: 'auto',
-              text: [
-                { text: 'Fecha: ', style: 'label' },
-                // { text: this.fechaString, style: 'value' },
-                { text: '15/07/2025', style: 'value' },
-              ],
-              margin: [20, 0, 0, 0],
-            },
-            {
-              width: 'auto',
-              text: [
-                { text: 'Motivo: ', style: 'label' },
-                //{ text: this.motivo, style: 'value' },
-                { text: 'motivo', style: 'value' },
-              ],
-              margin: [20, 0, 0, 0],
-            },
-            {
-              width: 'auto',
-              text: [
-                { text: 'Medio Pago: ', style: 'label' },
-                //{ text: this.medio, style: 'value' },
-                { text: 'medio pago', style: 'value' },
-              ],
-              margin: [20, 0, 0, 0],
-            },
-          ],
-          margin: [0, 0, 0, 10],
-        },
-        //table
-        {
-          table: {
-            headerRows: 2,
-            widths: [
-              40, //1 // ruc
-              150,  //2  razon social
-              30,  //3 tipo documento
-              28,  //4 numero del documento  factura
-              40, //5 fecha emision
-              40,  //6 fecha vencimiento
-              33, //7 moneda original
-              60, //8 importe total S/
-              60, //9 importe total $
-            ],
-            body: body,
-            alignment: 'center',
-          },
-          layout: {
-            hLineWidth: function (i, node) {
-              return i === 0 ||
-                i === 1 ||
-                i === 2 ||
-                i === node.table.body.length
-                ? 1
-                : 0.5;
-            },
-            vLineWidth: function (i, node) {
-              return 0.5;
-            },
-            hLineColor: function (i, node) {
-              return i === 0 ||
-                i === 1 ||
-                i === 2 ||
-                i === node.table.body.length
-                ? 'black'
-                : '#aaa';
-            },
-            vLineColor: function (i, node) {
-              return '#aaa';
-            },
-            paddingTop: function (i) {
-              return 4;
-            },
-            paddingBottom: function (i) {
-              return 4;
-            },
-          },
-        },
-      ],
-      styles: {
-        header: {
-          fontSize: 15,
-          bold: true,
-          alignment: 'center',
-          margin: [0, 0, 0, 11],
-        },
-        label: {
-          bold: true,
-          fontSize: 8,
-        },
-        value: {
-          fontSize: 8,
-        },
-        tableHeader: {
-          bold: true,
-          fontSize: 7,
-          alignment: 'center',
-          fillColor: '#eeeeee',
-          margin: [0, 5],
-        },
-        subtotal: {
-          bold: true,
-          fontSize: 6,
-          alignment: 'right',
-        },
-        total: {
-          bold: true,
-          fontSize: 6,
-          alignment: 'right',
-        },
-      },
-      defaultStyle: {
-        fontSize: 6,
-        alignment: 'left',
-      },
-    };
-
-    // Generamos el pdf
-    //pdfMake.createPdf(docDefinition).download('DetallePrespupuesto_' + this.pagnro + '.pdf');
-    const fileName = 'DetallePrespuesto_' + '00001' + formatDateForFilename(new Date()) + '.pdf';
-    // const fileName = 'DetallePrespupuesto_' +
-    //     this.pagnro +
-    //     '_' +
-    //     formatDateWithTime((this.fechahoy = new Date())) +
-    //     '.pdf';
-
-    pdfMake.createPdf(docDefinition).open({
-      filename: fileName
-    });
-
   }
 
+  /**
+   * Determina si un registro tiene sustentos disponibles
+   */
+  tieneSustentosDisponibles(doc: TraeHistoricoCtaxCobra): boolean {
+    return (doc.estadopago === 'Cobrado' || doc.estadopago === 'Pagado') 
+           && !!doc.numeroRegCobro 
+           && doc.numeroRegCobro.trim() !== '';
+  }
 }
